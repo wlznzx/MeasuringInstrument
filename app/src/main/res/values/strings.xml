@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">MeasuringInstrument</string>
+    <string name="measuring">Measuring</string>
+    <string name="data_query">Data duery</string>
+    <string name="parameter_management">Parameter management</string>
+    <string name="calibration">Calibration</string>
+    <string name="user_management">User Management</string>
+    <string name="program_management">Program management</string>
+    <string name="system_management">System Management</string>
+    <string name="store">Store</string>
+    <string name="spc_analysis">SPC analysis</string>
+    <string name="statistical_report">Statistical report</string>
+
+    <string name="main_title">4Channels Measuring</string>
+    <string name="describe">Describe</string>
+    <string name="nominal_value">Nominal value</string>
+    <string name="upper_tolerance_value">Upper tolerance value</string>
+    <string name="lower_tolerance_value">Lower tolerance value</string>
+    <string name="resolution">Resolution</string>
+    <string name="deviation">Deviation</string>
+    <string name="formula">Formula</string>
+    <string name="grouping">Grouping</string>
+    <string name="save">Save</string>
+    <string name="m1_group">M1 Group</string>
+    <string name="m2_group">M2 Group</string>
+    <string name="m3_group">M3 Group</string>
+    <string name="m4_group">M4 Group</string>
+    <string name="m2_formula">M2 Formula</string>
+    <string name="m1_formula">M1 Formula</string>
+    <string name="m3_formula">M3 Formula</string>
+    <string name="m4_formula">M4 Formula</string>
+    <string name="name">Name</string>
+    <string name="lower_limit">Lower limit</string>
+    <string name="upper_limit">Upper limit</string>
+</resources>

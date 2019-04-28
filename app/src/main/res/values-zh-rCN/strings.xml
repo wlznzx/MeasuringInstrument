@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">MeasuringInstrument</string>
+    <string name="measuring">测量</string>
+    <string name="data_query">数据查询</string>
+    <string name="parameter_management">参数管理</string>
+    <string name="calibration">校准</string>
+    <string name="user_management">用户管理</string>
+    <string name="program_management">程序管理</string>
+    <string name="system_management">系统管理</string>
+    <string name="store">储存</string>
+    <string name="spc_analysis">SPC分析</string>
+    <string name="statistical_report">统计报表</string>
+    <string name="main_title">四通道测量仪</string>
+    <string name="describe">描述</string>
+    <string name="nominal_value">名义值</string>
+    <string name="upper_tolerance_value">上公差值</string>
+    <string name="lower_tolerance_value">下公差值</string>
+    <string name="resolution">分辨率</string>
+    <string name="deviation">偏差</string>
+    <string name="formula">公式</string>
+    <string name="grouping">分组</string>
+    <string name="save">Save</string>
+    <string name="m1_group">M1分组</string>
+    <string name="m2_group">M2分组</string>
+    <string name="m3_group">M3分组</string>
+    <string name="m4_group">M4分组</string>
+    <string name="m2_formula">M2程序</string>
+    <string name="m1_formula">M1程序</string>
+    <string name="m3_formula">M3程序</string>
+    <string name="m4_formula">M4程序</string>
+    <string name="name">名称</string>
+    <string name="lower_limit">下限</string>
+    <string name="upper_limit">上限</string>
+</resources>
