@@ -1,19 +1,9 @@
 package alauncher.cn.measuringinstrument.view;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Toast;
-
-import java.util.List;
 
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
-import butterknife.BindView;
-import butterknife.BindViews;
-import butterknife.OnClick;
 
 
 public class MGroupActivity extends BaseActivity {

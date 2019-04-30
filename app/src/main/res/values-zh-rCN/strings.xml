@@ -31,4 +31,23 @@
     <string name="name">名称</string>
     <string name="lower_limit">下限</string>
     <string name="upper_limit">上限</string>
+    <string name="set">设置</string>
+    <string name="small_part_standard">小件标准</string>
+    <string name="big_part_standard">大件标准</string>
+    <string name="upper_limit_of_information_rate">倍率上限</string>
+    <string name="lower_confidence_limit">倍率下限</string>
+    <string name="compensation_value">补偿值</string>
+    <string name="ch1">CH1</string>
+    <string name="ch2">CH2</string>
+    <string name="ch3">CH3</string>
+    <string name="ch4">CH4</string>
+    <string name="small_piece_ad">小件AD</string>
+    <string name="big_piece_ad">大件AD</string>
+    <string name="measure_ad">测量AD</string>
+    <string name="measure_value">测量值</string>
+    <string name="calibration_method">校验方式</string>
+    <string name="calibration_save">Calibration Save</string>
+    <string name="select_all">Select All</string>
+    <string name="samll_part_value">Small P value</string>
+    <string name="big_part_value">Big P value</string>
 </resources>

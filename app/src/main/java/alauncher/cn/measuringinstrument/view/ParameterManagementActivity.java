@@ -39,7 +39,6 @@ public class ParameterManagementActivity extends BaseActivity {
     @BindViews({R.id.formula_m1, R.id.formula_m2, R.id.formula_m3, R.id.formula_m4})
     public List<Button> formulaEd;
 
-
     @BindViews({R.id.grouping_m1, R.id.grouping_m2, R.id.grouping_m3, R.id.grouping_m4})
     public List<Button> groupingBtn;
 
@@ -84,7 +83,7 @@ public class ParameterManagementActivity extends BaseActivity {
             default:
                 break;
         }
-        Toast.makeText(this,"go m = " + m_num,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "go m = " + m_num, Toast.LENGTH_SHORT).show();
         openActivty(MGroupActivity.class);
     }
 }

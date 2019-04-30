@@ -11,6 +11,7 @@ import java.util.List;
 
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
+import alauncher.cn.measuringinstrument.view.CalibrationActivity;
 import alauncher.cn.measuringinstrument.view.ParameterManagementActivity;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -35,16 +36,16 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView() {
         List<MainInfo> _datas = new ArrayList();
-        _datas.add(new MainInfo(R.string.measuring, R.drawable.equalizer_24px));
-        _datas.add(new MainInfo(R.string.data_query, R.drawable.find_in_page_24px));
-        _datas.add(new MainInfo(R.string.parameter_management, R.drawable.functions_24px));
-        _datas.add(new MainInfo(R.string.calibration, R.drawable.straighten_24px));
-        _datas.add(new MainInfo(R.string.user_management, R.drawable.account_box_24px));
-        _datas.add(new MainInfo(R.string.program_management, R.drawable.code_24px));
-        _datas.add(new MainInfo(R.string.system_management, R.drawable.phonelink_setup_24px));
-        _datas.add(new MainInfo(R.string.store, R.drawable.archive_24px));
-        _datas.add(new MainInfo(R.string.spc_analysis, R.drawable.show_chart_24px));
-        _datas.add(new MainInfo(R.string.statistical_report, R.drawable.assignment_24px));
+        _datas.add(new MainInfo(R.string.measuring, R.drawable.equalizer));
+        _datas.add(new MainInfo(R.string.data_query, R.drawable.find_in_page));
+        _datas.add(new MainInfo(R.string.parameter_management, R.drawable.functions));
+        _datas.add(new MainInfo(R.string.calibration, R.drawable.straighten));
+        _datas.add(new MainInfo(R.string.user_management, R.drawable.account_box));
+        _datas.add(new MainInfo(R.string.program_management, R.drawable.code));
+        _datas.add(new MainInfo(R.string.system_management, R.drawable.phonelink_setup));
+        _datas.add(new MainInfo(R.string.store, R.drawable.archive));
+        _datas.add(new MainInfo(R.string.spc_analysis, R.drawable.show_chart));
+        _datas.add(new MainInfo(R.string.statistical_report, R.drawable.assignment));
         MainLayoutAdapter _adapter = new MainLayoutAdapter(_datas);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
@@ -84,7 +85,17 @@ public class MainActivity extends BaseActivity {
             holder.setOnClickListener(R.id.main_item, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openActivty(ParameterManagementActivity.class);
+                    switch (position) {
+                        case 2:
+                            openActivty(ParameterManagementActivity.class);
+                            break;
+                        case 3:
+                            openActivty(CalibrationActivity.class);
+                            break;
+                        default:
+                            break;
+                    }
+
                 }
             });
         }

@@ -6,4 +6,9 @@
         <item>0.3</item>
         <item>0.4</item>
     </string-array>
+
+    <string-array name="calibration_method_values" translatable="false">
+        <item>one piece</item>
+        <item>two piece</item>
+    </string-array>
 </resources>
