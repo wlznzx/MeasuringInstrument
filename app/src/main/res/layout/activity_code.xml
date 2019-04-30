@@ -13,212 +13,203 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_height="@dimen/action_bar_height"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
 
         <TextView
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/name" />
+            android:text="@string/code_num" />
 
         <TextView
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/upper_limit" />
-
-        <TextView
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/lower_limit" />
-
-        <TextView
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/describe" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="A" />
-
-        <EditText
-            android:id="@+id/nominal_value_m1"
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:inputType="number|numberDecimal"
-            android:text="M1" />
-
-        <EditText
-            android:id="@+id/nominal_value_m2"
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
-
-        <EditText
-            android:id="@+id/nominal_value_m3"
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
-
-
+            android:text="@string/code_name" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:orientation="horizontal">
 
-        <TextView
-            style="@style/TextStyle"
+        <RadioGroup
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="B" />
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/upper_tolerance_m1"
-            style="@style/EdNumOnlyStyle"
+            <RadioButton
+                android:id="@+id/nan"
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="01" />
+
+            <RadioButton
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false" />
+
+            <RadioButton
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false" />
+
+            <RadioButton
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false" />
+
+            <RadioButton
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false" />
+
+            <RadioButton
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false" />
+
+            <RadioButton
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false" />
+
+            <RadioButton
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false" />
+
+            <RadioButton
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false" />
+
+            <RadioButton
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false" />
+
+            <RadioButton
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false" />
+        </RadioGroup>
+
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:inputType="number|numberDecimal"
-            android:text="M1" />
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/upper_tolerance_m2"
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
+            <EditText
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/code1_name" />
 
-        <EditText
-            android:id="@+id/upper_tolerance_m3"
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
+            <EditText
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="@string/code2_name" />
 
+            <EditText
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="@string/code3_name" />
 
+            <EditText
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="@string/code4_name" />
+
+            <EditText
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/code5_name" />
+
+            <EditText
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/code6_name" />
+
+            <EditText
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/code7_name" />
+
+            <EditText
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/code8_name" />
+
+            <EditText
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/code9_name" />
+
+            <EditText
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/code10_name" />
+
+            <EditText
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/code11_name" />
+        </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="C" />
-
-        <EditText
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:inputType="number|numberDecimal"
-            android:text="M1" />
-
-        <EditText
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
-
-        <EditText
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="D" />
-
-        <EditText
-            android:id="@+id/lower_tolerance_m1"
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:inputType="number|numberDecimal"
-            android:text="M1" />
-
-        <EditText
-            android:id="@+id/lower_tolerance_m2"
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
-
-        <EditText
-            android:id="@+id/lower_tolerance_m3"
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/save_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/btn_selector"
-            android:text="@string/save" />
-    </RelativeLayout>
-
 </LinearLayout>

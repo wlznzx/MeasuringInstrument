@@ -51,4 +51,17 @@
     <string name="select_all">Select All</string>
     <string name="samll_part_value">Small P value</string>
     <string name="big_part_value">Big P value</string>
+    <string name="code_num">Code Num</string>
+    <string name="code_name">Code Name</string>
+    <string name="code1_name">Code 1</string>
+    <string name="code2_name">Code 2</string>
+    <string name="code3_name">Code 3</string>
+    <string name="code4_name">Code 4</string>
+    <string name="code5_name">Code 5</string>
+    <string name="code6_name">Code 6</string>
+    <string name="code7_name">Code 7</string>
+    <string name="code8_name">Code 8</string>
+    <string name="code9_name">Code 9</string>
+    <string name="code10_name">Code 10</string>
+    <string name="code11_name">Code 11</string>
 </resources>

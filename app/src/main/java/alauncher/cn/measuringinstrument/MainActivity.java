@@ -12,6 +12,7 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.view.CalibrationActivity;
+import alauncher.cn.measuringinstrument.view.CodeActivity;
 import alauncher.cn.measuringinstrument.view.ParameterManagementActivity;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -91,6 +92,9 @@ public class MainActivity extends BaseActivity {
                             break;
                         case 3:
                             openActivty(CalibrationActivity.class);
+                            break;
+                        case 4:
+                            openActivty(CodeActivity.class);
                             break;
                         default:
                             break;
