@@ -64,4 +64,37 @@
     <string name="code9_name">Code 9</string>
     <string name="code10_name">Code 10</string>
     <string name="code11_name">Code 11</string>
+
+
+    <string name="on_job">On Job</string>
+    <string name="leave_job">Leave Job</string>
+    <string name="status">Status</string>
+    <string name="id">ID</string>
+    <string name="email">Email</string>
+    <string name="accout">Accout</string>
+    <string name="communication">Communication</string>
+    <string name="io">I/O</string>
+    <string name="system_backup">System backup</string>
+    <string name="force_calibration">Force calibration</string>
+    <string name="store_method">Store Method</string>
+    <string name="automatic">Automatic</string>
+    <string name="manual">Manual</string>
+    <string name="store_condition">Store Condition</string>
+    <string name="second">Second</string>
+    <string name="mm">mm</string>
+    <string name="retention_time">Retention time</string>
+    <string name="total_production">Total production</string>
+    <string name="qualified_number">Qualified</string>
+    <string name="defective">Defective</string>
+    <string name="delete_statistical">Delete Statistical</string>
+    <string name="delete_result">Delete result</string>
+    <string name="handler">Handler</string>
+    <string name="time">Time</string>
+    <string name="workpiece_id">WorkpieceID</string>
+    <string name="event">Event</string>
+    <string name="result">Result</string>
+    <string name="m1">M1</string>
+    <string name="m2">M2</string>
+    <string name="m3">M3</string>
+    <string name="m4">M4</string>
 </resources>

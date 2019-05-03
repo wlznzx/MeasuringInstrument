@@ -1,9 +1,9 @@
 package alauncher.cn.measuringinstrument.bean;
 
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
-import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * 日期：2019/4/25 0025 9:27
@@ -12,7 +12,7 @@ import org.greenrobot.greendao.annotation.Generated;
  * 描述：
  */
 @Entity
-public class Users {
+public class User {
     @Id
     public String accout;
     @NotNull
@@ -22,22 +22,22 @@ public class Users {
 
     public int status;
     public String email;
-    public long num;
 
+    public long id;
 
-    @Generated(hash = 1792319412)
-    public Users(String accout, @NotNull String name, @NotNull String password,
-                 int status, String email, long num) {
+    @Generated(hash = 1868478386)
+    public User(String accout, @NotNull String name, @NotNull String password,
+            int status, String email, long id) {
         this.accout = accout;
         this.name = name;
         this.password = password;
         this.status = status;
         this.email = email;
-        this.num = num;
+        this.id = id;
     }
 
-    @Generated(hash = 2146996206)
-    public Users() {
+    @Generated(hash = 586692638)
+    public User() {
     }
 
     public String getAccout() {
@@ -80,11 +80,11 @@ public class Users {
         this.email = email;
     }
 
-    public long getNum() {
-        return this.num;
+    public long getId() {
+        return this.id;
     }
 
-    public void setNum(long num) {
-        this.num = num;
+    public void setId(long id) {
+        this.id = id;
     }
 }

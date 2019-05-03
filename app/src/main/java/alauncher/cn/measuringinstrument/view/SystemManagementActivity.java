@@ -1,30 +1,22 @@
-package alauncher.cn.measuringinstrument;
+package alauncher.cn.measuringinstrument.view;
 
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
-import alauncher.cn.measuringinstrument.view.AccoutManagementActivity;
-import alauncher.cn.measuringinstrument.view.CalibrationActivity;
-import alauncher.cn.measuringinstrument.view.CodeActivity;
-import alauncher.cn.measuringinstrument.view.DataActivity;
-import alauncher.cn.measuringinstrument.view.ParameterManagementActivity;
-import alauncher.cn.measuringinstrument.view.StatisticalActivity;
-import alauncher.cn.measuringinstrument.view.StoreActivity;
-import alauncher.cn.measuringinstrument.view.SystemManagementActivity;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 
-public class MainActivity extends BaseActivity {
+public class SystemManagementActivity extends BaseActivity {
 
     @BindView(R.id.rv)
     RecyclerView rv;
@@ -42,16 +34,10 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView() {
         List<MainInfo> _datas = new ArrayList();
-        _datas.add(new MainInfo(R.string.measuring, R.drawable.equalizer));
-        _datas.add(new MainInfo(R.string.data_query, R.drawable.find_in_page));
-        _datas.add(new MainInfo(R.string.parameter_management, R.drawable.functions));
-        _datas.add(new MainInfo(R.string.calibration, R.drawable.straighten));
-        _datas.add(new MainInfo(R.string.user_management, R.drawable.account_box));
-        _datas.add(new MainInfo(R.string.program_management, R.drawable.code));
-        _datas.add(new MainInfo(R.string.system_management, R.drawable.phonelink_setup));
-        _datas.add(new MainInfo(R.string.store, R.drawable.archive));
-        _datas.add(new MainInfo(R.string.spc_analysis, R.drawable.show_chart));
-        _datas.add(new MainInfo(R.string.statistical_report, R.drawable.assignment));
+        _datas.add(new MainInfo(R.string.communication, R.drawable.settings_ethernet));
+        _datas.add(new MainInfo(R.string.io, R.drawable.settings_input_svideo));
+        _datas.add(new MainInfo(R.string.system_backup, R.drawable.archive));
+        _datas.add(new MainInfo(R.string.force_calibration, R.drawable.straighten));
         MainLayoutAdapter _adapter = new MainLayoutAdapter(_datas);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
@@ -81,7 +67,7 @@ public class MainActivity extends BaseActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return ViewHolder.createViewHolder(MainActivity.this, parent, R.layout.main_layout_item);
+            return ViewHolder.createViewHolder(SystemManagementActivity.this, parent, R.layout.main_layout_item);
         }
 
         @Override
@@ -92,29 +78,13 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     switch (position) {
-                        case 1:
-                            openActivty(DataActivity.class);
-                            break;
                         case 2:
-                            openActivty(ParameterManagementActivity.class);
                             break;
                         case 3:
-                            openActivty(CalibrationActivity.class);
                             break;
                         case 4:
-                            openActivty(AccoutManagementActivity.class);
                             break;
                         case 5:
-                            openActivty(CodeActivity.class);
-                            break;
-                        case 6:
-                            openActivty(SystemManagementActivity.class);
-                            break;
-                        case 7:
-                            openActivty(StoreActivity.class);
-                            break;
-                        case 9:
-                            openActivty(StatisticalActivity.class);
                             break;
                         default:
                             break;
