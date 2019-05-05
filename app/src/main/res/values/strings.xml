@@ -97,4 +97,7 @@
     <string name="m2">M2</string>
     <string name="m3">M3</string>
     <string name="m4">M4</string>
+    <string name="get_value">GetValue</string>
+    <string name="additional">Additional</string>
+    <string name="swap">Swap</string>
 </resources>

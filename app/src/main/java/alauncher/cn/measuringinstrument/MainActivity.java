@@ -15,6 +15,7 @@ import alauncher.cn.measuringinstrument.view.AccoutManagementActivity;
 import alauncher.cn.measuringinstrument.view.CalibrationActivity;
 import alauncher.cn.measuringinstrument.view.CodeActivity;
 import alauncher.cn.measuringinstrument.view.DataActivity;
+import alauncher.cn.measuringinstrument.view.MeasuringActivity;
 import alauncher.cn.measuringinstrument.view.ParameterManagementActivity;
 import alauncher.cn.measuringinstrument.view.StatisticalActivity;
 import alauncher.cn.measuringinstrument.view.StoreActivity;
@@ -92,6 +93,9 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     switch (position) {
+                        case 0:
+                            openActivty(MeasuringActivity.class);
+                            break;
                         case 1:
                             openActivty(DataActivity.class);
                             break;

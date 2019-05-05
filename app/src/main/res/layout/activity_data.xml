@@ -10,82 +10,81 @@
         layout="@layout/action_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height" />
-    
-    
+
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:orientation="horizontal"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:gravity="center_vertical">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/handler"
-                />
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/handler" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/time"
-                style="@style/TextStyle"
-                />
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/time" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="@style/TextStyle"
-                android:layout_weight="1"
-                android:text="@string/workpiece_id"
-                />
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/workpiece_id" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="@style/TextStyle"
-                android:layout_weight="1"
-                android:text="@string/event"
-                />
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/event" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="@style/TextStyle"
-                android:layout_weight="1"
-                android:text="@string/result"/>
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/result" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                style="@style/TextStyle"
-                android:text="@string/m1"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                style="@style/TextStyle"
-                android:text="@string/m2"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                style="@style/TextStyle"
-                android:text="@string/m3"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                style="@style/TextStyle"
-                android:text="@string/m4"/>
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m1" />
 
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m2" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m3" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/m4" />
+
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="12dp" />
         </LinearLayout>
 
     </HorizontalScrollView>

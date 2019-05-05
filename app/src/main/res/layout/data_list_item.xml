@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/data_handler"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/handler" />
+
+    <TextView
+        android:id="@+id/data_time"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/time" />
+
+    <TextView
+        android:id="@+id/data_workpiece_id"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/workpiece_id" />
+
+    <TextView
+        android:id="@+id/data_event"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/event" />
+
+    <TextView
+        android:id="@+id/data_result"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/result" />
+
+    <TextView
+        android:id="@+id/data_m1"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m1" />
+
+    <TextView
+        android:id="@+id/data_m2"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m2" />
+
+    <TextView
+        android:id="@+id/data_m3"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m3" />
+
+    <TextView
+        android:id="@+id/data_m4"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4" />
+
+</LinearLayout>
