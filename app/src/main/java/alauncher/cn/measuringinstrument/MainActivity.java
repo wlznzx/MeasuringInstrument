@@ -4,7 +4,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +58,7 @@ public class MainActivity extends BaseActivity {
         rv.addItemDecoration(new RecyclerItemDecoration(24, 3));
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(_adapter);
+
     }
 
     class MainInfo {
@@ -94,31 +94,31 @@ public class MainActivity extends BaseActivity {
                 public void onClick(View v) {
                     switch (position) {
                         case 0:
-                            openActivty(MeasuringActivity.class);
+                            openActivty(MeasuringActivity.class, datas.get(position).strID);
                             break;
                         case 1:
-                            openActivty(DataActivity.class);
+                            openActivty(DataActivity.class, datas.get(position).strID);
                             break;
                         case 2:
-                            openActivty(ParameterManagementActivity.class);
+                            openActivty(ParameterManagementActivity.class, datas.get(position).strID);
                             break;
                         case 3:
-                            openActivty(CalibrationActivity.class);
+                            openActivty(CalibrationActivity.class, datas.get(position).strID);
                             break;
                         case 4:
-                            openActivty(AccoutManagementActivity.class);
+                            openActivty(AccoutManagementActivity.class, datas.get(position).strID);
                             break;
                         case 5:
-                            openActivty(CodeActivity.class);
+                            openActivty(CodeActivity.class, datas.get(position).strID);
                             break;
                         case 6:
-                            openActivty(SystemManagementActivity.class);
+                            openActivty(SystemManagementActivity.class, datas.get(position).strID);
                             break;
                         case 7:
-                            openActivty(StoreActivity.class);
+                            openActivty(StoreActivity.class, datas.get(position).strID);
                             break;
                         case 9:
-                            openActivty(StatisticalActivity.class);
+                            openActivty(StatisticalActivity.class, datas.get(position).strID);
                             break;
                         default:
                             break;

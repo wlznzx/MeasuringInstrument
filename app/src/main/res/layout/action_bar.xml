@@ -9,7 +9,7 @@
         android:id="@+id/action_bar_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="14dp"
+        android:layout_marginLeft="10dp"
         android:src="@drawable/filled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

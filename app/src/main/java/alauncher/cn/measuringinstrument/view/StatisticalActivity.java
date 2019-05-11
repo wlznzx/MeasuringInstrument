@@ -123,12 +123,12 @@ public class StatisticalActivity extends BaseActivity {
                 xAxis.setDrawLimitLinesBehindData(true);
 
                 // add limit lines
-                 yAxis.addLimitLine(ll1);
-                 yAxis.addLimitLine(ll2);
+                yAxis.addLimitLine(ll1);
+                yAxis.addLimitLine(ll2);
                 //xAxis.addLimitLine(llXAxis);
             }
         }
-        setDatas(10,100);
+        setDatas(10, 100);
     }
 
     private void setDatas(int count, float range) {

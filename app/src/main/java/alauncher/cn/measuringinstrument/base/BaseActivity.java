@@ -15,11 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.lang.reflect.Field;
 
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.mvpbase.BaseView;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
@@ -28,6 +31,12 @@ public abstract class BaseActivity extends Activity implements BaseView {
     private static final String TAG = "BaseActivity";
 
     protected BaseActivity mActivity;
+
+    @BindView(R.id.action_bar_icon)
+    ImageView actionIV;
+
+    @BindView(R.id.action_bar_title)
+    TextView actionTitleTV;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +57,18 @@ public abstract class BaseActivity extends Activity implements BaseView {
         //初始化布局
         initLayout();
         ButterKnife.bind(this);
+        int titleID = getIntent().getIntExtra("Title", -1);
+        if (titleID != -1) {
+            actionTitleTV.setText(getIntent().getIntExtra("Title", R.string.main_title));
+            actionIV.setImageResource(R.drawable.arrow_back_24px);
+            actionIV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+        }
+
         //初始化View
         initView();
 
@@ -136,6 +157,12 @@ public abstract class BaseActivity extends Activity implements BaseView {
 
     protected void openActivty(Class<?> mclass) {
         Intent intent = new Intent(this, mclass);
+        startActivity(intent);
+    }
+
+    protected void openActivty(Class<?> mclass, int title) {
+        Intent intent = new Intent(this, mclass);
+        intent.putExtra("Title", title);
         startActivity(intent);
     }
 
