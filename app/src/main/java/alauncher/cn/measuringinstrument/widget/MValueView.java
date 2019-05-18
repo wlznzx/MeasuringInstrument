@@ -5,10 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -24,7 +22,13 @@ public class MValueView extends View {
     private double mValue;
     private double offect;
 
-    private double offectHeight;
+    private float offectHeight;
+
+    private float stepWidth;
+
+    final private int border = 1;
+
+    final private int textMargin = 4;
 
     public MValueView(Context context) {
         super(context);
@@ -64,16 +68,36 @@ public class MValueView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         offectHeight = getMeasuredHeight() / 6;
+        stepWidth = getMeasuredWidth() / 4;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        // 绘制刻度线
+        paint.setColor(Color.RED);
+        canvas.drawLine(stepWidth + border, offectHeight + border, stepWidth * 3 + border, offectHeight + border, paint);
+        canvas.drawText("HL", stepWidth * 3 + border + textMargin, offectHeight + border + textMargin, paint);
+
+        canvas.drawLine(stepWidth + border, offectHeight * 5 + border, stepWidth * 3 + border, offectHeight * 5 + border, paint);
+        canvas.drawText("LL", stepWidth * 3 + border + textMargin, offectHeight * 5 + border + textMargin, paint);
+
+        paint.setColor(Color.YELLOW);
+        canvas.drawLine(stepWidth + border, offectHeight * 2 + border, stepWidth * 3 + border, offectHeight * 2 + border, paint);
+        canvas.drawText("HW", stepWidth * 3 + border + textMargin, offectHeight * 2 + border + textMargin, paint);
+
+        canvas.drawLine(stepWidth + border, offectHeight * 4 + border, stepWidth * 3 + border, offectHeight * 4 + border, paint);
+        canvas.drawText("LW", stepWidth * 3 + border + textMargin, offectHeight * 4 + border + textMargin, paint);
+
+        paint.setColor(Color.GREEN);
+        // canvas.drawLine(stepWidth + border, offectHeight * 3 + border, stepWidth * 3 + border, offectHeight * 3 + border, paint);
+        canvas.drawText("N", stepWidth * 3 + border + textMargin, offectHeight * 3 + border + textMargin, paint);
+
         // 绘制Base矩形；
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.GRAY);
-        paint.setStrokeWidth(1);
-        rect = new RectF(2, 2, getMeasuredWidth() - 2, getBottom() - 14);
+        paint.setStrokeWidth(border * 2);
+        rect = new RectF(stepWidth, 2, stepWidth * 3, getBottom() - 14);
         canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
         canvas.drawRoundRect(rect, 4, 4, paint);
 
@@ -81,13 +105,13 @@ public class MValueView extends View {
         if (_value > 0) {
             float _top = (float) ((3 * offectHeight) - _value / offect * offectHeight);
             float _bottom = getMeasuredHeight() / 2;
-            rect = new RectF(3, 3 + _top, getMeasuredWidth() - 3, _bottom);
+            rect = new RectF(stepWidth + border, 3 + _top, stepWidth * 3 - border, _bottom);
         } else {
             _value = Math.abs(_value);
             float _top = getMeasuredHeight() / 2;
             float _bottom = (float) (_top + _value / offect * offectHeight);
-            rect = new RectF(3, 3 + _top, getMeasuredWidth() - 3, _bottom);
-    }
+            rect = new RectF(stepWidth + border, 3 + _top, stepWidth * 3 - border, _bottom);
+        }
         _value = Math.abs(_value);
         if (_value > 2 * offect) {
             paint.setColor(Color.RED);

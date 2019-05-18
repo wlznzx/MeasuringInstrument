@@ -100,4 +100,6 @@
     <string name="get_value">GetValue</string>
     <string name="additional">Additional</string>
     <string name="swap">Swap</string>
+    <string name="unqualified_number">Unqualified</string>
+    <string name="DRate">Defective Rate</string>
 </resources>

@@ -105,7 +105,7 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
 
                 // horizontal grid lines
                 yAxis.enableGridDashedLine(10f, 10f, 0f);
-
+                
                 // axis range
                 yAxis.setAxisMaximum(200f);
                 yAxis.setAxisMinimum(-50f);
