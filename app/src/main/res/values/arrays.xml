@@ -12,4 +12,11 @@
         <item>two piece</item>
     </string-array>
 
+    <string-array name="m_values" translatable="false">
+        <item>M1</item>
+        <item>M2</item>
+        <item>M3</item>
+        <item>M4</item>
+    </string-array>
+
 </resources>

@@ -16,6 +16,7 @@ import alauncher.cn.measuringinstrument.view.CodeActivity;
 import alauncher.cn.measuringinstrument.view.DataActivity;
 import alauncher.cn.measuringinstrument.view.MeasuringActivity;
 import alauncher.cn.measuringinstrument.view.ParameterManagementActivity;
+import alauncher.cn.measuringinstrument.view.SPCStatisticalActivity;
 import alauncher.cn.measuringinstrument.view.StatisticalActivity;
 import alauncher.cn.measuringinstrument.view.StoreActivity;
 import alauncher.cn.measuringinstrument.view.SystemManagementActivity;
@@ -116,6 +117,9 @@ public class MainActivity extends BaseActivity {
                             break;
                         case 7:
                             openActivty(StoreActivity.class, datas.get(position).strID);
+                            break;
+                        case 8:
+                            openActivty(SPCStatisticalActivity.class, datas.get(position).strID);
                             break;
                         case 9:
                             openActivty(StatisticalActivity.class, datas.get(position).strID);

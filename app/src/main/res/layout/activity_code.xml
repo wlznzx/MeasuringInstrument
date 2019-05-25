@@ -51,6 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:checked="true"
                 android:text="01" />
 
             <RadioButton
@@ -58,70 +59,80 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false" />
+                android:checked="false"
+                android:text="02"/>
 
             <RadioButton
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false" />
+                android:checked="false"
+                android:text="03"/>
 
             <RadioButton
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false" />
+                android:checked="false"
+                android:text="04"/>
 
             <RadioButton
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false" />
+                android:checked="false"
+                android:text="05"/>
 
             <RadioButton
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false" />
+                android:checked="false"
+                android:text="06"/>
 
             <RadioButton
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false" />
+                android:checked="false"
+                android:text="07"/>
 
             <RadioButton
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false" />
+                android:checked="false"
+                android:text="08"/>
 
             <RadioButton
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false" />
+                android:checked="false"
+                android:text="09"/>
 
             <RadioButton
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false" />
+                android:checked="false"
+                android:text="10"/>
 
             <RadioButton
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false" />
+                android:checked="false"
+                android:text="11"/>
         </RadioGroup>
 
 

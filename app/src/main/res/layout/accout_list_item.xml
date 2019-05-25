@@ -2,48 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:orientation="horizontal"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/accout_item_radio"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:src="@drawable/radio_checked" />
+        android:src="@drawable/uncheck_radio" />
 
     <TextView
         android:id="@+id/accout_tv"
+        style="@style/TextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/TextStyle"
         android:layout_weight="1" />
 
     <TextView
         android:id="@+id/accout_name_tv"
+        style="@style/TextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/TextStyle"
         android:layout_weight="1" />
 
     <TextView
         android:id="@+id/accout_status_tv"
+        style="@style/TextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <TextView
         android:id="@+id/accout_id_tv"
+        style="@style/TextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/TextStyle"
         android:layout_weight="1" />
 
     <TextView
         android:id="@+id/accout_email_tv"
+        style="@style/TextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/TextStyle"
         android:layout_weight="1" />
 
 </LinearLayout>

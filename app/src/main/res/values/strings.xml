@@ -102,4 +102,6 @@
     <string name="swap">Swap</string>
     <string name="unqualified_number">Unqualified</string>
     <string name="DRate">Defective Rate</string>
+    <string name="statistical_p">StatisticalP</string>
+    <string name="handler_line">HLine</string>
 </resources>

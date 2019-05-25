@@ -16,12 +16,13 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
+
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/store_method"
-            style="@style/TextStyle" />
+            android:text="@string/store_method" />
 
         <RadioGroup
             android:layout_width="0dp"
@@ -29,19 +30,20 @@
             android:layout_weight="4"
             android:orientation="horizontal">
 
-        <RadioButton
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/automatic" />
+            <RadioButton
+                style="@style/TextStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="@string/automatic" />
 
-        <RadioButton
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/manual"/>
+            <RadioButton
+                style="@style/TextStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/manual" />
         </RadioGroup>
     </LinearLayout>
 
@@ -49,99 +51,107 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/store_condition"
-            style="@style/TextStyle" />
+            android:text="@string/store_condition" />
 
         <EditText
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            style="@style/TextStyle">
-        </EditText>
+            android:text="M1"></EditText>
+
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="@style/TextStyle" />
+            android:layout_weight="1" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/upper_limit"
-            style="@style/TextStyle" />
+            android:text="@string/upper_limit" />
 
         <EditText
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            style="@style/TextStyle">
-        </EditText>
+            android:text="0.0000"></EditText>
+
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            style="@style/TextStyle"
-            android:text="@string/mm"/>
+            android:text="@string/mm" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/lower_limit"
-            style="@style/TextStyle" />
+            android:text="@string/lower_limit" />
 
         <EditText
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            style="@style/TextStyle">
-        </EditText>
+            android:text="0.0000"></EditText>
+
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            style="@style/TextStyle"
-            android:text="@string/mm"/>
+            android:text="@string/mm" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/retention_time"
-            style="@style/TextStyle" />
+            android:text="@string/retention_time" />
 
         <EditText
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            style="@style/TextStyle">
-        </EditText>
+            android:text="0.0"
+            android:layout_weight="3"></EditText>
+
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            style="@style/TextStyle"
-            android:text="@string/second"/>
+            android:text="@string/second" />
     </LinearLayout>
 
     <RelativeLayout
@@ -154,9 +164,9 @@
             android:id="@+id/save_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:background="@drawable/btn_selector"
-            android:text="@string/save"
-            android:layout_centerInParent="true" />
+            android:text="@string/save" />
     </RelativeLayout>
 
 </LinearLayout>

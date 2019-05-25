@@ -34,13 +34,13 @@ public class AccoutManagementActivity extends BaseActivity {
     @Override
     protected void initView() {
         List<User> _datas = new ArrayList();
-        _datas.add(new User());
-        _datas.add(new User("acccout","name","123456",1,"email",1234567891));
-        _datas.add(new User("acccout","name","123456",1,"email",1234567891));
-        _datas.add(new User("acccout","name","123456",1,"email",1234567891));
-        _datas.add(new User("acccout","name","123456",1,"email",1234567891));
-        _datas.add(new User("acccout","name","123456",1,"email",1234567891));
-        _datas.add(new User("acccout","name","123456",1,"email",1234567891));
+        // _datas.add(new User());
+        _datas.add(new User("acccout","admin","123456",1,"et_admin@.com",1));
+        _datas.add(new User("acccout","MANAGER2","123456",1,"MANAGER2_admin@.com",2));
+        _datas.add(new User("acccout","OPERATER1","123456",1,"OPERATER1_admin@.com",3));
+        _datas.add(new User("acccout","OPERATER2","123456",1,"OPERATER2_admin@.com",4));
+        // _datas.add(new User("acccout","name","123456",1,"email",1234567891));
+        // _datas.add(new User("acccout","name","123456",1,"email",1234567891));
         AccoutAdapter _adapter = new AccoutAdapter(_datas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AccoutManagementActivity.this);
         rv.setLayoutManager(layoutManager);
@@ -64,11 +64,11 @@ public class AccoutManagementActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.setImageResource(R.id.accout_item_radio, R.drawable.radio_checked);
+            if(position == 0)holder.setImageResource(R.id.accout_item_radio, R.drawable.radio_checked);
             holder.setText(R.id.accout_tv, "" + datas.get(position).accout);
             holder.setText(R.id.accout_id_tv, "" + datas.get(position).id);
             holder.setText(R.id.accout_name_tv, datas.get(position).name);
-            holder.setText(R.id.accout_status_tv, "" + R.string.on_job);
+            holder.setText(R.id.accout_status_tv, "" + mActivity.getString(R.string.on_job));
             holder.setText(R.id.accout_email_tv, "" + datas.get(position).email);
         }
 

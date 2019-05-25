@@ -97,4 +97,8 @@
     <string name="swap">切换</string>
     <string name="unqualified_number">不良品</string>
     <string name="DRate">不良率</string>
+    <string name="on_job">在职</string>
+    <string name="leave_job">离职</string>
+    <string name="statistical_p">分析参数</string>
+    <string name="handler_line">控制线</string>
 </resources>
