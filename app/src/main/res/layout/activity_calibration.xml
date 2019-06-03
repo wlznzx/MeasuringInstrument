@@ -29,28 +29,28 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="M1" />
+            android:text="CH1" />
 
         <TextView
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="M2" />
+            android:text="CH2" />
 
         <TextView
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="M3" />
+            android:text="CH3" />
 
         <TextView
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="M4" />
+            android:text="CH4" />
     </LinearLayout>
 
     <LinearLayout
@@ -331,6 +331,58 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="0.0070" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/k_value" />
+
+        <EditText
+            android:id="@+id/ch1_k_edt"
+            style="@style/EdNumOnlyStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:inputType="number|numberDecimal"
+            android:text="0.0070" />
+
+        <EditText
+            android:id="@+id/ch2_k_edt"
+            style="@style/EdNumOnlyStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0.0070" />
+
+        <EditText
+            android:id="@+id/ch3_k_edt"
+            style="@style/EdNumOnlyStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0.0070" />
+
+        <EditText
+            android:id="@+id/ch4_k_edt"
+            style="@style/EdNumOnlyStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0.0070" />
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -432,6 +484,52 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:text="@string/big_piece_ad" />
+
+        <EditText
+            android:id="@+id/big_piece_ad_m1"
+            style="@style/EdNumOnlyStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0.0070" />
+
+        <EditText
+            android:id="@+id/big_piece_ad_m2"
+            style="@style/EdNumOnlyStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0.0070" />
+
+        <EditText
+            android:id="@+id/big_piece_ad_m3"
+            style="@style/EdNumOnlyStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0.0070" />
+
+        <EditText
+            android:id="@+id/big_piece_ad_m4"
+            style="@style/EdNumOnlyStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0.0070" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="@string/measure_ad" />
 
         <EditText
@@ -513,51 +611,6 @@
             android:text="-0.0070" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/big_piece_ad" />
-
-        <EditText
-            android:id="@+id/big_piece_ad_m1"
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="0.0070" />
-
-        <EditText
-            android:id="@+id/big_piece_ad_m2"
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="0.0070" />
-
-        <EditText
-            android:id="@+id/big_piece_ad_m3"
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="0.0070" />
-
-        <EditText
-            android:id="@+id/big_piece_ad_m4"
-            style="@style/EdNumOnlyStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="0.0070" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

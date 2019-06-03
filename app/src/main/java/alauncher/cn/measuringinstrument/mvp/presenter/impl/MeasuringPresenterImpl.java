@@ -29,13 +29,15 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     private String sPort = "/dev/ttyMT1";
     private int iBaudRate = 115200;
+    private SerialHelper serialHelper;
 
     MeasuringActivityView mView;
 
-    private SerialHelper serialHelper;
-
     private boolean isCommandStart = false;
 
+    private int command_index = 0;
+    private byte[] command = new byte[12];
+    private byte[] _chValue = new byte[2];
     public ParameterBean mParameterBean;
 
     public MeasuringPresenterImpl(MeasuringActivityView view) {
@@ -44,9 +46,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         android.util.Log.d("wlDebug", mParameterBean.toString());
     }
 
-    private int command_index = 0;
-    private byte[] command = new byte[12];
-    private byte[] _chValue = new byte[2];
+
     private JEP jep = new JEP();
 
     @Override
@@ -56,7 +56,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             serialHelper = new SerialHelper(sPort, iBaudRate) {
                 @Override
                 protected void onDataReceived(ComBean paramComBean) {
-                    int length = paramComBean.bRec.length;
                     for (byte _byte : paramComBean.bRec) {
                         if (_byte == 0x53) {
                             isCommandStart = true;

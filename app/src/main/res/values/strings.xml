@@ -125,4 +125,5 @@
     <string name="btn_divide">÷</string>
     <string name="btn_equal">=</string>
     <string name="in_value">取值中.</string>
+    <string name="k_value">倍率</string>
 </resources>
