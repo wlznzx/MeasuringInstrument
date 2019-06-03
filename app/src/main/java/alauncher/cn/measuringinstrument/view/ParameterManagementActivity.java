@@ -5,18 +5,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.util.List;
 
+import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.bean.ParameterBean;
+import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
+import alauncher.cn.measuringinstrument.widget.CalculateDialog;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
 
 
-public class ParameterManagementActivity extends BaseActivity {
+public class ParameterManagementActivity extends BaseActivity implements CalculateDialog.CodeInterface {
 
     @BindViews({R.id.describe_m1, R.id.describe_m2, R.id.describe_m3, R.id.describe_m4})
     public List<EditText> describeEd;
@@ -45,6 +48,12 @@ public class ParameterManagementActivity extends BaseActivity {
     @BindView(R.id.save_btn)
     public Button saveBtn;
 
+    public DaoSession session;
+
+    public String m1_code, m2_code, m3_code, m4_code;
+
+    public ParameterBean mParameterBean;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,11 +66,22 @@ public class ParameterManagementActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        session = App.getDaoSession();
+        mParameterBean = session.getParameterBeanDao().load((long) 1);
+        if (mParameterBean == null) {
+            mParameterBean = new ParameterBean();
+            mParameterBean.setCode_id(1);
+        }
+        updateUI();
     }
 
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
-
+        if (session.getParameterBeanDao().load((long) 1) == null) {
+            session.getParameterBeanDao().insert(mParameterBean);
+        } else {
+            session.getParameterBeanDao().update(mParameterBean);
+        }
     }
 
     @OnClick({R.id.formula_m1, R.id.formula_m2, R.id.formula_m3, R.id.formula_m4})
@@ -83,7 +103,42 @@ public class ParameterManagementActivity extends BaseActivity {
             default:
                 break;
         }
-        Toast.makeText(this, "go m = " + m_num, Toast.LENGTH_SHORT).show();
-        openActivty(MGroupActivity.class);
+        // Toast.makeText(this, "go m = " + m_num, Toast.LENGTH_SHORT).show();
+        // openActivty(MGroupActivity.class);
+        CalculateDialog mCalculateDialog = new CalculateDialog(this);
+        // mCalculateDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mCalculateDialog.setTitle("M" + m_num + "程序设置");
+        mCalculateDialog.setM(m_num);
+        mCalculateDialog.setCodeInterface(this);
+        mCalculateDialog.show();
+    }
+
+    @Override
+    public void onCodeSet(int m, String code) {
+        android.util.Log.d("wlDebug", "M" + m + " = " + code);
+        switch (m) {
+            case 1:
+                mParameterBean.setM1_code(code);
+                break;
+            case 2:
+                mParameterBean.setM2_code(code);
+                break;
+            case 3:
+                mParameterBean.setM3_code(code);
+                break;
+            case 4:
+                mParameterBean.setM4_code(code);
+                break;
+        }
+        updateUI();
+    }
+
+    public void updateUI() {
+        if (mParameterBean != null) {
+            formulaEd.get(0).setText(mParameterBean.getM1_code());
+            formulaEd.get(1).setText(mParameterBean.getM2_code());
+            formulaEd.get(2).setText(mParameterBean.getM3_code());
+            formulaEd.get(3).setText(mParameterBean.getM4_code());
+        }
     }
 }

@@ -58,4 +58,22 @@
         <item name="android:layout_marginRight">10dp</item>
     </style>
 
+    <style name="ButtonBaseStyle">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">70dp</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="ButtonStyle" parent="ButtonBaseStyle">
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/btn_selector</item>
+    </style>
+
+    <style name="ButtonEqualStyle" parent="ButtonBaseStyle">
+
+        <item name="android:layout_weight">1</item>
+    </style>
 </resources>

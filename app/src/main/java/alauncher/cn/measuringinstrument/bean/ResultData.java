@@ -29,7 +29,7 @@ public class ResultData {
 
     @Generated(hash = 884313210)
     public ResultData(long id, String handler, long time, long workpieceId,
-            String event, int result, double m1, double m2, double m3, double m4) {
+                      String event, int result, double m1, double m2, double m3, double m4) {
         this.id = id;
         this.handler = handler;
         this.time = time;

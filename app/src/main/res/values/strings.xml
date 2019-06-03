@@ -104,4 +104,25 @@
     <string name="DRate">Defective Rate</string>
     <string name="statistical_p">StatisticalP</string>
     <string name="handler_line">HLine</string>
+
+
+    <string name="text1">显示文本框</string>
+    <string name="relative">布局</string>
+    <string name="btn_1">1</string>
+    <string name="btn_2">2</string>
+    <string name="btn_3">3</string>
+    <string name="btn_4">4</string>
+    <string name="btn_5">5</string>
+    <string name="btn_6">6</string>
+    <string name="btn_7">7</string>
+    <string name="btn_8">8</string>
+    <string name="btn_9">9</string>
+    <string name="btn_0">0</string>
+    <string name="btn_clear">C</string>
+    <string name="btn_plus">+</string>
+    <string name="btn_minus">-</string>
+    <string name="btn_multiply">×</string>
+    <string name="btn_divide">÷</string>
+    <string name="btn_equal">=</string>
+    <string name="in_value">取值中.</string>
 </resources>

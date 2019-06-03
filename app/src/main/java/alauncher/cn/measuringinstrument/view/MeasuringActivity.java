@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -24,6 +25,8 @@ import java.util.ArrayList;
 
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
+import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImpl;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import alauncher.cn.measuringinstrument.widget.MValueView;
 import androidx.core.content.ContextCompat;
@@ -39,6 +42,9 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     @BindView(R.id.m_chart)
     public LineChart chart;
 
+    @BindView(R.id.value_btn)
+    public TextView valueBtn;
+
     @BindViews({R.id.m1_text_value, R.id.m2_text_value, R.id.m3_text_value, R.id.m4_text_value})
     public TextView mTValues[];
 
@@ -50,10 +56,14 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
 
     private double[] curMValues = {1.8, -2.8, 0.8, -0.4};
 
+    private boolean inValue = false;
+
+    private MeasuringPresenter mMeasuringPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mMeasuringPresenter = new MeasuringPresenterImpl(this);
     }
 
     @Override
@@ -63,93 +73,26 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
 
     @Override
     protected void initView() {
-
-        {   // // Chart Style // //
-
-            // background color
-            chart.setBackgroundColor(Color.WHITE);
-
-            // disable description text
-            chart.getDescription().setEnabled(false);
-
-            // enable touch gestures
-            chart.setTouchEnabled(true);
-
-            // set listeners
-            // chart.setOnChartValueSelectedListener(this);
-            chart.setDrawGridBackground(false);
-
-            // enable scaling and dragging
-            chart.setDragEnabled(true);
-            chart.setScaleEnabled(true);
-            // chart.setScaleXEnabled(true);
-            // chart.setScaleYEnabled(true);
-
-            // force pinch zoom along both axis
-            chart.setPinchZoom(true);
-
-            XAxis xAxis;
-            {   // // X-Axis Style // //
-                xAxis = chart.getXAxis();
-
-                // vertical grid lines
-                xAxis.enableGridDashedLine(10f, 10f, 0f);
-            }
-
-            YAxis yAxis;
-            {   // // Y-Axis Style // //
-                yAxis = chart.getAxisLeft();
-
-                // disable dual axis (only use LEFT axis)
-                chart.getAxisRight().setEnabled(false);
-
-                // horizontal grid lines
-                yAxis.enableGridDashedLine(10f, 10f, 0f);
-                
-                // axis range
-                yAxis.setAxisMaximum(200f);
-                yAxis.setAxisMinimum(-50f);
-            }
-
-
-            {   // // Create Limit Lines // //
-                LimitLine llXAxis = new LimitLine(9f, "Index 10");
-                llXAxis.setLineWidth(4f);
-                llXAxis.enableDashedLine(10f, 10f, 0f);
-                llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-                llXAxis.setTextSize(10f);
-                llXAxis.setTypeface(tfRegular);
-
-                LimitLine ll1 = new LimitLine(150f, "Upper Limit");
-                ll1.setLineWidth(2f);
-                ll1.setLineColor(R.color.baseColor);
-                ll1.enableDashedLine(10f, 10f, 0f);
-                ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll1.setTextSize(10f);
-                ll1.setTypeface(tfRegular);
-
-                LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
-                ll2.setLineWidth(2f);
-                ll2.setLineColor(R.color.baseColor);
-                ll2.enableDashedLine(10f, 10f, 0f);
-                ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-                ll2.setTextSize(10f);
-                ll2.setTypeface(tfRegular);
-
-                // draw limit lines behind data instead of on top
-                yAxis.setDrawLimitLinesBehindData(true);
-                xAxis.setDrawLimitLinesBehindData(true);
-
-                // add limit lines
-                yAxis.addLimitLine(ll1);
-                yAxis.addLimitLine(ll2);
-                //xAxis.addLimitLine(llXAxis);
-            }
-        }
-        setDatas(10, 100);
-
+        initChart();
         onMeasuringDataUpdate(curMValues);
     }
+
+
+    @OnClick(R.id.value_btn)
+    public void onValueClick() {
+        if (!inValue) {
+            // start 取值;
+            inValue = true;
+            mMeasuringPresenter.startMeasuing();
+            valueBtn.setText(R.string.in_value);
+        } else {
+            // stop 取值;
+            inValue = false;
+            mMeasuringPresenter.stopMeasuing();
+            valueBtn.setText(R.string.get_value);
+        }
+    }
+
 
     private void setDatas(int count, double range) {
         ArrayList<Entry> values = new ArrayList<>();
@@ -219,7 +162,13 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     @Override
     public void onMeasuringDataUpdate(double[] values) {
         curMValues = values;
-        updateMValues(curMValues);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateMValues(curMValues);
+            }
+        });
+
     }
 
 
@@ -328,6 +277,93 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                 mMValueViews[3].setMValue(mValues[3]);
                 break;
         }
+    }
+
+
+    private void initChart() {
+        {   // // Chart Style // //
+
+            // background color
+            chart.setBackgroundColor(Color.WHITE);
+
+            // disable description text
+            chart.getDescription().setEnabled(false);
+
+            // enable touch gestures
+            chart.setTouchEnabled(true);
+
+            // set listeners
+            // chart.setOnChartValueSelectedListener(this);
+            chart.setDrawGridBackground(false);
+
+            // enable scaling and dragging
+            chart.setDragEnabled(true);
+            chart.setScaleEnabled(true);
+            // chart.setScaleXEnabled(true);
+            // chart.setScaleYEnabled(true);
+
+            // force pinch zoom along both axis
+            chart.setPinchZoom(true);
+
+            XAxis xAxis;
+            {   // // X-Axis Style // //
+                xAxis = chart.getXAxis();
+
+                // vertical grid lines
+                xAxis.enableGridDashedLine(10f, 10f, 0f);
+            }
+
+            YAxis yAxis;
+            {   // // Y-Axis Style // //
+                yAxis = chart.getAxisLeft();
+
+                // disable dual axis (only use LEFT axis)
+                chart.getAxisRight().setEnabled(false);
+
+                // horizontal grid lines
+                yAxis.enableGridDashedLine(10f, 10f, 0f);
+
+                // axis range
+                yAxis.setAxisMaximum(200f);
+                yAxis.setAxisMinimum(-50f);
+            }
+
+
+            {   // // Create Limit Lines // //
+                LimitLine llXAxis = new LimitLine(9f, "Index 10");
+                llXAxis.setLineWidth(4f);
+                llXAxis.enableDashedLine(10f, 10f, 0f);
+                llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+                llXAxis.setTextSize(10f);
+                llXAxis.setTypeface(tfRegular);
+
+                LimitLine ll1 = new LimitLine(150f, "Upper Limit");
+                ll1.setLineWidth(2f);
+                ll1.setLineColor(R.color.baseColor);
+                ll1.enableDashedLine(10f, 10f, 0f);
+                ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+                ll1.setTextSize(10f);
+                ll1.setTypeface(tfRegular);
+
+                LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
+                ll2.setLineWidth(2f);
+                ll2.setLineColor(R.color.baseColor);
+                ll2.enableDashedLine(10f, 10f, 0f);
+                ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+                ll2.setTextSize(10f);
+                ll2.setTypeface(tfRegular);
+
+                // draw limit lines behind data instead of on top
+                yAxis.setDrawLimitLinesBehindData(true);
+                xAxis.setDrawLimitLinesBehindData(true);
+
+                // add limit lines
+                yAxis.addLimitLine(ll1);
+                yAxis.addLimitLine(ll2);
+                //xAxis.addLimitLine(llXAxis);
+            }
+        }
+        setDatas(10, 100);
     }
 
 }

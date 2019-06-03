@@ -21,10 +21,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildToolsVersion '28.0.3'
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['src/main/assets', 'src/main/assets/']
+        }
+    }
+
 }
 
 greendao {
-    schemaVersion 1 //数据库版本号
+    schemaVersion 2 //数据库版本号
     daoPackage 'alauncher.cn.measuringinstrument.database.greenDao.db'
 // 设置DaoMaster、DaoSession、Dao 包名
     targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用.不要用/
@@ -33,7 +41,7 @@ greendao {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     // implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
@@ -41,8 +49,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'org.greenrobot:greendao:3.2.2' // add library
-
+    implementation 'org.greenrobot:greendao:3.2.2'
+    // add library
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
