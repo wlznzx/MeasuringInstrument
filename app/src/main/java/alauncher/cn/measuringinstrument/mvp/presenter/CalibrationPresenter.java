@@ -1,5 +1,7 @@
 package alauncher.cn.measuringinstrument.mvp.presenter;
 
+import alauncher.cn.measuringinstrument.bean.CalibrationBean;
+
 /**
  * 日期：2019/6/3 0003 21:11
  * 包名：alauncher.cn.measuringinstrument.mvp.presenter.impl
@@ -20,4 +22,8 @@ public interface CalibrationPresenter {
     double calculationC(double y, double k, double x);
 
     double calculationValue(double k, double x, double c);
+
+    void updateUI();
+
+    void saveCalibration(CalibrationBean bean);
 }

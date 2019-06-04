@@ -446,7 +446,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="-0.0070" />
+            android:text="" />
 
         <EditText
             android:id="@+id/small_piece_ad_m2"
@@ -454,7 +454,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="-0.0070" />
+            android:text="" />
 
         <EditText
             android:id="@+id/small_piece_ad_m3"
@@ -462,7 +462,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="-0.0070" />
+            android:text="" />
 
         <EditText
             android:id="@+id/small_piece_ad_m4"
@@ -470,7 +470,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="-0.0070" />
+            android:text="" />
     </LinearLayout>
 
     <LinearLayout
@@ -492,7 +492,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="0.0070" />
+            android:text="" />
 
         <EditText
             android:id="@+id/big_piece_ad_m2"
@@ -500,7 +500,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="0.0070" />
+            android:text="" />
 
         <EditText
             android:id="@+id/big_piece_ad_m3"
@@ -508,7 +508,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="0.0070" />
+            android:text="" />
 
         <EditText
             android:id="@+id/big_piece_ad_m4"
@@ -516,7 +516,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="0.0070" />
+            android:text="" />
     </LinearLayout>
 
     <LinearLayout
@@ -538,7 +538,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="0.0070" />
+            android:text="1086" />
 
         <EditText
             android:id="@+id/measure_ad_m2"
@@ -546,7 +546,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="0.0070" />
+            android:text="2031" />
 
         <EditText
             android:id="@+id/measure_ad_m3"
@@ -554,7 +554,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="0.0070" />
+            android:text="3036" />
 
         <EditText
             android:id="@+id/measure_ad_m4"
@@ -562,7 +562,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="0.0070" />
+            android:text="38C9" />
     </LinearLayout>
 
     <LinearLayout
@@ -584,7 +584,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="-0.0070" />
+            android:text="" />
 
         <EditText
             android:id="@+id/measure_value_m2"
@@ -592,7 +592,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="-0.0070" />
+            android:text="" />
 
         <EditText
             android:id="@+id/measure_value_m3"
@@ -600,7 +600,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="-0.0070" />
+            android:text="" />
 
         <EditText
             android:id="@+id/measure_value_m4"
@@ -608,7 +608,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="-0.0070" />
+            android:text="" />
     </LinearLayout>
 
 

@@ -39,15 +39,13 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     private byte[] command = new byte[12];
     private byte[] _chValue = new byte[2];
     public ParameterBean mParameterBean;
+    private JEP jep = new JEP();
 
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) 1);
-        android.util.Log.d("wlDebug", mParameterBean.toString());
+        if (mParameterBean != null) android.util.Log.d("wlDebug", mParameterBean.toString());
     }
-
-
-    private JEP jep = new JEP();
 
     @Override
     public void startMeasuing() {
@@ -131,11 +129,13 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
         try {
             serialHelper.open();
-        } catch (IOException e) {
+        } catch (Exception e) {
+            Toast.makeText((Context) mView, "串口打开失败.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
 
+    // 5301 1086 2031 3036 38C9 4E54
     @Override
     public void stopMeasuing() {
         android.util.Log.d("wlDebug", "stopMeasuing.");

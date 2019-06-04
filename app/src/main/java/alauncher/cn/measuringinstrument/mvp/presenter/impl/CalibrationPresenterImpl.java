@@ -1,7 +1,10 @@
 package alauncher.cn.measuringinstrument.mvp.presenter.impl;
 
-import java.io.IOException;
+import android.content.Context;
+import android.widget.Toast;
 
+import alauncher.cn.measuringinstrument.App;
+import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.mvp.presenter.CalibrationPresenter;
 import alauncher.cn.measuringinstrument.view.activity_view.CalibrationActivityView;
 import tp.xmaihh.serialport.SerialHelper;
@@ -24,14 +27,16 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
     private byte[] command = new byte[12];
     private byte[] _chValue = new byte[2];
 
-
     CalibrationActivityView mView;
+
+    private CalibrationBean mCalibrationBean;
 
     public CalibrationPresenterImpl(CalibrationActivityView view) {
         mView = view;
-//        mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) 1);
-//        android.util.Log.d("wlDebug", mParameterBean.toString());
+        mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) 1);
+        if (mCalibrationBean != null) android.util.Log.d("wlDebug", mCalibrationBean.toString());
     }
+
 
     @Override
     public void startValueing() {
@@ -78,7 +83,8 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
         }
         try {
             serialHelper.open();
-        } catch (IOException e) {
+        } catch (Exception e) {
+            Toast.makeText((Context) mView, "串口打开失败.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -109,5 +115,20 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
     @Override
     public double calculationValue(double k, double x, double c) {
         return k * x + c;
+    }
+
+    @Override
+    public void updateUI() {
+        mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) 1);
+        if (mView != null) mView.onUIUpdate(mCalibrationBean);
+    }
+
+    @Override
+    public void saveCalibration(CalibrationBean bean) {
+        if (App.getDaoSession().getCalibrationBeanDao().load((long) 1) == null) {
+            App.getDaoSession().getCalibrationBeanDao().insert(bean);
+        } else {
+            App.getDaoSession().getCalibrationBeanDao().update(bean);
+        }
     }
 }

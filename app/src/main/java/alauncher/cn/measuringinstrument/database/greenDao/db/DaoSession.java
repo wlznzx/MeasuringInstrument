@@ -8,13 +8,13 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
-import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.bean.ResultData;
+import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 
-import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultDataDao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.CalibrationBeanDao;
 
@@ -27,13 +27,13 @@ import alauncher.cn.measuringinstrument.database.greenDao.db.CalibrationBeanDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
-    private final DaoConfig userDaoConfig;
     private final DaoConfig resultDataDaoConfig;
+    private final DaoConfig userDaoConfig;
     private final DaoConfig parameterBeanDaoConfig;
     private final DaoConfig calibrationBeanDaoConfig;
 
-    private final UserDao userDao;
     private final ResultDataDao resultDataDao;
+    private final UserDao userDao;
     private final ParameterBeanDao parameterBeanDao;
     private final CalibrationBeanDao calibrationBeanDao;
 
@@ -41,11 +41,11 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
-        userDaoConfig = daoConfigMap.get(UserDao.class).clone();
-        userDaoConfig.initIdentityScope(type);
-
         resultDataDaoConfig = daoConfigMap.get(ResultDataDao.class).clone();
         resultDataDaoConfig.initIdentityScope(type);
+
+        userDaoConfig = daoConfigMap.get(UserDao.class).clone();
+        userDaoConfig.initIdentityScope(type);
 
         parameterBeanDaoConfig = daoConfigMap.get(ParameterBeanDao.class).clone();
         parameterBeanDaoConfig.initIdentityScope(type);
@@ -53,30 +53,30 @@ public class DaoSession extends AbstractDaoSession {
         calibrationBeanDaoConfig = daoConfigMap.get(CalibrationBeanDao.class).clone();
         calibrationBeanDaoConfig.initIdentityScope(type);
 
-        userDao = new UserDao(userDaoConfig, this);
         resultDataDao = new ResultDataDao(resultDataDaoConfig, this);
+        userDao = new UserDao(userDaoConfig, this);
         parameterBeanDao = new ParameterBeanDao(parameterBeanDaoConfig, this);
         calibrationBeanDao = new CalibrationBeanDao(calibrationBeanDaoConfig, this);
 
-        registerDao(User.class, userDao);
         registerDao(ResultData.class, resultDataDao);
+        registerDao(User.class, userDao);
         registerDao(ParameterBean.class, parameterBeanDao);
         registerDao(CalibrationBean.class, calibrationBeanDao);
     }
     
     public void clear() {
-        userDaoConfig.clearIdentityScope();
         resultDataDaoConfig.clearIdentityScope();
+        userDaoConfig.clearIdentityScope();
         parameterBeanDaoConfig.clearIdentityScope();
         calibrationBeanDaoConfig.clearIdentityScope();
     }
 
-    public UserDao getUserDao() {
-        return userDao;
-    }
-
     public ResultDataDao getResultDataDao() {
         return resultDataDao;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
     }
 
     public ParameterBeanDao getParameterBeanDao() {
