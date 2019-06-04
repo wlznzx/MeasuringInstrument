@@ -84,6 +84,18 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
 
     @Override
     public void onDataUpdate(double[] values) {
+        android.util.Log.d("wlDebug","1 = " + values[0]);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mCalibrationPresenter.stopValueing();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCalibrationPresenter.startValueing();
     }
 }

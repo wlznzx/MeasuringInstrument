@@ -1,5 +1,7 @@
 package alauncher.cn.measuringinstrument.mvp.presenter.impl;
 
+import java.io.IOException;
+
 import alauncher.cn.measuringinstrument.mvp.presenter.CalibrationPresenter;
 import alauncher.cn.measuringinstrument.view.activity_view.CalibrationActivityView;
 import tp.xmaihh.serialport.SerialHelper;
@@ -73,6 +75,11 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
                     }
                 }
             };
+        }
+        try {
+            serialHelper.open();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
