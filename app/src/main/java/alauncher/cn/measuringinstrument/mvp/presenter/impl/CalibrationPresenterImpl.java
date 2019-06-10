@@ -6,6 +6,7 @@ import android.widget.Toast;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.mvp.presenter.CalibrationPresenter;
+import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.view.activity_view.CalibrationActivityView;
 import tp.xmaihh.serialport.SerialHelper;
 import tp.xmaihh.serialport.bean.ComBean;
@@ -74,8 +75,10 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
                             Double ch4 = Double.parseDouble(ByteUtil.ByteArrToHex(_chValue));
                             android.util.Log.d("wlDebug", "ch4 = " + ch4);
 
-                            if (mView != null)
-                                mView.onDataUpdate(new double[]{ch1, ch2, ch3, ch4});
+                            if (mView != null) {
+
+                            }
+                            // mView.onDataUpdate(new int[]{ch1, ch2, ch3, ch4});
                         }
                     }
                 }
@@ -109,12 +112,14 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
 
     @Override
     public double calculationC(double y, double k, double x) {
-        return y - k * x;
+        // return y - k * x;
+        return Arith.sub(y, Arith.mul(k, x));
     }
 
     @Override
     public double calculationValue(double k, double x, double c) {
-        return k * x + c;
+        // return k * x + c;
+        return Arith.add(Arith.mul(k, x), c);
     }
 
     @Override

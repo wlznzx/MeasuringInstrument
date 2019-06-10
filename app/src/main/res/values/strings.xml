@@ -47,7 +47,7 @@
     <string name="measure_ad">Measure AD</string>
     <string name="measure_value">Measure</string>
     <string name="calibration_method">Calibration Method</string>
-    <string name="calibration_save">Calibration Save</string>
+    <string name="calibration_save">校验保存</string>
     <string name="select_all">Select All</string>
     <string name="samll_part_value">Small P value</string>
     <string name="big_part_value">Big P value</string>

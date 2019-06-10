@@ -118,7 +118,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:inputType="number|numberDecimal"
             android:text="0.0070" />
 
         <EditText
@@ -165,7 +164,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:inputType="number|numberDecimal"
+
             android:text="0.0070" />
 
         <EditText
@@ -212,7 +211,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:inputType="number|numberDecimal"
+
             android:text="0.0070" />
 
         <EditText
@@ -307,7 +306,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:inputType="number|numberDecimal"
+
             android:text="0.0070" />
 
         <EditText
@@ -400,7 +399,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:inputType="number|numberDecimal"
             android:text="@string/m1_group" />
 
         <Button

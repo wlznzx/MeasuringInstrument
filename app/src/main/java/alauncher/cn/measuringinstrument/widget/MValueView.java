@@ -30,6 +30,20 @@ public class MValueView extends View {
 
     final private int textMargin = 4;
 
+    // 名义值;
+    private double nominal_value = 0;
+    // 上公差值;
+    public double upper_tolerance_value = 0.7;
+    // 下公差值;
+    public double lower_tolerance_value = 0.7;
+    // 偏移值;
+    public double offect_value = 0.7;
+    // 分辨率;
+    public double resolution = 0.1;
+
+    // 高度的step;
+    public double stepHeight;
+
     public MValueView(Context context) {
         super(context);
     }
@@ -54,7 +68,7 @@ public class MValueView extends View {
 
     private void init() {
         paint = new Paint();
-        baseValue = 0;
+        baseValue = 1.5;
         offect = 1;
         mValue = 1.5;
     }
@@ -69,6 +83,8 @@ public class MValueView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         offectHeight = getMeasuredHeight() / 6;
         stepWidth = getMeasuredWidth() / 4;
+        // 将整条测量柱分为100等份;
+        stepHeight = getMeasuredHeight() / 100;
     }
 
     @Override

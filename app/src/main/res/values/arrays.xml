@@ -3,8 +3,11 @@
     <string-array name="resolution_values" translatable="false">
         <item>0.1</item>
         <item>0.2</item>
-        <item>0.3</item>
-        <item>0.4</item>
+        <item>0.5</item>
+        <item>1.0</item>
+        <item>2.0</item>
+        <item>5.0</item>
+        <item>Auto</item>
     </string-array>
 
     <string-array name="calibration_method_values" translatable="false">

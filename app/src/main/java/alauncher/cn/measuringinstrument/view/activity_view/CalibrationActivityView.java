@@ -7,5 +7,5 @@ public interface CalibrationActivityView {
 
     void onUIUpdate(CalibrationBean bean);
 
-    void onDataUpdate(double[] values);
+    void onDataUpdate(int[] values);
 }

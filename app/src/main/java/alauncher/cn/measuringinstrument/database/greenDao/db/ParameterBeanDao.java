@@ -25,10 +25,38 @@ public class ParameterBeanDao extends AbstractDao<ParameterBean, Long> {
      */
     public static class Properties {
         public final static Property Code_id = new Property(0, long.class, "code_id", true, "_id");
-        public final static Property M1_code = new Property(1, String.class, "m1_code", false, "M1_CODE");
-        public final static Property M2_code = new Property(2, String.class, "m2_code", false, "M2_CODE");
-        public final static Property M3_code = new Property(3, String.class, "m3_code", false, "M3_CODE");
-        public final static Property M4_code = new Property(4, String.class, "m4_code", false, "M4_CODE");
+        public final static Property M1_describe = new Property(1, String.class, "m1_describe", false, "M1_DESCRIBE");
+        public final static Property M2_describe = new Property(2, String.class, "m2_describe", false, "M2_DESCRIBE");
+        public final static Property M3_describe = new Property(3, String.class, "m3_describe", false, "M3_DESCRIBE");
+        public final static Property M4_describe = new Property(4, String.class, "m4_describe", false, "M4_DESCRIBE");
+        public final static Property M1_nominal_value = new Property(5, double.class, "m1_nominal_value", false, "M1_NOMINAL_VALUE");
+        public final static Property M2_nominal_value = new Property(6, double.class, "m2_nominal_value", false, "M2_NOMINAL_VALUE");
+        public final static Property M3_nominal_value = new Property(7, double.class, "m3_nominal_value", false, "M3_NOMINAL_VALUE");
+        public final static Property M4_nominal_value = new Property(8, double.class, "m4_nominal_value", false, "M4_NOMINAL_VALUE");
+        public final static Property M1_upper_tolerance_value = new Property(9, double.class, "m1_upper_tolerance_value", false, "M1_UPPER_TOLERANCE_VALUE");
+        public final static Property M2_upper_tolerance_value = new Property(10, double.class, "m2_upper_tolerance_value", false, "M2_UPPER_TOLERANCE_VALUE");
+        public final static Property M3_upper_tolerance_value = new Property(11, double.class, "m3_upper_tolerance_value", false, "M3_UPPER_TOLERANCE_VALUE");
+        public final static Property M4_upper_tolerance_value = new Property(12, double.class, "m4_upper_tolerance_value", false, "M4_UPPER_TOLERANCE_VALUE");
+        public final static Property M1_lower_tolerance_value = new Property(13, double.class, "m1_lower_tolerance_value", false, "M1_LOWER_TOLERANCE_VALUE");
+        public final static Property M2_lower_tolerance_value = new Property(14, double.class, "m2_lower_tolerance_value", false, "M2_LOWER_TOLERANCE_VALUE");
+        public final static Property M3_lower_tolerance_value = new Property(15, double.class, "m3_lower_tolerance_value", false, "M3_LOWER_TOLERANCE_VALUE");
+        public final static Property M4_lower_tolerance_value = new Property(16, double.class, "m4_lower_tolerance_value", false, "M4_LOWER_TOLERANCE_VALUE");
+        public final static Property M1_offect = new Property(17, double.class, "m1_offect", false, "M1_OFFECT");
+        public final static Property M2_offect = new Property(18, double.class, "m2_offect", false, "M2_OFFECT");
+        public final static Property M3_offect = new Property(19, double.class, "m3_offect", false, "M3_OFFECT");
+        public final static Property M4_offect = new Property(20, double.class, "m4_offect", false, "M4_OFFECT");
+        public final static Property M1_resolution = new Property(21, int.class, "m1_resolution", false, "M1_RESOLUTION");
+        public final static Property M2_resolution = new Property(22, int.class, "m2_resolution", false, "M2_RESOLUTION");
+        public final static Property M3_resolution = new Property(23, int.class, "m3_resolution", false, "M3_RESOLUTION");
+        public final static Property M4_resolution = new Property(24, int.class, "m4_resolution", false, "M4_RESOLUTION");
+        public final static Property M1_scale = new Property(25, double.class, "m1_scale", false, "M1_SCALE");
+        public final static Property M2_scale = new Property(26, double.class, "m2_scale", false, "M2_SCALE");
+        public final static Property M3_scale = new Property(27, double.class, "m3_scale", false, "M3_SCALE");
+        public final static Property M4_scale = new Property(28, double.class, "m4_scale", false, "M4_SCALE");
+        public final static Property M1_code = new Property(29, String.class, "m1_code", false, "M1_CODE");
+        public final static Property M2_code = new Property(30, String.class, "m2_code", false, "M2_CODE");
+        public final static Property M3_code = new Property(31, String.class, "m3_code", false, "M3_CODE");
+        public final static Property M4_code = new Property(32, String.class, "m4_code", false, "M4_CODE");
     }
 
 
@@ -45,10 +73,38 @@ public class ParameterBeanDao extends AbstractDao<ParameterBean, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"PARAMETER_BEAN\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 0: code_id
-                "\"M1_CODE\" TEXT," + // 1: m1_code
-                "\"M2_CODE\" TEXT," + // 2: m2_code
-                "\"M3_CODE\" TEXT," + // 3: m3_code
-                "\"M4_CODE\" TEXT);"); // 4: m4_code
+                "\"M1_DESCRIBE\" TEXT," + // 1: m1_describe
+                "\"M2_DESCRIBE\" TEXT," + // 2: m2_describe
+                "\"M3_DESCRIBE\" TEXT," + // 3: m3_describe
+                "\"M4_DESCRIBE\" TEXT," + // 4: m4_describe
+                "\"M1_NOMINAL_VALUE\" REAL NOT NULL ," + // 5: m1_nominal_value
+                "\"M2_NOMINAL_VALUE\" REAL NOT NULL ," + // 6: m2_nominal_value
+                "\"M3_NOMINAL_VALUE\" REAL NOT NULL ," + // 7: m3_nominal_value
+                "\"M4_NOMINAL_VALUE\" REAL NOT NULL ," + // 8: m4_nominal_value
+                "\"M1_UPPER_TOLERANCE_VALUE\" REAL NOT NULL ," + // 9: m1_upper_tolerance_value
+                "\"M2_UPPER_TOLERANCE_VALUE\" REAL NOT NULL ," + // 10: m2_upper_tolerance_value
+                "\"M3_UPPER_TOLERANCE_VALUE\" REAL NOT NULL ," + // 11: m3_upper_tolerance_value
+                "\"M4_UPPER_TOLERANCE_VALUE\" REAL NOT NULL ," + // 12: m4_upper_tolerance_value
+                "\"M1_LOWER_TOLERANCE_VALUE\" REAL NOT NULL ," + // 13: m1_lower_tolerance_value
+                "\"M2_LOWER_TOLERANCE_VALUE\" REAL NOT NULL ," + // 14: m2_lower_tolerance_value
+                "\"M3_LOWER_TOLERANCE_VALUE\" REAL NOT NULL ," + // 15: m3_lower_tolerance_value
+                "\"M4_LOWER_TOLERANCE_VALUE\" REAL NOT NULL ," + // 16: m4_lower_tolerance_value
+                "\"M1_OFFECT\" REAL NOT NULL ," + // 17: m1_offect
+                "\"M2_OFFECT\" REAL NOT NULL ," + // 18: m2_offect
+                "\"M3_OFFECT\" REAL NOT NULL ," + // 19: m3_offect
+                "\"M4_OFFECT\" REAL NOT NULL ," + // 20: m4_offect
+                "\"M1_RESOLUTION\" INTEGER NOT NULL ," + // 21: m1_resolution
+                "\"M2_RESOLUTION\" INTEGER NOT NULL ," + // 22: m2_resolution
+                "\"M3_RESOLUTION\" INTEGER NOT NULL ," + // 23: m3_resolution
+                "\"M4_RESOLUTION\" INTEGER NOT NULL ," + // 24: m4_resolution
+                "\"M1_SCALE\" REAL NOT NULL ," + // 25: m1_scale
+                "\"M2_SCALE\" REAL NOT NULL ," + // 26: m2_scale
+                "\"M3_SCALE\" REAL NOT NULL ," + // 27: m3_scale
+                "\"M4_SCALE\" REAL NOT NULL ," + // 28: m4_scale
+                "\"M1_CODE\" TEXT," + // 29: m1_code
+                "\"M2_CODE\" TEXT," + // 30: m2_code
+                "\"M3_CODE\" TEXT," + // 31: m3_code
+                "\"M4_CODE\" TEXT);"); // 32: m4_code
     }
 
     /** Drops the underlying database table. */
@@ -62,24 +118,68 @@ public class ParameterBeanDao extends AbstractDao<ParameterBean, Long> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getCode_id());
  
+        String m1_describe = entity.getM1_describe();
+        if (m1_describe != null) {
+            stmt.bindString(2, m1_describe);
+        }
+ 
+        String m2_describe = entity.getM2_describe();
+        if (m2_describe != null) {
+            stmt.bindString(3, m2_describe);
+        }
+ 
+        String m3_describe = entity.getM3_describe();
+        if (m3_describe != null) {
+            stmt.bindString(4, m3_describe);
+        }
+ 
+        String m4_describe = entity.getM4_describe();
+        if (m4_describe != null) {
+            stmt.bindString(5, m4_describe);
+        }
+        stmt.bindDouble(6, entity.getM1_nominal_value());
+        stmt.bindDouble(7, entity.getM2_nominal_value());
+        stmt.bindDouble(8, entity.getM3_nominal_value());
+        stmt.bindDouble(9, entity.getM4_nominal_value());
+        stmt.bindDouble(10, entity.getM1_upper_tolerance_value());
+        stmt.bindDouble(11, entity.getM2_upper_tolerance_value());
+        stmt.bindDouble(12, entity.getM3_upper_tolerance_value());
+        stmt.bindDouble(13, entity.getM4_upper_tolerance_value());
+        stmt.bindDouble(14, entity.getM1_lower_tolerance_value());
+        stmt.bindDouble(15, entity.getM2_lower_tolerance_value());
+        stmt.bindDouble(16, entity.getM3_lower_tolerance_value());
+        stmt.bindDouble(17, entity.getM4_lower_tolerance_value());
+        stmt.bindDouble(18, entity.getM1_offect());
+        stmt.bindDouble(19, entity.getM2_offect());
+        stmt.bindDouble(20, entity.getM3_offect());
+        stmt.bindDouble(21, entity.getM4_offect());
+        stmt.bindLong(22, entity.getM1_resolution());
+        stmt.bindLong(23, entity.getM2_resolution());
+        stmt.bindLong(24, entity.getM3_resolution());
+        stmt.bindLong(25, entity.getM4_resolution());
+        stmt.bindDouble(26, entity.getM1_scale());
+        stmt.bindDouble(27, entity.getM2_scale());
+        stmt.bindDouble(28, entity.getM3_scale());
+        stmt.bindDouble(29, entity.getM4_scale());
+ 
         String m1_code = entity.getM1_code();
         if (m1_code != null) {
-            stmt.bindString(2, m1_code);
+            stmt.bindString(30, m1_code);
         }
  
         String m2_code = entity.getM2_code();
         if (m2_code != null) {
-            stmt.bindString(3, m2_code);
+            stmt.bindString(31, m2_code);
         }
  
         String m3_code = entity.getM3_code();
         if (m3_code != null) {
-            stmt.bindString(4, m3_code);
+            stmt.bindString(32, m3_code);
         }
  
         String m4_code = entity.getM4_code();
         if (m4_code != null) {
-            stmt.bindString(5, m4_code);
+            stmt.bindString(33, m4_code);
         }
     }
 
@@ -88,24 +188,68 @@ public class ParameterBeanDao extends AbstractDao<ParameterBean, Long> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getCode_id());
  
+        String m1_describe = entity.getM1_describe();
+        if (m1_describe != null) {
+            stmt.bindString(2, m1_describe);
+        }
+ 
+        String m2_describe = entity.getM2_describe();
+        if (m2_describe != null) {
+            stmt.bindString(3, m2_describe);
+        }
+ 
+        String m3_describe = entity.getM3_describe();
+        if (m3_describe != null) {
+            stmt.bindString(4, m3_describe);
+        }
+ 
+        String m4_describe = entity.getM4_describe();
+        if (m4_describe != null) {
+            stmt.bindString(5, m4_describe);
+        }
+        stmt.bindDouble(6, entity.getM1_nominal_value());
+        stmt.bindDouble(7, entity.getM2_nominal_value());
+        stmt.bindDouble(8, entity.getM3_nominal_value());
+        stmt.bindDouble(9, entity.getM4_nominal_value());
+        stmt.bindDouble(10, entity.getM1_upper_tolerance_value());
+        stmt.bindDouble(11, entity.getM2_upper_tolerance_value());
+        stmt.bindDouble(12, entity.getM3_upper_tolerance_value());
+        stmt.bindDouble(13, entity.getM4_upper_tolerance_value());
+        stmt.bindDouble(14, entity.getM1_lower_tolerance_value());
+        stmt.bindDouble(15, entity.getM2_lower_tolerance_value());
+        stmt.bindDouble(16, entity.getM3_lower_tolerance_value());
+        stmt.bindDouble(17, entity.getM4_lower_tolerance_value());
+        stmt.bindDouble(18, entity.getM1_offect());
+        stmt.bindDouble(19, entity.getM2_offect());
+        stmt.bindDouble(20, entity.getM3_offect());
+        stmt.bindDouble(21, entity.getM4_offect());
+        stmt.bindLong(22, entity.getM1_resolution());
+        stmt.bindLong(23, entity.getM2_resolution());
+        stmt.bindLong(24, entity.getM3_resolution());
+        stmt.bindLong(25, entity.getM4_resolution());
+        stmt.bindDouble(26, entity.getM1_scale());
+        stmt.bindDouble(27, entity.getM2_scale());
+        stmt.bindDouble(28, entity.getM3_scale());
+        stmt.bindDouble(29, entity.getM4_scale());
+ 
         String m1_code = entity.getM1_code();
         if (m1_code != null) {
-            stmt.bindString(2, m1_code);
+            stmt.bindString(30, m1_code);
         }
  
         String m2_code = entity.getM2_code();
         if (m2_code != null) {
-            stmt.bindString(3, m2_code);
+            stmt.bindString(31, m2_code);
         }
  
         String m3_code = entity.getM3_code();
         if (m3_code != null) {
-            stmt.bindString(4, m3_code);
+            stmt.bindString(32, m3_code);
         }
  
         String m4_code = entity.getM4_code();
         if (m4_code != null) {
-            stmt.bindString(5, m4_code);
+            stmt.bindString(33, m4_code);
         }
     }
 
@@ -118,10 +262,38 @@ public class ParameterBeanDao extends AbstractDao<ParameterBean, Long> {
     public ParameterBean readEntity(Cursor cursor, int offset) {
         ParameterBean entity = new ParameterBean( //
             cursor.getLong(offset + 0), // code_id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // m1_code
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // m2_code
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // m3_code
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // m4_code
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // m1_describe
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // m2_describe
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // m3_describe
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // m4_describe
+            cursor.getDouble(offset + 5), // m1_nominal_value
+            cursor.getDouble(offset + 6), // m2_nominal_value
+            cursor.getDouble(offset + 7), // m3_nominal_value
+            cursor.getDouble(offset + 8), // m4_nominal_value
+            cursor.getDouble(offset + 9), // m1_upper_tolerance_value
+            cursor.getDouble(offset + 10), // m2_upper_tolerance_value
+            cursor.getDouble(offset + 11), // m3_upper_tolerance_value
+            cursor.getDouble(offset + 12), // m4_upper_tolerance_value
+            cursor.getDouble(offset + 13), // m1_lower_tolerance_value
+            cursor.getDouble(offset + 14), // m2_lower_tolerance_value
+            cursor.getDouble(offset + 15), // m3_lower_tolerance_value
+            cursor.getDouble(offset + 16), // m4_lower_tolerance_value
+            cursor.getDouble(offset + 17), // m1_offect
+            cursor.getDouble(offset + 18), // m2_offect
+            cursor.getDouble(offset + 19), // m3_offect
+            cursor.getDouble(offset + 20), // m4_offect
+            cursor.getInt(offset + 21), // m1_resolution
+            cursor.getInt(offset + 22), // m2_resolution
+            cursor.getInt(offset + 23), // m3_resolution
+            cursor.getInt(offset + 24), // m4_resolution
+            cursor.getDouble(offset + 25), // m1_scale
+            cursor.getDouble(offset + 26), // m2_scale
+            cursor.getDouble(offset + 27), // m3_scale
+            cursor.getDouble(offset + 28), // m4_scale
+            cursor.isNull(offset + 29) ? null : cursor.getString(offset + 29), // m1_code
+            cursor.isNull(offset + 30) ? null : cursor.getString(offset + 30), // m2_code
+            cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31), // m3_code
+            cursor.isNull(offset + 32) ? null : cursor.getString(offset + 32) // m4_code
         );
         return entity;
     }
@@ -129,10 +301,38 @@ public class ParameterBeanDao extends AbstractDao<ParameterBean, Long> {
     @Override
     public void readEntity(Cursor cursor, ParameterBean entity, int offset) {
         entity.setCode_id(cursor.getLong(offset + 0));
-        entity.setM1_code(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setM2_code(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setM3_code(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setM4_code(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setM1_describe(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setM2_describe(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setM3_describe(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setM4_describe(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setM1_nominal_value(cursor.getDouble(offset + 5));
+        entity.setM2_nominal_value(cursor.getDouble(offset + 6));
+        entity.setM3_nominal_value(cursor.getDouble(offset + 7));
+        entity.setM4_nominal_value(cursor.getDouble(offset + 8));
+        entity.setM1_upper_tolerance_value(cursor.getDouble(offset + 9));
+        entity.setM2_upper_tolerance_value(cursor.getDouble(offset + 10));
+        entity.setM3_upper_tolerance_value(cursor.getDouble(offset + 11));
+        entity.setM4_upper_tolerance_value(cursor.getDouble(offset + 12));
+        entity.setM1_lower_tolerance_value(cursor.getDouble(offset + 13));
+        entity.setM2_lower_tolerance_value(cursor.getDouble(offset + 14));
+        entity.setM3_lower_tolerance_value(cursor.getDouble(offset + 15));
+        entity.setM4_lower_tolerance_value(cursor.getDouble(offset + 16));
+        entity.setM1_offect(cursor.getDouble(offset + 17));
+        entity.setM2_offect(cursor.getDouble(offset + 18));
+        entity.setM3_offect(cursor.getDouble(offset + 19));
+        entity.setM4_offect(cursor.getDouble(offset + 20));
+        entity.setM1_resolution(cursor.getInt(offset + 21));
+        entity.setM2_resolution(cursor.getInt(offset + 22));
+        entity.setM3_resolution(cursor.getInt(offset + 23));
+        entity.setM4_resolution(cursor.getInt(offset + 24));
+        entity.setM1_scale(cursor.getDouble(offset + 25));
+        entity.setM2_scale(cursor.getDouble(offset + 26));
+        entity.setM3_scale(cursor.getDouble(offset + 27));
+        entity.setM4_scale(cursor.getDouble(offset + 28));
+        entity.setM1_code(cursor.isNull(offset + 29) ? null : cursor.getString(offset + 29));
+        entity.setM2_code(cursor.isNull(offset + 30) ? null : cursor.getString(offset + 30));
+        entity.setM3_code(cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31));
+        entity.setM4_code(cursor.isNull(offset + 32) ? null : cursor.getString(offset + 32));
      }
     
     @Override

@@ -1,6 +1,7 @@
 package alauncher.cn.measuringinstrument.mvp.presenter.impl;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.nfunk.jep.JEP;
@@ -11,9 +12,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import alauncher.cn.measuringinstrument.App;
+import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
+import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import tp.xmaihh.serialport.SerialHelper;
 import tp.xmaihh.serialport.bean.ComBean;
@@ -26,6 +29,8 @@ import tp.xmaihh.serialport.utils.ByteUtil;
  * 描述：
  */
 public class MeasuringPresenterImpl implements MeasuringPresenter {
+
+    final String TAG = "MeasuringPresenterImpl";
 
     private String sPort = "/dev/ttyMT1";
     private int iBaudRate = 115200;
@@ -41,10 +46,14 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     public ParameterBean mParameterBean;
     private JEP jep = new JEP();
 
+    public CalibrationBean mCalibrationBean;
+
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) 1);
-        if (mParameterBean != null) android.util.Log.d("wlDebug", mParameterBean.toString());
+        if (mParameterBean != null) android.util.Log.d(TAG, mParameterBean.toString());
+        mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) 1);
+        if (mCalibrationBean != null) Log.d(TAG, mCalibrationBean.toString());
     }
 
     @Override
@@ -84,6 +93,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             Double ch4 = Double.parseDouble(ByteUtil.ByteArrToHex(_chValue));
                             android.util.Log.d("wlDebug", "ch4 = " + ch4);
 
+
+                            // 如果参数管理不为空的话，那么需要进行公式的校验;
                             if (mParameterBean != null) {
                                 double m1 = ch1;
                                 double m2 = ch2;
@@ -144,5 +155,37 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         }
     }
 
+    /*
+     *
+     *   将读出来的AD字，通过校准，转化为校准后的测量值;
+     *
+     * */
+    private double[] doCH2P(String[] inputValue) {
+        double[] _values = new double[4];
+        if (mCalibrationBean != null) {
+            int x1 = Integer.parseInt(inputValue[1], 16);
+            double y1 = Arith.add(Arith.mul(mCalibrationBean.getCh1KValue(), x1), mCalibrationBean.getCh1CompensationValue());
+
+            int x2 = Integer.parseInt(inputValue[2], 16);
+            double y2 = Arith.add(Arith.mul(mCalibrationBean.getCh2KValue(), x2), mCalibrationBean.getCh2CompensationValue());
+
+            int x3 = Integer.parseInt(inputValue[3], 16);
+            double y3 = Arith.add(Arith.mul(mCalibrationBean.getCh3KValue(), x3), mCalibrationBean.getCh3CompensationValue());
+
+            int x4 = Integer.parseInt(inputValue[4], 16);
+            double y4 = Arith.add(Arith.mul(mCalibrationBean.getCh4KValue(), x4), mCalibrationBean.getCh4CompensationValue());
+
+            _values[0] = x1;
+            _values[1] = x2;
+            _values[2] = x3;
+            _values[3] = x4;
+        } else {
+            _values[0] = 1;
+            _values[1] = 2;
+            _values[2] = 3;
+            _values[3] = 4;
+        }
+        return _values;
+    }
 
 }
