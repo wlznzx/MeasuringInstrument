@@ -90,6 +90,9 @@ public class MValueView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        // HL刻度线
+
         // 绘制刻度线
         paint.setColor(Color.RED);
         canvas.drawLine(stepWidth + border, offectHeight + border, stepWidth * 3 + border, offectHeight + border, paint);
