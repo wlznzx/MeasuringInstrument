@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImpl;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
@@ -50,6 +51,9 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     @BindViews({R.id.m1_title, R.id.m2_title, R.id.m3_title, R.id.m4_title})
     public TextView mTitle[];
 
+    @BindViews({R.id.m1_describe, R.id.m2_describe, R.id.m3_describe, R.id.m4_describe})
+    public TextView mDescribes[];
+
     protected Typeface tfRegular;
     protected Typeface tfLight;
 
@@ -62,7 +66,6 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMeasuringPresenter = new MeasuringPresenterImpl(this);
     }
 
     @Override
@@ -72,8 +75,21 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
 
     @Override
     protected void initView() {
+        mMeasuringPresenter = new MeasuringPresenterImpl(this);
         initChart();
         onMeasuringDataUpdate(curMValues);
+        ParameterBean mParameterBean = mMeasuringPresenter.getParameterBean();
+        if (mParameterBean != null) {
+            mMValueViews[0].init(mParameterBean.getM1_nominal_value(), mParameterBean.getM1_upper_tolerance_value(), mParameterBean.getM1_lower_tolerance_value(), mParameterBean.getM1_scale());
+            mMValueViews[1].init(mParameterBean.getM2_nominal_value(), mParameterBean.getM2_upper_tolerance_value(), mParameterBean.getM2_lower_tolerance_value(), mParameterBean.getM2_scale());
+            mMValueViews[2].init(mParameterBean.getM3_nominal_value(), mParameterBean.getM3_upper_tolerance_value(), mParameterBean.getM3_lower_tolerance_value(), mParameterBean.getM3_scale());
+            mMValueViews[3].init(mParameterBean.getM4_nominal_value(), mParameterBean.getM4_upper_tolerance_value(), mParameterBean.getM4_lower_tolerance_value(), mParameterBean.getM4_scale());
+
+            mDescribes[0].setText(mParameterBean.getM1_describe());
+            mDescribes[1].setText(mParameterBean.getM2_describe());
+            mDescribes[2].setText(mParameterBean.getM3_describe());
+            mDescribes[3].setText(mParameterBean.getM4_describe());
+        }
     }
 
 

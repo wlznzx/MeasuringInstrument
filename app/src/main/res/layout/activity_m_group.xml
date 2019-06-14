@@ -61,31 +61,26 @@
             android:text="A" />
 
         <EditText
-            android:id="@+id/nominal_value_m1"
+            android:id="@+id/a_upper_limit_edt"
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:inputType="number|numberDecimal"
-            android:text="M1" />
+            android:inputType="number|numberDecimal" />
 
         <EditText
-            android:id="@+id/nominal_value_m2"
+            android:id="@+id/a_lower_limit_edt"
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
+            android:layout_weight="1" />
 
         <EditText
-            android:id="@+id/nominal_value_m3"
-            style="@style/EdNumOnlyStyle"
+            android:id="@+id/a_describe"
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
-
-
+            android:layout_weight="1" />
     </LinearLayout>
 
     <LinearLayout
@@ -102,29 +97,26 @@
             android:text="B" />
 
         <EditText
-            android:id="@+id/upper_tolerance_m1"
+            android:id="@+id/b_upper_limit_edt"
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:inputType="number|numberDecimal"
-            android:text="M1" />
+            android:inputType="number|numberDecimal" />
 
         <EditText
-            android:id="@+id/upper_tolerance_m2"
+            android:id="@+id/b_lower_limit_edt"
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
+            android:layout_weight="1" />
 
         <EditText
-            android:id="@+id/upper_tolerance_m3"
-            style="@style/EdNumOnlyStyle"
+            android:id="@+id/b_describe"
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
+            android:layout_weight="1" />
 
 
     </LinearLayout>
@@ -143,26 +135,26 @@
             android:text="C" />
 
         <EditText
+            android:id="@+id/c_upper_limit_edt"
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:inputType="number|numberDecimal"
-            android:text="M1" />
+            android:inputType="number|numberDecimal" />
 
         <EditText
+            android:id="@+id/c_lower_limit_edt"
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
+            android:layout_weight="1" />
 
         <EditText
-            style="@style/EdNumOnlyStyle"
+            android:id="@+id/c_describe"
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
+            android:layout_weight="1" />
 
     </LinearLayout>
 
@@ -180,29 +172,26 @@
             android:text="D" />
 
         <EditText
-            android:id="@+id/lower_tolerance_m1"
+            android:id="@+id/d_upper_limit_edt"
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:inputType="number|numberDecimal"
-            android:text="M1" />
+            android:inputType="number|numberDecimal" />
 
         <EditText
-            android:id="@+id/lower_tolerance_m2"
+            android:id="@+id/d_lower_limit_edt"
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
+            android:layout_weight="1" />
 
         <EditText
-            android:id="@+id/lower_tolerance_m3"
-            style="@style/EdNumOnlyStyle"
+            android:id="@+id/d_describe"
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="M1" />
+            android:layout_weight="1" />
 
     </LinearLayout>
 

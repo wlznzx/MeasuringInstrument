@@ -8,13 +8,9 @@ import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
-import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
@@ -47,6 +43,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     private JEP jep = new JEP();
 
     public CalibrationBean mCalibrationBean;
+
+    private int[] currentCHADValue = {4230, 8241, 12342, 14537};
 
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
@@ -92,7 +90,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             _chValue[1] = command[7];
                             Double ch4 = Double.parseDouble(ByteUtil.ByteArrToHex(_chValue));
                             android.util.Log.d("wlDebug", "ch4 = " + ch4);
-
 
                             // 如果参数管理不为空的话，那么需要进行公式的校验;
                             if (mParameterBean != null) {
@@ -144,6 +141,11 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             Toast.makeText((Context) mView, "串口打开失败.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
+
+        // 测试用;
+        String[] _values = {"1086", "2031", "3036", "38C9"};
+        if (mView != null)
+            mView.onMeasuringDataUpdate(doCH2P(_values));
     }
 
     // 5301 1086 2031 3036 38C9 4E54
@@ -155,6 +157,11 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         }
     }
 
+    @Override
+    public ParameterBean getParameterBean() {
+        return mParameterBean;
+    }
+
     /*
      *
      *   将读出来的AD字，通过校准，转化为校准后的测量值;
@@ -162,29 +169,70 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
      * */
     private double[] doCH2P(String[] inputValue) {
         double[] _values = new double[4];
+        // 计算测量值，ch1~ch4;
+        double ch1, ch2, ch3, ch4;
         if (mCalibrationBean != null) {
-            int x1 = Integer.parseInt(inputValue[1], 16);
+            int x1 = Integer.parseInt(inputValue[0], 16);
             double y1 = Arith.add(Arith.mul(mCalibrationBean.getCh1KValue(), x1), mCalibrationBean.getCh1CompensationValue());
 
-            int x2 = Integer.parseInt(inputValue[2], 16);
+            int x2 = Integer.parseInt(inputValue[1], 16);
             double y2 = Arith.add(Arith.mul(mCalibrationBean.getCh2KValue(), x2), mCalibrationBean.getCh2CompensationValue());
 
-            int x3 = Integer.parseInt(inputValue[3], 16);
+            int x3 = Integer.parseInt(inputValue[2], 16);
             double y3 = Arith.add(Arith.mul(mCalibrationBean.getCh3KValue(), x3), mCalibrationBean.getCh3CompensationValue());
 
-            int x4 = Integer.parseInt(inputValue[4], 16);
+            int x4 = Integer.parseInt(inputValue[3], 16);
             double y4 = Arith.add(Arith.mul(mCalibrationBean.getCh4KValue(), x4), mCalibrationBean.getCh4CompensationValue());
-
-            _values[0] = x1;
-            _values[1] = x2;
-            _values[2] = x3;
-            _values[3] = x4;
+            ch1 = y1;
+            ch2 = y2;
+            ch3 = y3;
+            ch4 = y4;
         } else {
-            _values[0] = 1;
-            _values[1] = 2;
-            _values[2] = 3;
-            _values[3] = 4;
+            ch1 = 1;
+            ch2 = 2;
+            ch3 = 3;
+            ch4 = 4;
         }
+        // 如果参数管理不为空的话，那么需要进行公式的校验;
+        double m1 = ch1;
+        double m2 = ch2;
+        double m3 = ch3;
+        double m4 = ch4;
+        if (mParameterBean != null) {
+
+            try {
+                jep.addVariable("ch1", ch1);
+                jep.addVariable("ch2", ch2);
+                jep.addVariable("ch3", ch3);
+                jep.addVariable("ch4", ch4);
+
+                if (mParameterBean.getM1_code() != null && !mParameterBean.getM1_code().equals("")) {
+                    Node node = jep.parse(mParameterBean.getM1_code());
+                    m1 = (double) jep.evaluate(node) + mParameterBean.getM1_offect();
+                }
+                if (mParameterBean.getM2_code() != null && mParameterBean.getM2_code() != null) {
+                    Node node = jep.parse(mParameterBean.getM2_code());
+                    m2 = (double) jep.evaluate(node) + mParameterBean.getM2_offect();
+                }
+                if (mParameterBean.getM3_code() != null && mParameterBean.getM3_code() != null) {
+                    Node node = jep.parse(mParameterBean.getM3_code());
+                    m3 = (double) jep.evaluate(node) + mParameterBean.getM3_offect();
+                }
+                if (mParameterBean.getM4_code() != null && mParameterBean.getM4_code() != null) {
+                    Node node = jep.parse(mParameterBean.getM4_code());
+                    m4 = (double) jep.evaluate(node) + mParameterBean.getM4_offect();
+                }/**/
+                if (mView != null)
+                    mView.onMeasuringDataUpdate(new double[]{m1, m2, m3, m4});
+                // Toast.makeText(mContext, "result = " + result, Toast.LENGTH_SHORT).show();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        _values[0] = m1;
+        _values[1] = m2;
+        _values[2] = m3;
+        _values[3] = m4;
         return _values;
     }
 

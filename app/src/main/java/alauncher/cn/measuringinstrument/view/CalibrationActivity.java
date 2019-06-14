@@ -1,8 +1,6 @@
 package alauncher.cn.measuringinstrument.view;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -23,7 +21,6 @@ import butterknife.BindViews;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
-import butterknife.OnTextChanged;
 
 
 public class CalibrationActivity extends BaseActivity implements CalibrationActivityView {
@@ -161,15 +158,24 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
     public void onBtnClick(View view) {
         switch (view.getId()) {
             case R.id.samll_part_btn:
-                for (int i = 0; i < smallPartADEdt.length; i++) {
-                    int x = Integer.parseInt(measureADEdt[i].getText().toString().trim(), 10) - 100;
-                    smallPartADEdt[i].setText("" + x);
-                }
+                for (int i = 0; i < smallPartADEdt.length; i++)
+                    try {
+                        int x = Integer.parseInt(measureADEdt[i].getText().toString().trim(), 10) - 100;
+                        smallPartADEdt[i].setText("" + x);
+                    } catch (NumberFormatException e) {
+
+                    }
+
                 break;
+
             case R.id.big_part_btn:
                 for (int i = 0; i < smallPartADEdt.length; i++) {
-                    int x = Integer.parseInt(measureADEdt[i].getText().toString().trim(), 10) + 100;
-                    bigPartADEdt[i].setText("" + x);
+                    try {
+                        int x = Integer.parseInt(measureADEdt[i].getText().toString().trim(), 10) + 100;
+                        bigPartADEdt[i].setText("" + x);
+                    } catch (NumberFormatException e) {
+
+                    }
                 }
                 break;
             case R.id.calibration_save_btn:
@@ -183,6 +189,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                 isSelectAll = !isSelectAll;
                 break;
         }
+
     }
 
     @OnCheckedChanged({R.id.ch1_rb, R.id.ch2_rb, R.id.ch3_rb, R.id.ch4_rb})
@@ -306,7 +313,9 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                 if (calibrationTypeSP[i].getSelectedItemId() == 0) {
                     try {
 
-                        if (!smallPartADEdt[i].getText().equals("")) {
+                        android.util.Log.d("wlDebug", "is ?= " + smallPartADEdt[i].getText() + "sAD = " + smallPartADEdt[i].getText().equals(""));
+
+                        if (!smallPartADEdt[i].getText().toString().trim().equals("")) {
                             double y1 = Double.valueOf(smallPartEdt[i].getText().toString().trim());
                             int x1 = Integer.parseInt(smallPartADEdt[i].getText().toString().trim(), 10);
                             k = Double.valueOf(kValueEdt[i].getText().toString().trim()) / 1000;
@@ -318,7 +327,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                         } else if (!bigPartADEdt[i].getText().equals("")) {
                             double y2 = Double.valueOf(bigPartCHEdt[i].getText().toString().trim());
                             int x2 = Integer.parseInt(bigPartADEdt[i].getText().toString().trim(), 10);
-                            k = Double.valueOf(kValueEdt[i].getText().toString().trim());
+                            k = Double.valueOf(kValueEdt[i].getText().toString().trim()) / 1000;
                             c = mCalibrationPresenter.calculationC(y2, k, x2);
                             android.util.Log.d("wlDebug", "y2 = " + y2 + " x = " + x2 + " k = " + k + " c = " + c);
                             BigDecimal _c = new BigDecimal(c + "");

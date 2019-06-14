@@ -1,5 +1,6 @@
 package alauncher.cn.measuringinstrument.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +13,6 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
-import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
 import alauncher.cn.measuringinstrument.widget.CalculateDialog;
@@ -136,8 +136,9 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
             default:
                 break;
         }
-        // Toast.makeText(this, "go m = " + m_num, Toast.LENGTH_SHORT).show();
-        openActivty(MGroupActivity.class);
+        Intent intent = new Intent(this, MGroupActivity.class);
+        intent.putExtra("M_INDEX", m_num);
+        startActivity(intent);
     }
 
     @Override
@@ -208,14 +209,14 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
         mParameterBean.setCode_id(1);
         // 分辨率
         mParameterBean.setM1_resolution((int) resolutionSp[0].getSelectedItemId());
-        mParameterBean.setM1_resolution((int) resolutionSp[1].getSelectedItemId());
-        mParameterBean.setM1_resolution((int) resolutionSp[2].getSelectedItemId());
-        mParameterBean.setM1_resolution((int) resolutionSp[3].getSelectedItemId());
+        mParameterBean.setM2_resolution((int) resolutionSp[1].getSelectedItemId());
+        mParameterBean.setM3_resolution((int) resolutionSp[2].getSelectedItemId());
+        mParameterBean.setM4_resolution((int) resolutionSp[3].getSelectedItemId());
         // 名义值
         mParameterBean.setM1_nominal_value(Double.valueOf(nominalValueEd[0].getText().toString().trim()));
-        mParameterBean.setM1_nominal_value(Double.valueOf(nominalValueEd[1].getText().toString().trim()));
-        mParameterBean.setM1_nominal_value(Double.valueOf(nominalValueEd[2].getText().toString().trim()));
-        mParameterBean.setM1_nominal_value(Double.valueOf(nominalValueEd[3].getText().toString().trim()));
+        mParameterBean.setM2_nominal_value(Double.valueOf(nominalValueEd[1].getText().toString().trim()));
+        mParameterBean.setM3_nominal_value(Double.valueOf(nominalValueEd[2].getText().toString().trim()));
+        mParameterBean.setM4_nominal_value(Double.valueOf(nominalValueEd[3].getText().toString().trim()));
         // 上公差
         mParameterBean.setM1_upper_tolerance_value(Double.valueOf(upperToleranceEd[0].getText().toString().trim()));
         mParameterBean.setM2_upper_tolerance_value(Double.valueOf(upperToleranceEd[1].getText().toString().trim()));
@@ -233,16 +234,22 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
         mParameterBean.setM4_offect(Double.valueOf(offectEd[3].getText().toString().trim()));
 
         // 分辨率
-        mParameterBean.setM1_resolution((int) resolutionSp[0].getSelectedItemId());
-        mParameterBean.setM2_resolution((int) resolutionSp[1].getSelectedItemId());
-        mParameterBean.setM3_resolution((int) resolutionSp[2].getSelectedItemId());
-        mParameterBean.setM4_resolution((int) resolutionSp[3].getSelectedItemId());
+//        mParameterBean.setM1_resolution((int) resolutionSp[0].getSelectedItemId());
+//        mParameterBean.setM2_resolution((int) resolutionSp[1].getSelectedItemId());
+//        mParameterBean.setM3_resolution((int) resolutionSp[2].getSelectedItemId());
+//        mParameterBean.setM4_resolution((int) resolutionSp[3].getSelectedItemId());
 
-
+        // 描述
         mParameterBean.setM1_describe(describeEd[0].getText().toString());
         mParameterBean.setM2_describe(describeEd[1].getText().toString());
         mParameterBean.setM3_describe(describeEd[2].getText().toString());
         mParameterBean.setM4_describe(describeEd[3].getText().toString());
+
+
+        mParameterBean.setM1_scale(getRbyID((int) resolutionSp[0].getSelectedItemId()));
+        mParameterBean.setM2_scale(getRbyID((int) resolutionSp[1].getSelectedItemId()));
+        mParameterBean.setM3_scale(getRbyID((int) resolutionSp[2].getSelectedItemId()));
+        mParameterBean.setM4_scale(getRbyID((int) resolutionSp[3].getSelectedItemId()));
 //
 //        describeEd[0].setText(mParameterBean.getM1_describe());
 //        describeEd[1].setText(mParameterBean.getM2_describe());

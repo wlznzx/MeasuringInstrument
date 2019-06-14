@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 
 public class MValueView extends View {
 
-    private Paint paint;
+    private Paint paint = new Paint();;
     private RectF rect;
 
     private Canvas canvas;
@@ -31,15 +31,20 @@ public class MValueView extends View {
     final private int textMargin = 4;
 
     // 名义值;
-    private double nominal_value = 0;
+    private double nominal_value = 31;
     // 上公差值;
-    public double upper_tolerance_value = 0.7;
+    public double upper_tolerance_value = 7;
     // 下公差值;
-    public double lower_tolerance_value = 0.7;
+    public double lower_tolerance_value = -7;
     // 偏移值;
     public double offect_value = 0.7;
     // 分辨率;
-    public double resolution = 0.1;
+    public double resolution = 0.4;
+
+    // HW 上报警
+    public double hw;
+    // HL 下报警
+    public double lw;
 
     // 高度的step;
     public double stepHeight;
@@ -54,9 +59,7 @@ public class MValueView extends View {
 
     public MValueView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
-
 
     /**
      * 外部调用的接口
@@ -66,11 +69,18 @@ public class MValueView extends View {
     }
 
 
-    private void init() {
-        paint = new Paint();
-        baseValue = 1.5;
+    public void init(double nominal, double upper, double lower, double pResolution) {
+        baseValue = nominal;
+        nominal_value = nominal;
         offect = 1;
         mValue = 1.5;
+        upper_tolerance_value = upper;
+        lower_tolerance_value = lower;
+        resolution = pResolution;
+        hw = 0.9 * upper_tolerance_value + 0.1 * lower_tolerance_value;
+        lw = 0.1 * upper_tolerance_value + 0.9 * lower_tolerance_value;
+
+        android.util.Log.d("wlDebug", "nominal_value = " + nominal_value + " upper_tolerance_value = " + upper_tolerance_value + " lower_tolerance_value = " + lower_tolerance_value + " resolution = " + resolution);
     }
 
     public void setMValue(double pValue) {
@@ -85,32 +95,36 @@ public class MValueView extends View {
         stepWidth = getMeasuredWidth() / 4;
         // 将整条测量柱分为100等份;
         stepHeight = getMeasuredHeight() / 100;
+        // android.util.Log.d("wlDebug", "stepHeight = " + stepHeight);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        // HL刻度线
-
-        // 绘制刻度线
+        // HL刻度线 , 上公差线;
+        float _HLLineHeight = (float) ((3 * offectHeight) - ((upper_tolerance_value / resolution) * stepHeight));
         paint.setColor(Color.RED);
-        canvas.drawLine(stepWidth + border, offectHeight + border, stepWidth * 3 + border, offectHeight + border, paint);
-        canvas.drawText("HL", stepWidth * 3 + border + textMargin, offectHeight + border + textMargin, paint);
+        canvas.drawLine(stepWidth + border, _HLLineHeight + border, stepWidth * 3 + border, _HLLineHeight + border, paint);
+        canvas.drawText("HL " + upper_tolerance_value, stepWidth * 3 + border + textMargin, _HLLineHeight + border + textMargin, paint);
 
-        canvas.drawLine(stepWidth + border, offectHeight * 5 + border, stepWidth * 3 + border, offectHeight * 5 + border, paint);
-        canvas.drawText("LL", stepWidth * 3 + border + textMargin, offectHeight * 5 + border + textMargin, paint);
+        // LL刻度线 , 下公差线;
+        float _LLLineHeight = (float) ((getMeasuredHeight() / 2) + Math.abs((lower_tolerance_value / resolution) * stepHeight));
+        canvas.drawLine(stepWidth + border, _LLLineHeight + border, stepWidth * 3 + border, _LLLineHeight + border, paint);
+        canvas.drawText("LL " + lower_tolerance_value, stepWidth * 3 + border + textMargin, _LLLineHeight + border + textMargin, paint);
 
+        // HW线 , 上报警;
         paint.setColor(Color.YELLOW);
-        canvas.drawLine(stepWidth + border, offectHeight * 2 + border, stepWidth * 3 + border, offectHeight * 2 + border, paint);
-        canvas.drawText("HW", stepWidth * 3 + border + textMargin, offectHeight * 2 + border + textMargin, paint);
+        float _HWLineHeight = (float) ((getMeasuredHeight() / 2) - ((hw / resolution) * stepHeight));
+        canvas.drawLine(stepWidth + border, _HWLineHeight + border, stepWidth * 3 + border, _HWLineHeight + border, paint);
+        canvas.drawText("HW " + hw, stepWidth * 3 + border + textMargin, _HWLineHeight + border + textMargin, paint);
 
-        canvas.drawLine(stepWidth + border, offectHeight * 4 + border, stepWidth * 3 + border, offectHeight * 4 + border, paint);
-        canvas.drawText("LW", stepWidth * 3 + border + textMargin, offectHeight * 4 + border + textMargin, paint);
+        float _LWLineHeight = (float) ((getMeasuredHeight() / 2) + Math.abs((lw / resolution) * stepHeight));
+        canvas.drawLine(stepWidth + border, _LWLineHeight + border, stepWidth * 3 + border, _LWLineHeight + border, paint);
+        canvas.drawText("LW " + lw, stepWidth * 3 + border + textMargin, _LWLineHeight + border + textMargin, paint);
 
         paint.setColor(Color.GREEN);
         // canvas.drawLine(stepWidth + border, offectHeight * 3 + border, stepWidth * 3 + border, offectHeight * 3 + border, paint);
-        canvas.drawText("N", stepWidth * 3 + border + textMargin, offectHeight * 3 + border + textMargin, paint);
+        canvas.drawText("N " + nominal_value, stepWidth * 3 + border + textMargin, offectHeight * 3 + border + textMargin, paint);
 
         // 绘制Base矩形；
         paint.setStyle(Paint.Style.STROKE);
@@ -122,22 +136,32 @@ public class MValueView extends View {
 
         double _value = mValue - baseValue;
         if (_value > 0) {
-            float _top = (float) ((3 * offectHeight) - _value / offect * offectHeight);
+            float _top = (float) ((3 * offectHeight) - _value / resolution * stepHeight);
             float _bottom = getMeasuredHeight() / 2;
             rect = new RectF(stepWidth + border, 3 + _top, stepWidth * 3 - border, _bottom);
         } else {
             _value = Math.abs(_value);
             float _top = getMeasuredHeight() / 2;
-            float _bottom = (float) (_top + _value / offect * offectHeight);
+            float _bottom = (float) (_top + _value / resolution * stepHeight);
             rect = new RectF(stepWidth + border, 3 + _top, stepWidth * 3 - border, _bottom);
         }
-        _value = Math.abs(_value);
-        if (_value > 2 * offect) {
-            paint.setColor(Color.RED);
-        } else if (_value > offect) {
-            paint.setColor(Color.YELLOW);
+
+        if (_value > 0) {
+            if (_value > upper_tolerance_value) {
+                paint.setColor(Color.RED);
+            } else if (_value > hw) {
+                paint.setColor(Color.YELLOW);
+            } else {
+                paint.setColor(Color.GREEN);
+            }
         } else {
-            paint.setColor(Color.GREEN);
+            if (_value < lower_tolerance_value) {
+                paint.setColor(Color.RED);
+            } else if (_value < lw) {
+                paint.setColor(Color.YELLOW);
+            } else {
+                paint.setColor(Color.GREEN);
+            }
         }
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRoundRect(rect, 4, 4, paint);
