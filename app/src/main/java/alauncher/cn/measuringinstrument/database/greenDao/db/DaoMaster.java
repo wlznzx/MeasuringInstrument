@@ -21,19 +21,19 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
-        CalibrationBeanDao.createTable(db, ifNotExists);
-        ParameterBeanDao.createTable(db, ifNotExists);
-        ResultDataDao.createTable(db, ifNotExists);
         UserDao.createTable(db, ifNotExists);
+        ResultDataDao.createTable(db, ifNotExists);
+        ParameterBeanDao.createTable(db, ifNotExists);
+        CalibrationBeanDao.createTable(db, ifNotExists);
         GroupBeamDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
-        CalibrationBeanDao.dropTable(db, ifExists);
-        ParameterBeanDao.dropTable(db, ifExists);
-        ResultDataDao.dropTable(db, ifExists);
         UserDao.dropTable(db, ifExists);
+        ResultDataDao.dropTable(db, ifExists);
+        ParameterBeanDao.dropTable(db, ifExists);
+        CalibrationBeanDao.dropTable(db, ifExists);
         GroupBeamDao.dropTable(db, ifExists);
     }
 
@@ -53,10 +53,10 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
-        registerDaoClass(CalibrationBeanDao.class);
-        registerDaoClass(ParameterBeanDao.class);
-        registerDaoClass(ResultDataDao.class);
         registerDaoClass(UserDao.class);
+        registerDaoClass(ResultDataDao.class);
+        registerDaoClass(ParameterBeanDao.class);
+        registerDaoClass(CalibrationBeanDao.class);
         registerDaoClass(GroupBeamDao.class);
     }
 

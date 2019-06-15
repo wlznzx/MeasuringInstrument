@@ -126,4 +126,5 @@
     <string name="btn_equal">=</string>
     <string name="in_value">取值中.</string>
     <string name="k_value">倍率</string>
+    <string name="event_id">事件号</string>
 </resources>

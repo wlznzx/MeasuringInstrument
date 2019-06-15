@@ -77,7 +77,7 @@
 
         <EditText
             android:id="@+id/a_describe"
-            style="@style/TextStyle"
+            style="@style/EdTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
@@ -113,7 +113,7 @@
 
         <EditText
             android:id="@+id/b_describe"
-            style="@style/TextStyle"
+            style="@style/EdTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
@@ -151,7 +151,7 @@
 
         <EditText
             android:id="@+id/c_describe"
-            style="@style/TextStyle"
+            style="@style/EdTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
@@ -188,7 +188,7 @@
 
         <EditText
             android:id="@+id/d_describe"
-            style="@style/TextStyle"
+            style="@style/EdTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />

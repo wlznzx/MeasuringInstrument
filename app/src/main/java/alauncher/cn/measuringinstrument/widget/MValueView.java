@@ -74,8 +74,9 @@ public class MValueView extends View {
         nominal_value = nominal;
         offect = 1;
         mValue = 1.5;
-        upper_tolerance_value = upper;
-        lower_tolerance_value = lower;
+        // 公差的单位是毫米，所以需要 * 1000;
+        upper_tolerance_value = upper * 1000;
+        lower_tolerance_value = lower * 1000;
         resolution = pResolution;
         hw = 0.9 * upper_tolerance_value + 0.1 * lower_tolerance_value;
         lw = 0.1 * upper_tolerance_value + 0.9 * lower_tolerance_value;

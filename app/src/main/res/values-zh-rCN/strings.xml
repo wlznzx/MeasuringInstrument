@@ -101,4 +101,5 @@
     <string name="leave_job">离职</string>
     <string name="statistical_p">分析参数</string>
     <string name="handler_line">控制线</string>
+    <string name="event_id">事件号</string>
 </resources>
