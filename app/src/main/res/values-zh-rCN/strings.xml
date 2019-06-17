@@ -102,4 +102,5 @@
     <string name="statistical_p">分析参数</string>
     <string name="handler_line">控制线</string>
     <string name="event_id">事件号</string>
+    <string name="is_auto_show">是否自动弹出</string>
 </resources>

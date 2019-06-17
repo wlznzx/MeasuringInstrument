@@ -28,6 +28,8 @@ import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImpl;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
+import alauncher.cn.measuringinstrument.widget.AdditionalDialog;
+import alauncher.cn.measuringinstrument.widget.CalculateDialog;
 import alauncher.cn.measuringinstrument.widget.MValueView;
 import androidx.core.content.ContextCompat;
 import butterknife.BindView;
@@ -93,19 +95,28 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     }
 
 
-    @OnClick(R.id.value_btn)
-    public void onValueClick() {
-        if (!inValue) {
-            // start 取值;
-            inValue = true;
-            mMeasuringPresenter.startMeasuing();
-            valueBtn.setText(R.string.in_value);
-        } else {
-            // stop 取值;
-            inValue = false;
-            mMeasuringPresenter.stopMeasuing();
-            valueBtn.setText(R.string.get_value);
+    @OnClick({R.id.value_btn, R.id.additional_btn})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.value_btn:
+                if (!inValue) {
+                    // start 取值;
+                    inValue = true;
+                    mMeasuringPresenter.startMeasuing();
+                    valueBtn.setText(R.string.in_value);
+                } else {
+                    // stop 取值;
+                    inValue = false;
+                    mMeasuringPresenter.stopMeasuing();
+                    valueBtn.setText(R.string.get_value);
+                }
+                break;
+            case R.id.additional_btn:
+                AdditionalDialog mAdditionalDialog = new AdditionalDialog(this,R.style.Translucent_NoTitle);
+                mAdditionalDialog.show();
+                break;
         }
+
     }
 
 

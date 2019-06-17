@@ -8,4 +8,6 @@
     <color name="tBaseColor">#455A64</color>
     <color name="pBaseColor">#F0455A64</color>
 
+    <color name="transparent">#00000000</color>
+
 </resources>
