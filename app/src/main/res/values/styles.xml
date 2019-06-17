@@ -91,7 +91,22 @@
     </style>
 
     <!--对话框透明背景-->
-    <style name="Translucent_NoTitle" parent="android:style/Theme.Dialog">
+    <style name="Translucent_NoTitle" parent="android:Theme.Holo.Dialog.NoActionBar">
+
+        <!--边框-->
+        <item name="android:windowFrame">@null</item>
+        <!--是否浮现在activity之上-->
+        <!--半透明-->
+        <!--无标题-->
+        <!--提示框背景（透明）-->
+        <item name="android:windowBackground">@color/transparent</item>
+        <!--模糊-->
+        <item name="android:backgroundDimEnabled">true</item>
+
+    </style>
+
+    <!--对话框透明背景-->
+    <style name="TranslucentNoTitle" parent="android:style/Theme.Dialog">
 
         <!--边框-->
         <item name="android:windowFrame">@null</item>
