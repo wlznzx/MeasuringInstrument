@@ -9,8 +9,22 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="50dp"
+        android:layout_margin="15dp"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/add_title"
+            android:textSize="18sp" />
+
+    
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#E4E4E4" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -31,7 +45,6 @@
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:entries="@array/workids"></Spinner>
         </LinearLayout>
 
@@ -64,7 +77,8 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="@string/is_auto_show"
-            android:textColor="@android:color/black" />
+            android:textColor="#7D7D7D"
+            android:textSize="12dp" />
 
 
         <LinearLayout

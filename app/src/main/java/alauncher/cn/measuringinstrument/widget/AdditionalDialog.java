@@ -1,21 +1,11 @@
 package alauncher.cn.measuringinstrument.widget;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
-
-import org.nfunk.jep.JEP;
-import org.nfunk.jep.Node;
-import org.nfunk.jep.ParseException;
 
 import alauncher.cn.measuringinstrument.R;
 import androidx.appcompat.app.AlertDialog;
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class AdditionalDialog extends AlertDialog {
 

@@ -9,11 +9,13 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import alauncher.cn.measuringinstrument.utils.Arith;
 import androidx.annotation.Nullable;
 
 public class MValueView extends View {
 
-    private Paint paint = new Paint();;
+    private Paint paint = new Paint();
+    ;
     private RectF rect;
 
     private Canvas canvas;
@@ -75,11 +77,13 @@ public class MValueView extends View {
         offect = 1;
         mValue = 1.5;
         // 公差的单位是毫米，所以需要 * 1000;
-        upper_tolerance_value = upper * 1000;
-        lower_tolerance_value = lower * 1000;
-        resolution = pResolution;
+        upper_tolerance_value = upper;
+        lower_tolerance_value = lower;
+        resolution = pResolution / 1000;
         hw = 0.9 * upper_tolerance_value + 0.1 * lower_tolerance_value;
         lw = 0.1 * upper_tolerance_value + 0.9 * lower_tolerance_value;
+
+        baseValue = Arith.div(((nominal + upper_tolerance_value) + (nominal + lower_tolerance_value)), 2);
 
         android.util.Log.d("wlDebug", "nominal_value = " + nominal_value + " upper_tolerance_value = " + upper_tolerance_value + " lower_tolerance_value = " + lower_tolerance_value + " resolution = " + resolution);
     }
@@ -103,16 +107,22 @@ public class MValueView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         // HL刻度线 , 上公差线;
-        float _HLLineHeight = (float) ((3 * offectHeight) - ((upper_tolerance_value / resolution) * stepHeight));
+
+        double _upper_step = nominal_value + upper_tolerance_value - baseValue;
+        float _HLLineHeight = (float) ((3 * offectHeight) - ((_upper_step / resolution) * stepHeight));
+
         paint.setColor(Color.RED);
         canvas.drawLine(stepWidth + border, _HLLineHeight + border, stepWidth * 3 + border, _HLLineHeight + border, paint);
         canvas.drawText("HL " + upper_tolerance_value, stepWidth * 3 + border + textMargin, _HLLineHeight + border + textMargin, paint);
 
         // LL刻度线 , 下公差线;
-        float _LLLineHeight = (float) ((getMeasuredHeight() / 2) + Math.abs((lower_tolerance_value / resolution) * stepHeight));
+        double _lower_step = nominal_value + lower_tolerance_value - baseValue;
+        float _LLLineHeight = (float) ((getMeasuredHeight() / 2) + Math.abs((_lower_step / resolution) * stepHeight));
         canvas.drawLine(stepWidth + border, _LLLineHeight + border, stepWidth * 3 + border, _LLLineHeight + border, paint);
         canvas.drawText("LL " + lower_tolerance_value, stepWidth * 3 + border + textMargin, _LLLineHeight + border + textMargin, paint);
 
+        hw = 0.9 * _upper_step + 0.1 * _lower_step;
+        lw = 0.1 * _upper_step + 0.9 * _lower_step;
         // HW线 , 上报警;
         paint.setColor(Color.YELLOW);
         float _HWLineHeight = (float) ((getMeasuredHeight() / 2) - ((hw / resolution) * stepHeight));
@@ -125,7 +135,7 @@ public class MValueView extends View {
 
         paint.setColor(Color.GREEN);
         // canvas.drawLine(stepWidth + border, offectHeight * 3 + border, stepWidth * 3 + border, offectHeight * 3 + border, paint);
-        canvas.drawText("N " + nominal_value, stepWidth * 3 + border + textMargin, offectHeight * 3 + border + textMargin, paint);
+        canvas.drawText("N " + baseValue, stepWidth * 3 + border + textMargin, offectHeight * 3 + border + textMargin, paint);
 
         // 绘制Base矩形；
         paint.setStyle(Paint.Style.STROKE);
@@ -141,6 +151,7 @@ public class MValueView extends View {
             float _bottom = getMeasuredHeight() / 2;
             rect = new RectF(stepWidth + border, 3 + _top, stepWidth * 3 - border, _bottom);
         } else {
+
             _value = Math.abs(_value);
             float _top = getMeasuredHeight() / 2;
             float _bottom = (float) (_top + _value / resolution * stepHeight);
@@ -148,7 +159,7 @@ public class MValueView extends View {
         }
 
         if (_value > 0) {
-            if (_value > upper_tolerance_value) {
+            if (_value > _upper_step) {
                 paint.setColor(Color.RED);
             } else if (_value > hw) {
                 paint.setColor(Color.YELLOW);
@@ -156,7 +167,7 @@ public class MValueView extends View {
                 paint.setColor(Color.GREEN);
             }
         } else {
-            if (_value < lower_tolerance_value) {
+            if (_value < _lower_step) {
                 paint.setColor(Color.RED);
             } else if (_value < lw) {
                 paint.setColor(Color.YELLOW);

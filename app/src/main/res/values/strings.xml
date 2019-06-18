@@ -128,4 +128,5 @@
     <string name="k_value">倍率</string>
     <string name="event_id">事件号</string>
     <string name="is_auto_show">是否自动弹出</string>
+    <string name="add_title">附加信息</string>
 </resources>

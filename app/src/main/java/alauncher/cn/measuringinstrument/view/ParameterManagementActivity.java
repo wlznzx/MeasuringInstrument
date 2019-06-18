@@ -147,18 +147,22 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
         switch (m) {
             case 1:
                 mParameterBean.setM1_code(code);
+                formulaEd.get(0).setText(mParameterBean.getM1_code());
                 break;
             case 2:
                 mParameterBean.setM2_code(code);
+                formulaEd.get(1).setText(mParameterBean.getM2_code());
                 break;
             case 3:
                 mParameterBean.setM3_code(code);
+                formulaEd.get(2).setText(mParameterBean.getM3_code());
                 break;
             case 4:
                 mParameterBean.setM4_code(code);
+                formulaEd.get(3).setText(mParameterBean.getM4_code());
                 break;
         }
-        updateUI();
+//        updateUI();
     }
 
     public void updateUI() {

@@ -69,7 +69,7 @@ public class MGroupActivity extends BaseActivity {
 
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
-        GroupBeam _bean = App.getDaoSession().getGroupBeamDao().load((long) 1);
+        GroupBeam _bean = mDao.queryBuilder().where(GroupBeamDao.Properties.Code_id.eq(1), GroupBeamDao.Properties.M_index.eq(mIndex)).unique();
         if (_bean != null) {
             App.getDaoSession().getGroupBeamDao().insert(view2Bean());
         } else {

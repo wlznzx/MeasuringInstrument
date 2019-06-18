@@ -7,8 +7,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.nfunk.jep.function.Str;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
@@ -136,10 +139,13 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
             k[2] = bean.getCh3KValue();
             k[3] = bean.getCh4KValue();
 
-            kValueEdt[0].setText(new BigDecimal(bean.getCh1KValue() * 1000) + "");
-            kValueEdt[1].setText(new BigDecimal(bean.getCh2KValue() * 1000).toString());
-            kValueEdt[2].setText(new BigDecimal(bean.getCh3KValue() * 1000).toString());
-            kValueEdt[3].setText(new BigDecimal(bean.getCh4KValue() * 1000).toString());
+
+            NumberFormat nf = NumberFormat.getInstance();
+
+            kValueEdt[0].setText(nf.format(bean.getCh1KValue() * 1000));
+            kValueEdt[1].setText(nf.format(bean.getCh2KValue() * 1000));
+            kValueEdt[2].setText(nf.format(bean.getCh3KValue() * 1000));
+            kValueEdt[3].setText(nf.format(bean.getCh4KValue() * 1000));
             // 补偿值;
             compensationValueEdt[0].setText(String.valueOf(bean.getCh1CompensationValue()));
             compensationValueEdt[1].setText(String.valueOf(bean.getCh2CompensationValue()));
@@ -355,7 +361,8 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
 
                         android.util.Log.d("wlDebug", "_temp = " + _temp + "_temp2 = " + _temp2);
 
-                        k = _temp / _temp2;
+//                        k = _temp / _temp2;
+                        k = Arith.div(_temp, _temp2);
                         c = mCalibrationPresenter.calculationC(y1, k, x1);
                         BigDecimal bg = new BigDecimal(k * 1000 + "");
                         kValueEdt[i].setText("" + bg);
