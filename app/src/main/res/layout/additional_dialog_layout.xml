@@ -15,12 +15,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:text="@string/add_title"
             android:textSize="18sp" />
 
-    
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
@@ -38,11 +38,13 @@
                 android:text="@string/workpiece_id" />
 
             <EditText
+                android:id="@+id/workpieceid_edt"
                 style="@style/EdNumOnlyStyle"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content" />
 
             <Spinner
+                android:id="@+id/workpieceid_sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:entries="@array/workids"></Spinner>
@@ -61,11 +63,13 @@
                 android:text="@string/event_id" />
 
             <EditText
+                android:id="@+id/eventid_edt"
                 style="@style/EdNumOnlyStyle"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content" />
 
             <Spinner
+                android:id="@+id/evnet_sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:entries="@array/eventid_items"></Spinner>

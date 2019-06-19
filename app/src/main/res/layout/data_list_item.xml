@@ -48,11 +48,25 @@
         android:text="@string/m1" />
 
     <TextView
+        android:id="@+id/data_m1_group"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m1_group" />
+
+    <TextView
         android:id="@+id/data_m2"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
         android:text="@string/m2" />
+
+    <TextView
+        android:id="@+id/data_m2_group"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m2_group" />
 
     <TextView
         android:id="@+id/data_m3"
@@ -62,10 +76,24 @@
         android:text="@string/m3" />
 
     <TextView
+        android:id="@+id/data_m3_group"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m3_group" />
+
+    <TextView
         android:id="@+id/data_m4"
         style="@style/TextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
         android:text="@string/m4" />
+
+    <TextView
+        android:id="@+id/data_m4_group"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4_group" />
 
 </LinearLayout>

@@ -50,6 +50,7 @@
         <item>首检</item>
         <item>抽检</item>
         <item>调试</item>
+        <item>其他</item>
     </string-array>
 
 </resources>

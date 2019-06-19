@@ -9,8 +9,8 @@ import android.widget.Toast;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
-import alauncher.cn.measuringinstrument.bean.GroupBeam;
-import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeamDao;
+import alauncher.cn.measuringinstrument.bean.GroupBean;
+import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
@@ -30,7 +30,7 @@ public class MGroupActivity extends BaseActivity {
     @BindView(R.id.save_btn)
     public Button saveBtn;
 
-    private GroupBeamDao mDao;
+    private GroupBeanDao mDao;
 
     private int mIndex;
 
@@ -47,9 +47,15 @@ public class MGroupActivity extends BaseActivity {
     @Override
     protected void initView() {
         mIndex = getIntent().getIntExtra("M_INDEX", 0);
-        mDao = App.getDaoSession().getGroupBeamDao();
-        GroupBeam _bean = mDao.queryBuilder().where(GroupBeamDao.Properties.Code_id.eq(1), GroupBeamDao.Properties.M_index.eq(mIndex)).unique();
+
+        android.util.Log.d("wlDebug", "mIndex = " + mIndex);
+
+        mDao = App.getDaoSession().getGroupBeanDao();
+        GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(1), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
         if (_bean != null) {
+
+            android.util.Log.d("wlDebug", _bean.toString());
+
             upperLimits[0].setText(_bean.getA_upper_limit() + "");
             upperLimits[1].setText(_bean.getB_upper_limit() + "");
             upperLimits[2].setText(_bean.getC_upper_limit() + "");
@@ -69,17 +75,18 @@ public class MGroupActivity extends BaseActivity {
 
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
-        GroupBeam _bean = mDao.queryBuilder().where(GroupBeamDao.Properties.Code_id.eq(1), GroupBeamDao.Properties.M_index.eq(mIndex)).unique();
-        if (_bean != null) {
-            App.getDaoSession().getGroupBeamDao().insert(view2Bean());
+        GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(1), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
+        if (_bean == null) {
+            App.getDaoSession().getGroupBeanDao().insert(view2Bean());
         } else {
-            App.getDaoSession().getGroupBeamDao().update(view2Bean());
+            App.getDaoSession().getGroupBeanDao().update(view2Bean());
+            // android.util.Log.d("wlDebug", "Save Bean " + _bean.toString());
         }
         Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
     }
 
-    private GroupBeam view2Bean() {
-        GroupBeam _bean = new GroupBeam();
+    private GroupBean view2Bean() {
+        GroupBean _bean = new GroupBean();
         _bean.setCode_id(1);
         _bean.setM_index(mIndex);
         // 分组的上区间

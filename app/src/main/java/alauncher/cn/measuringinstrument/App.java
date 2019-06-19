@@ -18,6 +18,10 @@ public class App extends Application {
 
     private static DaoSession mDaoSession;
 
+    public static int codeID = 1;
+
+    public static String handlerAccout = "吴工";
+
     @Override
     public void onCreate() {
         super.onCreate();

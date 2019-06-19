@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
@@ -24,19 +25,19 @@ import java.util.ArrayList;
 
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImpl;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import alauncher.cn.measuringinstrument.widget.AdditionalDialog;
-import alauncher.cn.measuringinstrument.widget.CalculateDialog;
 import alauncher.cn.measuringinstrument.widget.MValueView;
 import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
 
-public class MeasuringActivity extends BaseActivity implements MeasuringActivityView {
+public class MeasuringActivity extends BaseActivity implements MeasuringActivityView, AdditionalDialog.AdditionDialogInterface {
 
     @BindViews({R.id.m1_value, R.id.m2_value, R.id.m3_value, R.id.m4_value})
     public MValueView[] mMValueViews;
@@ -64,6 +65,8 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     private boolean inValue = false;
 
     private MeasuringPresenter mMeasuringPresenter;
+
+    private AddInfoBean mAddInfoBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +97,7 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         }
     }
 
-
-    @OnClick({R.id.value_btn, R.id.additional_btn})
+    @OnClick({R.id.value_btn, R.id.additional_btn, R.id.measure_save_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.value_btn:
@@ -112,13 +114,16 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                 }
                 break;
             case R.id.additional_btn:
-                AdditionalDialog mAdditionalDialog = new AdditionalDialog(this,R.style.Translucent_NoTitle);
+                AdditionalDialog mAdditionalDialog = new AdditionalDialog(this, R.style.Translucent_NoTitle);
+                mAdditionalDialog.setDialogInterface(this);
                 mAdditionalDialog.show();
                 break;
+            case R.id.measure_save_btn:
+                mMeasuringPresenter.saveResult(curMValues, mAddInfoBean);
+                Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
+                break;
         }
-
     }
-
 
     private void setDatas(int count, double range) {
         ArrayList<Entry> values = new ArrayList<>();
@@ -392,4 +397,8 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         setDatas(10, 100);
     }
 
+    @Override
+    public void onAdditionSet(AddInfoBean pBean) {
+        mAddInfoBean = pBean;
+    }
 }

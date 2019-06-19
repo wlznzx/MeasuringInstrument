@@ -6,21 +6,25 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
+import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.ResultData;
+import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 
-
 public class DataActivity extends BaseActivity {
 
     @BindView(R.id.rv)
     RecyclerView rv;
+
+    public ResultBeanDao mResultBeanDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,34 +39,39 @@ public class DataActivity extends BaseActivity {
     @Override
     protected void initView() {
         List<ResultData> _datas = new ArrayList();
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        _datas.add(new ResultData(1,"操作员",System.currentTimeMillis(),123456,"换刀",1,0.7023,0.7023,0.7023,0.7023));
-        DataActivity.DataAdapter _adapter = new DataActivity.DataAdapter(_datas);
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+        _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
+
+
+        mResultBeanDao = App.getDaoSession().getResultBeanDao();
+
+
+        DataActivity.DataAdapter _adapter = new DataActivity.DataAdapter(mResultBeanDao.loadAll());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(DataActivity.this);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(_adapter);
@@ -70,9 +79,9 @@ public class DataActivity extends BaseActivity {
 
     class DataAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-        List<ResultData> datas;
+        List<ResultBean> datas;
 
-        public DataAdapter(List<ResultData> pDatas) {
+        public DataAdapter(List<ResultBean> pDatas) {
             datas = pDatas;
         }
 
@@ -84,15 +93,19 @@ public class DataActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.setText(R.id.data_handler, "" + datas.get(position).handler);
-            holder.setText(R.id.data_workpiece_id, "" + datas.get(position).workpieceId);
-            holder.setText(R.id.data_event, datas.get(position).event);
-            holder.setText(R.id.data_m1, "" + R.string.m1);
+            holder.setText(R.id.data_handler, "" + datas.get(position).getHandlerAccout());
+            holder.setText(R.id.data_workpiece_id, "" + datas.get(position).getWorkid());
+            holder.setText(R.id.data_event, datas.get(position).getEvent());
+            holder.setText(R.id.data_m1, "" + datas.get(position).m2);
+            holder.setText(R.id.data_m1_group, "" + datas.get(position).getM1_group());
             holder.setText(R.id.data_m2, "" + datas.get(position).m2);
+            holder.setText(R.id.data_m2_group, "" + datas.get(position).getM2_group());
             holder.setText(R.id.data_m3, "" + datas.get(position).m3);
+            holder.setText(R.id.data_m3_group, "" + datas.get(position).getM3_group());
             holder.setText(R.id.data_m4, "" + datas.get(position).m4);
-            holder.setText(R.id.data_time, DateUtils.getDate(datas.get(position).time));
-            holder.setText(R.id.data_result, "" + datas.get(position).result);
+            holder.setText(R.id.data_m4_group, "" + datas.get(position).getM4_group());
+            holder.setText(R.id.data_time, DateUtils.getDate(datas.get(position).getTimeStamp()));
+            holder.setText(R.id.data_result, "" + datas.get(position).getResult());
         }
 
         @Override

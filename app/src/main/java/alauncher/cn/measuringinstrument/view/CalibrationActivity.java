@@ -139,9 +139,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
             k[2] = bean.getCh3KValue();
             k[3] = bean.getCh4KValue();
 
-
             NumberFormat nf = NumberFormat.getInstance();
-
             kValueEdt[0].setText(nf.format(bean.getCh1KValue() * 1000));
             kValueEdt[1].setText(nf.format(bean.getCh2KValue() * 1000));
             kValueEdt[2].setText(nf.format(bean.getCh3KValue() * 1000));

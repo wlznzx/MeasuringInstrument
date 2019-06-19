@@ -9,8 +9,12 @@ import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 
 import alauncher.cn.measuringinstrument.App;
+import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
+import alauncher.cn.measuringinstrument.bean.GroupBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
+import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
@@ -46,12 +50,23 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     private int[] currentCHADValue = {4230, 8241, 12342, 14537};
 
+    private GroupBean[] mGroupBeans = new GroupBean[4];
+
+    // 附加信息;
+
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) 1);
         if (mParameterBean != null) android.util.Log.d(TAG, mParameterBean.toString());
         mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) 1);
         if (mCalibrationBean != null) Log.d(TAG, mCalibrationBean.toString());
+
+        GroupBeanDao _dao = App.getDaoSession().getGroupBeanDao();
+        if (_dao != null) {
+            for (int i = 0; i < 4; i++) {
+                mGroupBeans[i] = _dao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.codeID), GroupBeanDao.Properties.M_index.eq(i + 1)).unique();
+            }
+        }
     }
 
     @Override
@@ -162,6 +177,55 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         return mParameterBean;
     }
 
+    @Override
+    public void saveResult(double[] ms, AddInfoBean bean) {
+        ResultBean _bean = new ResultBean();
+        // _bean.setId(App.codeID);
+        _bean.setHandlerAccout(App.handlerAccout);
+
+        _bean.setM1(ms[0]);
+        _bean.setM2(ms[1]);
+        _bean.setM3(ms[2]);
+        _bean.setM4(ms[3]);
+
+        String[] _group = getMGroupValues(ms);
+        _bean.setM1_group(_group[0]);
+        _bean.setM2_group(_group[1]);
+        _bean.setM3_group(_group[2]);
+        _bean.setM4_group(_group[3]);
+        _bean.setTimeStamp(System.currentTimeMillis());
+
+        if (bean != null) {
+            _bean.setEvent(bean.getEvent());
+        }
+
+        App.getDaoSession().getResultBeanDao().insert(_bean);
+    }
+
+    @Override
+    public String[] getMGroupValues(double[] ms) {
+        String[] result = new String[4];
+        for (int i = 0; i < 4; i++) {
+            GroupBean _bean = mGroupBeans[i];
+            if (_bean != null) {
+                if (ms[i] < _bean.getA_upper_limit() && ms[i] > _bean.getA_lower_limit()) {
+                    result[i] = "A";
+                } else if (ms[i] < _bean.getB_upper_limit() && ms[i] > _bean.getB_lower_limit()) {
+                    result[i] = "B";
+                } else if (ms[i] < _bean.getC_upper_limit() && ms[i] > _bean.getC_lower_limit()) {
+                    result[i] = "C";
+                } else if (ms[i] < _bean.getD_upper_limit() && ms[i] > _bean.getD_lower_limit()) {
+                    result[i] = "D";
+                } else {
+                    result[i] = "未分组";
+                }
+            } else {
+                result[i] = "未分组";
+            }
+        }
+        return result;
+    }
+
     /*
      *
      *   将读出来的AD字，通过校准，转化为校准后的测量值;
@@ -199,7 +263,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         double m3 = ch3;
         double m4 = ch4;
         if (mParameterBean != null) {
-
             try {
                 jep.addVariable("ch1", ch1);
                 jep.addVariable("ch2", ch2);
@@ -235,5 +298,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         _values[3] = m4;
         return _values;
     }
+
 
 }
