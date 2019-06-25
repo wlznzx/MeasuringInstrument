@@ -22,11 +22,15 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
+import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImpl;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
@@ -125,6 +129,8 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         }
     }
 
+    LineDataSet set1;
+
     private void setDatas(int count, double range) {
         ArrayList<Entry> values = new ArrayList<>();
 
@@ -133,7 +139,6 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
             values.add(new Entry(i, val, getResources().getDrawable(R.drawable.star)));
         }
 
-        LineDataSet set1;
         // create a dataset and give it a type
         set1 = new LineDataSet(values, getResources().getString(R.string.qualified_number));
 
@@ -188,6 +193,33 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         // create a data object with the data sets
         LineData data = new LineData(dataSets);
         chart.setData(data);
+    }
+
+    private List<Entry> getDatas() {
+        ResultBeanDao _dao = App.getDaoSession().getResultBeanDao();
+        List<ResultBean> beans = _dao.queryBuilder().limit(30).list();
+
+        ArrayList<Entry> values = new ArrayList<>();
+        for (int i = 0; i < beans.size(); i++) {
+            float _val = 0;
+            if (curMode == 1) {
+                _val = (float) beans.get(i).getM1();
+            } else if (curMode == 2) {
+                _val = (float) beans.get(i).getM2();
+            } else if (curMode == 3) {
+                _val = (float) beans.get(i).getM3();
+            } else if (curMode == 4) {
+                _val = (float) beans.get(i).getM4();
+            }
+            values.add(new Entry(i, _val, getResources().getDrawable(R.drawable.star)));
+        }
+        return values;
+    }
+
+    private void updateChartDatas() {
+        set1.setValues(getDatas());
+        chart.setData(new LineData(set1));
+        chart.notifyDataSetChanged();
     }
 
     @Override
@@ -264,6 +296,7 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         }
         setMTitle(mode);
         updateMValues(curMValues);
+        updateChartDatas();
     }
 
 
@@ -339,7 +372,6 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
             XAxis xAxis;
             {   // // X-Axis Style // //
                 xAxis = chart.getXAxis();
-
                 // vertical grid lines
                 xAxis.enableGridDashedLine(10f, 10f, 0f);
             }
@@ -347,13 +379,10 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
             YAxis yAxis;
             {   // // Y-Axis Style // //
                 yAxis = chart.getAxisLeft();
-
                 // disable dual axis (only use LEFT axis)
                 chart.getAxisRight().setEnabled(false);
-
                 // horizontal grid lines
                 yAxis.enableGridDashedLine(10f, 10f, 0f);
-
                 // axis range
                 yAxis.setAxisMaximum(200f);
                 yAxis.setAxisMinimum(-50f);
