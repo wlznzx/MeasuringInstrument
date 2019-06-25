@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
@@ -240,7 +241,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
 
     private CalibrationBean view2Bean() {
         CalibrationBean _bean = new CalibrationBean();
-        _bean.setCode_id(1);
+        _bean.setCode_id(App.getSetupBean().getCodeID());
         // 校验模式
         _bean.setCh1CalibrationType((int) calibrationTypeSP[0].getSelectedItemId());
         _bean.setCh2CalibrationType((int) calibrationTypeSP[1].getSelectedItemId());

@@ -14,12 +14,16 @@ import org.greenrobot.greendao.annotation.NotNull;
 @Entity
 public class SetupBean {
 
+    @Id
+    public Long id;
+
     public int codeID;
 
     public String accout;
 
-    @Generated(hash = 1671504447)
-    public SetupBean(int codeID, String accout) {
+    @Generated(hash = 1809436141)
+    public SetupBean(Long id, int codeID, String accout) {
+        this.id = id;
         this.codeID = codeID;
         this.accout = accout;
     }
@@ -42,6 +46,14 @@ public class SetupBean {
 
     public void setAccout(String accout) {
         this.accout = accout;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

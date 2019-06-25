@@ -21,13 +21,14 @@ public class User {
     public String password;
 
     public int status;
+
     public String email;
 
-    public long id;
+    public String id;
 
-    @Generated(hash = 1868478386)
+    @Generated(hash = 172240613)
     public User(String accout, @NotNull String name, @NotNull String password,
-            int status, String email, long id) {
+                int status, String email, String id) {
         this.accout = accout;
         this.name = name;
         this.password = password;
@@ -80,11 +81,23 @@ public class User {
         this.email = email;
     }
 
-    public long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "accout='" + accout + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", status=" + status +
+                ", email='" + email + '\'' +
+                ", id='" + id + '\'' +
+                '}';
     }
 }

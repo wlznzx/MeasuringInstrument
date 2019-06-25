@@ -15,7 +15,7 @@ import alauncher.cn.measuringinstrument.bean.SetupBean;
 /** 
  * DAO for table "SETUP_BEAN".
 */
-public class SetupBeanDao extends AbstractDao<SetupBean, Void> {
+public class SetupBeanDao extends AbstractDao<SetupBean, Long> {
 
     public static final String TABLENAME = "SETUP_BEAN";
 
@@ -24,8 +24,9 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property CodeID = new Property(0, int.class, "codeID", false, "CODE_ID");
-        public final static Property Accout = new Property(1, String.class, "accout", false, "ACCOUT");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property CodeID = new Property(1, int.class, "codeID", false, "CODE_ID");
+        public final static Property Accout = new Property(2, String.class, "accout", false, "ACCOUT");
     }
 
 
@@ -41,8 +42,9 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"SETUP_BEAN\" (" + //
-                "\"CODE_ID\" INTEGER NOT NULL ," + // 0: codeID
-                "\"ACCOUT\" TEXT);"); // 1: accout
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"CODE_ID\" INTEGER NOT NULL ," + // 1: codeID
+                "\"ACCOUT\" TEXT);"); // 2: accout
     }
 
     /** Drops the underlying database table. */
@@ -54,60 +56,75 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Void> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, SetupBean entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getCodeID());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+        stmt.bindLong(2, entity.getCodeID());
  
         String accout = entity.getAccout();
         if (accout != null) {
-            stmt.bindString(2, accout);
+            stmt.bindString(3, accout);
         }
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, SetupBean entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getCodeID());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+        stmt.bindLong(2, entity.getCodeID());
  
         String accout = entity.getAccout();
         if (accout != null) {
-            stmt.bindString(2, accout);
+            stmt.bindString(3, accout);
         }
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public SetupBean readEntity(Cursor cursor, int offset) {
         SetupBean entity = new SetupBean( //
-            cursor.getInt(offset + 0), // codeID
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // accout
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.getInt(offset + 1), // codeID
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // accout
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, SetupBean entity, int offset) {
-        entity.setCodeID(cursor.getInt(offset + 0));
-        entity.setAccout(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setCodeID(cursor.getInt(offset + 1));
+        entity.setAccout(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(SetupBean entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(SetupBean entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(SetupBean entity) {
-        return null;
+    public Long getKey(SetupBean entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(SetupBean entity) {
-        // TODO
-        return false;
+        return entity.getId() != null;
     }
 
     @Override

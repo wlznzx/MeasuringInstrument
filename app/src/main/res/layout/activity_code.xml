@@ -40,13 +40,14 @@
         android:orientation="horizontal">
 
         <RadioGroup
+            android:id="@+id/code_rg"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <RadioButton
-                android:id="@+id/nan"
+                android:id="@+id/code_1"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -55,84 +56,94 @@
                 android:text="01" />
 
             <RadioButton
+                android:id="@+id/code_2"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
-                android:text="02"/>
+                android:text="02" />
 
             <RadioButton
+                android:id="@+id/code_3"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
-                android:text="03"/>
+                android:text="03" />
 
             <RadioButton
+                android:id="@+id/code_4"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
-                android:text="04"/>
+                android:text="04" />
 
             <RadioButton
+                android:id="@+id/code_5"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
-                android:text="05"/>
+                android:text="05" />
 
             <RadioButton
+                android:id="@+id/code_6"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
-                android:text="06"/>
+                android:text="06" />
 
             <RadioButton
+                android:id="@+id/code_7"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
-                android:text="07"/>
+                android:text="07" />
 
             <RadioButton
+                android:id="@+id/code_8"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
-                android:text="08"/>
+                android:text="08" />
 
             <RadioButton
+                android:id="@+id/code_9"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
-                android:text="09"/>
+                android:text="09" />
 
             <RadioButton
+                android:id="@+id/code_10"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
-                android:text="10"/>
+                android:text="10" />
 
             <RadioButton
+                android:id="@+id/code_11"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
-                android:text="11"/>
+                android:text="11" />
         </RadioGroup>
 
 

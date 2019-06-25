@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 
+import alauncher.cn.measuringinstrument.App;
 import androidx.annotation.Nullable;
 
 import android.util.Log;
@@ -37,6 +38,9 @@ public abstract class BaseActivity extends Activity implements BaseView {
 
     @BindView(R.id.action_bar_title)
     TextView actionTitleTV;
+
+    @BindView(R.id.action_bar_tips)
+    public TextView actionTips;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,9 +73,16 @@ public abstract class BaseActivity extends Activity implements BaseView {
             });
         }
 
+
         //初始化View
         initView();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
     }
 
     /**

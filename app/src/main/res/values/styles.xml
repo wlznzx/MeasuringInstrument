@@ -49,6 +49,21 @@
         <item name="android:layout_marginRight">10dp</item>
     </style>
 
+    <style name="EdWordStyle">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+        </item>
+        <item name="android:background">@drawable/edittext_focused</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginBottom">15dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
     <style name="MTitleStyle">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@android:color/black</item>

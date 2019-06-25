@@ -34,7 +34,7 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
 
     public CalibrationPresenterImpl(CalibrationActivityView view) {
         mView = view;
-        mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) 1);
+        mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) App.getSetupBean().getCodeID());
         if (mCalibrationBean != null) android.util.Log.d("wlDebug", mCalibrationBean.toString());
     }
 
@@ -124,13 +124,13 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
 
     @Override
     public void updateUI() {
-        mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) 1);
+        mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) App.getSetupBean().getCodeID());
         if (mView != null) mView.onUIUpdate(mCalibrationBean);
     }
 
     @Override
     public void saveCalibration(CalibrationBean bean) {
-        if (App.getDaoSession().getCalibrationBeanDao().load((long) 1) == null) {
+        if (App.getDaoSession().getCalibrationBeanDao().load((long) App.getSetupBean().getCodeID()) == null) {
             App.getDaoSession().getCalibrationBeanDao().insert(bean);
         } else {
             App.getDaoSession().getCalibrationBeanDao().update(bean);

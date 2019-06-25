@@ -258,8 +258,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:entries="@array/resolution_values"
-            />
+            android:entries="@array/resolution_values" />
 
         <Spinner
             android:id="@+id/resolution_sp_m2"
@@ -267,7 +266,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:entries="@array/resolution_values"/>
+            android:entries="@array/resolution_values" />
 
         <Spinner
             android:id="@+id/resolution_sp_m3"
@@ -275,7 +274,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:entries="@array/resolution_values"/>
+            android:entries="@array/resolution_values" />
 
         <Spinner
             android:id="@+id/resolution_sp_m4"
@@ -283,7 +282,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:entries="@array/resolution_values"/>
+            android:entries="@array/resolution_values" />
 
     </LinearLayout>
 
@@ -436,9 +435,9 @@
             android:id="@+id/save_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:background="@drawable/btn_selector"
-            android:text="@string/save"
-            android:layout_centerInParent="true" />
+            android:text="@string/save" />
     </RelativeLayout>
 
 </LinearLayout>

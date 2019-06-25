@@ -69,10 +69,10 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
     @Override
     protected void initView() {
         session = App.getDaoSession();
-        mParameterBean = session.getParameterBeanDao().load((long) 1);
+        mParameterBean = session.getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
         if (mParameterBean == null) {
             mParameterBean = new ParameterBean();
-            mParameterBean.setCode_id(1);
+            mParameterBean.setCode_id(App.getSetupBean().getCodeID());
         }
         updateUI();
     }
@@ -80,7 +80,7 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
         view2Bean();
-        if (session.getParameterBeanDao().load((long) 1) == null) {
+        if (session.getParameterBeanDao().load((long) App.getSetupBean().getCodeID()) == null) {
             session.getParameterBeanDao().insert(mParameterBean);
         } else {
             session.getParameterBeanDao().update(mParameterBean);
@@ -210,7 +210,7 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
     }
 
     private void view2Bean() {
-        mParameterBean.setCode_id(1);
+        mParameterBean.setCode_id(App.getSetupBean().getCodeID());
         // 分辨率
         mParameterBean.setM1_resolution((int) resolutionSp[0].getSelectedItemId());
         mParameterBean.setM2_resolution((int) resolutionSp[1].getSelectedItemId());

@@ -51,7 +51,7 @@ public class MGroupActivity extends BaseActivity {
         android.util.Log.d("wlDebug", "mIndex = " + mIndex);
 
         mDao = App.getDaoSession().getGroupBeanDao();
-        GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(1), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
+        GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
         if (_bean != null) {
 
             android.util.Log.d("wlDebug", _bean.toString());
@@ -75,7 +75,7 @@ public class MGroupActivity extends BaseActivity {
 
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
-        GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(1), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
+        GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
         if (_bean == null) {
             App.getDaoSession().getGroupBeanDao().insert(view2Bean());
         } else {
@@ -87,7 +87,7 @@ public class MGroupActivity extends BaseActivity {
 
     private GroupBean view2Bean() {
         GroupBean _bean = new GroupBean();
-        _bean.setCode_id(1);
+        _bean.setCode_id(App.getSetupBean().getCodeID());
         _bean.setM_index(mIndex);
         // 分组的上区间
         if (!upperLimits[0].getText().toString().equals(""))

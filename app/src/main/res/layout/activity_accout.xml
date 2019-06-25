@@ -14,10 +14,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:orientation="horizontal"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
@@ -25,51 +25,72 @@
             android:layout_weight="1" />
 
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/accout"
-            style="@style/TextStyle"
-            />
+            android:text="@string/accout" />
 
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/TextStyle"
             android:layout_weight="1"
-            android:text="@string/name"
-            />
+            android:text="@string/name" />
 
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/TextStyle"
             android:layout_weight="1"
-            android:text="@string/status"
-            />
+            android:text="@string/status" />
 
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/TextStyle"
             android:layout_weight="1"
-            android:text="@string/id"/>
+            android:text="@string/id" />
 
         <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            style="@style/TextStyle"
-            android:text="@string/email"/>
+            android:text="@string/email" />
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.yanzhenjie.recyclerview.SwipeRecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:layout_marginTop="12dp"
-        android:layout_marginRight="12dp" />
+        android:layout_weight="10" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/add_user_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="15dp"
+                android:src="@drawable/add_circle"
+                android:textColor="@android:color/white" />
+        </FrameLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>

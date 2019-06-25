@@ -56,15 +56,15 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
-        mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) 1);
+        mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
         if (mParameterBean != null) android.util.Log.d(TAG, mParameterBean.toString());
-        mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) 1);
+        mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) App.getSetupBean().getCodeID());
         if (mCalibrationBean != null) Log.d(TAG, mCalibrationBean.toString());
 
         GroupBeanDao _dao = App.getDaoSession().getGroupBeanDao();
         if (_dao != null) {
             for (int i = 0; i < 4; i++) {
-                mGroupBeans[i] = _dao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.codeID), GroupBeanDao.Properties.M_index.eq(i + 1)).unique();
+                mGroupBeans[i] = _dao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(i + 1)).unique();
             }
         }
     }
