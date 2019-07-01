@@ -50,8 +50,8 @@
     <string name="select_all">全选</string>
     <string name="samll_part_value">小件取值</string>
     <string name="big_part_value">大件取值</string>
-    <string name="code_num">公式</string>
-    <string name="code_name">公式名</string>
+    <string name="code_num">程序</string>
+    <string name="code_name">程序名</string>
     <string name="code1_name">程序 1</string>
     <string name="code2_name">程序 2</string>
     <string name="code3_name">程序 3</string>

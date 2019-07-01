@@ -69,8 +69,6 @@ public class DataActivity extends BaseActivity {
 
 
         mResultBeanDao = App.getDaoSession().getResultBeanDao();
-
-
         DataActivity.DataAdapter _adapter = new DataActivity.DataAdapter(mResultBeanDao.queryBuilder().orderDesc(ResultBeanDao.Properties.Id).list());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(DataActivity.this);
         rv.setLayoutManager(layoutManager);
