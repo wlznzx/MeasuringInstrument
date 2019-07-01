@@ -204,8 +204,6 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
             formulaEd.get(1).setText(mParameterBean.getM2_code());
             formulaEd.get(2).setText(mParameterBean.getM3_code());
             formulaEd.get(3).setText(mParameterBean.getM4_code());
-
-
         }
     }
 
@@ -254,7 +252,7 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
         mParameterBean.setM2_scale(getRbyID((int) resolutionSp[1].getSelectedItemId()));
         mParameterBean.setM3_scale(getRbyID((int) resolutionSp[2].getSelectedItemId()));
         mParameterBean.setM4_scale(getRbyID((int) resolutionSp[3].getSelectedItemId()));
-//
+        
 //        describeEd[0].setText(mParameterBean.getM1_describe());
 //        describeEd[1].setText(mParameterBean.getM2_describe());
 //        describeEd[2].setText(mParameterBean.getM3_describe());

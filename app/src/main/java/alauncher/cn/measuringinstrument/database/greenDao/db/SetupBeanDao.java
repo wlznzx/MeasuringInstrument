@@ -27,6 +27,7 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property CodeID = new Property(1, int.class, "codeID", false, "CODE_ID");
         public final static Property Accout = new Property(2, String.class, "accout", false, "ACCOUT");
+        public final static Property IsAutoPopUp = new Property(3, boolean.class, "isAutoPopUp", false, "IS_AUTO_POP_UP");
     }
 
 
@@ -44,7 +45,8 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"SETUP_BEAN\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"CODE_ID\" INTEGER NOT NULL ," + // 1: codeID
-                "\"ACCOUT\" TEXT);"); // 2: accout
+                "\"ACCOUT\" TEXT," + // 2: accout
+                "\"IS_AUTO_POP_UP\" INTEGER NOT NULL );"); // 3: isAutoPopUp
     }
 
     /** Drops the underlying database table. */
@@ -67,6 +69,7 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Long> {
         if (accout != null) {
             stmt.bindString(3, accout);
         }
+        stmt.bindLong(4, entity.getIsAutoPopUp() ? 1L: 0L);
     }
 
     @Override
@@ -83,6 +86,7 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Long> {
         if (accout != null) {
             stmt.bindString(3, accout);
         }
+        stmt.bindLong(4, entity.getIsAutoPopUp() ? 1L: 0L);
     }
 
     @Override
@@ -95,7 +99,8 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Long> {
         SetupBean entity = new SetupBean( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getInt(offset + 1), // codeID
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // accout
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // accout
+            cursor.getShort(offset + 3) != 0 // isAutoPopUp
         );
         return entity;
     }
@@ -105,6 +110,7 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setCodeID(cursor.getInt(offset + 1));
         entity.setAccout(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setIsAutoPopUp(cursor.getShort(offset + 3) != 0);
      }
     
     @Override

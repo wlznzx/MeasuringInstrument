@@ -3,7 +3,6 @@ package alauncher.cn.measuringinstrument.bean;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.NotNull;
 
 /**
  * 日期：2019/4/25 0025 9:27
@@ -21,11 +20,14 @@ public class SetupBean {
 
     public String accout;
 
-    @Generated(hash = 1809436141)
-    public SetupBean(Long id, int codeID, String accout) {
+    public boolean isAutoPopUp;
+
+    @Generated(hash = 1297150129)
+    public SetupBean(Long id, int codeID, String accout, boolean isAutoPopUp) {
         this.id = id;
         this.codeID = codeID;
         this.accout = accout;
+        this.isAutoPopUp = isAutoPopUp;
     }
 
     @Generated(hash = 4168623)
@@ -54,6 +56,14 @@ public class SetupBean {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean getIsAutoPopUp() {
+        return this.isAutoPopUp;
+    }
+
+    public void setIsAutoPopUp(boolean isAutoPopUp) {
+        this.isAutoPopUp = isAutoPopUp;
     }
 
 }

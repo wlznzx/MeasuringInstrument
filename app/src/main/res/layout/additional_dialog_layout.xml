@@ -64,7 +64,7 @@
 
             <EditText
                 android:id="@+id/eventid_edt"
-                style="@style/EdNumOnlyStyle"
+                style="@style/EdTextStyle"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content" />
 

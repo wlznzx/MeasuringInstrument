@@ -195,8 +195,11 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
         if (bean != null) {
             _bean.setEvent(bean.getEvent());
+            _bean.setWorkid(bean.getWorkid());
+        } else {
+            _bean.setEvent("");
+            _bean.setWorkid("");
         }
-
         App.getDaoSession().getResultBeanDao().insert(_bean);
     }
 

@@ -38,6 +38,7 @@ public class App extends Application {
             SetupBean _bean = new SetupBean();
             _bean.setCodeID(1);
             _bean.setAccout("wl");
+            _bean.setIsAutoPopUp(false);
             getDaoSession().getSetupBeanDao().insert(_bean);
         }
 
@@ -58,5 +59,11 @@ public class App extends Application {
 
     public static SetupBean getSetupBean() {
         return getDaoSession().getSetupBeanDao().load(SETTING_ID);
+    }
+
+    public static void setSetupPopUp(boolean isPopUp) {
+        SetupBean _bean = getSetupBean();
+        _bean.setIsAutoPopUp(isPopUp);
+        getDaoSession().getSetupBeanDao().update(_bean);
     }
 }

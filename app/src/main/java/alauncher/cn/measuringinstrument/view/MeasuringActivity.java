@@ -5,7 +5,6 @@ import android.graphics.DashPathEffect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +30,6 @@ import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
-import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImpl;
@@ -106,6 +104,10 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
             mDescribes[2].setText(mParameterBean.getM3_describe());
             mDescribes[3].setText(mParameterBean.getM4_describe());
         }
+
+        if (App.getSetupBean().getIsAutoPopUp()) {
+            showAddDialog();
+        }
     }
 
     @OnClick({R.id.value_btn, R.id.additional_btn, R.id.measure_save_btn})
@@ -125,9 +127,7 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                 }
                 break;
             case R.id.additional_btn:
-                AdditionalDialog mAdditionalDialog = new AdditionalDialog(this, R.style.Translucent_NoTitle);
-                mAdditionalDialog.setDialogInterface(this);
-                mAdditionalDialog.show();
+                showAddDialog();
                 break;
             case R.id.measure_save_btn:
                 mMeasuringPresenter.saveResult(curMValues, mAddInfoBean);
@@ -135,6 +135,12 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                 updateChartDatas();
                 break;
         }
+    }
+
+    private void showAddDialog() {
+        AdditionalDialog mAdditionalDialog = new AdditionalDialog(this, R.style.Translucent_NoTitle);
+        mAdditionalDialog.setDialogInterface(this);
+        mAdditionalDialog.show();
     }
 
 
@@ -185,7 +191,6 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
             }
         });
 
-
         // set color of filled area
         if (Utils.getSDKInt() >= 18) {
             // drawables only supported on api level 18 and above
@@ -221,8 +226,6 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
             }
             values.add(new Entry(i + 1, _val, getResources().getDrawable(R.drawable.star)));
         }
-
-
         return values;
     }
 
@@ -247,7 +250,6 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                 updateMValues(curMValues);
             }
         });
-
     }
 
 
@@ -473,5 +475,7 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     @Override
     public void onAdditionSet(AddInfoBean pBean) {
         mAddInfoBean = pBean;
+        // 设置是否自动弹出;
+        App.setSetupPopUp(mAddInfoBean.isAutoShow());
     }
 }

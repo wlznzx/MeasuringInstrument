@@ -9,7 +9,9 @@ package alauncher.cn.measuringinstrument.bean;
 public class AddInfoBean {
 
     private String workid;
+
     private String eventid;
+
     private boolean isAutoShow;
 
     private String event;
