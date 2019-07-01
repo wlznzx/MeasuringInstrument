@@ -7,8 +7,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import org.nfunk.jep.function.Str;
-
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -73,7 +71,8 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
 
     private double k[] = new double[4];
 
-    DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+    DecimalFormat decimalFormat = new DecimalFormat("#,##0.0000");
+    DecimalFormat decimalFormat6 = new DecimalFormat("#,##0.000000");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,17 +145,17 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
             kValueEdt[2].setText(nf.format(bean.getCh3KValue() * 1000));
             kValueEdt[3].setText(nf.format(bean.getCh4KValue() * 1000));
             // 补偿值;
-            compensationValueEdt[0].setText(String.valueOf(bean.getCh1CompensationValue()));
-            compensationValueEdt[1].setText(String.valueOf(bean.getCh2CompensationValue()));
-            compensationValueEdt[2].setText(String.valueOf(bean.getCh3CompensationValue()));
-            compensationValueEdt[3].setText(String.valueOf(bean.getCh4CompensationValue()));
+            compensationValueEdt[0].setText(decimalFormat.format(bean.getCh1CompensationValue()));
+            compensationValueEdt[1].setText(decimalFormat.format(bean.getCh2CompensationValue()));
+            compensationValueEdt[2].setText(decimalFormat.format(bean.getCh3CompensationValue()));
+            compensationValueEdt[3].setText(decimalFormat.format(bean.getCh4CompensationValue()));
 
             for (int i = 0; i < calibrationTypeSP.length; i++) {
                 kValueEdt[i].setEnabled(calibrationTypeSP[i].getSelectedItemId() == 0);
             }
         }
         doUpdateMeasureADValue();
-        doCalcMeasureValue();
+        doCalcMeasureValue(currentCHADValue);
     }
 
     @OnClick({R.id.samll_part_btn, R.id.big_part_btn, R.id.calibration_save_btn, R.id.select_all_btn})
@@ -170,7 +169,6 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                     } catch (NumberFormatException e) {
 
                     }
-
                 break;
 
             case R.id.big_part_btn:
@@ -200,7 +198,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
     @OnCheckedChanged({R.id.ch1_rb, R.id.ch2_rb, R.id.ch3_rb, R.id.ch4_rb})
     public void radioButtonCheckChange(boolean isChecked) {
         doUpdateMeasureADValue();
-        doCalcMeasureValue();
+        doCalcMeasureValue(currentCHADValue);
     }
 
     @OnItemSelected({R.id.calibration_method_sp_m1, R.id.calibration_method_sp_m2, R.id.calibration_method_sp_m3, R.id.calibration_method_sp_m4})
@@ -219,10 +217,11 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
             public void run() {
                 for (int i = 0; i < measureADEdt.length; i++) {
                     measureADEdt[i].setText(String.valueOf(currentCHADValue[i]));
-                    doCalcMeasureValue();
+                    // doCalcMeasureValue();
                 }
             }
         });
+        doCalcMeasureValue(values);
     }
 
     @Override
@@ -273,6 +272,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
         _bean.setCh3KValue(Double.valueOf(kValueEdt[2].getText().toString().trim()) / 1000);
         _bean.setCh4KValue(Double.valueOf(kValueEdt[3].getText().toString().trim()) / 1000);
         // 偏差;
+
         _bean.setCh1CompensationValue(Double.valueOf(compensationValueEdt[0].getText().toString().trim()));
         _bean.setCh2CompensationValue(Double.valueOf(compensationValueEdt[1].getText().toString().trim()));
         _bean.setCh3CompensationValue(Double.valueOf(compensationValueEdt[2].getText().toString().trim()));
@@ -290,16 +290,19 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
         }
     }
 
-    private void doCalcMeasureValue() {
+    private void doCalcMeasureValue(int[] value) {
+        double[] ys = new double[4];
         for (int i = 0; i < chRbs.length; i++) {
             if (chRbs[i].isChecked()) {
                 try {
                     double k = Double.valueOf(kValueEdt[i].getText().toString().trim()) / 1000;
                     double c = Double.valueOf(compensationValueEdt[i].getText().toString().trim());
                     // 计算实际值；y = k * x + c;
-                    int x = Integer.parseInt(measureADEdt[i].getText().toString().trim(), 10);
-                    double y = Arith.add(Arith.mul(k, x), c);
-                    measureValueEdt[i].setText(decimalFormat.format(y));
+                    // int x = Integer.parseInt(measureADEdt[i].getText().toString().trim(), 10);
+                    int x = value[i];
+                    // double y = Arith.add(Arith.mul(k, x), c);
+                    ys[i] = Arith.add(Arith.mul(k, x), c);
+                    // measureValueEdt[i].setText(decimalFormat.format(y));
                 } catch (NumberFormatException e) {
 
                 }
@@ -307,6 +310,14 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                 measureValueEdt[i].setText("");
             }
         }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 4; i++) {
+                    measureValueEdt[i].setText(decimalFormat.format(ys[i]));
+                }
+            }
+        });
     }
 
     private void doCalc() {
@@ -317,9 +328,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                 double k = 0, c = 0;
                 if (calibrationTypeSP[i].getSelectedItemId() == 0) {
                     try {
-
                         android.util.Log.d("wlDebug", "is ?= " + smallPartADEdt[i].getText() + "sAD = " + smallPartADEdt[i].getText().equals(""));
-
                         if (!smallPartADEdt[i].getText().toString().trim().equals("")) {
                             double y1 = Double.valueOf(smallPartEdt[i].getText().toString().trim());
                             int x1 = Integer.parseInt(smallPartADEdt[i].getText().toString().trim(), 10);
@@ -328,7 +337,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                             android.util.Log.d("wlDebug", "y1 = " + y1 + " x1 = " + x1 + " k = " + k + " c = " + c);
                             BigDecimal _c = new BigDecimal(c + "");
                             measureValueEdt[i].setText(_c + "");
-                            compensationValueEdt[i].setText("" + _c);
+                            compensationValueEdt[i].setText(decimalFormat.format(_c));
                         } else if (!bigPartADEdt[i].getText().equals("")) {
                             double y2 = Double.valueOf(bigPartCHEdt[i].getText().toString().trim());
                             int x2 = Integer.parseInt(bigPartADEdt[i].getText().toString().trim(), 10);
@@ -337,7 +346,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                             android.util.Log.d("wlDebug", "y2 = " + y2 + " x = " + x2 + " k = " + k + " c = " + c);
                             BigDecimal _c = new BigDecimal(c + "");
                             measureValueEdt[i].setText(_c + "");
-                            compensationValueEdt[i].setText("" + _c);
+                            compensationValueEdt[i].setText(decimalFormat.format(_c));
                         }
                     } catch (NumberFormatException e) {
                         android.util.Log.d("wlDebug", "---------", e);
@@ -364,9 +373,10 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                         k = Arith.div(_temp, _temp2);
                         c = mCalibrationPresenter.calculationC(y1, k, x1);
                         BigDecimal bg = new BigDecimal(k * 1000 + "");
-                        kValueEdt[i].setText("" + bg);
+                        // 倍率小数点后6位;
+                        kValueEdt[i].setText(decimalFormat6.format(bg));
                         // kValueEdt[i].setText(decimalFormat.format(k));
-                        compensationValueEdt[i].setText("" + c);
+                        compensationValueEdt[i].setText(decimalFormat.format(c));
 
                     } catch (NumberFormatException e) {
                         android.util.Log.d("wlDebug", "---------", e);
@@ -374,7 +384,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                     }
                 }
             }
-            doCalcMeasureValue();
+            doCalcMeasureValue(currentCHADValue);
         }
     }
 

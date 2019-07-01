@@ -52,12 +52,29 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     private GroupBean[] mGroupBeans = new GroupBean[4];
 
+    // 上公差值;
+    private double[] upperValue = new double[4];
+    // 下公差值;
+    private double[] lowerValue = new double[4];
+
     // 附加信息;
 
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
-        if (mParameterBean != null) android.util.Log.d(TAG, mParameterBean.toString());
+        if (mParameterBean != null) {
+            android.util.Log.d(TAG, mParameterBean.toString());
+            // 计算上下公差值;
+            upperValue[0] = mParameterBean.getM1_nominal_value() + (mParameterBean.getM1_upper_tolerance_value() * 1000);
+            upperValue[1] = mParameterBean.getM2_nominal_value() + (mParameterBean.getM2_upper_tolerance_value() * 1000);
+            upperValue[2] = mParameterBean.getM3_nominal_value() + (mParameterBean.getM3_upper_tolerance_value() * 1000);
+            upperValue[3] = mParameterBean.getM4_nominal_value() + (mParameterBean.getM4_upper_tolerance_value() * 1000);
+
+            lowerValue[0] = mParameterBean.getM1_nominal_value() + (mParameterBean.getM1_lower_tolerance_value() * 1000);
+            lowerValue[1] = mParameterBean.getM2_nominal_value() + (mParameterBean.getM2_lower_tolerance_value() * 1000);
+            lowerValue[2] = mParameterBean.getM3_nominal_value() + (mParameterBean.getM3_lower_tolerance_value() * 1000);
+            lowerValue[3] = mParameterBean.getM4_nominal_value() + (mParameterBean.getM4_lower_tolerance_value() * 1000);
+        }
         mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) App.getSetupBean().getCodeID());
         if (mCalibrationBean != null) Log.d(TAG, mCalibrationBean.toString());
 
@@ -76,6 +93,9 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             serialHelper = new SerialHelper(sPort, iBaudRate) {
                 @Override
                 protected void onDataReceived(ComBean paramComBean) {
+                    // android.util.Log.d("wlDebug", "_value = " + ByteUtil.ByteArrToHex(paramComBean.bRec));
+
+                    /**/
                     for (byte _byte : paramComBean.bRec) {
                         if (_byte == 0x53) {
                             isCommandStart = true;
@@ -88,62 +108,34 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                         if (_byte == 0x54) {
                             isCommandStart = false;
                             String _value = ByteUtil.ByteArrToHex(command);
+
                             android.util.Log.d("wlDebug", "_value = " + _value);
                             _chValue[0] = command[2];
                             _chValue[1] = command[3];
-                            Double ch1 = Double.parseDouble(ByteUtil.ByteArrToHex(_chValue));
-                            android.util.Log.d("wlDebug", "ch1 = " + ch1);
+                            // int x1 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
+                            // Double ch1 = Double.valueOf(x1);
+                            String _value1 = ByteUtil.ByteArrToHex(_chValue);
+//                            android.util.Log.d("wlDebug", "ch1 = " + ch1);
                             _chValue[0] = command[4];
                             _chValue[1] = command[5];
-                            Double ch2 = Double.parseDouble(ByteUtil.ByteArrToHex(_chValue));
-                            android.util.Log.d("wlDebug", "ch2 = " + ch2);
+                            String _value2 = ByteUtil.ByteArrToHex(_chValue);
+                            // int x2 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
+                            // Double ch2 = Double.valueOf(x2);
+//                            android.util.Log.d("wlDebug", "ch2 = " + ch2);
                             _chValue[0] = command[6];
                             _chValue[1] = command[7];
-                            Double ch3 = Double.parseDouble(ByteUtil.ByteArrToHex(_chValue));
-                            android.util.Log.d("wlDebug", "ch3 = " + ch3);
-                            _chValue[0] = command[6];
-                            _chValue[1] = command[7];
-                            Double ch4 = Double.parseDouble(ByteUtil.ByteArrToHex(_chValue));
-                            android.util.Log.d("wlDebug", "ch4 = " + ch4);
-
-                            // 如果参数管理不为空的话，那么需要进行公式的校验;
-                            if (mParameterBean != null) {
-                                double m1 = ch1;
-                                double m2 = ch2;
-                                double m3 = ch3;
-                                double m4 = ch4;
-                                try {
-                                    jep.addVariable("ch1", ch1);
-                                    jep.addVariable("ch2", ch2);
-                                    jep.addVariable("ch3", ch3);
-                                    jep.addVariable("ch4", ch4);
-
-                                    if (!mParameterBean.getM1_code().equals("")) {
-                                        Node node = jep.parse(mParameterBean.getM1_code());
-                                        m1 = (double) jep.evaluate(node);
-                                    }
-                                    if (mParameterBean.getM2_code() != null) {
-                                        Node node = jep.parse(mParameterBean.getM2_code());
-                                        m2 = (double) jep.evaluate(node);
-                                    }
-                                    if (mParameterBean.getM3_code() != null) {
-                                        Node node = jep.parse(mParameterBean.getM3_code());
-                                        m3 = (double) jep.evaluate(node);
-                                    }
-                                    if (mParameterBean.getM4_code() != null) {
-                                        Node node = jep.parse(mParameterBean.getM4_code());
-                                        m4 = (double) jep.evaluate(node);
-                                    }/**/
-                                    if (mView != null)
-                                        mView.onMeasuringDataUpdate(new double[]{m1, m2, m3, m4});
-                                    // Toast.makeText(mContext, "result = " + result, Toast.LENGTH_SHORT).show();
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                if (mView != null)
-                                    mView.onMeasuringDataUpdate(new double[]{ch1, ch2, ch3, ch4});
-                            }
+                            String _value3 = ByteUtil.ByteArrToHex(_chValue);
+                            // int x3 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
+                            // Double ch3 = Double.valueOf(x3);
+//                            android.util.Log.d("wlDebug", "ch3 = " + ch3);
+                            _chValue[0] = command[8];
+                            _chValue[1] = command[9];
+                            String _value4 = ByteUtil.ByteArrToHex(_chValue);
+                            // int x4 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
+                            // Double ch4 = Double.valueOf(x4);
+//                            android.util.Log.d("wlDebug", "ch4 = " + ch4);
+                            if (mView != null)
+                                mView.onMeasuringDataUpdate(doCH2P(new String[]{_value1, _value2, _value3, _value4}));
                         }
                     }
                 }
@@ -188,6 +180,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         _bean.setM3(ms[2]);
         _bean.setM4(ms[3]);
 
+        if (mParameterBean != null) {
+            _bean.setResult(getMResults(ms));
+        } else {
+            _bean.setResult("未设置参数");
+        }
+
         String[] _group = getMGroupValues(ms);
         _bean.setM1_group(_group[0]);
         _bean.setM2_group(_group[1]);
@@ -224,6 +222,21 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             }
         }
         return result;
+    }
+
+
+    /*
+     *
+     * 根据测量值和上下公差，返回测试结果;
+     *
+     */
+    public String getMResults(double[] ms) {
+        for (int i = 0; i < 4; i++) {
+            if (ms[i] > upperValue[i] || ms[i] < lowerValue[i]) {
+                return "不合格";
+            }
+        }
+        return "合格";
     }
 
     /*

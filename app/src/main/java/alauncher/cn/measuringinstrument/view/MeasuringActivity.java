@@ -5,6 +5,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,9 +31,11 @@ import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImpl;
+import alauncher.cn.measuringinstrument.utils.NumberUtils;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import alauncher.cn.measuringinstrument.widget.AdditionalDialog;
 import alauncher.cn.measuringinstrument.widget.MValueView;
@@ -72,6 +75,10 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
 
     private AddInfoBean mAddInfoBean;
 
+    private LineDataSet set1;
+
+    private ParameterBean mParameterBean;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +94,7 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         mMeasuringPresenter = new MeasuringPresenterImpl(this);
         initChart();
         onMeasuringDataUpdate(curMValues);
-        ParameterBean mParameterBean = mMeasuringPresenter.getParameterBean();
+        mParameterBean = mMeasuringPresenter.getParameterBean();
         if (mParameterBean != null) {
             mMValueViews[0].init(mParameterBean.getM1_nominal_value(), mParameterBean.getM1_upper_tolerance_value(), mParameterBean.getM1_lower_tolerance_value(), mParameterBean.getM1_scale());
             mMValueViews[1].init(mParameterBean.getM2_nominal_value(), mParameterBean.getM2_upper_tolerance_value(), mParameterBean.getM2_lower_tolerance_value(), mParameterBean.getM2_scale());
@@ -125,14 +132,14 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
             case R.id.measure_save_btn:
                 mMeasuringPresenter.saveResult(curMValues, mAddInfoBean);
                 Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
+                updateChartDatas();
                 break;
         }
     }
 
-    LineDataSet set1;
 
     private void setDatas(int count, double range) {
-        ArrayList<Entry> values = new ArrayList<>();
+        ArrayList<Entry> values = new ArrayList<Entry>();
 
         for (int i = 0; i < count; i++) {
             float val = (float) (Math.random() * range) - 30;
@@ -178,6 +185,7 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
             }
         });
 
+
         // set color of filled area
         if (Utils.getSDKInt() >= 18) {
             // drawables only supported on api level 18 and above
@@ -197,29 +205,37 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
 
     private List<Entry> getDatas() {
         ResultBeanDao _dao = App.getDaoSession().getResultBeanDao();
-        List<ResultBean> beans = _dao.queryBuilder().limit(30).list();
+        List<ResultBean> beans = _dao.queryBuilder().orderDesc(ResultBeanDao.Properties.Id).limit(30).list();
 
-        ArrayList<Entry> values = new ArrayList<>();
+        ArrayList<Entry> values = new ArrayList<Entry>();
         for (int i = 0; i < beans.size(); i++) {
             float _val = 0;
             if (curMode == 1) {
-                _val = (float) beans.get(i).getM1();
+                _val = (float) beans.get(beans.size() - 1 - i).getM1();
             } else if (curMode == 2) {
-                _val = (float) beans.get(i).getM2();
+                _val = (float) beans.get(beans.size() - 1 - i).getM2();
             } else if (curMode == 3) {
-                _val = (float) beans.get(i).getM3();
+                _val = (float) beans.get(beans.size() - 1 - i).getM3();
             } else if (curMode == 4) {
-                _val = (float) beans.get(i).getM4();
+                _val = (float) beans.get(beans.size() - 1 - i).getM4();
             }
-            values.add(new Entry(i, _val, getResources().getDrawable(R.drawable.star)));
+            values.add(new Entry(i + 1, _val, getResources().getDrawable(R.drawable.star)));
         }
+
+
         return values;
     }
 
     private void updateChartDatas() {
-        set1.setValues(getDatas());
-        chart.setData(new LineData(set1));
+        //set1.setValues(getDatas());
+//        chart.setData(new LineData(set1));
+        set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+        List<Entry> values = getDatas();
+//        Log.d("wlDebug", values.toString());
+        set1.setValues(values);
+        chart.getData().notifyDataChanged();
         chart.notifyDataSetChanged();
+        chart.invalidate();
     }
 
     @Override
@@ -242,21 +258,47 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                 mTitle[1].setText(R.string.m2);
                 mTitle[2].setText(R.string.m3);
                 mTitle[3].setText(R.string.m4);
+                if (mParameterBean != null) {
+                    mMValueViews[0].init(mParameterBean.getM1_nominal_value(), mParameterBean.getM1_upper_tolerance_value(), mParameterBean.getM1_lower_tolerance_value(), mParameterBean.getM1_scale());
+                    mMValueViews[1].init(mParameterBean.getM2_nominal_value(), mParameterBean.getM2_upper_tolerance_value(), mParameterBean.getM2_lower_tolerance_value(), mParameterBean.getM2_scale());
+                    mMValueViews[2].init(mParameterBean.getM3_nominal_value(), mParameterBean.getM3_upper_tolerance_value(), mParameterBean.getM3_lower_tolerance_value(), mParameterBean.getM3_scale());
+                    mMValueViews[3].init(mParameterBean.getM4_nominal_value(), mParameterBean.getM4_upper_tolerance_value(), mParameterBean.getM4_lower_tolerance_value(), mParameterBean.getM4_scale());
+                    mDescribes[0].setText(mParameterBean.getM1_describe());
+                    mDescribes[1].setText(mParameterBean.getM2_describe());
+                    mDescribes[2].setText(mParameterBean.getM3_describe());
+                    mDescribes[3].setText(mParameterBean.getM4_describe());
+                }
                 break;
             case 1:
                 mTitle[0].setText("");
                 mTitle[1].setText("");
                 mTitle[2].setText("");
                 mTitle[3].setText(R.string.m1);
+                if (mParameterBean != null) {
+                    mMValueViews[3].init(mParameterBean.getM1_nominal_value(), mParameterBean.getM1_upper_tolerance_value(), mParameterBean.getM1_lower_tolerance_value(), mParameterBean.getM1_scale());
+                    mDescribes[3].setText(mParameterBean.getM1_describe());
+                }
                 break;
             case 2:
                 mTitle[3].setText(R.string.m2);
+                if (mParameterBean != null) {
+                    mMValueViews[3].init(mParameterBean.getM2_nominal_value(), mParameterBean.getM2_upper_tolerance_value(), mParameterBean.getM2_lower_tolerance_value(), mParameterBean.getM2_scale());
+                    mDescribes[3].setText(mParameterBean.getM2_describe());
+                }
                 break;
             case 3:
                 mTitle[3].setText(R.string.m3);
+                if (mParameterBean != null) {
+                    mMValueViews[3].init(mParameterBean.getM3_nominal_value(), mParameterBean.getM3_upper_tolerance_value(), mParameterBean.getM3_lower_tolerance_value(), mParameterBean.getM3_scale());
+                    mDescribes[3].setText(mParameterBean.getM3_describe());
+                }
                 break;
             case 4:
                 mTitle[3].setText(R.string.m4);
+                if (mParameterBean != null) {
+                    mMValueViews[3].init(mParameterBean.getM4_nominal_value(), mParameterBean.getM4_upper_tolerance_value(), mParameterBean.getM4_lower_tolerance_value(), mParameterBean.getM4_scale());
+                    mDescribes[3].setText(mParameterBean.getM4_describe());
+                }
                 break;
             default:
                 break;
@@ -320,20 +362,20 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         switch (curMode) {
             case 0:
                 for (int i = 0; i < mTValues.length; i++) {
-                    mTValues[i].setText("" + mValues[i]);
+                    mTValues[i].setText(NumberUtils.get4bits(mValues[i]));
                     mMValueViews[i].setMValue(mValues[i]);
                 }
                 break;
             case 1:
-                mTValues[3].setText("" + mValues[0]);
+                mTValues[3].setText(NumberUtils.get4bits(mValues[0]));
                 mMValueViews[3].setMValue(mValues[0]);
                 break;
             case 2:
-                mTValues[3].setText("" + mValues[1]);
+                mTValues[3].setText(NumberUtils.get4bits(mValues[1]));
                 mMValueViews[3].setMValue(mValues[1]);
                 break;
             case 3:
-                mTValues[3].setText("" + mValues[2]);
+                mTValues[3].setText(NumberUtils.get4bits(mValues[2]));
                 mMValueViews[3].setMValue(mValues[2]);
                 break;
             case 4:
@@ -374,6 +416,8 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                 xAxis = chart.getXAxis();
                 // vertical grid lines
                 xAxis.enableGridDashedLine(10f, 10f, 0f);
+                xAxis.setAxisMaximum(32f);
+                xAxis.setAxisMinimum(0f);
             }
 
             YAxis yAxis;

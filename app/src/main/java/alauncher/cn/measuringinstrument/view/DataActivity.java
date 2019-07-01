@@ -71,7 +71,7 @@ public class DataActivity extends BaseActivity {
         mResultBeanDao = App.getDaoSession().getResultBeanDao();
 
 
-        DataActivity.DataAdapter _adapter = new DataActivity.DataAdapter(mResultBeanDao.loadAll());
+        DataActivity.DataAdapter _adapter = new DataActivity.DataAdapter(mResultBeanDao.queryBuilder().orderDesc(ResultBeanDao.Properties.Id).list());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(DataActivity.this);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(_adapter);
@@ -96,7 +96,7 @@ public class DataActivity extends BaseActivity {
             holder.setText(R.id.data_handler, "" + datas.get(position).getHandlerAccout());
             holder.setText(R.id.data_workpiece_id, "" + datas.get(position).getWorkid());
             holder.setText(R.id.data_event, datas.get(position).getEvent());
-            holder.setText(R.id.data_m1, "" + datas.get(position).m2);
+            holder.setText(R.id.data_m1, "" + datas.get(position).m1);
             holder.setText(R.id.data_m1_group, "" + datas.get(position).getM1_group());
             holder.setText(R.id.data_m2, "" + datas.get(position).m2);
             holder.setText(R.id.data_m2_group, "" + datas.get(position).getM2_group());

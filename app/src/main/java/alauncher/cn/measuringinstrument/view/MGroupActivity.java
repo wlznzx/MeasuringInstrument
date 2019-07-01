@@ -112,6 +112,9 @@ public class MGroupActivity extends BaseActivity {
         _bean.setB_describe(describes[1].getText().toString());
         _bean.setC_describe(describes[2].getText().toString());
         _bean.setD_describe(describes[3].getText().toString());
+
+        android.util.Log.d("wlDebug", _bean.toString());
+
         return _bean;
     }
 

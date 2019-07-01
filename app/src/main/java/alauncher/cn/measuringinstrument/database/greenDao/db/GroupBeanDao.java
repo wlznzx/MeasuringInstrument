@@ -15,7 +15,7 @@ import alauncher.cn.measuringinstrument.bean.GroupBean;
 /** 
  * DAO for table "GROUP_BEAN".
 */
-public class GroupBeanDao extends AbstractDao<GroupBean, Long> {
+public class GroupBeanDao extends AbstractDao<GroupBean, Void> {
 
     public static final String TABLENAME = "GROUP_BEAN";
 
@@ -24,7 +24,7 @@ public class GroupBeanDao extends AbstractDao<GroupBean, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Code_id = new Property(0, long.class, "code_id", true, "_id");
+        public final static Property Code_id = new Property(0, long.class, "code_id", false, "CODE_ID");
         public final static Property M_index = new Property(1, int.class, "m_index", false, "M_INDEX");
         public final static Property A_upper_limit = new Property(2, double.class, "a_upper_limit", false, "A_UPPER_LIMIT");
         public final static Property A_lower_limit = new Property(3, double.class, "a_lower_limit", false, "A_LOWER_LIMIT");
@@ -53,7 +53,7 @@ public class GroupBeanDao extends AbstractDao<GroupBean, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"GROUP_BEAN\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 0: code_id
+                "\"CODE_ID\" INTEGER NOT NULL ," + // 0: code_id
                 "\"M_INDEX\" INTEGER NOT NULL ," + // 1: m_index
                 "\"A_UPPER_LIMIT\" REAL NOT NULL ," + // 2: a_upper_limit
                 "\"A_LOWER_LIMIT\" REAL NOT NULL ," + // 3: a_lower_limit
@@ -146,8 +146,8 @@ public class GroupBeanDao extends AbstractDao<GroupBean, Long> {
     }
 
     @Override
-    public Long readKey(Cursor cursor, int offset) {
-        return cursor.getLong(offset + 0);
+    public Void readKey(Cursor cursor, int offset) {
+        return null;
     }    
 
     @Override
@@ -190,23 +190,20 @@ public class GroupBeanDao extends AbstractDao<GroupBean, Long> {
      }
     
     @Override
-    protected final Long updateKeyAfterInsert(GroupBean entity, long rowId) {
-        entity.setCode_id(rowId);
-        return rowId;
+    protected final Void updateKeyAfterInsert(GroupBean entity, long rowId) {
+        // Unsupported or missing PK type
+        return null;
     }
     
     @Override
-    public Long getKey(GroupBean entity) {
-        if(entity != null) {
-            return entity.getCode_id();
-        } else {
-            return null;
-        }
+    public Void getKey(GroupBean entity) {
+        return null;
     }
 
     @Override
     public boolean hasKey(GroupBean entity) {
-        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
+        // TODO
+        return false;
     }
 
     @Override
