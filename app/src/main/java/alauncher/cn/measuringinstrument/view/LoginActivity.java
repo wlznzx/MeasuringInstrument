@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -15,7 +13,6 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.MainActivity;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
-import alauncher.cn.measuringinstrument.bean.SetupBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
 import butterknife.BindView;

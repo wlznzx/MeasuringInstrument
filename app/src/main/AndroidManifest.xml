@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="alauncher.cn.measuringinstrument">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 往SDCard写入数据权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -17,8 +21,9 @@
             android:name=".MainActivity"
             android:fitsSystemWindows="true">
             <intent-filter>
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -26,8 +31,8 @@
             android:name=".view.LoginActivity"
             android:fitsSystemWindows="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

@@ -3,6 +3,7 @@ package alauncher.cn.measuringinstrument.bean;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Transient;
 
 @Entity
 public class ResultBean {
@@ -39,6 +40,9 @@ public class ResultBean {
     public String m3_group;
 
     public String m4_group;
+
+    @Transient
+    public boolean isSelect;
 
     @Generated(hash = 852319293)
     public ResultBean(Long id, String handlerAccout, long timeStamp, String workid,
@@ -195,4 +199,11 @@ public class ResultBean {
         this.m4_group = m4_group;
     }
 
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
+    }
 }
