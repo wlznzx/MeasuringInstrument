@@ -2,7 +2,6 @@ package alauncher.cn.measuringinstrument.view;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -14,11 +13,9 @@ import com.yanzhenjie.recyclerview.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
-import alauncher.cn.measuringinstrument.MainActivity;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
@@ -58,8 +55,6 @@ public class AccoutManagementActivity extends BaseActivity implements UserEditDi
         rv.setOnItemMenuClickListener(mMenuItemClickListener);
 
         mUserDao = App.getDaoSession().getUserDao();
-
-
         mDatas = mUserDao.loadAll();
         _adapter = new AccoutAdapter(mDatas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AccoutManagementActivity.this);

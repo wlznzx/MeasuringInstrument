@@ -144,4 +144,7 @@
     <string name="password_notnull">密码不能为空</string>
     <string name="user_not_exist">账号不存在</string>
     <string name="password_error">密码错误</string>
+    <string name="filter_title">筛选</string>
+    <string name="start_time">开始时间</string>
+    <string name="end_time">结束时间</string>
 </resources>

@@ -16,7 +16,6 @@ import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemSelected;
 
 public class AdditionalDialog extends Dialog {
 

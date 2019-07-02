@@ -58,4 +58,9 @@
         <item>离职</item>
     </string-array>
 
+    <string-array name="result" translatable="false">
+        <item>合格</item>
+        <item>不合格</item>
+    </string-array>
+
 </resources>

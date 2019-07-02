@@ -14,11 +14,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="@string/add_user_title"
+            android:text="@string/filter_title"
             android:textSize="18sp" />
-
 
         <View
             android:layout_width="match_parent"
@@ -35,17 +35,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/accout_user" />
+                android:text="@string/handler" />
 
-            <EditText
-                android:id="@+id/accout_edt"
+            <Spinner
+                android:id="@+id/filter_handler_sp"
                 style="@style/EdWordStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4" />
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,15 +55,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/full_name" />
+                android:text="@string/workpiece_id" />
 
             <EditText
-                android:id="@+id/fullname_edt"
+                android:id="@+id/workpiece_id_filter_edt"
                 style="@style/EdTextStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -77,15 +75,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/password_user" />
+                android:text="@string/start_time" />
 
             <EditText
                 android:id="@+id/password_edt"
                 style="@style/EdWordStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:inputType="textPassword" />
+                android:layout_weight="4" />
 
         </LinearLayout>
 
@@ -99,7 +96,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/repassword_user" />
+                android:text="@string/end_time" />
 
             <EditText
                 android:id="@+id/repassword_edt"
@@ -121,11 +118,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/status" />
+                android:text="@string/event" />
 
-            <Spinner
-                android:id="@+id/status_sp"
-                style="@style/EdNumOnlyStyle"
+            <EditText
+                android:id="@+id/event_filter_edt"
+                style="@style/EdTextStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
@@ -143,74 +140,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/id" />
+                android:text="@string/result" />
 
-            <EditText
-                android:id="@+id/workpiece_edt"
-                style="@style/EdNumOnlyStyle"
+            <Spinner
+                android:id="@+id/result_filter_edt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4" />
-
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/email" />
-
-            <EditText
-                android:id="@+id/email_edt"
-                style="@style/EdWordStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="4" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/no"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:background="@null"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="No"
-                android:textColor="#7D7D7D"
-                android:textSize="16sp" />
-
-            <View
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:background="#E4E4E4" />
-
-            <Button
-                android:id="@+id/yes"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="@null"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="Yes"
-                android:textColor="#38ADFF"
-                android:textSize="16sp" />
-        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
