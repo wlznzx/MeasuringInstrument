@@ -59,6 +59,7 @@
     </string-array>
 
     <string-array name="result" translatable="false">
+        <item></item>
         <item>合格</item>
         <item>不合格</item>
     </string-array>

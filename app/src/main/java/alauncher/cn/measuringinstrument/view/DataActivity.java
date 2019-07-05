@@ -25,6 +25,8 @@ import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
 import alauncher.cn.measuringinstrument.utils.ExcelUtil;
 import alauncher.cn.measuringinstrument.view.adapter.DataAdapter;
+import alauncher.cn.measuringinstrument.widget.CalculateDialog;
+import alauncher.cn.measuringinstrument.widget.FilterDialog;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,6 +50,8 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
     TextView quitBtn;
     @BindView(R.id.btn_excel)
     TextView excelBtn;
+    @BindView(R.id.btn_filter)
+    TextView filterBtn;
     @BindView(R.id.ll_mycollection_bottom_dialog)
     LinearLayout mLlMycollectionBottomDialog;
 
@@ -88,6 +92,7 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
         mSelectAll.setOnClickListener(this);
         quitBtn.setOnClickListener(this);
         excelBtn.setOnClickListener(this);
+        filterBtn.setOnClickListener(this);
     }
 
     /**
@@ -213,10 +218,12 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
         if (mEditMode == MYLIVE_MODE_EDIT) {
             // mBtnEditor.setText("取消");
             mLlMycollectionBottomDialog.setVisibility(View.VISIBLE);
+            filterBtn.setVisibility(View.GONE);
             editorStatus = true;
         } else {
             // mBtnEditor.setText("编辑");
             mLlMycollectionBottomDialog.setVisibility(View.GONE);
+            filterBtn.setVisibility(View.VISIBLE);
             editorStatus = false;
             clearAll();
         }
@@ -301,6 +308,10 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.btn_excel:
                 excelDatas();
+                break;
+            case R.id.btn_filter:
+                FilterDialog mFilterDialog = new FilterDialog(this);
+                mFilterDialog.show();
                 break;
             default:
                 break;

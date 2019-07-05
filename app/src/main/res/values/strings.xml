@@ -147,4 +147,5 @@
     <string name="filter_title">筛选</string>
     <string name="start_time">开始时间</string>
     <string name="end_time">结束时间</string>
+    <string name="filter">筛选</string>
 </resources>

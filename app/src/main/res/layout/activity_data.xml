@@ -210,4 +210,15 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btn_filter"
+        android:layout_width="80dp"
+        android:layout_height="33dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_noclickable_shape"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/filter"
+        android:textColor="#b7b8bd"
+        android:textSize="14sp" />
+
 </LinearLayout>

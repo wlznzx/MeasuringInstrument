@@ -4,16 +4,17 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
+
+import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
-import alauncher.cn.measuringinstrument.utils.UserReg;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -22,36 +23,25 @@ public class FilterDialog extends Dialog {
 
     private Context mContext;
 
-    @BindView(R.id.accout_edt)
-    public EditText accoutEdt;
+    @BindView(R.id.filter_handler_sp)
+    public Spinner filterHandlerSP;
 
-    @BindView(R.id.fullname_edt)
-    public EditText fullNameEdt;
+    @BindView(R.id.workpiece_id_filter_edt)
+    public EditText workpieceIDEdt;
 
-    @BindView(R.id.password_edt)
-    public EditText passwordEdt;
+    @BindView(R.id.event_filter_edt)
+    public EditText eventFilterEdt;
 
-    @BindView(R.id.repassword_edt)
-    public EditText rePasswordEdt;
-
-    @BindView(R.id.status_sp)
-    public Spinner statusSP;
-
-    @BindView(R.id.workpiece_edt)
-    public EditText workpieceEdt;
-
-    @BindView(R.id.email_edt)
-    public EditText emailEdt;
+    @BindView(R.id.result_filter_sp)
+    public Spinner resultFilterSP;
 
 
-    AdditionDialogInterface mAdditionDialogInterface;
-
-    UserDao mUserDao;
-
-    UIInterface mUIInterface;
-
+    public UserDao mUserDao;
     private User mUser;
 
+    private boolean isHandlerSpinnerFirst = true;
+
+    private boolean isResultSpinnerFirst = true;
 
     public FilterDialog(Context context) {
         super(context);
@@ -65,27 +55,6 @@ public class FilterDialog extends Dialog {
         mUserDao = App.getDaoSession().getUserDao();
     }
 
-    public void setmUIInterface(UIInterface uiInterface) {
-        mUIInterface = uiInterface;
-    }
-
-    public void setDialogInterface(AdditionDialogInterface pAdditionDialogInterface) {
-        mAdditionDialogInterface = pAdditionDialogInterface;
-    }
-
-
-    public void goEditMode(User user) {
-        mUser = user;
-        mUser.getAccout();
-        accoutEdt.setText(mUser.getAccout());
-        accoutEdt.setEnabled(false);
-        fullNameEdt.setText(mUser.getName());
-        passwordEdt.setText(mUser.getPassword());
-        rePasswordEdt.setText(mUser.getPassword());
-        statusSP.setSelection(mUser.getStatus());
-        emailEdt.setText(mUser.getEmail());
-        workpieceEdt.setText(mUser.getId());
-    }
 
     @OnClick({R.id.no, R.id.yes})
     public void onClick(View v) {
@@ -94,7 +63,6 @@ public class FilterDialog extends Dialog {
                 dismiss();
                 break;
             case R.id.yes:
-                doAddUser();
                 break;
             default:
                 break;
@@ -104,67 +72,49 @@ public class FilterDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.adduser_dialog_layout);
+        setContentView(R.layout.filter_dialog_layout);
         ButterKnife.bind(this);
-    }
-
-    public interface AdditionDialogInterface {
-        void onAdditionSet(AddInfoBean pBean);
-    }
 
 
-    public void doAddUser() {
-        String accoutStr = accoutEdt.getText().toString().trim();
-        if (accoutStr == null || accoutStr.equals("")) {
-            Toast.makeText(mContext, "用户名不能为空.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!UserReg.validateUserName(accoutStr)) {
-            Toast.makeText(mContext, "用户名格式错误", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String fullName = fullNameEdt.getText().toString().trim();
-        if (fullName == null || fullName.equals("")) {
-            Toast.makeText(mContext, "全名不能为空.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        filterHandlerSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-        String passwordStr = passwordEdt.getText().toString().trim();
-        if (passwordStr == null || passwordStr.equals("")) {
-            Toast.makeText(mContext, "密码不能为空", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String repasswordStr = rePasswordEdt.getText().toString().trim();
-        if (!repasswordStr.equals(passwordStr)) {
-            Toast.makeText(mContext, "两次输入密码必须一致", Toast.LENGTH_SHORT).show();
-            return;
-        }
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        if (mUser == null) {
-            if (mUserDao.load(accoutStr) != null) {
-                Toast.makeText(mContext, "用户名已经注册了.", Toast.LENGTH_SHORT).show();
-                return;
             }
-        }
 
-        User _user = new User();
-        _user.setAccout(accoutStr);
-        _user.setName(fullName);
-        _user.setPassword(passwordStr);
-        _user.setStatus((int) statusSP.getSelectedItemId());
-        _user.setEmail(emailEdt.getText().toString().trim());
-        _user.setId(workpieceEdt.getText().toString().trim());
-        android.util.Log.d("wlDebug", _user.toString());
-        dismiss();
-        if (mUser != null) {
-            mUserDao.update(_user);
-        } else {
-            mUserDao.insert(_user);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        resultFilterSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        List<User> users = mUserDao.loadAll();
+        String[] items = new String[users.size() + 1];
+        items[0] = "";
+        for (int i = 1; i < users.size() + 1; i++) {
+            items[i] = users.get(i - 1).accout;
         }
-        if (mUIInterface != null) mUIInterface.upDateUserUI();
+        // 建立Adapter并且绑定数据源
+        ArrayAdapter<String> _Adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, items);
+        filterHandlerSP.setAdapter(_Adapter);
     }
 
-    public interface UIInterface {
-        void upDateUserUI();
+    public interface FilterInterface {
+        void dataFilterUpdate();
     }
 }
