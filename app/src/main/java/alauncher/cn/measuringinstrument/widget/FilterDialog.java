@@ -13,6 +13,7 @@ import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
+import alauncher.cn.measuringinstrument.bean.FilterBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
 import butterknife.BindView;
@@ -43,10 +44,13 @@ public class FilterDialog extends Dialog {
 
     private boolean isResultSpinnerFirst = true;
 
-    public FilterDialog(Context context) {
+    private FilterInterface mFilterInterface;
+
+    public FilterDialog(Context context, FilterInterface pFilterInterface) {
         super(context);
         mContext = context;
         mUserDao = App.getDaoSession().getUserDao();
+        mFilterInterface = pFilterInterface;
     }
 
     public FilterDialog(Context context, int themeResId) {
@@ -63,6 +67,8 @@ public class FilterDialog extends Dialog {
                 dismiss();
                 break;
             case R.id.yes:
+                mFilterInterface.dataFilterUpdate(view2Bean());
+                dismiss();
                 break;
             default:
                 break;
@@ -74,34 +80,6 @@ public class FilterDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.filter_dialog_layout);
         ButterKnife.bind(this);
-
-
-        filterHandlerSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        resultFilterSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
 
         List<User> users = mUserDao.loadAll();
         String[] items = new String[users.size() + 1];
@@ -115,6 +93,16 @@ public class FilterDialog extends Dialog {
     }
 
     public interface FilterInterface {
-        void dataFilterUpdate();
+        void dataFilterUpdate(FilterBean bean);
     }
+
+    private FilterBean view2Bean() {
+        FilterBean bean = new FilterBean();
+        bean.setHandler((String) filterHandlerSP.getSelectedItem());
+        bean.setResult((String) resultFilterSP.getSelectedItem());
+        bean.setWorkid((String) workpieceIDEdt.getText().toString().trim());
+        bean.setEvent((String) eventFilterEdt.getText().toString().trim());
+        return bean;
+    }
+
 }

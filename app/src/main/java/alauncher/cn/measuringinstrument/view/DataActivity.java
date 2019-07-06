@@ -12,6 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.greendao.query.Query;
+import org.greenrobot.greendao.query.WhereCondition;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.bean.FilterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.ResultData;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
@@ -35,7 +39,7 @@ import butterknife.BindView;
 import static alauncher.cn.measuringinstrument.view.adapter.DataAdapter.MYLIVE_MODE_CHECK;
 import static alauncher.cn.measuringinstrument.view.adapter.DataAdapter.MYLIVE_MODE_EDIT;
 
-public class DataActivity extends BaseActivity implements View.OnClickListener, DataAdapter.OnItemClickListener {
+public class DataActivity extends BaseActivity implements View.OnClickListener, DataAdapter.OnItemClickListener, FilterDialog.FilterInterface {
 
     @BindView(R.id.rv)
     RecyclerView rv;
@@ -310,13 +314,14 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
                 excelDatas();
                 break;
             case R.id.btn_filter:
-                FilterDialog mFilterDialog = new FilterDialog(this);
+                FilterDialog mFilterDialog = new FilterDialog(this, this);
                 mFilterDialog.show();
                 break;
             default:
                 break;
         }
     }
+
 
     public class DeleteTask extends AsyncTask<String, Integer, String> {
 
@@ -455,4 +460,14 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
 
         }
     }
+
+    @Override
+    public void dataFilterUpdate(FilterBean bean) {
+        Query query = mResultBeanDao.queryBuilder().where(
+                new WhereCondition.StringCondition("_ID IN " +
+                        "(SELECT * FROM RESULT_BEAN WHERE HANDLER_ACCOUT = '吴工')")).build();
+        List<ResultBean> _datas = query.list();
+        mDataAdapter.notifyAdapter(_datas,false);
+    }
+
 }
