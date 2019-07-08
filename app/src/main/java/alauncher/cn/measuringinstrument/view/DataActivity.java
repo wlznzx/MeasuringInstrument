@@ -13,9 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.greenrobot.greendao.query.Query;
-import org.greenrobot.greendao.query.WhereCondition;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +28,6 @@ import alauncher.cn.measuringinstrument.utils.CommonUtil;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
 import alauncher.cn.measuringinstrument.utils.ExcelUtil;
 import alauncher.cn.measuringinstrument.view.adapter.DataAdapter;
-import alauncher.cn.measuringinstrument.widget.CalculateDialog;
 import alauncher.cn.measuringinstrument.widget.FilterDialog;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;

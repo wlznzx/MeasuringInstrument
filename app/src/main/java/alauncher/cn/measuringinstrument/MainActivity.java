@@ -160,7 +160,8 @@ public class MainActivity extends BaseActivity {
             } else {
                 // outRect.left = itemSpace;
             }
-
         }
+
+
     }
 }

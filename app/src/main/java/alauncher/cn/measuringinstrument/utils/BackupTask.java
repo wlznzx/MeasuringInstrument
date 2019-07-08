@@ -11,7 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
-public class BackupTask extends AsyncTask<String, Void, Integer> {
+public class BackupTask extends AsyncTask<String, Void, String> {
     private static final String COMMAND_BACKUP = "backupDatabase";
     public static final String COMMAND_RESTORE = "restroeDatabase";
     private Context mContext;
@@ -25,7 +25,7 @@ public class BackupTask extends AsyncTask<String, Void, Integer> {
     }
 
     @Override
-    protected Integer doInBackground(String... params) {
+    protected String doInBackground(String... params) {
         // TODO Auto-generated method stub
 
         // 获得正在使用的数据库路径，我的是 sdcard 目录下的 /dlion/db_dlion.db
@@ -41,26 +41,28 @@ public class BackupTask extends AsyncTask<String, Void, Integer> {
         File backup = new File(exportDir, dbFile.getName());
 
         Log.d("backup", backup.getAbsolutePath());
+
         String command = params[0];
         if (command.equals(COMMAND_BACKUP)) {
             try {
+                backup = new File(exportDir, "mi" + DateUtils.getFileDate(System.currentTimeMillis()) + ".db");
                 backup.createNewFile();
                 fileCopy(dbFile, backup);
-                return Log.d("backup", "ok");
+                return backup.getAbsolutePath();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();
-                return Log.d("backup", "fail");
+                return null;
             }
         } else if (command.equals(COMMAND_RESTORE)) {
             try {
                 backup = new File(params[1]);
                 fileCopy(backup, dbFile);
-                return Log.d("restore", "success");
+                return backup.getAbsolutePath();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();
-                return Log.d("restore", "fail");
+                return null;
             }
         } else {
             return null;
@@ -84,12 +86,6 @@ public class BackupTask extends AsyncTask<String, Void, Integer> {
                 outChannel.close();
             }
         }
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -99,9 +95,9 @@ public class BackupTask extends AsyncTask<String, Void, Integer> {
     }
 
     @Override
-    protected void onPostExecute(Integer integer) {
-        super.onPostExecute(integer);
-        mInterface.onPostExecute();
+    protected void onPostExecute(String str) {
+        super.onPostExecute(str);
+        mInterface.onPostExecute(isBackup, str);
     }
 
     @Override
@@ -112,6 +108,6 @@ public class BackupTask extends AsyncTask<String, Void, Integer> {
     public interface BackupInterface {
         void onPreExecute(String tips);
 
-        void onPostExecute();
+        void onPostExecute(boolean isBackup, String str);
     }
 }

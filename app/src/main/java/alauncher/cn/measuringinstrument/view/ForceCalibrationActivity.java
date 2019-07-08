@@ -6,7 +6,7 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 
 
-public class CommunicationActivity extends BaseActivity {
+public class ForceCalibrationActivity extends BaseActivity {
 
 
     @Override
@@ -16,7 +16,7 @@ public class CommunicationActivity extends BaseActivity {
 
     @Override
     protected void initLayout() {
-        setContentView(R.layout.activity_communication);
+        setContentView(R.layout.activity_force_calibration);
     }
 
     @Override

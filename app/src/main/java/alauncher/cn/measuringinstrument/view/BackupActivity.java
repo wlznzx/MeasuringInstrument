@@ -19,8 +19,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.utils.BackupTask;
@@ -37,8 +35,13 @@ public class BackupActivity extends BaseActivity implements BackupTask.BackupInt
     @BindView(R.id.in_btn)
     Button inBtn;
 
-    private ProgressDialog dialog;
+    @BindView(R.id.out_path_tv)
+    TextView outPathTV;
 
+    @BindView(R.id.out_btn)
+    Button outBtn;
+
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +55,11 @@ public class BackupActivity extends BaseActivity implements BackupTask.BackupInt
 
     @Override
     protected void initView() {
-//        dataBackup();
+        // dataBackup();
         // dataRecover();
-
     }
 
-    @OnClick({R.id.select_path_btn, R.id.in_btn})
+    @OnClick({R.id.select_path_btn, R.id.in_btn, R.id.out_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.select_path_btn:
@@ -91,22 +93,43 @@ public class BackupActivity extends BaseActivity implements BackupTask.BackupInt
                     }
                 });
                 break;
+            case R.id.out_btn:
+                final AlertDialog outbuilder = new AlertDialog.Builder(this)
+                        .create();
+                outbuilder.show();
+                if (outbuilder.getWindow() == null) return;
+                outbuilder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
+                TextView _msg = (TextView) outbuilder.findViewById(R.id.tv_msg);
+                Button _cancle = (Button) outbuilder.findViewById(R.id.btn_cancle);
+                Button _sure = (Button) outbuilder.findViewById(R.id.btn_sure);
+                if (_msg == null || _cancle == null || _sure == null) return;
+                _msg.setText("确认导出数据？");
+                _cancle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        outbuilder.dismiss();
+                    }
+                });
+                _sure.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dataBackup();
+                        outbuilder.dismiss();
+                    }
+                });
+                break;
         }
     }
 
-
     // 数据恢复
     private void dataRecover() {
-        // TODO Auto-generated method stub
         new BackupTask(this, this, false).execute("restroeDatabase", selectPathBtn.getText().toString().trim());
     }
 
     // 数据备份
     private void dataBackup() {
-        // TODO Auto-generated method stub
         new BackupTask(this, this, true).execute("backupDatabase");
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -236,7 +259,19 @@ public class BackupActivity extends BaseActivity implements BackupTask.BackupInt
     }
 
     @Override
-    public void onPostExecute() {
+    public void onPostExecute(boolean isBackup, String str) {
         dialog.dismiss();
+        if (str != null) {
+            if (isBackup) {
+                outPathTV.setText(str);
+            } else {
+                BackupActivity.this.finish();
+                startActivity(new Intent(this, LoginActivity.class));
+            }
+            Toast.makeText(BackupActivity.this, "操作成功.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(BackupActivity.this, "操作失败.", Toast.LENGTH_SHORT).show();
+        }
     }
+
 }

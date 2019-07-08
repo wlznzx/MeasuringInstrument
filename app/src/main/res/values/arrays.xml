@@ -64,4 +64,10 @@
         <item>不合格</item>
     </string-array>
 
+    <string-array name="force_calibration_item" translatable="false">
+        <item>不强制</item>
+        <item>周期数量</item>
+        <item>周期时间</item>
+    </string-array>
+
 </resources>

@@ -91,6 +91,7 @@ public class SystemManagementActivity extends BaseActivity {
                             startActivity(new Intent(SystemManagementActivity.this, BackupActivity.class).putExtra("Title", R.string.system_backup));
                             break;
                         case 3:
+                            startActivity(new Intent(SystemManagementActivity.this, ForceCalibrationActivity.class).putExtra("Title", R.string.force_calibration));
                             break;
                         default:
                             break;
