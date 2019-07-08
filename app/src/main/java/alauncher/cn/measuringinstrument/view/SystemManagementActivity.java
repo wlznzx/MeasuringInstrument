@@ -1,5 +1,6 @@
 package alauncher.cn.measuringinstrument.view;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
@@ -78,13 +79,18 @@ public class SystemManagementActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     switch (position) {
+                        case 0:
+                            Intent _i = new Intent(SystemManagementActivity.this, CommunicationActivity.class);
+                            _i.putExtra("Title", R.string.communication);
+                            startActivity(_i);
+                            break;
+                        case 1:
+                            startActivity(new Intent(SystemManagementActivity.this, IOActivity.class).putExtra("Title", R.string.io));
+                            break;
                         case 2:
+                            startActivity(new Intent(SystemManagementActivity.this, BackupActivity.class).putExtra("Title", R.string.system_backup));
                             break;
                         case 3:
-                            break;
-                        case 4:
-                            break;
-                        case 5:
                             break;
                         default:
                             break;

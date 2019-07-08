@@ -2,6 +2,7 @@ package alauncher.cn.measuringinstrument.view;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import alauncher.cn.measuringinstrument.bean.FilterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.ResultData;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
+import alauncher.cn.measuringinstrument.utils.CommonUtil;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
 import alauncher.cn.measuringinstrument.utils.ExcelUtil;
 import alauncher.cn.measuringinstrument.view.adapter.DataAdapter;
@@ -463,11 +465,93 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void dataFilterUpdate(FilterBean bean) {
+        /*
         Query query = mResultBeanDao.queryBuilder().where(
-                new WhereCondition.StringCondition("_ID IN " +
-                        "(SELECT * FROM RESULT_BEAN WHERE HANDLER_ACCOUT = '吴工')")).build();
+                new WhereCondition.StringCondition(
+                        "SELECT * FROM RESULT_BEAN WHERE HANDLER_ACCOUT = '吴工'")).build();
         List<ResultBean> _datas = query.list();
-        mDataAdapter.notifyAdapter(_datas,false);
+        mDataAdapter.notifyAdapter(_datas, false);
+        */
+
+        //请求参数
+        ArrayList<String> strParamLt = new ArrayList<String>();
+
+        String queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where 1==1 ";
+
+        //用户
+        if (!CommonUtil.isNull(bean.getHandler())) {
+            queryString = queryString + " and "
+                    + ResultBeanDao.Properties.HandlerAccout.columnName + " =  ?";
+            strParamLt.add(bean.getHandler());
+        }
+
+        // Event
+        if (!CommonUtil.isNull(bean.getEvent())) {
+            queryString = queryString + " and "
+                    + ResultBeanDao.Properties.Event.columnName + " =  ?";
+            strParamLt.add(bean.getEvent());
+        }
+
+        // 工件号
+        if (!CommonUtil.isNull(bean.getWorkid())) {
+            queryString = queryString + " and "
+                    + ResultBeanDao.Properties.Workid.columnName + " =  ?";
+            strParamLt.add(bean.getWorkid());
+        }
+
+        //
+        if (!CommonUtil.isNull(bean.getResult())) {
+            queryString = queryString + " and "
+                    + ResultBeanDao.Properties.Result.columnName + " =  ?";
+            strParamLt.add(bean.getResult());
+        }
+
+        Object[] objs = strParamLt.toArray();
+        String[] strs = new String[objs.length];
+
+        for (int i = 0; i < objs.length; i++) {
+            strs[i] = objs[i].toString();
+        }
+
+//        Cursor cursor = mResultBeanDao.getDatabase().rawQuery("SELECT * FROM RESULT_BEAN WHERE HANDLER_ACCOUT = '工'", null);
+        Cursor cursor = mResultBeanDao.getDatabase().rawQuery(queryString, strs);
+
+
+        int HandlerAccout = cursor.getColumnIndex(ResultBeanDao.Properties.HandlerAccout.columnName);
+        int TimeStamp = cursor.getColumnIndex(ResultBeanDao.Properties.TimeStamp.columnName);
+        int Workid = cursor.getColumnIndex(ResultBeanDao.Properties.Workid.columnName);
+        int Event = cursor.getColumnIndex(ResultBeanDao.Properties.Event.columnName);
+        int Result = cursor.getColumnIndex(ResultBeanDao.Properties.Result.columnName);
+        int M1 = cursor.getColumnIndex(ResultBeanDao.Properties.M1.columnName);
+        int M2 = cursor.getColumnIndex(ResultBeanDao.Properties.M2.columnName);
+        int M3 = cursor.getColumnIndex(ResultBeanDao.Properties.M3.columnName);
+        int M4 = cursor.getColumnIndex(ResultBeanDao.Properties.M4.columnName);
+        int M1_Group = cursor.getColumnIndex(ResultBeanDao.Properties.M1_group.columnName);
+        int M2_Group = cursor.getColumnIndex(ResultBeanDao.Properties.M2_group.columnName);
+        int M3_Group = cursor.getColumnIndex(ResultBeanDao.Properties.M3_group.columnName);
+        int M4_Group = cursor.getColumnIndex(ResultBeanDao.Properties.M4_group.columnName);
+
+        List<ResultBean> _datas = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            ResultBean rBean = new ResultBean();
+            rBean.setHandlerAccout(cursor.getString(HandlerAccout));
+            rBean.setWorkid(cursor.getString(Workid));
+            rBean.setTimeStamp(cursor.getLong(TimeStamp));
+            rBean.setEvent(cursor.getString(Event));
+            rBean.setResult(cursor.getString(Result));
+            rBean.setM1(cursor.getDouble(M1));
+            rBean.setM2(cursor.getDouble(M2));
+            rBean.setM3(cursor.getDouble(M3));
+            rBean.setM4(cursor.getDouble(M4));
+            rBean.setM1_group(cursor.getString(M1_Group));
+            rBean.setM2_group(cursor.getString(M2_Group));
+            rBean.setM3_group(cursor.getString(M3_Group));
+            rBean.setM4_group(cursor.getString(M4_Group));
+            _datas.add(rBean);
+        }
+        mDataAdapter.notifyAdapter(_datas, false);
+
     }
 
 }

@@ -148,4 +148,9 @@
     <string name="start_time">开始时间</string>
     <string name="end_time">结束时间</string>
     <string name="filter">筛选</string>
+    <string name="normal">正常</string>
+    <string name="not_supporte">暂不支持</string>
+    <string name="refresh">刷新</string>
+    <string name="out">导出</string>
+    <string name="in">导入</string>
 </resources>

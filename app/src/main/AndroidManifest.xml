@@ -116,6 +116,29 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".view.CommunicationActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".view.IOActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.BackupActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_height" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="名称" />
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="描述" />
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="协议" />
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="状态" />
+    </LinearLayout>
+
+    <!-- 描述 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+
+        <EditText
+            android:id="@+id/describe_m1"
+            style="@style/EdTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="COM1" />
+
+
+        <EditText
+            android:id="@+id/describe_m3"
+            style="@style/EdTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="RS485" />
+
+        <EditText
+            android:id="@+id/describe_m4"
+            style="@style/EdTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="xxx" />
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/normal" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <EditText
+            style="@style/EdTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="无线" />
+
+
+        <EditText
+            style="@style/EdTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="2.4G" />
+
+        <EditText
+            style="@style/EdTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="xxx" />
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/not_supporte" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <EditText
+            style="@style/EdTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="蓝牙" />
+
+
+        <EditText
+            style="@style/EdTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="xx" />
+
+        <EditText
+            style="@style/EdTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="xxx" />
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/not_supporte" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <EditText
+            style="@style/EdTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="WIFI" />
+
+
+        <EditText
+            style="@style/EdTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="以太网" />
+
+        <EditText
+            style="@style/EdTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="xxx" />
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/not_supporte" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4">
+
+    </View>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/save_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/btn_selector"
+            android:text="@string/refresh" />
+    </RelativeLayout>
+
+</LinearLayout>

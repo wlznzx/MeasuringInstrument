@@ -38,7 +38,7 @@ public class DataAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
     public void notifyAdapter(List<ResultBean   > myLiveList, boolean isAdd) {
-        
+
         if (!isAdd) {
             this.datas = myLiveList;
         } else {
