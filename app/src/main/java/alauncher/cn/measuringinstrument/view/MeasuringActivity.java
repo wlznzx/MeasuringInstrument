@@ -1,11 +1,13 @@
 package alauncher.cn.measuringinstrument.view;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +30,10 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
+import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.database.greenDao.db.ForceCalibrationBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImpl;
@@ -130,11 +134,45 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                 showAddDialog();
                 break;
             case R.id.measure_save_btn:
+                // 判断是否时间校验模式，如果超时，不保存并且提示;
+                ForceCalibrationBeanDao _dao = App.getDaoSession().getForceCalibrationBeanDao();
+                ForceCalibrationBean _bean = _dao.load(App.SETTING_ID);
+                if ((_bean.getForceMode() == 1 && _bean.getUsrNum() <= 0) || (_bean.getForceMode() == 2 && System.currentTimeMillis() > _bean.getRealForceTime())) {
+                    showForceDialog();
+                    return;
+                }
                 mMeasuringPresenter.saveResult(curMValues, mAddInfoBean);
                 Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
                 updateChartDatas();
+                _bean.setUsrNum(_bean.getUsrNum() - 1);
+                _dao.update(_bean);
                 break;
         }
+    }
+
+    private void showForceDialog() {
+        final AlertDialog builder = new AlertDialog.Builder(this)
+                .create();
+        builder.show();
+        if (builder.getWindow() == null) return;
+        builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
+        TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
+        Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
+        Button sure = (Button) builder.findViewById(R.id.btn_sure);
+        if (msg == null || cancle == null || sure == null) return;
+        msg.setText("请校验后继续测量.");
+        cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+            }
+        });
+        sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+            }
+        });
     }
 
     private void showAddDialog() {

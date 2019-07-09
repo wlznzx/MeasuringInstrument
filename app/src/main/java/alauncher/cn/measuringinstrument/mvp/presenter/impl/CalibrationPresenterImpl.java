@@ -5,6 +5,8 @@ import android.widget.Toast;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
+import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
+import alauncher.cn.measuringinstrument.database.greenDao.db.ForceCalibrationBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.CalibrationPresenter;
 import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.view.activity_view.CalibrationActivityView;
@@ -156,6 +158,14 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
     @Override
     public void saveCalibration(CalibrationBean bean) {
         // 如果倍率超出了倍率上下限的范围，不保存，并提示;
+
+        // 保存就要重新计算强制校验的值;
+        ForceCalibrationBeanDao _dao = App.getDaoSession().getForceCalibrationBeanDao();
+        ForceCalibrationBean _bean = _dao.load(App.SETTING_ID);
+        _bean.setUsrNum(_bean.getForceNum());
+        _bean.setRealForceTime(System.currentTimeMillis() + _bean.getForceTime() * 60 * 1000);
+        _dao.update(_bean);
+
         if (App.getDaoSession().getCalibrationBeanDao().load((long) App.getSetupBean().getCodeID()) == null) {
             App.getDaoSession().getCalibrationBeanDao().insert(bean);
         } else {

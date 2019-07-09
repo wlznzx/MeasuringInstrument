@@ -32,6 +32,7 @@
             android:text="强制条件" />
 
         <Spinner
+            android:id="@+id/force_calibration_sp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -60,13 +61,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="系统导出" />
+            android:text="周期时间" />
 
         <EditText
+            android:id="@+id/force_calibration_time_edt"
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:inputType="number"
             android:text="" />
 
         <TextView
@@ -100,13 +103,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="系统导出" />
+            android:text="周期数量" />
+
 
         <EditText
+            android:id="@+id/force_calibration_number_edt"
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:inputType="number"
             android:text="" />
 
         <TextView
@@ -114,7 +120,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="分钟" />
+            android:text="次" />
 
         <View
             android:layout_width="0dp"

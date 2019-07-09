@@ -4,6 +4,7 @@ import android.app.Application;
 
 import org.greenrobot.greendao.database.Database;
 
+import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoMaster;
@@ -50,6 +51,16 @@ public class App extends Application {
             _user.setStatus(0);
             _user.setId("1");
             getDaoSession().getUserDao().insert(_user);
+        }
+
+
+        if (getDaoSession().getForceCalibrationBeanDao().load(SETTING_ID) == null) {
+            ForceCalibrationBean _bean = new ForceCalibrationBean();
+            _bean.set_id(SETTING_ID);
+            _bean.setForceMode(0);
+            _bean.setForceNum(50);
+            _bean.setForceTime(60);
+            getDaoSession().getForceCalibrationBeanDao().insert(_bean);
         }
     }
 
