@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
@@ -51,7 +52,7 @@ public class StoreActivity extends BaseActivity {
         mStoreBeanDao = App.getDaoSession().getStoreBeanDao();
         mStoreBean = mStoreBeanDao.load(App.SETTING_ID);
 
-        storeModeRG.check(mStoreBean.storeMode);
+        storeModeRG.check(getModeID(mStoreBean.storeMode));
         storeUpperLimitEdt.setText("" + mStoreBean.getUpLimitValue());
         storeLowerLimitEdt.setText("" + mStoreBean.getLowLimitValue());
         storeDelayTime.setText("" + mStoreBean.getDelayTime());
@@ -74,8 +75,19 @@ public class StoreActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.save_btn:
                 mStoreBeanDao.update(view2Bean());
+                Toast.makeText(this, "保存成功.", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private int getModeID(int code) {
+        switch (code) {
+            case 1:
+                return R.id.store_auto;
+            case 2:
+                return R.id.store_manual;
+        }
+        return R.id.store_auto;
     }
 
 }

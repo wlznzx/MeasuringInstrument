@@ -114,8 +114,6 @@ public class CodeActivity extends BaseActivity {
                 return R.id.code_10;
             case 11:
                 return R.id.code_11;
-
-
         }
         return R.id.code_1;
     }

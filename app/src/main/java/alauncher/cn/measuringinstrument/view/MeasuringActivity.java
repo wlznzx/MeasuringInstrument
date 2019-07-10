@@ -6,6 +6,8 @@ import android.graphics.DashPathEffect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ForceCalibrationBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
@@ -81,9 +84,33 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
 
     private ParameterBean mParameterBean;
 
+    // 测量界面加入逻辑;
+    private StoreBean mStoreBean;
+
+    private final int MSG_AUTO_STORE = 1;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_AUTO_STORE:
+                    handler.removeMessages(MSG_AUTO_STORE);
+                    doAutoStore();
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeMessages(MSG_AUTO_STORE);
     }
 
     @Override
@@ -112,6 +139,8 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         if (App.getSetupBean().getIsAutoPopUp()) {
             showAddDialog();
         }
+
+        mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
     }
 
     @OnClick({R.id.value_btn, R.id.additional_btn, R.id.measure_save_btn})
@@ -123,6 +152,7 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                     inValue = true;
                     mMeasuringPresenter.startMeasuing();
                     valueBtn.setText(R.string.in_value);
+                    startAutoStore();
                 } else {
                     // stop 取值;
                     inValue = false;
@@ -134,20 +164,24 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                 showAddDialog();
                 break;
             case R.id.measure_save_btn:
-                // 判断是否时间校验模式，如果超时，不保存并且提示;
-                ForceCalibrationBeanDao _dao = App.getDaoSession().getForceCalibrationBeanDao();
-                ForceCalibrationBean _bean = _dao.load(App.SETTING_ID);
-                if ((_bean.getForceMode() == 1 && _bean.getUsrNum() <= 0) || (_bean.getForceMode() == 2 && System.currentTimeMillis() > _bean.getRealForceTime())) {
-                    showForceDialog();
-                    return;
-                }
-                mMeasuringPresenter.saveResult(curMValues, mAddInfoBean);
-                Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
-                updateChartDatas();
-                _bean.setUsrNum(_bean.getUsrNum() - 1);
-                _dao.update(_bean);
+                doSave();
                 break;
         }
+    }
+
+    private void doSave() {
+        // 判断是否时间校验模式，如果超时，不保存并且提示;
+        ForceCalibrationBeanDao _dao = App.getDaoSession().getForceCalibrationBeanDao();
+        ForceCalibrationBean _bean = _dao.load(App.SETTING_ID);
+        if ((_bean.getForceMode() == 1 && _bean.getUsrNum() <= 0) || (_bean.getForceMode() == 2 && System.currentTimeMillis() > _bean.getRealForceTime())) {
+            showForceDialog();
+            return;
+        }
+        mMeasuringPresenter.saveResult(curMValues, mAddInfoBean);
+        Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
+        updateChartDatas();
+        _bean.setUsrNum(_bean.getUsrNum() - 1);
+        _dao.update(_bean);
     }
 
     private void showForceDialog() {
@@ -515,5 +549,20 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         mAddInfoBean = pBean;
         // 设置是否自动弹出;
         App.setSetupPopUp(mAddInfoBean.isAutoShow());
+    }
+
+    private void startAutoStore() {
+        if (mStoreBean.getStoreMode() == 1) {
+            handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime());
+        }
+    }
+
+    private void doAutoStore() {
+        double mValue = curMValues[mStoreBean.getMValue()];
+        if (mValue > mStoreBean.getLowLimitValue() && mValue < mStoreBean.getUpLimitValue()) {
+            // Do Save;
+            doSave();
+        }
+        handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime());
     }
 }

@@ -14,6 +14,7 @@ import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.utils.Arith;
@@ -84,6 +85,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 mGroupBeans[i] = _dao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(i + 1)).unique();
             }
         }
+
+        mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
     }
 
     @Override
@@ -202,6 +205,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         }
         App.getDaoSession().getResultBeanDao().insert(_bean);
     }
+
 
     @Override
     public String[] getMGroupValues(double[] ms) {
