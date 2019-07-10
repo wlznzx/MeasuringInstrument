@@ -28,7 +28,7 @@ public class StoreBean {
 
     @Generated(hash = 1310177342)
     public StoreBean(Long id, int storeMode, int mValue, double upLimitValue,
-            double lowLimitValue, int delayTime) {
+                     double lowLimitValue, int delayTime) {
         this.id = id;
         this.storeMode = storeMode;
         this.mValue = mValue;
@@ -89,5 +89,15 @@ public class StoreBean {
         this.delayTime = delayTime;
     }
 
-    
+    @Override
+    public String toString() {
+        return "StoreBean{" +
+                "id=" + id +
+                ", storeMode=" + storeMode +
+                ", mValue=" + mValue +
+                ", upLimitValue=" + upLimitValue +
+                ", lowLimitValue=" + lowLimitValue +
+                ", delayTime=" + delayTime +
+                '}';
+    }
 }

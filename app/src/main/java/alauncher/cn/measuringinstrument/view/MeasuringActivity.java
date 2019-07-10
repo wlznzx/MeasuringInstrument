@@ -110,7 +110,7 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeMessages(MSG_AUTO_STORE);
+        stopAutoStore();
     }
 
     @Override
@@ -158,6 +158,7 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                     inValue = false;
                     mMeasuringPresenter.stopMeasuing();
                     valueBtn.setText(R.string.get_value);
+                    stopAutoStore();
                 }
                 break;
             case R.id.additional_btn:
@@ -552,8 +553,9 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     }
 
     private void startAutoStore() {
+        android.util.Log.d("store", mStoreBean.toString());
         if (mStoreBean.getStoreMode() == 1) {
-            handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime());
+            handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime() * 1000);
         }
     }
 
@@ -563,6 +565,10 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
             // Do Save;
             doSave();
         }
-        handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime());
+        handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime() * 1000);
+    }
+
+    private void stopAutoStore() {
+        handler.removeMessages(MSG_AUTO_STORE);
     }
 }

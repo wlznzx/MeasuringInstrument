@@ -63,7 +63,7 @@ public class StoreActivity extends BaseActivity {
         StoreBean _bean = new StoreBean();
         _bean.setId(App.SETTING_ID);
         _bean.setMValue(storeValueSP.getSelectedItemPosition());
-        _bean.setStoreMode(storeModeRG.getCheckedRadioButtonId());
+        _bean.setStoreMode(storeModeRG.getCheckedRadioButtonId() == R.id.store_auto ? 1 : 2);
         _bean.setUpLimitValue(Double.valueOf(storeUpperLimitEdt.getText().toString().trim()));
         _bean.setLowLimitValue(Double.valueOf(storeLowerLimitEdt.getText().toString().trim()));
         _bean.setDelayTime(Integer.valueOf(storeDelayTime.getText().toString().trim()));
