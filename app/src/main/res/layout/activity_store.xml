@@ -25,6 +25,7 @@
             android:text="@string/store_method" />
 
         <RadioGroup
+            android:id="@+id/store_mode_rg"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
@@ -59,12 +60,13 @@
             android:layout_weight="1"
             android:text="@string/store_condition" />
 
-        <EditText
+        <Spinner
+            android:id="@+id/store_value_sp"
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:text="M1"></EditText>
+            android:entries="@array/m_values"></Spinner>
 
         <TextView
             style="@style/TextStyle"
@@ -86,6 +88,7 @@
             android:text="@string/upper_limit" />
 
         <EditText
+            android:id="@+id/store_upper_limit_edt"
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -113,6 +116,7 @@
             android:text="@string/lower_limit" />
 
         <EditText
+            android:id="@+id/store_lower_limit_edt"
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -140,11 +144,13 @@
             android:text="@string/retention_time" />
 
         <EditText
+            android:id="@+id/store_time"
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="0.0"
-            android:layout_weight="3"></EditText>
+            android:layout_weight="3"
+            android:inputType="number"
+            android:text="0"></EditText>
 
         <TextView
             style="@style/TextStyle"

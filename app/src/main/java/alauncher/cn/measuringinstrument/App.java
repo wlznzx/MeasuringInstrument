@@ -6,6 +6,7 @@ import org.greenrobot.greendao.database.Database;
 
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
+import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoMaster;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
@@ -61,6 +62,18 @@ public class App extends Application {
             _bean.setForceNum(50);
             _bean.setForceTime(60);
             getDaoSession().getForceCalibrationBeanDao().insert(_bean);
+        }
+
+        if (getDaoSession().getStoreBeanDao().load(SETTING_ID) == null) {
+            StoreBean _bean = new StoreBean();
+            _bean.setId(SETTING_ID);
+            _bean.setStoreMode(1);
+            _bean.setUpLimitValue(10);
+        
+            _bean.setLowLimitValue(-10);
+            _bean.setMValue(0);
+            _bean.setDelayTime(3);
+            getDaoSession().getStoreBeanDao().insert(_bean);
         }
     }
 

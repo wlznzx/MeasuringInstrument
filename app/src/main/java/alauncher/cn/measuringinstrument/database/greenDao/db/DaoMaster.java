@@ -29,6 +29,7 @@ public class DaoMaster extends AbstractDaoMaster {
         ResultBeanDao.createTable(db, ifNotExists);
         ParameterBeanDao.createTable(db, ifNotExists);
         ForceCalibrationBeanDao.createTable(db, ifNotExists);
+        StoreBeanDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -41,6 +42,7 @@ public class DaoMaster extends AbstractDaoMaster {
         ResultBeanDao.dropTable(db, ifExists);
         ParameterBeanDao.dropTable(db, ifExists);
         ForceCalibrationBeanDao.dropTable(db, ifExists);
+        StoreBeanDao.dropTable(db, ifExists);
     }
 
     /**
@@ -67,6 +69,7 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(ResultBeanDao.class);
         registerDaoClass(ParameterBeanDao.class);
         registerDaoClass(ForceCalibrationBeanDao.class);
+        registerDaoClass(StoreBeanDao.class);
     }
 
     public DaoSession newSession() {
