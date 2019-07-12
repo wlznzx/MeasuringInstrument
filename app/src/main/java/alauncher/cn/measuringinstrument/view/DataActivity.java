@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.data.Entry;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +97,8 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
         quitBtn.setOnClickListener(this);
         excelBtn.setOnClickListener(this);
         filterBtn.setOnClickListener(this);
+
+
     }
 
     /**
@@ -547,7 +551,6 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
             _datas.add(rBean);
         }
         mDataAdapter.notifyAdapter(_datas, false);
-
     }
 
 }

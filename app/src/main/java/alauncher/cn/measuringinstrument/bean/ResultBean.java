@@ -206,4 +206,27 @@ public class ResultBean {
     public void setSelect(boolean select) {
         isSelect = select;
     }
+
+    @Override
+    public String toString() {
+        return "ResultBean{" +
+                "id=" + id +
+                ", handlerAccout='" + handlerAccout + '\'' +
+                ", timeStamp=" + timeStamp +
+                ", workid='" + workid + '\'' +
+                ", workid_extra='" + workid_extra + '\'' +
+                ", eventid='" + eventid + '\'' +
+                ", event='" + event + '\'' +
+                ", result='" + result + '\'' +
+                ", m1=" + m1 +
+                ", m2=" + m2 +
+                ", m3=" + m3 +
+                ", m4=" + m4 +
+                ", m1_group='" + m1_group + '\'' +
+                ", m2_group='" + m2_group + '\'' +
+                ", m3_group='" + m3_group + '\'' +
+                ", m4_group='" + m4_group + '\'' +
+                ", isSelect=" + isSelect +
+                '}';
+    }
 }

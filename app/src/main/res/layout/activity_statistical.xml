@@ -17,6 +17,43 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/daily_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_weight="1"
+            android:background="@drawable/btn_selector"
+            android:layout_margin="10dp"
+            android:text="@string/daily_table" />
+
+        <Button
+            android:id="@+id/monthly_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_selector"
+            android:text="@string/monthly_table" />
+
+        <Button
+            android:id="@+id/year_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_selector"
+            android:text="@string/year_table" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
         <TextView
             style="@style/TextStyle"
             android:layout_width="0dp"

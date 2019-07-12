@@ -153,4 +153,7 @@
     <string name="refresh">刷新</string>
     <string name="out">导出</string>
     <string name="in">导入</string>
+    <string name="daily_table">日报表</string>
+    <string name="monthly_table">月报表</string>
+    <string name="year_table">年报表</string>
 </resources>
