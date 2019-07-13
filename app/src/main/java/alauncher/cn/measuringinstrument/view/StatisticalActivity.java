@@ -1,5 +1,6 @@
 package alauncher.cn.measuringinstrument.view;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -8,8 +9,12 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
@@ -25,6 +30,9 @@ import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 
+import org.nfunk.jep.function.Str;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +42,7 @@ import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
+import alauncher.cn.measuringinstrument.utils.ExcelUtil;
 import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -45,7 +54,6 @@ public class StatisticalActivity extends BaseActivity {
     public LineChart chart;
 
     protected Typeface tfRegular;
-    protected Typeface tfLight;
 
     private ResultBeanDao mResultBeanDao;
 
@@ -56,6 +64,28 @@ public class StatisticalActivity extends BaseActivity {
     private final String WEEK = "WEEK";
 
     private final String MONTH = "MONTH";
+
+    private String[] title = {"时间", "良品率"};
+
+    private int total, succ, fail = 0;
+
+    @BindView(R.id.total_production_tv)
+    TextView totalProductionTV;
+
+    @BindView(R.id.qualified_number_tv)
+    TextView qualifiedNumberTV;
+
+    @BindView(R.id.defective_tv)
+    TextView defeectiveTV;
+
+    @BindView(R.id.rate_tv)
+    TextView rateTV;
+
+    @BindView(R.id.statistical_chart_title)
+    TextView statChartTV;
+
+
+    private List<StatistialData> excelData = new ArrayList<StatistialData>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +102,9 @@ public class StatisticalActivity extends BaseActivity {
         mResultBeanDao = App.getDaoSession().getResultBeanDao();
         initChart();
         setDatas(10, 100);
+        float[] result = {0, 0, 0, 0, 0, 0};
+        updateChartDatas(result);
         // Log.d("statistcal", "" + "week = " + DateUtils.getDateD(DateUtils.getMondayOfThisWeek()));
-
-        Log.d("statistcal", "" + "week = " + DateUtils.getDateD(DateUtils.getTimeOfMonthStart()));
-
-        monthStatistics();
-
     }
 
     /*
@@ -102,17 +129,33 @@ public class StatisticalActivity extends BaseActivity {
         chart.invalidate();
     }
 
-    @OnClick({R.id.daily_btn, R.id.monthly_btn, R.id.year_btn})
+    @OnClick({R.id.daily_btn, R.id.monthly_btn, R.id.year_btn, R.id.delete_delete_result, R.id.delete_statistical_btn})
     public void OnClick(View v) {
         switch (v.getId()) {
             case R.id.daily_btn:
+                statChartTV.setText(getResources().getString(R.string.daily_table));
                 new AnalyseTask().execute(DAILY);
                 break;
             case R.id.monthly_btn:
+                statChartTV.setText(getResources().getString(R.string.monthly_table));
                 new AnalyseTask().execute(WEEK);
                 break;
             case R.id.year_btn:
+                statChartTV.setText(getResources().getString(R.string.year_table));
                 new AnalyseTask().execute(MONTH);
+                break;
+            case R.id.delete_statistical_btn:
+                totalProductionTV.setText("");
+                qualifiedNumberTV.setText("");
+                defeectiveTV.setText("");
+                rateTV.setText("");
+                statChartTV.setText("");
+                float[] result = {0, 0, 0, 0, 0, 0};
+                updateChartDatas(result);
+                excelData.clear();
+                break;
+            case R.id.delete_delete_result:
+                excelDatas();
                 break;
         }
     }
@@ -190,12 +233,12 @@ public class StatisticalActivity extends BaseActivity {
                 // horizontal grid lines
                 yAxis.enableGridDashedLine(10f, 10f, 0f);
                 // axis range
-                yAxis.setAxisMaximum(1f);
+                yAxis.setAxisMaximum(1.02f);
                 yAxis.setAxisMinimum(0f);
                 yAxis.setValueFormatter(new IndexAxisValueFormatter() {
                     @Override
                     public String getFormattedValue(float value) {
-                        return value + "%";
+                        return (int)(value * 100) + "%";
                     }
                 });
             }
@@ -233,6 +276,18 @@ public class StatisticalActivity extends BaseActivity {
                 // yAxis.addLimitLine(ll2);
                 //xAxis.addLimitLine(llXAxis);
             }
+        }
+    }
+
+    @OnClick({R.id.delete_statistical_btn, R.id.delete_delete_result})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.delete_delete_result:
+                // 需要导出Excel
+
+                break;
+            case R.id.delete_statistical_btn:
+                break;
         }
     }
 
@@ -275,7 +330,7 @@ public class StatisticalActivity extends BaseActivity {
         set1.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return value + "%";
+                return (int)(value * 100) + "%";
             }
         });
         // set color of filled area
@@ -335,6 +390,16 @@ public class StatisticalActivity extends BaseActivity {
         @Override
         protected void onPostExecute(float[] result) {
             updateChartDatas(result);
+            fail = total - succ;
+            totalProductionTV.setText(String.valueOf(total));
+            qualifiedNumberTV.setText(String.valueOf(succ));
+            defeectiveTV.setText(String.valueOf(fail));
+            if (total > 0) {
+                int rate = (int)((succ / (float) total) * 100);
+                rateTV.setText(rate + "%");
+            } else {
+                rateTV.setText("0%");
+            }
             dialog.dismiss();
         }
 
@@ -346,11 +411,15 @@ public class StatisticalActivity extends BaseActivity {
     }
 
     private float[] dailyStatistics() {
+        excelData.clear();
+        total = 0;
+        succ = 0;
+        fail = 0;
         float[] percents = new float[7];
         int successTime;
         for (int i = 0; i > -7; i--) {
             successTime = 0;
-            long start_time,end_time;
+            long start_time, end_time;
             if (i == 0) {
                 // 获取本周一到当前的时间;
                 start_time = DateUtils.getTimesMorning();
@@ -371,6 +440,9 @@ public class StatisticalActivity extends BaseActivity {
             } else {
                 percents[i + 6] = 0;
             }
+            total = total + _beans.size();
+            succ = succ + successTime;
+            excelData.add(new StatistialData(DateUtils.getDateD(start_time) + " - " + DateUtils.getDateD(end_time), percents[i + 6]));
         }
         for (float p : percents) {
             Log.d("statistcal", "" + "p = " + p);
@@ -379,6 +451,10 @@ public class StatisticalActivity extends BaseActivity {
     }
 
     private float[] weekStatistics() {
+        excelData.clear();
+        total = 0;
+        succ = 0;
+        fail = 0;
         float[] percents = new float[7];
         int successTime;
         for (int i = 0; i > -7; i--) {
@@ -404,6 +480,9 @@ public class StatisticalActivity extends BaseActivity {
             } else {
                 percents[i + 6] = 0;
             }
+            total = total + _beans.size();
+            succ = succ + successTime;
+            excelData.add(new StatistialData(DateUtils.getDateD(start_time) + " - " + DateUtils.getDateD(end_time), percents[i + 6]));
         }
         for (float p : percents) {
             Log.d("statistcal", "" + "p = " + p);
@@ -412,6 +491,10 @@ public class StatisticalActivity extends BaseActivity {
     }
 
     private float[] monthStatistics() {
+        excelData.clear();
+        total = 0;
+        succ = 0;
+        fail = 0;
         float[] percents = new float[7];
         int successTime;
         for (int i = 0; i > -7; i--) {
@@ -438,8 +521,9 @@ public class StatisticalActivity extends BaseActivity {
             } else {
                 percents[i + 6] = 0;
             }
-
-
+            total = total + _beans.size();
+            succ = succ + successTime;
+            excelData.add(new StatistialData(DateUtils.getDateD(start_time) + " - " + DateUtils.getDateD(end_time), percents[i + 6]));
         }
 
         for (float p : percents) {
@@ -447,4 +531,127 @@ public class StatisticalActivity extends BaseActivity {
         }
         return percents;
     }
+
+    private void excelDatas() {
+        final AlertDialog builder = new AlertDialog.Builder(this)
+                .create();
+        builder.show();
+        if (builder.getWindow() == null) return;
+        builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
+        TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
+        Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
+        Button sure = (Button) builder.findViewById(R.id.btn_sure);
+        if (msg == null || cancle == null || sure == null) return;
+
+        msg.setText("是否导出统计列表.");
+
+        cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+            }
+        });
+        sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ExcelTask().execute();
+                builder.dismiss();
+            }
+        });
+    }
+
+    /*
+     *
+     * 导出Excel Task.
+     *
+     * */
+    public class ExcelTask extends AsyncTask<String, Integer, String> {
+
+        private ProgressDialog dialog;
+        private String path = Environment.getExternalStorageDirectory() + "/ETGate/";
+
+        //执行的第一个方法用于在执行后台任务前做一些UI操作
+        @Override
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(StatisticalActivity.this);
+            dialog.setTitle("导出Excel");
+            dialog.setMessage("正在将数据导出Excel中 , 请稍等.");
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        //第二个执行方法,在onPreExecute()后执行，用于后台任务,不可在此方法内修改UI
+        @Override
+        protected String doInBackground(String... params) {
+            //处理耗时操作
+
+            File destDir = new File(path);
+            if (!destDir.exists()) {
+                destDir.mkdirs();
+            }
+
+            if (excelData.size() > 0) {
+                path = path + "datas_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".xls";
+                ExcelUtil.initExcel(path, "data", title);
+                ExcelUtil.writeStatisticalToExcel(excelData, path, StatisticalActivity.this);
+                return path;
+            } else {
+                return null;
+            }
+        }
+
+        /*这个函数在doInBackground调用publishProgress(int i)时触发，虽然调用时只有一个参数
+         但是这里取到的是一个数组,所以要用progesss[0]来取值
+         第n个参数就用progress[n]来取值   */
+        @Override
+        protected void onProgressUpdate(Integer... progresses) {
+            //"loading..." + progresses[0] + "%"
+        }
+
+        /*doInBackground返回时触发，换句话说，就是doInBackground执行完后触发
+        这里的result就是上面doInBackground执行后的返回值，所以这里是"后台任务执行完毕"  */
+        @Override
+        protected void onPostExecute(String result) {
+            dialog.dismiss();
+            if (result == null) {
+                Toast.makeText(StatisticalActivity.this, "请先选择分析图表", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(StatisticalActivity.this, "导出至 : " + result, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        //onCancelled方法用于在取消执行中的任务时更改UI
+        @Override
+        protected void onCancelled() {
+
+        }
+    }
+
+    public class StatistialData {
+        private String dataRange;
+        private float percent;
+
+        public StatistialData(String dataRange, float percent) {
+            this.dataRange = dataRange;
+            this.percent = percent;
+        }
+
+        public String getDataRange() {
+            return dataRange;
+        }
+
+        public void setDataRange(String dataRange) {
+            this.dataRange = dataRange;
+        }
+
+        public float getPercent() {
+            return percent;
+        }
+
+        public void setPercent(float percent) {
+            this.percent = percent;
+        }
+    }
+
 }

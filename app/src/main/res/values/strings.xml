@@ -156,4 +156,5 @@
     <string name="daily_table">日报表</string>
     <string name="monthly_table">月报表</string>
     <string name="year_table">年报表</string>
+    <string name="rate">良品率</string>
 </resources>

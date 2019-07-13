@@ -82,7 +82,7 @@
     <string name="qualified_number">合格数</string>
     <string name="defective">缺陷</string>
     <string name="delete_statistical">删除统计</string>
-    <string name="delete_result">删除结果</string>
+    <string name="delete_result">清空记录</string>
     <string name="handler">操作员</string>
     <string name="time">时间</string>
     <string name="workpiece_id">工件号</string>

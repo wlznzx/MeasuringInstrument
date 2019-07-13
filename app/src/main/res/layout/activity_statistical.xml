@@ -22,9 +22,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_margin="10dp"
             android:layout_weight="1"
             android:background="@drawable/btn_selector"
-            android:layout_margin="10dp"
             android:text="@string/daily_table" />
 
         <Button
@@ -32,8 +32,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_weight="1"
             android:layout_margin="10dp"
+            android:layout_weight="1"
             android:background="@drawable/btn_selector"
             android:text="@string/monthly_table" />
 
@@ -42,8 +42,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_weight="1"
             android:layout_margin="10dp"
+            android:layout_weight="1"
             android:background="@drawable/btn_selector"
             android:text="@string/year_table" />
     </LinearLayout>
@@ -80,7 +80,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/describe" />
+            android:text="@string/rate" />
     </LinearLayout>
 
     <LinearLayout
@@ -90,32 +90,32 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/total_production_tv"
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="100" />
+            android:layout_weight="1" />
 
         <TextView
+            android:id="@+id/qualified_number_tv"
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="99" />
+            android:layout_weight="1" />
 
         <TextView
+            android:id="@+id/defective_tv"
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="1" />
+            android:layout_weight="1" />
 
         <TextView
+            android:id="@+id/rate_tv"
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="99%" />
+            android:layout_weight="1" />
     </LinearLayout>
 
     <ListView
@@ -127,35 +127,40 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/statistical_chart_title"
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="" />
 
         <TextView
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/total_production" />
+            android:text="@string/qualified_number"
+            android:visibility="invisible" />
 
         <TextView
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/qualified_number" />
+            android:text="@string/defective"
+            android:visibility="invisible" />
 
         <TextView
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/defective" />
-
-        <TextView
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/describe" />
+            android:text="@string/describe"
+            android:visibility="invisible" />
     </LinearLayout>
 
     <com.github.mikephil.charting.charts.LineChart

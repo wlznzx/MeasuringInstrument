@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.view.StatisticalActivity;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.format.Colour;
@@ -189,4 +190,69 @@ public class ExcelUtil {
     }
 
 
+    /**
+     * 将制定类型的List写入Excel中
+     *
+     * @param objList  待写入的list
+     * @param fileName
+     * @param c
+     * @param <T>
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> void writeStatisticalToExcel(List<T> objList, String fileName, Context c) {
+        if (objList != null && objList.size() > 0) {
+            WritableWorkbook writebook = null;
+            InputStream in = null;
+            try {
+                WorkbookSettings setEncode = new WorkbookSettings();
+                setEncode.setEncoding(UTF8_ENCODING);
+
+                in = new FileInputStream(new File(fileName));
+                Workbook workbook = Workbook.getWorkbook(in);
+                writebook = Workbook.createWorkbook(new File(fileName), workbook);
+                WritableSheet sheet = writebook.getSheet(0);
+
+                for (int j = 0; j < objList.size(); j++) {
+                    StatisticalActivity.StatistialData demoBean = (StatisticalActivity.StatistialData) objList.get(j);
+                    List<String> list = new ArrayList<>();
+                    list.add(demoBean.getDataRange());
+                    list.add("" + demoBean.getPercent());
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(i, j + 1, list.get(i), arial12format));
+                        if (list.get(i).length() <= 4) {
+                            //设置列宽
+                            sheet.setColumnView(i, list.get(i).length() + 8);
+                        } else {
+                            //设置列宽
+                            sheet.setColumnView(i, list.get(i).length() + 5);
+                        }
+                    }
+                    //设置行高
+                    sheet.setRowView(j + 1, 350);
+                }
+
+                writebook.write();
+                workbook.close();
+                Toast.makeText(c, "导出Excel成功", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (writebook != null) {
+                    try {
+                        writebook.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
 }
