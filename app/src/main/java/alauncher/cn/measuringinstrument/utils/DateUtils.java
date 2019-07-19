@@ -7,13 +7,13 @@ import java.util.Date;
 public class DateUtils {
 
     public static String getFileDate(long time) {
-        SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
+        SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
         Date date = new Date();
         return dateFormater.format(date);
     }
 
     public static String getDate(long time) {
-        SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(time);
         return dateFormater.format(date);
     }

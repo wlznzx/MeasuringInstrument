@@ -22,14 +22,29 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/statistical_p" />
+            android:text="@string/code_p" />
 
         <Spinner
-            android:id="@+id/calibration_method_sp_m2"
+            android:id="@+id/code_sp"
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="1"
+            android:entries="@array/code_array" />
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/statistical_p" />
+
+        <Spinner
+            android:id="@+id/target_sp"
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:entries="@array/m_values" />
     </LinearLayout>
 
@@ -44,17 +59,54 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/set" />
+            android:text="@string/group_size" />
 
+        <Spinner
+            android:id="@+id/group_size_sp"
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:entries="@array/group_size_array" />
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/group_num" />
+
+        <Spinner
+            android:id="@+id/group_num_sp"
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:entries="@array/group_num_array" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/time_mode" />
 
         <RadioGroup
+            android:id="@+id/time_rg"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/nan"
+                android:id="@+id/auto_time_rb"
                 style="@style/TextStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -76,7 +128,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:orientation="horizontal">
 
         <TextView
@@ -85,23 +137,29 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="开始时间" />
-        <LinearLayout
+
+
+        <Button
+            android:id="@+id/start_time_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1" />
+
+        <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3">
+            android:layout_weight="1"
+            android:text="结束时间" />
 
-            <TimePicker
-                android:timePickerMode="spinner"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
+        <Button
+            android:id="@+id/stop_time_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1" />
 
-            <TimePicker
-                android:timePickerMode="spinner"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -119,17 +177,18 @@
 
 
         <RadioGroup
+            android:id="@+id/line_rg"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:orientation="horizontal">
 
             <RadioButton
+                android:id="@+id/auto_line_rb"
                 style="@style/TextStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:checked="true"
                 android:text="@string/automatic" />
 
             <RadioButton
@@ -137,7 +196,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:checked="false"
                 android:text="手动" />
         </RadioGroup>
     </LinearLayout>
@@ -154,6 +212,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="X控制线" />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -201,6 +260,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Y控制线" />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -299,7 +359,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/delete_statistical_btn"
+                android:id="@+id/spc_statistical_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -314,7 +374,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/delete_delete_result"
+                android:id="@+id/delete_spc_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

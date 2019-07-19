@@ -172,9 +172,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     @Override
     public void saveResult(double[] ms, AddInfoBean bean) {
         ResultBean _bean = new ResultBean();
-        // _bean.setId(App.codeID);
         _bean.setHandlerAccout(App.handlerAccout);
-
+        _bean.setCodeID(App.getSetupBean().getCodeID());
         _bean.setM1(ms[0]);
         _bean.setM2(ms[1]);
         _bean.setM3(ms[2]);

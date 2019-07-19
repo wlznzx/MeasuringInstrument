@@ -1,11 +1,14 @@
 package alauncher.cn.measuringinstrument;
 
+import android.app.DatePickerDialog;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.base.BaseActivity;
@@ -59,7 +62,6 @@ public class MainActivity extends BaseActivity {
         rv.addItemDecoration(new RecyclerItemDecoration(24, 3));
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(_adapter);
-
     }
 
     class MainInfo {

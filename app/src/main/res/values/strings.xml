@@ -102,7 +102,7 @@
     <string name="swap">Swap</string>
     <string name="unqualified_number">Unqualified</string>
     <string name="DRate">Defective Rate</string>
-    <string name="statistical_p">StatisticalP</string>
+    <string name="statistical_p">分析参数</string>
     <string name="handler_line">HLine</string>
 
 
@@ -157,4 +157,8 @@
     <string name="monthly_table">月报表</string>
     <string name="year_table">年报表</string>
     <string name="rate">良品率</string>
+    <string name="code_p">测量程序</string>
+    <string name="group_size">子组大小</string>
+    <string name="group_num">子组数</string>
+    <string name="time_mode">时间区间</string>
 </resources>

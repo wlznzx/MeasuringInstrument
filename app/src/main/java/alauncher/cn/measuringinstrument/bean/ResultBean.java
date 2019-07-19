@@ -11,6 +11,8 @@ public class ResultBean {
     @Id(autoincrement = true)
     public Long id;
 
+    public long codeID;
+
     public String handlerAccout;
 
     public long timeStamp;
@@ -44,12 +46,13 @@ public class ResultBean {
     @Transient
     public boolean isSelect;
 
-    @Generated(hash = 852319293)
-    public ResultBean(Long id, String handlerAccout, long timeStamp, String workid,
-                      String workid_extra, String eventid, String event, String result,
-                      double m1, double m2, double m3, double m4, String m1_group,
-                      String m2_group, String m3_group, String m4_group) {
+    @Generated(hash = 573637926)
+    public ResultBean(Long id, long codeID, String handlerAccout, long timeStamp,
+            String workid, String workid_extra, String eventid, String event, String result,
+            double m1, double m2, double m3, double m4, String m1_group, String m2_group,
+            String m3_group, String m4_group) {
         this.id = id;
+        this.codeID = codeID;
         this.handlerAccout = handlerAccout;
         this.timeStamp = timeStamp;
         this.workid = workid;
@@ -228,5 +231,13 @@ public class ResultBean {
                 ", m4_group='" + m4_group + '\'' +
                 ", isSelect=" + isSelect +
                 '}';
+    }
+
+    public long getCodeID() {
+        return this.codeID;
+    }
+
+    public void setCodeID(long codeID) {
+        this.codeID = codeID;
     }
 }

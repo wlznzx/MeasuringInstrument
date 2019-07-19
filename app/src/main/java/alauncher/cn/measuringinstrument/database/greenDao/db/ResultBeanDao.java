@@ -25,21 +25,22 @@ public class ResultBeanDao extends AbstractDao<ResultBean, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property HandlerAccout = new Property(1, String.class, "handlerAccout", false, "HANDLER_ACCOUT");
-        public final static Property TimeStamp = new Property(2, long.class, "timeStamp", false, "TIME_STAMP");
-        public final static Property Workid = new Property(3, String.class, "workid", false, "WORKID");
-        public final static Property Workid_extra = new Property(4, String.class, "workid_extra", false, "WORKID_EXTRA");
-        public final static Property Eventid = new Property(5, String.class, "eventid", false, "EVENTID");
-        public final static Property Event = new Property(6, String.class, "event", false, "EVENT");
-        public final static Property Result = new Property(7, String.class, "result", false, "RESULT");
-        public final static Property M1 = new Property(8, double.class, "m1", false, "M1");
-        public final static Property M2 = new Property(9, double.class, "m2", false, "M2");
-        public final static Property M3 = new Property(10, double.class, "m3", false, "M3");
-        public final static Property M4 = new Property(11, double.class, "m4", false, "M4");
-        public final static Property M1_group = new Property(12, String.class, "m1_group", false, "M1_GROUP");
-        public final static Property M2_group = new Property(13, String.class, "m2_group", false, "M2_GROUP");
-        public final static Property M3_group = new Property(14, String.class, "m3_group", false, "M3_GROUP");
-        public final static Property M4_group = new Property(15, String.class, "m4_group", false, "M4_GROUP");
+        public final static Property CodeID = new Property(1, long.class, "codeID", false, "CODE_ID");
+        public final static Property HandlerAccout = new Property(2, String.class, "handlerAccout", false, "HANDLER_ACCOUT");
+        public final static Property TimeStamp = new Property(3, long.class, "timeStamp", false, "TIME_STAMP");
+        public final static Property Workid = new Property(4, String.class, "workid", false, "WORKID");
+        public final static Property Workid_extra = new Property(5, String.class, "workid_extra", false, "WORKID_EXTRA");
+        public final static Property Eventid = new Property(6, String.class, "eventid", false, "EVENTID");
+        public final static Property Event = new Property(7, String.class, "event", false, "EVENT");
+        public final static Property Result = new Property(8, String.class, "result", false, "RESULT");
+        public final static Property M1 = new Property(9, double.class, "m1", false, "M1");
+        public final static Property M2 = new Property(10, double.class, "m2", false, "M2");
+        public final static Property M3 = new Property(11, double.class, "m3", false, "M3");
+        public final static Property M4 = new Property(12, double.class, "m4", false, "M4");
+        public final static Property M1_group = new Property(13, String.class, "m1_group", false, "M1_GROUP");
+        public final static Property M2_group = new Property(14, String.class, "m2_group", false, "M2_GROUP");
+        public final static Property M3_group = new Property(15, String.class, "m3_group", false, "M3_GROUP");
+        public final static Property M4_group = new Property(16, String.class, "m4_group", false, "M4_GROUP");
     }
 
 
@@ -56,21 +57,22 @@ public class ResultBeanDao extends AbstractDao<ResultBean, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"RESULT_BEAN\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
-                "\"HANDLER_ACCOUT\" TEXT," + // 1: handlerAccout
-                "\"TIME_STAMP\" INTEGER NOT NULL ," + // 2: timeStamp
-                "\"WORKID\" TEXT," + // 3: workid
-                "\"WORKID_EXTRA\" TEXT," + // 4: workid_extra
-                "\"EVENTID\" TEXT," + // 5: eventid
-                "\"EVENT\" TEXT," + // 6: event
-                "\"RESULT\" TEXT," + // 7: result
-                "\"M1\" REAL NOT NULL ," + // 8: m1
-                "\"M2\" REAL NOT NULL ," + // 9: m2
-                "\"M3\" REAL NOT NULL ," + // 10: m3
-                "\"M4\" REAL NOT NULL ," + // 11: m4
-                "\"M1_GROUP\" TEXT," + // 12: m1_group
-                "\"M2_GROUP\" TEXT," + // 13: m2_group
-                "\"M3_GROUP\" TEXT," + // 14: m3_group
-                "\"M4_GROUP\" TEXT);"); // 15: m4_group
+                "\"CODE_ID\" INTEGER NOT NULL ," + // 1: codeID
+                "\"HANDLER_ACCOUT\" TEXT," + // 2: handlerAccout
+                "\"TIME_STAMP\" INTEGER NOT NULL ," + // 3: timeStamp
+                "\"WORKID\" TEXT," + // 4: workid
+                "\"WORKID_EXTRA\" TEXT," + // 5: workid_extra
+                "\"EVENTID\" TEXT," + // 6: eventid
+                "\"EVENT\" TEXT," + // 7: event
+                "\"RESULT\" TEXT," + // 8: result
+                "\"M1\" REAL NOT NULL ," + // 9: m1
+                "\"M2\" REAL NOT NULL ," + // 10: m2
+                "\"M3\" REAL NOT NULL ," + // 11: m3
+                "\"M4\" REAL NOT NULL ," + // 12: m4
+                "\"M1_GROUP\" TEXT," + // 13: m1_group
+                "\"M2_GROUP\" TEXT," + // 14: m2_group
+                "\"M3_GROUP\" TEXT," + // 15: m3_group
+                "\"M4_GROUP\" TEXT);"); // 16: m4_group
     }
 
     /** Drops the underlying database table. */
@@ -87,60 +89,61 @@ public class ResultBeanDao extends AbstractDao<ResultBean, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
+        stmt.bindLong(2, entity.getCodeID());
  
         String handlerAccout = entity.getHandlerAccout();
         if (handlerAccout != null) {
-            stmt.bindString(2, handlerAccout);
+            stmt.bindString(3, handlerAccout);
         }
-        stmt.bindLong(3, entity.getTimeStamp());
+        stmt.bindLong(4, entity.getTimeStamp());
  
         String workid = entity.getWorkid();
         if (workid != null) {
-            stmt.bindString(4, workid);
+            stmt.bindString(5, workid);
         }
  
         String workid_extra = entity.getWorkid_extra();
         if (workid_extra != null) {
-            stmt.bindString(5, workid_extra);
+            stmt.bindString(6, workid_extra);
         }
  
         String eventid = entity.getEventid();
         if (eventid != null) {
-            stmt.bindString(6, eventid);
+            stmt.bindString(7, eventid);
         }
  
         String event = entity.getEvent();
         if (event != null) {
-            stmt.bindString(7, event);
+            stmt.bindString(8, event);
         }
  
         String result = entity.getResult();
         if (result != null) {
-            stmt.bindString(8, result);
+            stmt.bindString(9, result);
         }
-        stmt.bindDouble(9, entity.getM1());
-        stmt.bindDouble(10, entity.getM2());
-        stmt.bindDouble(11, entity.getM3());
-        stmt.bindDouble(12, entity.getM4());
+        stmt.bindDouble(10, entity.getM1());
+        stmt.bindDouble(11, entity.getM2());
+        stmt.bindDouble(12, entity.getM3());
+        stmt.bindDouble(13, entity.getM4());
  
         String m1_group = entity.getM1_group();
         if (m1_group != null) {
-            stmt.bindString(13, m1_group);
+            stmt.bindString(14, m1_group);
         }
  
         String m2_group = entity.getM2_group();
         if (m2_group != null) {
-            stmt.bindString(14, m2_group);
+            stmt.bindString(15, m2_group);
         }
  
         String m3_group = entity.getM3_group();
         if (m3_group != null) {
-            stmt.bindString(15, m3_group);
+            stmt.bindString(16, m3_group);
         }
  
         String m4_group = entity.getM4_group();
         if (m4_group != null) {
-            stmt.bindString(16, m4_group);
+            stmt.bindString(17, m4_group);
         }
     }
 
@@ -152,60 +155,61 @@ public class ResultBeanDao extends AbstractDao<ResultBean, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
+        stmt.bindLong(2, entity.getCodeID());
  
         String handlerAccout = entity.getHandlerAccout();
         if (handlerAccout != null) {
-            stmt.bindString(2, handlerAccout);
+            stmt.bindString(3, handlerAccout);
         }
-        stmt.bindLong(3, entity.getTimeStamp());
+        stmt.bindLong(4, entity.getTimeStamp());
  
         String workid = entity.getWorkid();
         if (workid != null) {
-            stmt.bindString(4, workid);
+            stmt.bindString(5, workid);
         }
  
         String workid_extra = entity.getWorkid_extra();
         if (workid_extra != null) {
-            stmt.bindString(5, workid_extra);
+            stmt.bindString(6, workid_extra);
         }
  
         String eventid = entity.getEventid();
         if (eventid != null) {
-            stmt.bindString(6, eventid);
+            stmt.bindString(7, eventid);
         }
  
         String event = entity.getEvent();
         if (event != null) {
-            stmt.bindString(7, event);
+            stmt.bindString(8, event);
         }
  
         String result = entity.getResult();
         if (result != null) {
-            stmt.bindString(8, result);
+            stmt.bindString(9, result);
         }
-        stmt.bindDouble(9, entity.getM1());
-        stmt.bindDouble(10, entity.getM2());
-        stmt.bindDouble(11, entity.getM3());
-        stmt.bindDouble(12, entity.getM4());
+        stmt.bindDouble(10, entity.getM1());
+        stmt.bindDouble(11, entity.getM2());
+        stmt.bindDouble(12, entity.getM3());
+        stmt.bindDouble(13, entity.getM4());
  
         String m1_group = entity.getM1_group();
         if (m1_group != null) {
-            stmt.bindString(13, m1_group);
+            stmt.bindString(14, m1_group);
         }
  
         String m2_group = entity.getM2_group();
         if (m2_group != null) {
-            stmt.bindString(14, m2_group);
+            stmt.bindString(15, m2_group);
         }
  
         String m3_group = entity.getM3_group();
         if (m3_group != null) {
-            stmt.bindString(15, m3_group);
+            stmt.bindString(16, m3_group);
         }
  
         String m4_group = entity.getM4_group();
         if (m4_group != null) {
-            stmt.bindString(16, m4_group);
+            stmt.bindString(17, m4_group);
         }
     }
 
@@ -218,21 +222,22 @@ public class ResultBeanDao extends AbstractDao<ResultBean, Long> {
     public ResultBean readEntity(Cursor cursor, int offset) {
         ResultBean entity = new ResultBean( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // handlerAccout
-            cursor.getLong(offset + 2), // timeStamp
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // workid
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // workid_extra
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // eventid
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // event
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // result
-            cursor.getDouble(offset + 8), // m1
-            cursor.getDouble(offset + 9), // m2
-            cursor.getDouble(offset + 10), // m3
-            cursor.getDouble(offset + 11), // m4
-            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // m1_group
-            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // m2_group
-            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // m3_group
-            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15) // m4_group
+            cursor.getLong(offset + 1), // codeID
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // handlerAccout
+            cursor.getLong(offset + 3), // timeStamp
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // workid
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // workid_extra
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // eventid
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // event
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // result
+            cursor.getDouble(offset + 9), // m1
+            cursor.getDouble(offset + 10), // m2
+            cursor.getDouble(offset + 11), // m3
+            cursor.getDouble(offset + 12), // m4
+            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // m1_group
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // m2_group
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // m3_group
+            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16) // m4_group
         );
         return entity;
     }
@@ -240,21 +245,22 @@ public class ResultBeanDao extends AbstractDao<ResultBean, Long> {
     @Override
     public void readEntity(Cursor cursor, ResultBean entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setHandlerAccout(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setTimeStamp(cursor.getLong(offset + 2));
-        entity.setWorkid(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setWorkid_extra(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setEventid(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setEvent(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setResult(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setM1(cursor.getDouble(offset + 8));
-        entity.setM2(cursor.getDouble(offset + 9));
-        entity.setM3(cursor.getDouble(offset + 10));
-        entity.setM4(cursor.getDouble(offset + 11));
-        entity.setM1_group(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
-        entity.setM2_group(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
-        entity.setM3_group(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
-        entity.setM4_group(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setCodeID(cursor.getLong(offset + 1));
+        entity.setHandlerAccout(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setTimeStamp(cursor.getLong(offset + 3));
+        entity.setWorkid(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setWorkid_extra(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setEventid(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setEvent(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setResult(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setM1(cursor.getDouble(offset + 9));
+        entity.setM2(cursor.getDouble(offset + 10));
+        entity.setM3(cursor.getDouble(offset + 11));
+        entity.setM4(cursor.getDouble(offset + 12));
+        entity.setM1_group(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setM2_group(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
+        entity.setM3_group(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setM4_group(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
      }
     
     @Override
