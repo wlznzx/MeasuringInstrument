@@ -16,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
@@ -81,6 +82,15 @@ public class SPCStatisticalActivity extends BaseActivity {
     private long startTimeStamp = 0;
 
     private long stopTimeStamp = 0;
+
+    // 过程能力图.
+    private final int GCNLT_MODE = 1;
+
+    // 趋势质量图;
+    private final int QSZLT_MODE = 2;
+
+    private int spc_mode = GCNLT_MODE;
+
 
     private FilterBean mFilterBean;
 
@@ -165,6 +175,8 @@ public class SPCStatisticalActivity extends BaseActivity {
         mFilterBean.isLineAuto = lineRG.getCheckedRadioButtonId() == R.id.auto_line_rb ? true : false;
 
         android.util.Log.d("wlDebug", "mFilterBean = " + mFilterBean.toString());
+
+        dataFilterUpdate();
     }
 
     /*
@@ -223,26 +235,24 @@ public class SPCStatisticalActivity extends BaseActivity {
         }
     }
 
-    public void dataFilterUpdate(FilterBean bean) {
-
-        /*
-        Query query = mResultBeanDao.queryBuilder().where(
-                new WhereCondition.StringCondition(
-                        "SELECT * FROM RESULT_BEAN WHERE HANDLER_ACCOUT = '吴工'")).build();
-        List<ResultBean> _datas = query.list();
-        mDataAdapter.notifyAdapter(_datas, false);
-        */
+    public void dataFilterUpdate() {
 
 //        String query = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.TimeStamp.columnName + " between " + startTimeStamp + " and " + stopTimeStamp + " order by id desc limit 10";
 
         int _limit = mFilterBean.getGroupNum() * mFilterBean.getGroupSize();
 
+        if (!mFilterBean.isTimeAuto() && startTimeStamp >= stopTimeStamp) {
+            Toast.makeText(SPCStatisticalActivity.this, "起始时间不可大于结束时间，请确认输入.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String queryString = "";
         if (mFilterBean.isTimeAuto()) {
-            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where 1==1 order by id desc limit " + _limit;
+            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.CodeID.columnName + " = " + mFilterBean.getCodeID() + " order by _id desc limit " + _limit;
         } else {
-            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.TimeStamp.columnName + " between " + startTimeStamp + " and " + stopTimeStamp + " order by id desc limit " + _limit;
+            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.TimeStamp.columnName + " between " + startTimeStamp + " and " + stopTimeStamp + " order by _id desc limit " + _limit;
         }
+
 
         Cursor cursor = mResultBeanDao.getDatabase().rawQuery(queryString, null);
         int HandlerAccout = cursor.getColumnIndex(ResultBeanDao.Properties.HandlerAccout.columnName);
@@ -279,7 +289,40 @@ public class SPCStatisticalActivity extends BaseActivity {
             _datas.add(rBean);
         }
 
-        android.util.Log.d("wlDebug", "size = " + _datas.size());
+        for (ResultBean _bean : _datas) {
+            android.util.Log.d("wlDebug", _bean.toString());
+        }
+
+        if (_datas.size() < _limit) {
+            Toast.makeText(SPCStatisticalActivity.this, "数据源数量不足以分析.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /*
+     *  均值极差图;
+     * */
+    private void jzjctDrew(List<ResultBean> _datas) {
+        double[] m = new double[_datas.size()];
+        double total = 0;
+        for (int i = 0; i < _datas.size(); i++) {
+            switch (mFilterBean.getTargetNum()) {
+                case 0:
+                    m[i] = _datas.get(i).getM1();
+                    break;
+                case 1:
+                    m[i] = _datas.get(i).getM2();
+                    break;
+                case 2:
+                    m[i] = _datas.get(i).getM3();
+                    break;
+                case 3:
+                    m[i] = _datas.get(i).getM4();
+                    break;
+            }
+            total += m[i];
+        }
+        float xbar = (float) (total / _datas.size());
+
     }
 
     @Override
@@ -303,8 +346,6 @@ public class SPCStatisticalActivity extends BaseActivity {
         // enable scaling and dragging
         chart.setDragEnabled(true);
         chart.setScaleEnabled(true);
-        // chart.setScaleXEnabled(true);
-        // chart.setScaleYEnabled(true);
 
         // force pinch zoom along both axis
         chart.setPinchZoom(true);
@@ -364,9 +405,8 @@ public class SPCStatisticalActivity extends BaseActivity {
             // add limit lines
             yAxis.addLimitLine(ll1);
             yAxis.addLimitLine(ll2);
-            //xAxis.addLimitLine(llXAxis);
         }
-        setDatas(10, 100);
+        // setDatas(10, 100);
     }
 
     private void setDatas(int count, float range) {
