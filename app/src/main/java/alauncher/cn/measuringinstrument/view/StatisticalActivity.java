@@ -43,7 +43,9 @@ import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
 import alauncher.cn.measuringinstrument.utils.ExcelUtil;
+
 import androidx.core.content.ContextCompat;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -238,7 +240,7 @@ public class StatisticalActivity extends BaseActivity {
                 yAxis.setValueFormatter(new IndexAxisValueFormatter() {
                     @Override
                     public String getFormattedValue(float value) {
-                        return (int)(value * 100) + "%";
+                        return (int) (value * 100) + "%";
                     }
                 });
             }
@@ -330,7 +332,7 @@ public class StatisticalActivity extends BaseActivity {
         set1.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return (int)(value * 100) + "%";
+                return (int) (value * 100) + "%";
             }
         });
         // set color of filled area
@@ -395,7 +397,7 @@ public class StatisticalActivity extends BaseActivity {
             qualifiedNumberTV.setText(String.valueOf(succ));
             defeectiveTV.setText(String.valueOf(fail));
             if (total > 0) {
-                int rate = (int)((succ / (float) total) * 100);
+                int rate = (int) ((succ / (float) total) * 100);
                 rateTV.setText(rate + "%");
             } else {
                 rateTV.setText("0%");

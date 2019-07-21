@@ -33,6 +33,7 @@ import com.github.mikephil.charting.utils.Utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
@@ -40,8 +41,11 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
+import alauncher.cn.measuringinstrument.utils.Constants;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
+
 import androidx.core.content.ContextCompat;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -91,6 +95,7 @@ public class SPCStatisticalActivity extends BaseActivity {
 
     private int spc_mode = GCNLT_MODE;
 
+    private LineDataSet set1;
 
     private FilterBean mFilterBean;
 
@@ -162,6 +167,11 @@ public class SPCStatisticalActivity extends BaseActivity {
             case R.id.delete_spc_result:
 
                 break;
+            case R.id.qszlt_btn:
+                break;
+            case R.id.gcnlt_btn:
+
+                break;
         }
     }
 
@@ -205,12 +215,7 @@ public class SPCStatisticalActivity extends BaseActivity {
         protected String doInBackground(String... params) {
             //处理耗时操作
 
-            File destDir = new File(path);
-            if (!destDir.exists()) {
-                destDir.mkdirs();
-            }
 
-            path = path + "datas_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".xls";
             return "后台任务执行完毕";
         }
 
@@ -296,12 +301,15 @@ public class SPCStatisticalActivity extends BaseActivity {
         if (_datas.size() < _limit) {
             Toast.makeText(SPCStatisticalActivity.this, "数据源数量不足以分析.", Toast.LENGTH_SHORT).show();
         }
+
+        jzjctDrew(_datas);
     }
 
     /*
      *  均值极差图;
      * */
-    private void jzjctDrew(List<ResultBean> _datas) {
+    private JZJCTBean jzjctDrew(List<ResultBean> _datas) {
+        JZJCTBean _bean = new JZJCTBean();
         double[] m = new double[_datas.size()];
         double total = 0;
         for (int i = 0; i < _datas.size(); i++) {
@@ -321,8 +329,65 @@ public class SPCStatisticalActivity extends BaseActivity {
             }
             total += m[i];
         }
+        // 绘制XBar;
         float xbar = (float) (total / _datas.size());
+        _bean.xbar = xbar;
+        // 绘制折线图；
+        ArrayList<Entry> values = new ArrayList<Entry>();
+        ArrayList<Double> _mList = new ArrayList<>();
+        ArrayList<Double> _rList = new ArrayList<>();
+        float rbar = 0;
+        for (int i = 0; i < mFilterBean.getGroupNum(); i++) {
+            float _groupM = 0;
+            float _r = 0;
+            _mList.clear();
+            for (int j = 0; j < mFilterBean.getGroupSize(); j++) {
+                int index = i * mFilterBean.getGroupSize() + j;
+                android.util.Log.d("wlDebug", "index = " + index);
+                _groupM += m[index];
+                _mList.add(m[index]);
+            }
+            Collections.sort(_mList);
+            _r = (float) (_mList.get(0) - _mList.get(_mList.size() - 1));
+            rbar = rbar + _r;
+            _groupM = _groupM / mFilterBean.getGroupSize();
+            values.add(new Entry(i + 1, _groupM, getResources().getDrawable(R.drawable.star)));
+        }
+        _bean.xValues = values;
 
+        rbar = rbar / mFilterBean.getGroupNum();
+        _bean.rbar = rbar;
+
+        float xucl, xlcl, rucl, rlcl, maxX, minX, maxR, minR;
+        if (mFilterBean.isLineAuto()) {
+            xucl = (float) (xbar + Constants.A2[mFilterBean.groupSize - 2] * rbar);
+            xlcl = (float) (xbar - Constants.A2[mFilterBean.groupSize - 2] * rbar);
+        }
+
+        YAxis yAxis;
+        {   // // Y-Axis Style // //
+            yAxis = chart.getAxisLeft();
+
+            // disable dual axis (only use LEFT axis)
+            chart.getAxisRight().setEnabled(false);
+
+            // horizontal grid lines
+            yAxis.enableGridDashedLine(10f, 10f, 0f);
+
+            // axis range
+            yAxis.setAxisMaximum(20f);
+            yAxis.setAxisMinimum(-20f);
+        }
+
+        updateChartDatas(values);
+    }
+
+    private void updateChartDatas(List<Entry> values) {
+        set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+        set1.setValues(values);
+        chart.getData().notifyDataChanged();
+        chart.notifyDataSetChanged();
+        chart.invalidate();
     }
 
     @Override
@@ -406,7 +471,7 @@ public class SPCStatisticalActivity extends BaseActivity {
             yAxis.addLimitLine(ll1);
             yAxis.addLimitLine(ll2);
         }
-        // setDatas(10, 100);
+        setDatas(10, 100);
     }
 
     private void setDatas(int count, float range) {
@@ -551,4 +616,44 @@ public class SPCStatisticalActivity extends BaseActivity {
         }
     }
 
+    // 均值极差图;
+    class JZJCTBean {
+        float xbar;
+        // X图的上控制线;
+        float xUCL;
+        // X图的下控制线;
+        float xLCL;
+        // X图的Y轴最大值;
+        float maxXY;
+        // X图的Y轴最小值:
+        float minXY;
+        // X图的数据；
+        ArrayList<Entry> xValues;
+        //
+        float rbar;
+        // R图的上控制线;
+        float rUCL;
+        // R图的下控制线;
+        float rLCL;
+        // R图的Y轴最大值;
+        float maxRY;
+        // R图的Y轴最小值;
+        float minRY;
+
+        @Override
+        public String toString() {
+            return "JZJCTBean{" +
+                    "xbar=" + xbar +
+                    ", xUCL=" + xUCL +
+                    ", xLCL=" + xLCL +
+                    ", maxXY=" + maxXY +
+                    ", minXY=" + minXY +
+                    ", rbar=" + rbar +
+                    ", rUCL=" + rUCL +
+                    ", rLCL=" + rLCL +
+                    ", maxRY=" + maxRY +
+                    ", minRY=" + minRY +
+                    '}';
+        }
+    }
 }

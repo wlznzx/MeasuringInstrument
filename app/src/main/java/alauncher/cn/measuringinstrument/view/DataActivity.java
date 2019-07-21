@@ -31,9 +31,11 @@ import alauncher.cn.measuringinstrument.utils.DateUtils;
 import alauncher.cn.measuringinstrument.utils.ExcelUtil;
 import alauncher.cn.measuringinstrument.view.adapter.DataAdapter;
 import alauncher.cn.measuringinstrument.widget.FilterDialog;
+
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 
 import static alauncher.cn.measuringinstrument.view.adapter.DataAdapter.MYLIVE_MODE_CHECK;
@@ -97,8 +99,6 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
         quitBtn.setOnClickListener(this);
         excelBtn.setOnClickListener(this);
         filterBtn.setOnClickListener(this);
-
-
     }
 
     /**
