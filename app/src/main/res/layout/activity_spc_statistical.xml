@@ -308,12 +308,14 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/qszlt_btn"
+            android:id="@+id/jzjct_btn"
             style="@style/TextStyleSelected"
+            android:background="@drawable/bg_tv_seleted"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="趋势质量图" />
+            android:clickable="true"
+            android:text="均值极差图" />
 
         <TextView
             android:id="@+id/gcnlt_btn"
@@ -342,6 +344,12 @@
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/statistical_chart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/r_chart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5" />
