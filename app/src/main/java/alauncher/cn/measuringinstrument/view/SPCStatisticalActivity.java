@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -81,6 +82,18 @@ public class SPCStatisticalActivity extends BaseActivity {
     @BindView(R.id.line_rg)
     public RadioGroup lineRG;
 
+    @BindView(R.id.xucl_edt)
+    public EditText xuclEdt;
+
+    @BindView(R.id.xlcl_edt)
+    public EditText xlclEdt;
+
+    @BindView(R.id.rucl_edt)
+    public EditText ruclEdt;
+
+    @BindView(R.id.rlcl_edt)
+    public EditText rlclEdt;
+
     public ResultBeanDao mResultBeanDao;
 
     private long startTimeStamp = 0;
@@ -88,12 +101,12 @@ public class SPCStatisticalActivity extends BaseActivity {
     private long stopTimeStamp = 0;
 
     // 过程能力图.
-    private final int GCNLT_MODE = 1;
+    private final int JZJCT_MODE = 1;
 
     // 趋势质量图;
     private final int QSZLT_MODE = 2;
 
-    private int spc_mode = GCNLT_MODE;
+    private int spc_mode = JZJCT_MODE;
 
     private LineDataSet set1;
 
@@ -162,7 +175,8 @@ public class SPCStatisticalActivity extends BaseActivity {
                 ).show();
                 break;
             case R.id.spc_statistical_btn:
-                startStatistical();
+//                startStatistical();
+                new SPCTask().execute();
                 break;
             case R.id.delete_spc_result:
 
@@ -184,6 +198,10 @@ public class SPCStatisticalActivity extends BaseActivity {
         mFilterBean.isTimeAuto = timeRG.getCheckedRadioButtonId() == R.id.auto_time_rb ? true : false;
         mFilterBean.isLineAuto = lineRG.getCheckedRadioButtonId() == R.id.auto_line_rb ? true : false;
 
+        mFilterBean.setXucl(Double.valueOf(xuclEdt.getText().toString().trim()));
+        mFilterBean.setXlcl(Double.valueOf(xlclEdt.getText().toString().trim()));
+        mFilterBean.setRucl(Double.valueOf(ruclEdt.getText().toString().trim()));
+        mFilterBean.setRlcl(Double.valueOf(rlclEdt.getText().toString().trim()));
         android.util.Log.d("wlDebug", "mFilterBean = " + mFilterBean.toString());
 
         dataFilterUpdate();
@@ -194,7 +212,7 @@ public class SPCStatisticalActivity extends BaseActivity {
      * 导出Excel Task.
      *
      * */
-    public class SPCTask extends AsyncTask<String, Integer, String> {
+    public class SPCTask extends AsyncTask<String, Integer, Object> {
 
         private ProgressDialog dialog;
         private String path = Environment.getExternalStorageDirectory() + "/ETGate/";
@@ -203,8 +221,8 @@ public class SPCStatisticalActivity extends BaseActivity {
         @Override
         protected void onPreExecute() {
             dialog = new ProgressDialog(SPCStatisticalActivity.this);
-            dialog.setTitle("导出Excel");
-            dialog.setMessage("正在将数据导出Excel中 , 请稍等.");
+            dialog.setTitle("SPC");
+            dialog.setMessage("SPC分析中...");
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
             dialog.show();
@@ -212,11 +230,15 @@ public class SPCStatisticalActivity extends BaseActivity {
 
         //第二个执行方法,在onPreExecute()后执行，用于后台任务,不可在此方法内修改UI
         @Override
-        protected String doInBackground(String... params) {
+        protected Object doInBackground(String... params) {
             //处理耗时操作
-
-
-            return "后台任务执行完毕";
+            if (spc_mode == JZJCT_MODE) {
+                startStatistical();
+                List<ResultBean> _datas = dataFilterUpdate();
+                if (_datas == null) return null;
+                return jzjctDatas(_datas);
+            }
+            return null;
         }
 
         /*这个函数在doInBackground调用publishProgress(int i)时触发，虽然调用时只有一个参数
@@ -229,8 +251,20 @@ public class SPCStatisticalActivity extends BaseActivity {
         /*doInBackground返回时触发，换句话说，就是doInBackground执行完后触发
         这里的result就是上面doInBackground执行后的返回值，所以这里是"后台任务执行完毕"  */
         @Override
-        protected void onPostExecute(String result) {
-
+        protected void onPostExecute(Object result) {
+            dialog.dismiss();
+            if (result != null) {
+                JZJCTBean _bean = (JZJCTBean) result;
+                YAxis yAxis = chart.getAxisLeft();
+                yAxis.setAxisMaximum(_bean.maxXY);
+                yAxis.setAxisMinimum(_bean.minXY);
+                yAxis.removeAllLimitLines();
+                yAxis.addLimitLine(getLimitLine(_bean.xUCL, "上控制线"));
+                yAxis.addLimitLine(getLimitLine(_bean.xLCL, "下控制线"));
+                updateChartDatas(_bean.xValues);
+            } else {
+                Toast.makeText(SPCStatisticalActivity.this, "数据源数量不足以分析.", Toast.LENGTH_SHORT).show();
+            }
         }
 
         //onCancelled方法用于在取消执行中的任务时更改UI
@@ -240,15 +274,13 @@ public class SPCStatisticalActivity extends BaseActivity {
         }
     }
 
-    public void dataFilterUpdate() {
-
-//        String query = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.TimeStamp.columnName + " between " + startTimeStamp + " and " + stopTimeStamp + " order by id desc limit 10";
+    public List<ResultBean> dataFilterUpdate() {
 
         int _limit = mFilterBean.getGroupNum() * mFilterBean.getGroupSize();
 
         if (!mFilterBean.isTimeAuto() && startTimeStamp >= stopTimeStamp) {
             Toast.makeText(SPCStatisticalActivity.this, "起始时间不可大于结束时间，请确认输入.", Toast.LENGTH_SHORT).show();
-            return;
+            return null;
         }
 
         String queryString = "";
@@ -299,16 +331,17 @@ public class SPCStatisticalActivity extends BaseActivity {
         }
 
         if (_datas.size() < _limit) {
-            Toast.makeText(SPCStatisticalActivity.this, "数据源数量不足以分析.", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(SPCStatisticalActivity.this, "数据源数量不足以分析.", Toast.LENGTH_SHORT).show();
+            return null;
         }
 
-        jzjctDrew(_datas);
+        return _datas;
     }
 
     /*
      *  均值极差图;
      * */
-    private JZJCTBean jzjctDrew(List<ResultBean> _datas) {
+    private JZJCTBean jzjctDatas(List<ResultBean> _datas) {
         JZJCTBean _bean = new JZJCTBean();
         double[] m = new double[_datas.size()];
         double total = 0;
@@ -338,7 +371,7 @@ public class SPCStatisticalActivity extends BaseActivity {
         ArrayList<Double> _rList = new ArrayList<>();
         float rbar = 0;
         for (int i = 0; i < mFilterBean.getGroupNum(); i++) {
-            float _groupM = 0;
+            double _groupM = 0;
             float _r = 0;
             _mList.clear();
             for (int j = 0; j < mFilterBean.getGroupSize(); j++) {
@@ -351,10 +384,10 @@ public class SPCStatisticalActivity extends BaseActivity {
             _r = (float) (_mList.get(0) - _mList.get(_mList.size() - 1));
             rbar = rbar + _r;
             _groupM = _groupM / mFilterBean.getGroupSize();
-            values.add(new Entry(i + 1, _groupM, getResources().getDrawable(R.drawable.star)));
+            values.add(new Entry(i + 1, (float) _groupM, getResources().getDrawable(R.drawable.star)));
         }
         _bean.xValues = values;
-
+        // 计算Rbar
         rbar = rbar / mFilterBean.getGroupNum();
         _bean.rbar = rbar;
 
@@ -362,24 +395,32 @@ public class SPCStatisticalActivity extends BaseActivity {
         if (mFilterBean.isLineAuto()) {
             xucl = (float) (xbar + Constants.A2[mFilterBean.groupSize - 2] * rbar);
             xlcl = (float) (xbar - Constants.A2[mFilterBean.groupSize - 2] * rbar);
+            rucl = (float) (Constants.D4[mFilterBean.groupSize - 2] * rbar);
+            rlcl = (float) (Constants.D3[mFilterBean.groupSize - 2] * rbar);
+        } else {
+            xucl = (float) mFilterBean.getXucl();
+            xlcl = (float) mFilterBean.getXlcl();
+            rucl = (float) mFilterBean.getRucl();
+            rlcl = (float) mFilterBean.getRlcl();
         }
+        maxX = xucl + xucl + 10;
+        minX = xlcl - xucl - 10;
 
-        YAxis yAxis;
-        {   // // Y-Axis Style // //
-            yAxis = chart.getAxisLeft();
+        maxR = rucl + rucl + 10;
+        minR = rlcl - rlcl - 10;
 
-            // disable dual axis (only use LEFT axis)
-            chart.getAxisRight().setEnabled(false);
 
-            // horizontal grid lines
-            yAxis.enableGridDashedLine(10f, 10f, 0f);
+        _bean.xUCL = xucl;
+        _bean.xLCL = xlcl;
+        _bean.rUCL = rucl;
+        _bean.rLCL = rlcl;
+        _bean.maxXY = maxX;
+        _bean.minXY = minX;
+        _bean.maxRY = maxR;
+        _bean.minRY = minR;
 
-            // axis range
-            yAxis.setAxisMaximum(20f);
-            yAxis.setAxisMinimum(-20f);
-        }
-
-        updateChartDatas(values);
+        android.util.Log.d("wlDebug", _bean.toString());
+        return _bean;
     }
 
     private void updateChartDatas(List<Entry> values) {
@@ -447,7 +488,7 @@ public class SPCStatisticalActivity extends BaseActivity {
             llXAxis.setTextSize(10f);
             llXAxis.setTypeface(tfRegular);
 
-            LimitLine ll1 = new LimitLine(150f, "Upper Limit");
+            LimitLine ll1 = new LimitLine(150f, "上控制线");
             ll1.setLineWidth(2f);
             ll1.setLineColor(R.color.baseColor);
             ll1.enableDashedLine(10f, 10f, 0f);
@@ -455,7 +496,7 @@ public class SPCStatisticalActivity extends BaseActivity {
             ll1.setTextSize(10f);
             ll1.setTypeface(tfRegular);
 
-            LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
+            LimitLine ll2 = new LimitLine(-30f, "下控制线");
             ll2.setLineWidth(2f);
             ll2.setLineColor(R.color.baseColor);
             ll2.enableDashedLine(10f, 10f, 0f);
@@ -472,6 +513,17 @@ public class SPCStatisticalActivity extends BaseActivity {
             yAxis.addLimitLine(ll2);
         }
         setDatas(10, 100);
+    }
+
+    private LimitLine getLimitLine(float value, String str) {
+        LimitLine ll1 = new LimitLine(value, str);
+        ll1.setLineWidth(2f);
+        ll1.setLineColor(R.color.baseColor);
+        ll1.enableDashedLine(10f, 10f, 0f);
+        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+        ll1.setTextSize(10f);
+        ll1.setTypeface(tfRegular);
+        return ll1;
     }
 
     private void setDatas(int count, float range) {
@@ -550,6 +602,14 @@ public class SPCStatisticalActivity extends BaseActivity {
 
         private int groupNum;
 
+        private double xucl;
+
+        private double xlcl;
+
+        private double rucl;
+
+        private double rlcl;
+
         private boolean isTimeAuto;
 
         private boolean isLineAuto;
@@ -603,6 +663,38 @@ public class SPCStatisticalActivity extends BaseActivity {
             this.groupNum = groupNum;
         }
 
+        public double getXucl() {
+            return xucl;
+        }
+
+        public void setXucl(double xucl) {
+            this.xucl = xucl;
+        }
+
+        public double getXlcl() {
+            return xlcl;
+        }
+
+        public void setXlcl(double xlcl) {
+            this.xlcl = xlcl;
+        }
+
+        public double getRucl() {
+            return rucl;
+        }
+
+        public void setRucl(double rucl) {
+            this.rucl = rucl;
+        }
+
+        public double getRlcl() {
+            return rlcl;
+        }
+
+        public void setRlcl(double rlcl) {
+            this.rlcl = rlcl;
+        }
+
         @Override
         public String toString() {
             return "FilterBean{" +
@@ -610,6 +702,10 @@ public class SPCStatisticalActivity extends BaseActivity {
                     ", targetNum=" + targetNum +
                     ", groupSize=" + groupSize +
                     ", groupNum=" + groupNum +
+                    ", xucl=" + xucl +
+                    ", xlcl=" + xlcl +
+                    ", rucl=" + rucl +
+                    ", rlcl=" + rlcl +
                     ", isTimeAuto=" + isTimeAuto +
                     ", isLineAuto=" + isLineAuto +
                     '}';

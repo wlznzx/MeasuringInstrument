@@ -223,28 +223,31 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="下控制线" />
-
-            <TextView
-                style="@style/TextStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="0.0070" />
-
-            <TextView
-                style="@style/TextStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:text="上控制线" />
 
+            <EditText
+                android:id="@+id/xucl_edt"
+                style="@style/EdNumOnlyStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="0.0070" />
+
             <TextView
                 style="@style/TextStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="0.0070" />
+                android:text="下控制线" />
+
+            <EditText
+                android:id="@+id/xlcl_edt"
+                style="@style/EdNumOnlyStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="-0.0070" />
+
         </LinearLayout>
     </LinearLayout>
 
@@ -259,7 +262,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Y控制线" />
+            android:text="R控制线" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -271,10 +274,11 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="下控制线" />
+                android:text="上控制线" />
 
-            <TextView
-                style="@style/TextStyle"
+            <EditText
+                android:id="@+id/rucl_edt"
+                style="@style/EdNumOnlyStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -285,10 +289,11 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="上控制线" />
+                android:text="下控制线" />
 
-            <TextView
-                style="@style/TextStyle"
+            <EditText
+                android:id="@+id/rlcl_edt"
+                style="@style/EdNumOnlyStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -304,7 +309,7 @@
 
         <TextView
             android:id="@+id/qszlt_btn"
-            style="@style/TextStyle"
+            style="@style/TextStyleSelected"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -312,7 +317,7 @@
 
         <TextView
             android:id="@+id/gcnlt_btn"
-            style="@style/TextStyle"
+            style="@style/TextStyleSelected"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

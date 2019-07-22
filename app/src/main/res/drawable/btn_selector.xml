@@ -11,6 +11,14 @@
     <item android:state_pressed="false">
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
             android:shape="rectangle">
+            <solid android:color="@color/color_b7b8bd"/>
+            <corners android:radius="5dip"/>
+        </shape>
+    </item>
+
+    <item android:state_selected="true">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="rectangle">
             <solid android:color="@color/tBaseColor"/>
             <corners android:radius="5dip"/>
         </shape>
