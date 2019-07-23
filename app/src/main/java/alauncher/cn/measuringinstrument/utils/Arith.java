@@ -102,13 +102,22 @@ public class Arith {
     }
 
 
-    public static double variance(double[] in) {
-        double t_mean = mean(in);
-        double t_sumPerPow = 0;
-        for (int i = 0; i < in.length; i++) {
-            t_sumPerPow = Mutil.add(t_sumPerPow, Math.pow(Mutil.subtract(in[i], t_mean), 2));
+    public static double getStandardDeviation(int[] _array) {
+        int[] array = {15, 96, 85, 88, 18, 58, 68, 16, 6, 99, 88, 11, 8, 36, 82, 44, 55, 66};
+        int sum = 0;
+        for (int i = 0; i < array.length; i++) {
+            sum += array[i];      //求出数组的总和
         }
-        return Mutil.divide(t_sumPerPow, (in.length - 1), 2);
+        System.out.println(sum);  //939
+        double average = sum / array.length;  //求出数组的平均数
+        System.out.println(average);   //52.0
+        int total = 0;
+        for (int i = 0; i < array.length; i++) {
+            total += (array[i] - average) * (array[i] - average);   //求出方差，如果要计算方差的话这一步就可以了
+        }
+        double standardDeviation = Math.sqrt(total / array.length);   //求出标准差
+        System.out.println(standardDeviation);    //32.55764119219941
+        return standardDeviation;
     }
 
 };

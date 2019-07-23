@@ -21,6 +21,10 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bin.david.form.annotation.SmartColumn;
+import com.bin.david.form.core.SmartTable;
+import com.bin.david.form.data.column.Column;
+import com.bin.david.form.data.table.TableData;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -43,6 +47,7 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.utils.CommonUtil;
 import alauncher.cn.measuringinstrument.utils.Constants;
@@ -546,6 +551,7 @@ public class SPCStatisticalActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        
         mResultBeanDao = getDaoSession().getResultBeanDao();
         ((RadioButton) lineRG.getChildAt(0)).setChecked(true);
         codeSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -935,4 +941,5 @@ public class SPCStatisticalActivity extends BaseActivity {
         // 下公差值;
         float lcl;
     }
+
 }

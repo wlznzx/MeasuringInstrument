@@ -310,10 +310,10 @@
         <TextView
             android:id="@+id/jzjct_btn"
             style="@style/TextStyleSelected"
-            android:background="@drawable/bg_tv_seleted"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/bg_tv_seleted"
             android:clickable="true"
             android:text="均值极差图" />
 
@@ -343,11 +343,33 @@
             android:visibility="invisible" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/TableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:divider="@drawable/line_h"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/line_h"></ImageView>
+
+        <include layout="@layout/spc_table_layout"></include>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/line_h"></ImageView>
+    </LinearLayout>
+
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/statistical_chart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5" />
+        android:layout_weight="5"
+        android:visibility="gone" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/r_chart"

@@ -15,6 +15,7 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
+import alauncher.cn.measuringinstrument.utils.Arith;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -53,6 +54,9 @@ public class LoginActivity extends BaseActivity {
             android.util.Log.d("wlDebug", user.toString());
         }
         actionTips.setVisibility(View.INVISIBLE);
+
+        double _b = Arith.getStandardDeviation(null);
+        android.util.Log.d("wlDebug", "_b = " + _b);
     }
 
     @OnClick(R.id.login_btn)
