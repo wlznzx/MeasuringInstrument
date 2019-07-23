@@ -15,7 +15,7 @@ import alauncher.cn.measuringinstrument.bean.GroupBean;
 /** 
  * DAO for table "GROUP_BEAN".
 */
-public class GroupBeanDao extends AbstractDao<GroupBean, Void> {
+public class GroupBeanDao extends AbstractDao<GroupBean, Long> {
 
     public static final String TABLENAME = "GROUP_BEAN";
 
@@ -24,20 +24,21 @@ public class GroupBeanDao extends AbstractDao<GroupBean, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Code_id = new Property(0, long.class, "code_id", false, "CODE_ID");
-        public final static Property M_index = new Property(1, int.class, "m_index", false, "M_INDEX");
-        public final static Property A_upper_limit = new Property(2, double.class, "a_upper_limit", false, "A_UPPER_LIMIT");
-        public final static Property A_lower_limit = new Property(3, double.class, "a_lower_limit", false, "A_LOWER_LIMIT");
-        public final static Property B_upper_limit = new Property(4, double.class, "b_upper_limit", false, "B_UPPER_LIMIT");
-        public final static Property B_lower_limit = new Property(5, double.class, "b_lower_limit", false, "B_LOWER_LIMIT");
-        public final static Property C_upper_limit = new Property(6, double.class, "c_upper_limit", false, "C_UPPER_LIMIT");
-        public final static Property C_lower_limit = new Property(7, double.class, "c_lower_limit", false, "C_LOWER_LIMIT");
-        public final static Property D_upper_limit = new Property(8, double.class, "d_upper_limit", false, "D_UPPER_LIMIT");
-        public final static Property D_lower_limit = new Property(9, double.class, "d_lower_limit", false, "D_LOWER_LIMIT");
-        public final static Property A_describe = new Property(10, String.class, "a_describe", false, "A_DESCRIBE");
-        public final static Property B_describe = new Property(11, String.class, "b_describe", false, "B_DESCRIBE");
-        public final static Property C_describe = new Property(12, String.class, "c_describe", false, "C_DESCRIBE");
-        public final static Property D_describe = new Property(13, String.class, "d_describe", false, "D_DESCRIBE");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Code_id = new Property(1, long.class, "code_id", false, "CODE_ID");
+        public final static Property M_index = new Property(2, int.class, "m_index", false, "M_INDEX");
+        public final static Property A_upper_limit = new Property(3, double.class, "a_upper_limit", false, "A_UPPER_LIMIT");
+        public final static Property A_lower_limit = new Property(4, double.class, "a_lower_limit", false, "A_LOWER_LIMIT");
+        public final static Property B_upper_limit = new Property(5, double.class, "b_upper_limit", false, "B_UPPER_LIMIT");
+        public final static Property B_lower_limit = new Property(6, double.class, "b_lower_limit", false, "B_LOWER_LIMIT");
+        public final static Property C_upper_limit = new Property(7, double.class, "c_upper_limit", false, "C_UPPER_LIMIT");
+        public final static Property C_lower_limit = new Property(8, double.class, "c_lower_limit", false, "C_LOWER_LIMIT");
+        public final static Property D_upper_limit = new Property(9, double.class, "d_upper_limit", false, "D_UPPER_LIMIT");
+        public final static Property D_lower_limit = new Property(10, double.class, "d_lower_limit", false, "D_LOWER_LIMIT");
+        public final static Property A_describe = new Property(11, String.class, "a_describe", false, "A_DESCRIBE");
+        public final static Property B_describe = new Property(12, String.class, "b_describe", false, "B_DESCRIBE");
+        public final static Property C_describe = new Property(13, String.class, "c_describe", false, "C_DESCRIBE");
+        public final static Property D_describe = new Property(14, String.class, "d_describe", false, "D_DESCRIBE");
     }
 
 
@@ -53,20 +54,21 @@ public class GroupBeanDao extends AbstractDao<GroupBean, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"GROUP_BEAN\" (" + //
-                "\"CODE_ID\" INTEGER NOT NULL ," + // 0: code_id
-                "\"M_INDEX\" INTEGER NOT NULL ," + // 1: m_index
-                "\"A_UPPER_LIMIT\" REAL NOT NULL ," + // 2: a_upper_limit
-                "\"A_LOWER_LIMIT\" REAL NOT NULL ," + // 3: a_lower_limit
-                "\"B_UPPER_LIMIT\" REAL NOT NULL ," + // 4: b_upper_limit
-                "\"B_LOWER_LIMIT\" REAL NOT NULL ," + // 5: b_lower_limit
-                "\"C_UPPER_LIMIT\" REAL NOT NULL ," + // 6: c_upper_limit
-                "\"C_LOWER_LIMIT\" REAL NOT NULL ," + // 7: c_lower_limit
-                "\"D_UPPER_LIMIT\" REAL NOT NULL ," + // 8: d_upper_limit
-                "\"D_LOWER_LIMIT\" REAL NOT NULL ," + // 9: d_lower_limit
-                "\"A_DESCRIBE\" TEXT," + // 10: a_describe
-                "\"B_DESCRIBE\" TEXT," + // 11: b_describe
-                "\"C_DESCRIBE\" TEXT," + // 12: c_describe
-                "\"D_DESCRIBE\" TEXT);"); // 13: d_describe
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "\"CODE_ID\" INTEGER NOT NULL ," + // 1: code_id
+                "\"M_INDEX\" INTEGER NOT NULL ," + // 2: m_index
+                "\"A_UPPER_LIMIT\" REAL NOT NULL ," + // 3: a_upper_limit
+                "\"A_LOWER_LIMIT\" REAL NOT NULL ," + // 4: a_lower_limit
+                "\"B_UPPER_LIMIT\" REAL NOT NULL ," + // 5: b_upper_limit
+                "\"B_LOWER_LIMIT\" REAL NOT NULL ," + // 6: b_lower_limit
+                "\"C_UPPER_LIMIT\" REAL NOT NULL ," + // 7: c_upper_limit
+                "\"C_LOWER_LIMIT\" REAL NOT NULL ," + // 8: c_lower_limit
+                "\"D_UPPER_LIMIT\" REAL NOT NULL ," + // 9: d_upper_limit
+                "\"D_LOWER_LIMIT\" REAL NOT NULL ," + // 10: d_lower_limit
+                "\"A_DESCRIBE\" TEXT," + // 11: a_describe
+                "\"B_DESCRIBE\" TEXT," + // 12: b_describe
+                "\"C_DESCRIBE\" TEXT," + // 13: c_describe
+                "\"D_DESCRIBE\" TEXT);"); // 14: d_describe
     }
 
     /** Drops the underlying database table. */
@@ -78,132 +80,147 @@ public class GroupBeanDao extends AbstractDao<GroupBean, Void> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, GroupBean entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getCode_id());
-        stmt.bindLong(2, entity.getM_index());
-        stmt.bindDouble(3, entity.getA_upper_limit());
-        stmt.bindDouble(4, entity.getA_lower_limit());
-        stmt.bindDouble(5, entity.getB_upper_limit());
-        stmt.bindDouble(6, entity.getB_lower_limit());
-        stmt.bindDouble(7, entity.getC_upper_limit());
-        stmt.bindDouble(8, entity.getC_lower_limit());
-        stmt.bindDouble(9, entity.getD_upper_limit());
-        stmt.bindDouble(10, entity.getD_lower_limit());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+        stmt.bindLong(2, entity.getCode_id());
+        stmt.bindLong(3, entity.getM_index());
+        stmt.bindDouble(4, entity.getA_upper_limit());
+        stmt.bindDouble(5, entity.getA_lower_limit());
+        stmt.bindDouble(6, entity.getB_upper_limit());
+        stmt.bindDouble(7, entity.getB_lower_limit());
+        stmt.bindDouble(8, entity.getC_upper_limit());
+        stmt.bindDouble(9, entity.getC_lower_limit());
+        stmt.bindDouble(10, entity.getD_upper_limit());
+        stmt.bindDouble(11, entity.getD_lower_limit());
  
         String a_describe = entity.getA_describe();
         if (a_describe != null) {
-            stmt.bindString(11, a_describe);
+            stmt.bindString(12, a_describe);
         }
  
         String b_describe = entity.getB_describe();
         if (b_describe != null) {
-            stmt.bindString(12, b_describe);
+            stmt.bindString(13, b_describe);
         }
  
         String c_describe = entity.getC_describe();
         if (c_describe != null) {
-            stmt.bindString(13, c_describe);
+            stmt.bindString(14, c_describe);
         }
  
         String d_describe = entity.getD_describe();
         if (d_describe != null) {
-            stmt.bindString(14, d_describe);
+            stmt.bindString(15, d_describe);
         }
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, GroupBean entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getCode_id());
-        stmt.bindLong(2, entity.getM_index());
-        stmt.bindDouble(3, entity.getA_upper_limit());
-        stmt.bindDouble(4, entity.getA_lower_limit());
-        stmt.bindDouble(5, entity.getB_upper_limit());
-        stmt.bindDouble(6, entity.getB_lower_limit());
-        stmt.bindDouble(7, entity.getC_upper_limit());
-        stmt.bindDouble(8, entity.getC_lower_limit());
-        stmt.bindDouble(9, entity.getD_upper_limit());
-        stmt.bindDouble(10, entity.getD_lower_limit());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+        stmt.bindLong(2, entity.getCode_id());
+        stmt.bindLong(3, entity.getM_index());
+        stmt.bindDouble(4, entity.getA_upper_limit());
+        stmt.bindDouble(5, entity.getA_lower_limit());
+        stmt.bindDouble(6, entity.getB_upper_limit());
+        stmt.bindDouble(7, entity.getB_lower_limit());
+        stmt.bindDouble(8, entity.getC_upper_limit());
+        stmt.bindDouble(9, entity.getC_lower_limit());
+        stmt.bindDouble(10, entity.getD_upper_limit());
+        stmt.bindDouble(11, entity.getD_lower_limit());
  
         String a_describe = entity.getA_describe();
         if (a_describe != null) {
-            stmt.bindString(11, a_describe);
+            stmt.bindString(12, a_describe);
         }
  
         String b_describe = entity.getB_describe();
         if (b_describe != null) {
-            stmt.bindString(12, b_describe);
+            stmt.bindString(13, b_describe);
         }
  
         String c_describe = entity.getC_describe();
         if (c_describe != null) {
-            stmt.bindString(13, c_describe);
+            stmt.bindString(14, c_describe);
         }
  
         String d_describe = entity.getD_describe();
         if (d_describe != null) {
-            stmt.bindString(14, d_describe);
+            stmt.bindString(15, d_describe);
         }
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public GroupBean readEntity(Cursor cursor, int offset) {
         GroupBean entity = new GroupBean( //
-            cursor.getLong(offset + 0), // code_id
-            cursor.getInt(offset + 1), // m_index
-            cursor.getDouble(offset + 2), // a_upper_limit
-            cursor.getDouble(offset + 3), // a_lower_limit
-            cursor.getDouble(offset + 4), // b_upper_limit
-            cursor.getDouble(offset + 5), // b_lower_limit
-            cursor.getDouble(offset + 6), // c_upper_limit
-            cursor.getDouble(offset + 7), // c_lower_limit
-            cursor.getDouble(offset + 8), // d_upper_limit
-            cursor.getDouble(offset + 9), // d_lower_limit
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // a_describe
-            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // b_describe
-            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // c_describe
-            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13) // d_describe
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.getLong(offset + 1), // code_id
+            cursor.getInt(offset + 2), // m_index
+            cursor.getDouble(offset + 3), // a_upper_limit
+            cursor.getDouble(offset + 4), // a_lower_limit
+            cursor.getDouble(offset + 5), // b_upper_limit
+            cursor.getDouble(offset + 6), // b_lower_limit
+            cursor.getDouble(offset + 7), // c_upper_limit
+            cursor.getDouble(offset + 8), // c_lower_limit
+            cursor.getDouble(offset + 9), // d_upper_limit
+            cursor.getDouble(offset + 10), // d_lower_limit
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // a_describe
+            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // b_describe
+            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // c_describe
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14) // d_describe
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, GroupBean entity, int offset) {
-        entity.setCode_id(cursor.getLong(offset + 0));
-        entity.setM_index(cursor.getInt(offset + 1));
-        entity.setA_upper_limit(cursor.getDouble(offset + 2));
-        entity.setA_lower_limit(cursor.getDouble(offset + 3));
-        entity.setB_upper_limit(cursor.getDouble(offset + 4));
-        entity.setB_lower_limit(cursor.getDouble(offset + 5));
-        entity.setC_upper_limit(cursor.getDouble(offset + 6));
-        entity.setC_lower_limit(cursor.getDouble(offset + 7));
-        entity.setD_upper_limit(cursor.getDouble(offset + 8));
-        entity.setD_lower_limit(cursor.getDouble(offset + 9));
-        entity.setA_describe(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
-        entity.setB_describe(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
-        entity.setC_describe(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
-        entity.setD_describe(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setCode_id(cursor.getLong(offset + 1));
+        entity.setM_index(cursor.getInt(offset + 2));
+        entity.setA_upper_limit(cursor.getDouble(offset + 3));
+        entity.setA_lower_limit(cursor.getDouble(offset + 4));
+        entity.setB_upper_limit(cursor.getDouble(offset + 5));
+        entity.setB_lower_limit(cursor.getDouble(offset + 6));
+        entity.setC_upper_limit(cursor.getDouble(offset + 7));
+        entity.setC_lower_limit(cursor.getDouble(offset + 8));
+        entity.setD_upper_limit(cursor.getDouble(offset + 9));
+        entity.setD_lower_limit(cursor.getDouble(offset + 10));
+        entity.setA_describe(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setB_describe(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
+        entity.setC_describe(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setD_describe(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(GroupBean entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(GroupBean entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(GroupBean entity) {
-        return null;
+    public Long getKey(GroupBean entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(GroupBean entity) {
-        // TODO
-        return false;
+        return entity.getId() != null;
     }
 
     @Override

@@ -76,10 +76,13 @@ public class MGroupActivity extends BaseActivity {
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
         GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
+
         if (_bean == null) {
             App.getDaoSession().getGroupBeanDao().insert(view2Bean());
         } else {
-            App.getDaoSession().getGroupBeanDao().update(view2Bean());
+            GroupBean saveBean = view2Bean();
+            saveBean.setId(_bean.getId());
+            App.getDaoSession().getGroupBeanDao().update(saveBean);
             // android.util.Log.d("wlDebug", "Save Bean " + _bean.toString());
         }
         Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();

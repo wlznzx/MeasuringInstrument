@@ -105,6 +105,9 @@ public class SPCStatisticalActivity extends BaseActivity {
     @BindView(R.id.jzjct_btn)
     public View jzjctBtn;
 
+    @BindView(R.id.ybyxt_btn)
+    public View ybyxtBtn;
+
     @BindView(R.id.gcnlt_btn)
     public View gcnltBtn;
 
@@ -114,11 +117,14 @@ public class SPCStatisticalActivity extends BaseActivity {
 
     private long stopTimeStamp = 0;
 
-    // 过程能力图.
+    // 均值极差图.
     private final int JZJCT_MODE = 1;
 
-    // 趋势质量图;
+    // 样本运行图;
     private final int YBYXT_MODE = 2;
+
+    // 过程能力图;
+    private final int GCNLT_MODE = 3;
 
     private int spc_mode = JZJCT_MODE;
 
@@ -199,18 +205,22 @@ public class SPCStatisticalActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.jzjct_btn, R.id.gcnlt_btn})
+    @OnClick({R.id.jzjct_btn, R.id.ybyxt_btn, R.id.gcnlt_btn})
     public void onSPCClick(View v) {
         jzjctBtn.setBackgroundResource(R.drawable.btn_selector);
+        ybyxtBtn.setBackgroundResource(R.drawable.btn_selector);
         gcnltBtn.setBackgroundResource(R.drawable.btn_selector);
         switch (v.getId()) {
             case R.id.jzjct_btn:
                 spc_mode = JZJCT_MODE;
                 rChart.setVisibility(View.VISIBLE);
                 break;
-            case R.id.gcnlt_btn:
+            case R.id.ybyxt_btn:
                 spc_mode = YBYXT_MODE;
                 rChart.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.gcnlt_btn:
+                spc_mode = GCNLT_MODE;
                 break;
         }
         v.setBackgroundResource(R.drawable.bg_tv_seleted);
@@ -436,7 +446,7 @@ public class SPCStatisticalActivity extends BaseActivity {
                 _mList.add(m[index]);
             }
             Collections.sort(_mList);
-            _r = (float) (_mList.get(0) - _mList.get(_mList.size() - 1));
+            _r = (float) Math.abs(_mList.get(0) - _mList.get(_mList.size() - 1));
             rbar = rbar + _r;
             _groupM = _groupM / mFilterBean.getGroupSize();
             values.add(new Entry(i + 1, (float) _groupM, getResources().getDrawable(R.drawable.star)));
@@ -461,7 +471,7 @@ public class SPCStatisticalActivity extends BaseActivity {
             rlcl = (float) mFilterBean.getRlcl();
         }
         maxX = xucl + xucl + 10;
-        minX = xlcl - xucl - 10;
+        minX = xlcl - xlcl - 10;
 
         maxR = rucl + rucl + 10;
         minR = rlcl - rlcl - 10;

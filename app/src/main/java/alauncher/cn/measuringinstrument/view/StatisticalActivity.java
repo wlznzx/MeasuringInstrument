@@ -457,9 +457,9 @@ public class StatisticalActivity extends BaseActivity {
         total = 0;
         succ = 0;
         fail = 0;
-        float[] percents = new float[7];
+        float[] percents = new float[8];
         int successTime;
-        for (int i = 0; i > -7; i--) {
+        for (int i = 0; i > -8; i--) {
             successTime = 0;
             long start_time, end_time;
             if (i == 0) {
@@ -478,13 +478,13 @@ public class StatisticalActivity extends BaseActivity {
                 }
             }
             if (_beans.size() > 0) {
-                percents[i + 6] = successTime / (float) _beans.size();
+                percents[i + 7] = successTime / (float) _beans.size();
             } else {
-                percents[i + 6] = 0;
+                percents[i + 7] = 0;
             }
             total = total + _beans.size();
             succ = succ + successTime;
-            excelData.add(new StatistialData(DateUtils.getDateD(start_time) + " - " + DateUtils.getDateD(end_time), percents[i + 6]));
+            excelData.add(new StatistialData(DateUtils.getDateD(start_time) + " - " + DateUtils.getDateD(end_time), percents[i + 7]));
         }
         for (float p : percents) {
             Log.d("statistcal", "" + "p = " + p);
@@ -497,9 +497,9 @@ public class StatisticalActivity extends BaseActivity {
         total = 0;
         succ = 0;
         fail = 0;
-        float[] percents = new float[7];
+        float[] percents = new float[12];
         int successTime;
-        for (int i = 0; i > -7; i--) {
+        for (int i = 0; i > -12; i--) {
             successTime = 0;
             long start_time, end_time;
             if (i == 0) {
@@ -519,13 +519,13 @@ public class StatisticalActivity extends BaseActivity {
                 Log.d("statistcal", "" + bean.toString());
             }
             if (_beans.size() > 0) {
-                percents[i + 6] = successTime / (float) _beans.size();
+                percents[i + 11] = successTime / (float) _beans.size();
             } else {
-                percents[i + 6] = 0;
+                percents[i + 11] = 0;
             }
             total = total + _beans.size();
             succ = succ + successTime;
-            excelData.add(new StatistialData(DateUtils.getDateD(start_time) + " - " + DateUtils.getDateD(end_time), percents[i + 6]));
+            excelData.add(new StatistialData(DateUtils.getDateD(start_time) + " - " + DateUtils.getDateD(end_time), percents[i + 11]));
         }
 
         for (float p : percents) {

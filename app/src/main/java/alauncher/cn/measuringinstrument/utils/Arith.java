@@ -100,4 +100,15 @@ public class Arith {
         BigDecimal one = new BigDecimal("1");
         return b.divide(one, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
+
+
+    public static double variance(double[] in) {
+        double t_mean = mean(in);
+        double t_sumPerPow = 0;
+        for (int i = 0; i < in.length; i++) {
+            t_sumPerPow = Mutil.add(t_sumPerPow, Math.pow(Mutil.subtract(in[i], t_mean), 2));
+        }
+        return Mutil.divide(t_sumPerPow, (in.length - 1), 2);
+    }
+
 };
