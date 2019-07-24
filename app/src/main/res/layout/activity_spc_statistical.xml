@@ -331,8 +331,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/defective"
-            android:visibility="invisible" />
+            android:text="过程能力图"
+            android:visibility="visible" />
 
         <TextView
             style="@style/TextStyle"
@@ -347,8 +347,9 @@
         android:id="@+id/TableLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
+        android:layout_weight="10"
         android:divider="@drawable/line_h"
+        android:visibility="gone"
         android:orientation="vertical">
 
         <ImageView
@@ -368,8 +369,7 @@
         android:id="@+id/statistical_chart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
-        android:visibility="gone" />
+        android:layout_weight="5" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/r_chart"

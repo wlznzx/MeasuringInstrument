@@ -116,6 +116,10 @@ public class SPCStatisticalActivity extends BaseActivity {
     @BindView(R.id.gcnlt_btn)
     public View gcnltBtn;
 
+    @BindView(R.id.TableLayout)
+    public View mTableLayout;
+
+
     public ResultBeanDao mResultBeanDao;
 
     private long startTimeStamp = 0;
@@ -218,13 +222,20 @@ public class SPCStatisticalActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.jzjct_btn:
                 spc_mode = JZJCT_MODE;
+                chart.setVisibility(View.VISIBLE);
                 rChart.setVisibility(View.VISIBLE);
+                mTableLayout.setVisibility(View.GONE);
                 break;
             case R.id.ybyxt_btn:
                 spc_mode = YBYXT_MODE;
+                chart.setVisibility(View.VISIBLE);
                 rChart.setVisibility(View.INVISIBLE);
+                mTableLayout.setVisibility(View.GONE);
                 break;
             case R.id.gcnlt_btn:
+                chart.setVisibility(View.GONE);
+                rChart.setVisibility(View.GONE);
+                mTableLayout.setVisibility(View.VISIBLE);
                 spc_mode = GCNLT_MODE;
                 break;
         }
@@ -551,7 +562,7 @@ public class SPCStatisticalActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        
+
         mResultBeanDao = getDaoSession().getResultBeanDao();
         ((RadioButton) lineRG.getChildAt(0)).setChecked(true);
         codeSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
