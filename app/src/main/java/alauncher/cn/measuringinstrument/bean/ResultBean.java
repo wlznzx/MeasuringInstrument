@@ -74,6 +74,10 @@ public class ResultBean {
     public ResultBean() {
     }
 
+    public ResultBean(double pM1){
+        this.m1 = pM1;
+    }
+
     public Long getId() {
         return this.id;
     }

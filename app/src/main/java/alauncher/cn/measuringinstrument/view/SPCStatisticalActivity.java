@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bin.david.form.annotation.SmartColumn;
@@ -36,6 +37,11 @@ import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
+
+import org.apache.commons.math3.stat.descriptive.rank.Max;
+import org.apache.commons.math3.stat.descriptive.rank.Min;
+import org.apache.commons.math3.stat.descriptive.moment.Mean;
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -119,6 +125,53 @@ public class SPCStatisticalActivity extends BaseActivity {
     @BindView(R.id.TableLayout)
     public View mTableLayout;
 
+    @BindView(R.id.average_value_tv)
+    public TextView averageValueTV;
+
+    @BindView(R.id.max_value_tv)
+    public TextView maxValueTV;
+
+    @BindView(R.id.min_value_tv)
+    public TextView minValueTV;
+
+    @BindView(R.id.nominal_value_tv)
+    public TextView nominalValueTV;
+
+    @BindView(R.id.spc_usl_tv)
+    public TextView gcUslTV;
+
+    @BindView(R.id.spc_lsl_tv)
+    public TextView gcLslTV;
+
+    @BindView(R.id._3a_tv)
+    public TextView _3aTV;
+
+    @BindView(R.id.a_tv)
+    public TextView _aTV;
+
+    @BindView(R.id.cp_tv)
+    public TextView cpTV;
+
+    @BindView(R.id.cpk_tv)
+    public TextView cpkTV;
+
+    @BindView(R.id.cpl_tv)
+    public TextView cplTV;
+
+    @BindView(R.id.cpu_tv)
+    public TextView cpuTV;
+
+    @BindView(R.id.pp_tv)
+    public TextView ppTV;
+
+    @BindView(R.id.ppk_tv)
+    public TextView ppkTV;
+
+    @BindView(R.id.ppl_tv)
+    public TextView pplTV;
+
+    @BindView(R.id.ppu_tv)
+    public TextView ppuTV;
 
     public ResultBeanDao mResultBeanDao;
 
@@ -295,6 +348,11 @@ public class SPCStatisticalActivity extends BaseActivity {
                 List<ResultBean> _datas = dataFilterUpdate();
                 if (_datas == null) return null;
                 return ybyxtDatas(_datas);
+            } else if (spc_mode == GCNLT_MODE) {
+                startStatistical();
+                List<ResultBean> _datas = dataFilterUpdate();
+                if (_datas == null) return null;
+                return gcnltDatas(_datas);
             }
             return null;
         }
@@ -342,6 +400,24 @@ public class SPCStatisticalActivity extends BaseActivity {
                     yAxis.addLimitLine(getLimitLine(_bean.ucl, "上公差线"));
                     yAxis.addLimitLine(getLimitLine(_bean.lcl, "下公差线"));
                     updateChartDatas(_bean.mValues);
+                } else if (spc_mode == GCNLT_MODE) {
+                    GCNLTBean _bean = (GCNLTBean) result;
+                    averageValueTV.setText("" + _bean.averageValue);
+                    maxValueTV.setText("" + _bean.maxValue);
+                    minValueTV.setText("" + _bean.minValue);
+                    nominalValueTV.setText("" + _bean.nominalValue);
+                    gcUslTV.setText("" + _bean.usl);
+                    gcLslTV.setText("" + _bean.lsl);
+                    _3aTV.setText("" + (_bean.a * -3));
+                    _aTV.setText("" + (_bean.a * 3));
+                    cpTV.setText("" + _bean.cp);
+                    cpkTV.setText("" + _bean.cpk);
+                    cplTV.setText("" + _bean.cpl);
+                    cpuTV.setText("" + _bean.cpu);
+                    ppTV.setText("" + _bean.pp);
+                    ppkTV.setText("" + _bean.ppk);
+                    pplTV.setText("" + _bean.ppl);
+                    ppuTV.setText("" + _bean.ppu);
                 }
             } else {
                 Toast.makeText(SPCStatisticalActivity.this, "数据源数量不足以分析.", Toast.LENGTH_SHORT).show();
@@ -552,6 +628,136 @@ public class SPCStatisticalActivity extends BaseActivity {
         return _bean;
     }
 
+    /*
+     *
+     * 过程能力图;
+     *
+     * */
+    private GCNLTBean gcnltDatas(List<ResultBean> _datas) {
+        GCNLTBean _bean = new GCNLTBean();
+        double[] values = new double[_datas.size()];
+        for (int i = 0; i < _datas.size(); i++) {
+            double m = 0;
+            switch (mFilterBean.getTargetNum()) {
+                case 0:
+                    m = _datas.get(i).getM1();
+                    break;
+                case 1:
+                    m = _datas.get(i).getM2();
+                    break;
+                case 2:
+                    m = _datas.get(i).getM3();
+                    break;
+                case 3:
+                    m = _datas.get(i).getM4();
+                    break;
+            }
+            values[i] = m;
+        }
+
+        Min min = new Min();
+        Max max = new Max();
+        Mean mean = new Mean(); // 算术平均值
+        _bean.minValue = min.evaluate(values);
+        _bean.maxValue = max.evaluate(values);
+        _bean.averageValue = mean.evaluate(values);
+
+        double normalValue, upperValue, lowValue, T, U, deviation;
+        ParameterBean _ParameterBean = App.getDaoSession().getParameterBeanDao().load(mFilterBean.codeID);
+        if (_ParameterBean != null) {
+            switch (mFilterBean.getTargetNum()) {
+                case 0:
+                    normalValue = _ParameterBean.getM1_nominal_value();
+                    upperValue = _ParameterBean.getM1_upper_tolerance_value();
+                    lowValue = _ParameterBean.getM1_lower_tolerance_value();
+                    break;
+                case 1:
+                    normalValue = _ParameterBean.getM2_nominal_value();
+                    upperValue = _ParameterBean.getM2_upper_tolerance_value();
+                    lowValue = _ParameterBean.getM2_lower_tolerance_value();
+                    break;
+                case 2:
+                    normalValue = _ParameterBean.getM3_nominal_value();
+                    upperValue = _ParameterBean.getM3_upper_tolerance_value();
+                    lowValue = _ParameterBean.getM3_lower_tolerance_value();
+                    break;
+                case 3:
+                    normalValue = _ParameterBean.getM4_nominal_value();
+                    upperValue = _ParameterBean.getM4_upper_tolerance_value();
+                    lowValue = _ParameterBean.getM4_lower_tolerance_value();
+                    break;
+                default:
+                    normalValue = 12;
+                    upperValue = 1;
+                    lowValue = -2;
+                    break;
+            }
+        } else {
+            normalValue = 12;
+//            upperValue = 23.991796;
+//            lowValue = 23.988764;
+            upperValue = 24;
+            lowValue = 23.99;
+        }
+        _bean.nominalValue = normalValue;
+        T = upperValue - lowValue;
+        U = (upperValue + lowValue) / 2;
+        StandardDeviation StandardDeviation = new StandardDeviation();//标准差
+        deviation = StandardDeviation.evaluate(values);
+        double cp, ca, CPKu, CPKl, cpl, cpu, cpk;
+        _bean.a = deviation;
+        cp = T / (6 * deviation);
+        ca = (_bean.averageValue - U) / (T / 2);
+        CPKu = Math.abs(upperValue - _bean.averageValue) / (3 * deviation);
+        CPKl = Math.abs(_bean.averageValue - lowValue) / (3 * deviation);
+        cpl = (_bean.averageValue - lowValue) / (3 * deviation);
+        cpu = (upperValue - _bean.averageValue) / (3 * deviation);
+        cpk = Math.min(CPKu, CPKl);
+
+        _bean.cp = cp;
+        _bean.cpl = cpl;
+        _bean.cpu = cpu;
+        _bean.cpk = cpk;
+
+
+        double pp, pa, PPKu, PPKl, ppl, ppu, ppk, deviation2;
+        double rbar = 0;
+        ArrayList<Double> _mList = new ArrayList<>();
+        double[] _rGroup = new double[mFilterBean.getGroupNum()];
+        for (int i = 0; i < mFilterBean.getGroupNum(); i++) {
+            double _r = 0;
+            double[] rGroup = new double[mFilterBean.getGroupSize()];
+            for (int j = 0; j < mFilterBean.getGroupSize(); j++) {
+                int index = i * mFilterBean.getGroupSize() + j;
+                android.util.Log.d("wlDebug", "index = " + index);
+                rGroup[j] = values[index];
+            }
+            _r = max.evaluate(rGroup) - min.evaluate(rGroup);
+            _rGroup[i] = _r;
+        }
+        rbar = mean.evaluate(_rGroup);
+        double d2 = Constants.d2[mFilterBean.groupSize - 2];
+        deviation2 = rbar / d2;
+
+        pp = T / (6 * deviation);
+        pa = (_bean.averageValue - U) / (T / 2);
+        PPKu = Math.abs(upperValue - _bean.averageValue) / (3 * deviation2);
+        PPKl = Math.abs(_bean.averageValue - lowValue) / (3 * deviation2);
+        ppl = (_bean.averageValue - lowValue) / (3 * deviation2);
+        ppu = (upperValue - _bean.averageValue) / (3 * deviation2);
+        ppk = Math.min(PPKl, PPKu);
+
+        _bean.pp = pp;
+        _bean.ppl = ppl;
+        _bean.ppu = ppu;
+        _bean.ppk = ppk;
+
+        android.util.Log.d("wlDebug", "deviation = " + deviation);
+        android.util.Log.d("wlDebug", "deviation2 = " + deviation2);
+        return _bean;
+    }
+
+
     private void updateChartDatas(List<Entry> values) {
         LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
         set1.setValues(values);
@@ -691,6 +897,7 @@ public class SPCStatisticalActivity extends BaseActivity {
             yAxis.addLimitLine(ll2);
         }
         setDatas(10, 100);
+
     }
 
     private LimitLine getLimitLine(float value, String str) {
@@ -951,6 +1158,60 @@ public class SPCStatisticalActivity extends BaseActivity {
         float ucl;
         // 下公差值;
         float lcl;
+    }
+
+    class GCNLTBean {
+        // 平均值;
+        double averageValue;
+        // 最大值;
+        double maxValue;
+        // 最小值;
+        double minValue;
+        // 名义值;
+        double nominalValue;
+        // USL;
+        double usl;
+        // LSL;
+        double lsl;
+        // 标准差;
+        double a;
+        // cp
+        double cp;
+        //
+        double cpk;
+        //
+        double cpl;
+        //
+        double cpu;
+        // pp
+        double pp;
+        //
+        double ppk;
+        //
+        double ppl;
+        //
+        double ppu;
+
+        @Override
+        public String toString() {
+            return "GCNLTBean{" +
+                    "averageValue=" + averageValue +
+                    ", maxValue=" + maxValue +
+                    ", minValue=" + minValue +
+                    ", nominalValue=" + nominalValue +
+                    ", usl=" + usl +
+                    ", lsl=" + lsl +
+                    ", a=" + a +
+                    ", cp=" + cp +
+                    ", cpk=" + cpk +
+                    ", cpl=" + cpl +
+                    ", cpu=" + cpu +
+                    ", pp=" + pp +
+                    ", ppk=" + ppk +
+                    ", ppl=" + ppl +
+                    ", ppu=" + ppu +
+                    '}';
+        }
     }
 
 }

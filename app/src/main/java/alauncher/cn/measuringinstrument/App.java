@@ -5,6 +5,7 @@ import android.app.Application;
 import org.greenrobot.greendao.database.Database;
 
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
+import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.bean.User;
@@ -74,6 +75,8 @@ public class App extends Application {
             _bean.setDelayTime(3);
             getDaoSession().getStoreBeanDao().insert(_bean);
         }
+
+        // initTestDatas();
     }
 
     public static DaoSession getDaoSession() {
@@ -88,5 +91,170 @@ public class App extends Application {
         SetupBean _bean = getSetupBean();
         _bean.setIsAutoPopUp(isPopUp);
         getDaoSession().getSetupBeanDao().update(_bean);
+    }
+
+    public void initTestDatas() {
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9914, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.992, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.99, 24, 24, 24, "m1", "m2", "m3", "m4"));
+        // 6
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9914, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9906, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        // 11
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9902, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9912, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9922, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9912, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        // 21
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.99, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9912, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9914, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.99, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.99, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.991, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9902, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9902, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        // 31
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.99, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.99, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9894, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9902, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9902, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9902, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 23.9912, 24, 24, 24, "m1", "m2", "m3", "m4"));
     }
 }
