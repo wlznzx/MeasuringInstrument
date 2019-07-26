@@ -34,6 +34,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
@@ -53,12 +55,12 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
-import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.utils.CommonUtil;
 import alauncher.cn.measuringinstrument.utils.Constants;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
 
+import alauncher.cn.measuringinstrument.utils.Format;
 import androidx.core.content.ContextCompat;
 
 import butterknife.BindView;
@@ -274,12 +276,18 @@ public class SPCStatisticalActivity extends BaseActivity {
         gcnltBtn.setBackgroundResource(R.drawable.btn_selector);
         switch (v.getId()) {
             case R.id.jzjct_btn:
+                if (spc_mode != JZJCT_MODE) {
+                    clearChart();
+                }
                 spc_mode = JZJCT_MODE;
                 chart.setVisibility(View.VISIBLE);
                 rChart.setVisibility(View.VISIBLE);
                 mTableLayout.setVisibility(View.GONE);
                 break;
             case R.id.ybyxt_btn:
+                if (spc_mode != YBYXT_MODE) {
+                    clearChart();
+                }
                 spc_mode = YBYXT_MODE;
                 chart.setVisibility(View.VISIBLE);
                 rChart.setVisibility(View.INVISIBLE);
@@ -289,6 +297,9 @@ public class SPCStatisticalActivity extends BaseActivity {
                 chart.setVisibility(View.GONE);
                 rChart.setVisibility(View.GONE);
                 mTableLayout.setVisibility(View.VISIBLE);
+                if (spc_mode != GCNLT_MODE) {
+                    clearChart();
+                }
                 spc_mode = GCNLT_MODE;
                 break;
         }
@@ -338,20 +349,14 @@ public class SPCStatisticalActivity extends BaseActivity {
         @Override
         protected Object doInBackground(String... params) {
             //处理耗时操作
+            startStatistical();
+            List<ResultBean> _datas = dataFilterUpdate();
+            if (_datas == null) return null;
             if (spc_mode == JZJCT_MODE) {
-                startStatistical();
-                List<ResultBean> _datas = dataFilterUpdate();
-                if (_datas == null) return null;
                 return jzjctDatas(_datas);
             } else if (spc_mode == YBYXT_MODE) {
-                startStatistical();
-                List<ResultBean> _datas = dataFilterUpdate();
-                if (_datas == null) return null;
                 return ybyxtDatas(_datas);
             } else if (spc_mode == GCNLT_MODE) {
-                startStatistical();
-                List<ResultBean> _datas = dataFilterUpdate();
-                if (_datas == null) return null;
                 return gcnltDatas(_datas);
             }
             return null;
@@ -370,7 +375,6 @@ public class SPCStatisticalActivity extends BaseActivity {
         protected void onPostExecute(Object result) {
             dialog.dismiss();
             if (result != null) {
-
                 if (spc_mode == JZJCT_MODE) {
                     JZJCTBean _bean = (JZJCTBean) result;
                     YAxis yAxis = chart.getAxisLeft();
@@ -396,28 +400,30 @@ public class SPCStatisticalActivity extends BaseActivity {
                 } else if (spc_mode == YBYXT_MODE) {
                     YBYXTBean _bean = (YBYXTBean) result;
                     YAxis yAxis = chart.getAxisLeft();
+                    yAxis.setAxisMaximum(_bean.maxY);
+                    yAxis.setAxisMinimum(_bean.minY);
                     yAxis.removeAllLimitLines();
                     yAxis.addLimitLine(getLimitLine(_bean.ucl, "上公差线"));
                     yAxis.addLimitLine(getLimitLine(_bean.lcl, "下公差线"));
                     updateChartDatas(_bean.mValues);
                 } else if (spc_mode == GCNLT_MODE) {
                     GCNLTBean _bean = (GCNLTBean) result;
-                    averageValueTV.setText("" + _bean.averageValue);
-                    maxValueTV.setText("" + _bean.maxValue);
-                    minValueTV.setText("" + _bean.minValue);
-                    nominalValueTV.setText("" + _bean.nominalValue);
-                    gcUslTV.setText("" + _bean.usl);
-                    gcLslTV.setText("" + _bean.lsl);
-                    _3aTV.setText("" + (_bean.a * -3));
-                    _aTV.setText("" + (_bean.a * 3));
-                    cpTV.setText("" + _bean.cp);
-                    cpkTV.setText("" + _bean.cpk);
-                    cplTV.setText("" + _bean.cpl);
-                    cpuTV.setText("" + _bean.cpu);
-                    ppTV.setText("" + _bean.pp);
-                    ppkTV.setText("" + _bean.ppk);
-                    pplTV.setText("" + _bean.ppl);
-                    ppuTV.setText("" + _bean.ppu);
+                    averageValueTV.setText("" + Format.m1(_bean.averageValue,4));
+                    maxValueTV.setText("" + Format.m1(_bean.maxValue,4));
+                    minValueTV.setText("" + Format.m1(_bean.minValue,4));
+                    nominalValueTV.setText("" + Format.m1(_bean.nominalValue,4));
+                    gcUslTV.setText("" + Format.m1(_bean.usl,4));
+                    gcLslTV.setText("" + Format.m1(_bean.lsl,4));
+                    _3aTV.setText("" + Format.m1((_bean.a * -3),4));
+                    _aTV.setText("" + Format.m1((_bean.a * 3),4));
+                    cpTV.setText("" + Format.m1(_bean.cp, 2));
+                    cpkTV.setText("" + Format.m1(_bean.cpk, 2));
+                    cplTV.setText("" + Format.m1(_bean.cpl, 2));
+                    cpuTV.setText("" + Format.m1(_bean.cpu, 2));
+                    ppTV.setText("" + Format.m1(_bean.pp, 2));
+                    ppkTV.setText("" + Format.m1(_bean.ppk, 2));
+                    pplTV.setText("" + Format.m1(_bean.ppl, 2));
+                    ppuTV.setText("" + Format.m1(_bean.ppu, 2));
                 }
             } else {
                 Toast.makeText(SPCStatisticalActivity.this, "数据源数量不足以分析.", Toast.LENGTH_SHORT).show();
@@ -442,11 +448,10 @@ public class SPCStatisticalActivity extends BaseActivity {
 
         String queryString = "";
         if (mFilterBean.isTimeAuto()) {
-            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.CodeID.columnName + " = " + mFilterBean.getCodeID() + " order by _id desc limit " + _limit;
+            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.CodeID.columnName + " = " + mFilterBean.getCodeID() + " order by _id asc limit " + _limit;
         } else {
-            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.TimeStamp.columnName + " between " + startTimeStamp + " and " + stopTimeStamp + " order by _id desc limit " + _limit;
+            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.TimeStamp.columnName + " between " + startTimeStamp + " and " + stopTimeStamp + " order by _id asc limit " + _limit;
         }
-
 
         Cursor cursor = mResultBeanDao.getDatabase().rawQuery(queryString, null);
         int HandlerAccout = cursor.getColumnIndex(ResultBeanDao.Properties.HandlerAccout.columnName);
@@ -533,7 +538,6 @@ public class SPCStatisticalActivity extends BaseActivity {
             _mList.clear();
             for (int j = 0; j < mFilterBean.getGroupSize(); j++) {
                 int index = i * mFilterBean.getGroupSize() + j;
-                android.util.Log.d("wlDebug", "index = " + index);
                 _groupM += m[index];
                 _mList.add(m[index]);
             }
@@ -541,7 +545,9 @@ public class SPCStatisticalActivity extends BaseActivity {
             _r = (float) Math.abs(_mList.get(0) - _mList.get(_mList.size() - 1));
             rbar = rbar + _r;
             _groupM = _groupM / mFilterBean.getGroupSize();
-            values.add(new Entry(i + 1, (float) _groupM, getResources().getDrawable(R.drawable.star)));
+            float _roupM = (float) _groupM;
+            android.util.Log.d("wlDebug", "__groupM = " + _roupM);
+            values.add(new Entry(i + 1, _roupM, getResources().getDrawable(R.drawable.star)));
             rValues.add(new Entry(i + 1, _r, getResources().getDrawable(R.drawable.star)));
         }
         _bean.xValues = values;
@@ -562,11 +568,13 @@ public class SPCStatisticalActivity extends BaseActivity {
             rucl = (float) mFilterBean.getRucl();
             rlcl = (float) mFilterBean.getRlcl();
         }
-        maxX = xucl + xucl + 10;
-        minX = xlcl - xlcl - 10;
 
-        maxR = rucl + rucl + 10;
-        minR = rlcl - rlcl - 10;
+
+        maxX = (float) (xucl + Math.abs(xucl - xbar) * 0.2);
+        minX = (float) (xlcl - Math.abs(xbar - xlcl) * 0.2);
+
+        maxR = (float) (rucl + Math.abs(rucl - rbar) * 0.2);
+        minR = (float) (rlcl - Math.abs(rlcl - rbar) * 0.2);
 
         _bean.xUCL = xucl;
         _bean.xLCL = xlcl;
@@ -584,6 +592,7 @@ public class SPCStatisticalActivity extends BaseActivity {
     private YBYXTBean ybyxtDatas(List<ResultBean> _datas) {
         YBYXTBean _bean = new YBYXTBean();
         ArrayList<Entry> values = new ArrayList<Entry>();
+        double[] _values = new double[_datas.size()];
         for (int i = 0; i < _datas.size(); i++) {
             double m = 0;
             switch (mFilterBean.getTargetNum()) {
@@ -600,31 +609,42 @@ public class SPCStatisticalActivity extends BaseActivity {
                     m = _datas.get(i).getM4();
                     break;
             }
+            _values[i] = m;
             values.add(new Entry(i + 1, (float) m, getResources().getDrawable(R.drawable.star)));
         }
+
+        double _r = new Max().evaluate(_values) - new Min().evaluate(_values);
+        double xbar = new Mean().evaluate(_values);
 
         ParameterBean _ParameterBean = App.getDaoSession().getParameterBeanDao().load(mFilterBean.codeID);
         _bean.mValues = values;
         if (_ParameterBean != null) {
             switch (mFilterBean.getTargetNum()) {
                 case 0:
-                    _bean.ucl = (float) _ParameterBean.getM1_upper_tolerance_value();
-                    _bean.lcl = (float) _ParameterBean.getM1_lower_tolerance_value();
+                    _bean.ucl = (float) (_ParameterBean.getM1_nominal_value() + _ParameterBean.getM1_upper_tolerance_value());
+                    _bean.lcl = (float) (_ParameterBean.getM1_nominal_value() + _ParameterBean.getM1_lower_tolerance_value());
                     break;
                 case 1:
-                    _bean.ucl = (float) _ParameterBean.getM2_upper_tolerance_value();
-                    _bean.lcl = (float) _ParameterBean.getM2_lower_tolerance_value();
+                    _bean.ucl = (float) (_ParameterBean.getM2_nominal_value() + _ParameterBean.getM2_upper_tolerance_value());
+                    _bean.lcl = (float) (_ParameterBean.getM2_nominal_value() + _ParameterBean.getM2_lower_tolerance_value());
                     break;
                 case 2:
-                    _bean.ucl = (float) _ParameterBean.getM3_upper_tolerance_value();
-                    _bean.lcl = (float) _ParameterBean.getM3_lower_tolerance_value();
+                    _bean.ucl = (float) (_ParameterBean.getM3_nominal_value() + _ParameterBean.getM3_upper_tolerance_value());
+                    _bean.lcl = (float) (_ParameterBean.getM3_nominal_value() + _ParameterBean.getM3_lower_tolerance_value());
                     break;
                 case 3:
-                    _bean.ucl = (float) _ParameterBean.getM4_upper_tolerance_value();
-                    _bean.lcl = (float) _ParameterBean.getM4_lower_tolerance_value();
+                    _bean.ucl = (float) (_ParameterBean.getM4_nominal_value() + _ParameterBean.getM4_upper_tolerance_value());
+                    _bean.lcl = (float) (_ParameterBean.getM4_nominal_value() + _ParameterBean.getM4_lower_tolerance_value());
                     break;
             }
+        } else {
+            _bean.ucl = (float) (xbar + Constants.A2[mFilterBean.groupSize - 2] * _r);
+            _bean.lcl = (float) (xbar - Constants.A2[mFilterBean.groupSize - 2] * _r);
         }
+
+        _bean.maxY = (float) (_bean.ucl + Math.abs(_bean.ucl - xbar) * 0.5);
+        _bean.minY = (float) (_bean.lcl - Math.abs(xbar - _bean.lcl) * 0.5);
+        android.util.Log.d("wlDebug", " --- " + _bean.toString());
         return _bean;
     }
 
@@ -668,28 +688,28 @@ public class SPCStatisticalActivity extends BaseActivity {
             switch (mFilterBean.getTargetNum()) {
                 case 0:
                     normalValue = _ParameterBean.getM1_nominal_value();
-                    upperValue = _ParameterBean.getM1_upper_tolerance_value();
-                    lowValue = _ParameterBean.getM1_lower_tolerance_value();
+                    upperValue = normalValue + _ParameterBean.getM1_upper_tolerance_value();
+                    lowValue = normalValue + _ParameterBean.getM1_lower_tolerance_value();
                     break;
                 case 1:
                     normalValue = _ParameterBean.getM2_nominal_value();
-                    upperValue = _ParameterBean.getM2_upper_tolerance_value();
-                    lowValue = _ParameterBean.getM2_lower_tolerance_value();
+                    upperValue = normalValue + _ParameterBean.getM2_upper_tolerance_value();
+                    lowValue = normalValue + _ParameterBean.getM2_lower_tolerance_value();
                     break;
                 case 2:
                     normalValue = _ParameterBean.getM3_nominal_value();
-                    upperValue = _ParameterBean.getM3_upper_tolerance_value();
-                    lowValue = _ParameterBean.getM3_lower_tolerance_value();
+                    upperValue = normalValue + _ParameterBean.getM3_upper_tolerance_value();
+                    lowValue = normalValue + _ParameterBean.getM3_lower_tolerance_value();
                     break;
                 case 3:
                     normalValue = _ParameterBean.getM4_nominal_value();
-                    upperValue = _ParameterBean.getM4_upper_tolerance_value();
-                    lowValue = _ParameterBean.getM4_lower_tolerance_value();
+                    upperValue = normalValue + _ParameterBean.getM4_upper_tolerance_value();
+                    lowValue = normalValue + _ParameterBean.getM4_lower_tolerance_value();
                     break;
                 default:
                     normalValue = 12;
-                    upperValue = 1;
-                    lowValue = -2;
+                    upperValue = normalValue + 1;
+                    lowValue = normalValue - 2;
                     break;
             }
         } else {
@@ -699,7 +719,11 @@ public class SPCStatisticalActivity extends BaseActivity {
             upperValue = 24;
             lowValue = 23.99;
         }
+
         _bean.nominalValue = normalValue;
+        _bean.usl = upperValue;
+        _bean.lsl = lowValue;
+
         T = upperValue - lowValue;
         U = (upperValue + lowValue) / 2;
         StandardDeviation StandardDeviation = new StandardDeviation();//标准差
@@ -718,7 +742,6 @@ public class SPCStatisticalActivity extends BaseActivity {
         _bean.cpl = cpl;
         _bean.cpu = cpu;
         _bean.cpk = cpk;
-
 
         double pp, pa, PPKu, PPKl, ppl, ppu, ppk, deviation2;
         double rbar = 0;
@@ -752,8 +775,6 @@ public class SPCStatisticalActivity extends BaseActivity {
         _bean.ppu = ppu;
         _bean.ppk = ppk;
 
-        android.util.Log.d("wlDebug", "deviation = " + deviation);
-        android.util.Log.d("wlDebug", "deviation2 = " + deviation2);
         return _bean;
     }
 
@@ -840,6 +861,8 @@ public class SPCStatisticalActivity extends BaseActivity {
         chart.setPinchZoom(true);
         rChart.setPinchZoom(true);
 
+        chart.animateX(1500);
+
         XAxis xAxis;
         {   // // X-Axis Style // //
             xAxis = chart.getXAxis();
@@ -854,49 +877,11 @@ public class SPCStatisticalActivity extends BaseActivity {
 
             // disable dual axis (only use LEFT axis)
             chart.getAxisRight().setEnabled(false);
-
+            rChart.getAxisRight().setEnabled(false);
             // horizontal grid lines
             yAxis.enableGridDashedLine(10f, 10f, 0f);
-
-            // axis range
-            yAxis.setAxisMaximum(200f);
-            yAxis.setAxisMinimum(-50f);
         }
-
-
-        {   // // Create Limit Lines // //
-            LimitLine llXAxis = new LimitLine(9f, "Index 10");
-            llXAxis.setLineWidth(4f);
-            llXAxis.enableDashedLine(10f, 10f, 0f);
-            llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-            llXAxis.setTextSize(10f);
-            llXAxis.setTypeface(tfRegular);
-
-            LimitLine ll1 = new LimitLine(150f, "上控制线");
-            ll1.setLineWidth(2f);
-            ll1.setLineColor(R.color.baseColor);
-            ll1.enableDashedLine(10f, 10f, 0f);
-            ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-            ll1.setTextSize(10f);
-            ll1.setTypeface(tfRegular);
-
-            LimitLine ll2 = new LimitLine(-30f, "下控制线");
-            ll2.setLineWidth(2f);
-            ll2.setLineColor(R.color.baseColor);
-            ll2.enableDashedLine(10f, 10f, 0f);
-            ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-            ll2.setTextSize(10f);
-            ll2.setTypeface(tfRegular);
-
-            // draw limit lines behind data instead of on top
-            yAxis.setDrawLimitLinesBehindData(true);
-            xAxis.setDrawLimitLinesBehindData(true);
-
-            // add limit lines
-            yAxis.addLimitLine(ll1);
-            yAxis.addLimitLine(ll2);
-        }
-        setDatas(10, 100);
+        clearChart();
 
     }
 
@@ -940,6 +925,15 @@ public class SPCStatisticalActivity extends BaseActivity {
         // text size of values
         set1.setValueTextSize(9f);
 
+        set1.setCubicIntensity(0.05f);
+
+        set1.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return super.getFormattedValue(value);
+            }
+        });
+
         // draw selection line as dashed
         set1.enableDashedHighlightLine(10f, 5f, 0f);
 
@@ -963,28 +957,33 @@ public class SPCStatisticalActivity extends BaseActivity {
         return set1;
     }
 
-    private void setDatas(int count, float range) {
+    private void clearChart() {
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(getLineDataSet(getDemoValues(), "M")); // add the data sets
         // create a data object with the data sets
         LineData data = new LineData(dataSets);
         chart.setData(data);
+        chart.getAxisLeft().removeAllLimitLines();
+        chart.getData().notifyDataChanged();
+        chart.notifyDataSetChanged();
+        chart.invalidate();
+
 
         ArrayList<ILineDataSet> rDataSets = new ArrayList<>();
         rDataSets.add(getLineDataSet(getDemoValues(), "R")); // add the data sets
         // create a data object with the data sets
         LineData rData = new LineData(rDataSets);
         rChart.setData(rData);
+        rChart.getAxisLeft().removeAllLimitLines();
+        rChart.getData().notifyDataChanged();
+        rChart.notifyDataSetChanged();
+        rChart.invalidate();
+
     }
 
     private ArrayList<Entry> getDemoValues() {
         ArrayList<Entry> values = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            float val = (float) (Math.random() * 30) - 30;
-            values.add(new Entry(i, val, getResources().getDrawable(R.drawable.star)));
-        }
         return values;
     }
 
@@ -1158,6 +1157,21 @@ public class SPCStatisticalActivity extends BaseActivity {
         float ucl;
         // 下公差值;
         float lcl;
+        //
+        float maxY;
+        //
+        float minY;
+
+        @Override
+        public String toString() {
+            return "YBYXTBean{" +
+                    "mValues=" + mValues +
+                    ", ucl=" + ucl +
+                    ", lcl=" + lcl +
+                    ", maxY=" + maxY +
+                    ", minY=" + minY +
+                    '}';
+        }
     }
 
     class GCNLTBean {

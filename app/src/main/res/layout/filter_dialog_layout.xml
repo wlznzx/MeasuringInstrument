@@ -76,12 +76,19 @@
                 android:layout_weight="1"
                 android:text="@string/start_time" />
 
-            <EditText
-                android:id="@+id/password_edt"
-                style="@style/EdWordStyle"
+            <Button
+                android:id="@+id/start_time_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4" />
+                android:layout_weight="3"
+                android:text="点击选择时间"
+                />
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="invisible"
+                />
 
         </LinearLayout>
 
@@ -97,13 +104,19 @@
                 android:layout_weight="1"
                 android:text="@string/end_time" />
 
-            <EditText
-                android:id="@+id/repassword_edt"
-                style="@style/EdWordStyle"
+            <Button
+                android:id="@+id/stop_time_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:inputType="textPassword" />
+                android:layout_weight="3"
+                android:text="点击选择时间"
+                />
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="invisible"
+                />
 
         </LinearLayout>
 

@@ -1,14 +1,18 @@
 package alauncher.cn.measuringinstrument.widget;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.util.Calendar;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
@@ -16,6 +20,8 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.FilterBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
+import alauncher.cn.measuringinstrument.utils.DateUtils;
+import alauncher.cn.measuringinstrument.view.SPCStatisticalActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -37,8 +43,18 @@ public class FilterDialog extends Dialog {
     public Spinner resultFilterSP;
 
 
+    @BindView(R.id.start_time_btn)
+    public Button startTimeBtn;
+
+    @BindView(R.id.stop_time_btn)
+    public Button stopTimeBtn;
+
     public UserDao mUserDao;
     private User mUser;
+
+    private long startTime;
+
+    private long stopTimeStamp;
 
     private boolean isHandlerSpinnerFirst = true;
 
@@ -60,7 +76,7 @@ public class FilterDialog extends Dialog {
     }
 
 
-    @OnClick({R.id.no, R.id.yes})
+    @OnClick({R.id.no, R.id.yes, R.id.start_time_btn, R.id.stop_time_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.no:
@@ -69,6 +85,53 @@ public class FilterDialog extends Dialog {
             case R.id.yes:
                 mFilterInterface.dataFilterUpdate(view2Bean());
                 dismiss();
+                break;
+            case R.id.start_time_btn:
+                Calendar now = Calendar.getInstance();
+                new android.app.DatePickerDialog(
+                        mContext,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                Calendar cal = Calendar.getInstance();
+                                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                cal.set(Calendar.YEAR, year);
+                                cal.set(Calendar.MONTH, month);
+                                cal.set(Calendar.HOUR_OF_DAY, 0);
+                                cal.set(Calendar.SECOND, 0);
+                                cal.set(Calendar.MINUTE, 0);
+                                cal.set(Calendar.MILLISECOND, 0);
+                                startTime = cal.getTimeInMillis();
+                                startTimeBtn.setText(DateUtils.getDate(cal.getTimeInMillis()));
+                            }
+                        },
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                ).show();
+                break;
+            case R.id.stop_time_btn:
+                Calendar _now = Calendar.getInstance();
+                new android.app.DatePickerDialog(
+                        mContext,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                Calendar cal = Calendar.getInstance();
+                                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                cal.set(Calendar.YEAR, year);
+                                cal.set(Calendar.MONTH, month);
+                                cal.set(Calendar.HOUR_OF_DAY, 23);
+                                cal.set(Calendar.SECOND, 59);
+                                cal.set(Calendar.MINUTE, 59);
+                                stopTimeStamp = cal.getTimeInMillis();
+                                stopTimeBtn.setText(DateUtils.getDate(stopTimeStamp));
+                            }
+                        },
+                        _now.get(Calendar.YEAR),
+                        _now.get(Calendar.MONTH),
+                        _now.get(Calendar.DAY_OF_MONTH)
+                ).show();
                 break;
             default:
                 break;
@@ -102,6 +165,8 @@ public class FilterDialog extends Dialog {
         bean.setResult((String) resultFilterSP.getSelectedItem());
         bean.setWorkid((String) workpieceIDEdt.getText().toString().trim());
         bean.setEvent((String) eventFilterEdt.getText().toString().trim());
+        bean.setStartTime(startTime);
+        bean.setEndTime(stopTimeStamp);
         return bean;
     }
 

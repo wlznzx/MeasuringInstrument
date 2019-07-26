@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.data.Entry;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -476,7 +474,12 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
         //请求参数
         ArrayList<String> strParamLt = new ArrayList<String>();
 
-        String queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where 1==1 ";
+        String queryString = "";
+        if (bean.getStartTime() == 0 && bean.getEndTime() == 0) {
+            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where 1==1 ";
+        } else {
+            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.TimeStamp.columnName + " between " + bean.getStartTime() + " and " + bean.getEndTime();
+        }
 
         //用户
         if (!CommonUtil.isNull(bean.getHandler())) {
