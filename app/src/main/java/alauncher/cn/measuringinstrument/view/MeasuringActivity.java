@@ -333,6 +333,9 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                 mTitle[1].setText(R.string.m2);
                 mTitle[2].setText(R.string.m3);
                 mTitle[3].setText(R.string.m4);
+                mDescribes[0].setVisibility(View.VISIBLE);
+                mDescribes[1].setVisibility(View.VISIBLE);
+                mDescribes[2].setVisibility(View.VISIBLE);
                 if (mParameterBean != null) {
                     mMValueViews[0].init(mParameterBean.getM1_nominal_value(), mParameterBean.getM1_upper_tolerance_value(), mParameterBean.getM1_lower_tolerance_value(), mParameterBean.getM1_scale());
                     mMValueViews[1].init(mParameterBean.getM2_nominal_value(), mParameterBean.getM2_upper_tolerance_value(), mParameterBean.getM2_lower_tolerance_value(), mParameterBean.getM2_scale());
@@ -348,6 +351,9 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                 mTitle[0].setText("");
                 mTitle[1].setText("");
                 mTitle[2].setText("");
+                mDescribes[0].setVisibility(View.INVISIBLE);
+                mDescribes[1].setVisibility(View.INVISIBLE);
+                mDescribes[2].setVisibility(View.INVISIBLE);
                 mTitle[3].setText(R.string.m1);
                 if (mParameterBean != null) {
                     mMValueViews[3].init(mParameterBean.getM1_nominal_value(), mParameterBean.getM1_upper_tolerance_value(), mParameterBean.getM1_lower_tolerance_value(), mParameterBean.getM1_scale());
