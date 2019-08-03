@@ -107,7 +107,6 @@
 
             <RadioButton
                 android:id="@+id/auto_time_rb"
-                style="@style/TextStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -115,7 +114,6 @@
                 android:text="@string/automatic" />
 
             <RadioButton
-                style="@style/TextStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -185,14 +183,12 @@
 
             <RadioButton
                 android:id="@+id/auto_line_rb"
-                style="@style/TextStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/automatic" />
 
             <RadioButton
-                style="@style/TextStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
