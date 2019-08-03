@@ -1,14 +1,11 @@
 package alauncher.cn.measuringinstrument;
 
-import android.app.DatePickerDialog;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.base.BaseActivity;

@@ -77,6 +77,23 @@ public class MGroupActivity extends BaseActivity {
     public void onSave(View v) {
         GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
 
+        GroupBean mGroupBean = view2Bean();
+        if (mGroupBean.getA_upper_limit() < mGroupBean.getA_lower_limit()) {
+            Toast.makeText(this, "分组A的上限必须大于下限，请检查输入.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (mGroupBean.getB_upper_limit() < mGroupBean.getB_lower_limit()) {
+            Toast.makeText(this, "分组B的上限必须大于下限，请检查输入.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (mGroupBean.getC_upper_limit() < mGroupBean.getC_lower_limit()) {
+            Toast.makeText(this, "分组C的上限必须大于下限，请检查输入.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (mGroupBean.getD_upper_limit() < mGroupBean.getD_lower_limit()) {
+            Toast.makeText(this, "分组D的上限必须大于下限，请检查输入.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (_bean == null) {
             App.getDaoSession().getGroupBeanDao().insert(view2Bean());
         } else {
@@ -117,7 +134,6 @@ public class MGroupActivity extends BaseActivity {
         _bean.setD_describe(describes[3].getText().toString());
 
         android.util.Log.d("wlDebug", _bean.toString());
-
         return _bean;
     }
 

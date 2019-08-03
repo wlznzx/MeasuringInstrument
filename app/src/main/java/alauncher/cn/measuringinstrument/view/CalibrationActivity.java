@@ -183,7 +183,25 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                 break;
             case R.id.calibration_save_btn:
                 doCalc();
-                mCalibrationPresenter.saveCalibration(view2Bean());
+                CalibrationBean _bean = view2Bean();
+                // 判断倍率;
+                if (_bean.getCh1KValue() < _bean.getCh1LowerLimitRate() || _bean.getCh1KValue() > _bean.getCh1UpperLimitRate()) {
+                    Toast.makeText(this, "Ch1测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (_bean.getCh2KValue() < _bean.getCh2LowerLimitRate() || _bean.getCh2KValue() > _bean.getCh2UpperLimitRate()) {
+                    Toast.makeText(this, "Ch2测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (_bean.getCh3KValue() < _bean.getCh3LowerLimitRate() || _bean.getCh3KValue() > _bean.getCh3UpperLimitRate()) {
+                    Toast.makeText(this, "Ch3测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (_bean.getCh4KValue() < _bean.getCh4LowerLimitRate() || _bean.getCh4KValue() > _bean.getCh4UpperLimitRate()) {
+                    Toast.makeText(this, "Ch4测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mCalibrationPresenter.saveCalibration(_bean);
                 break;
             case R.id.select_all_btn:
                 for (CheckBox _box : chRbs) {

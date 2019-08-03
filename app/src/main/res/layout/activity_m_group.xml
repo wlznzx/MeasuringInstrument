@@ -65,8 +65,7 @@
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:inputType="number|numberDecimal" />
+            android:layout_weight="1" />
 
         <EditText
             android:id="@+id/a_lower_limit_edt"
@@ -101,8 +100,7 @@
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:inputType="number|numberDecimal" />
+            android:layout_weight="1" />
 
         <EditText
             android:id="@+id/b_lower_limit_edt"
@@ -139,8 +137,7 @@
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:inputType="number|numberDecimal" />
+            android:layout_weight="1" />
 
         <EditText
             android:id="@+id/c_lower_limit_edt"
@@ -176,8 +173,7 @@
             style="@style/EdNumOnlyStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:inputType="number|numberDecimal" />
+            android:layout_weight="1" />
 
         <EditText
             android:id="@+id/d_lower_limit_edt"
