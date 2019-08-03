@@ -161,4 +161,5 @@
     <string name="group_size">子组大小</string>
     <string name="group_num">子组数</string>
     <string name="time_mode">时间区间</string>
+    <string name="num">序号</string>
 </resources>

@@ -10,4 +10,8 @@
 
     <color name="transparent">#00000000</color>
     <color name="color_b7b8bd">#b7b8bd</color>
+
+
+    <color name="listViewColor1">#455A64</color>
+    <color name="listViewColor2">#40455A64</color>
 </resources>

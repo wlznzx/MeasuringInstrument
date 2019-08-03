@@ -139,7 +139,6 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         if (App.getSetupBean().getIsAutoPopUp()) {
             showAddDialog();
         }
-
         mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
     }
 
@@ -165,24 +164,29 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                 showAddDialog();
                 break;
             case R.id.measure_save_btn:
-                doSave();
+                if (doSave()) {
+                    if (App.getSetupBean().getIsAutoPopUp()) {
+                        showAddDialog();
+                    }
+                }
                 break;
         }
     }
 
-    private void doSave() {
+    private boolean doSave() {
         // 判断是否时间校验模式，如果超时，不保存并且提示;
         ForceCalibrationBeanDao _dao = App.getDaoSession().getForceCalibrationBeanDao();
         ForceCalibrationBean _bean = _dao.load(App.SETTING_ID);
         if ((_bean.getForceMode() == 1 && _bean.getUsrNum() <= 0) || (_bean.getForceMode() == 2 && System.currentTimeMillis() > _bean.getRealForceTime())) {
             showForceDialog();
-            return;
+            return false;
         }
         mMeasuringPresenter.saveResult(curMValues, mAddInfoBean);
         Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
         updateChartDatas();
         _bean.setUsrNum(_bean.getUsrNum() - 1);
         _dao.update(_bean);
+        return true;
     }
 
     private void showForceDialog() {

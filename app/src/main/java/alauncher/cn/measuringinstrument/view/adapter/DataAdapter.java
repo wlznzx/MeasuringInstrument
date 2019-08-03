@@ -1,6 +1,7 @@
 package alauncher.cn.measuringinstrument.view.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -37,7 +38,7 @@ public class DataAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
 
-    public void notifyAdapter(List<ResultBean   > myLiveList, boolean isAdd) {
+    public void notifyAdapter(List<ResultBean> myLiveList, boolean isAdd) {
 
         if (!isAdd) {
             this.datas = myLiveList;
@@ -104,6 +105,14 @@ public class DataAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.setText(R.id.data_m4_group, "" + datas.get(position).getM4_group());
         holder.setText(R.id.data_time, DateUtils.getDate(datas.get(position).getTimeStamp()));
         holder.setText(R.id.data_result, "" + datas.get(position).getResult());
+        holder.setText(R.id.data_num, "" + (position + 1));
+
+        if (position % 2 == 0) {
+            // holder.setBackgroundColor(R.id.data_layout, Color.argb(250, 255, 255, 255));
+            holder.setBackgroundColor(R.id.data_layout, Color.argb(100, 69, 90, 100));
+        } else {
+            holder.setBackgroundColor(R.id.data_layout, Color.argb(50, 69, 90, 100));
+        }
     }
 
     @Override
