@@ -3,7 +3,9 @@ package alauncher.cn.measuringinstrument.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -102,6 +104,20 @@ public class AdditionalDialog extends Dialog {
                 break;
         }
         dismiss();
+    }
+
+    @Override
+    public void dismiss() {
+        //避免闪屏 提高用户体验
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AdditionalDialog.super.dismiss();
+            }
+        }, 500);
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(workpieceidEdt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(eventidEdt.getWindowToken(), 0);
     }
 
 }

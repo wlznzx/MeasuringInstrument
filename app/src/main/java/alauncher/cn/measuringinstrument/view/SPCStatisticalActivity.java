@@ -34,7 +34,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IFillFormatter;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
@@ -61,9 +60,11 @@ import alauncher.cn.measuringinstrument.utils.Constants;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
 
 import alauncher.cn.measuringinstrument.utils.Format;
+
 import androidx.core.content.ContextCompat;
 
 import butterknife.BindView;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 import static alauncher.cn.measuringinstrument.App.getDaoSession;
@@ -320,9 +321,9 @@ public class SPCStatisticalActivity extends BaseActivity {
         mFilterBean.setRucl(Double.valueOf(ruclEdt.getText().toString().trim()));
         mFilterBean.setRlcl(Double.valueOf(rlclEdt.getText().toString().trim()));
         android.util.Log.d("wlDebug", "mFilterBean = " + mFilterBean.toString());
-
         dataFilterUpdate();
     }
+
 
     /*
      *
@@ -408,14 +409,14 @@ public class SPCStatisticalActivity extends BaseActivity {
                     updateChartDatas(_bean.mValues);
                 } else if (spc_mode == GCNLT_MODE) {
                     GCNLTBean _bean = (GCNLTBean) result;
-                    averageValueTV.setText("" + Format.m1(_bean.averageValue,4));
-                    maxValueTV.setText("" + Format.m1(_bean.maxValue,4));
-                    minValueTV.setText("" + Format.m1(_bean.minValue,4));
-                    nominalValueTV.setText("" + Format.m1(_bean.nominalValue,4));
-                    gcUslTV.setText("" + Format.m1(_bean.usl,4));
-                    gcLslTV.setText("" + Format.m1(_bean.lsl,4));
-                    _3aTV.setText("" + Format.m1((_bean.a * -3),4));
-                    _aTV.setText("" + Format.m1((_bean.a * 3),4));
+                    averageValueTV.setText("" + Format.m1(_bean.averageValue, 4));
+                    maxValueTV.setText("" + Format.m1(_bean.maxValue, 4));
+                    minValueTV.setText("" + Format.m1(_bean.minValue, 4));
+                    nominalValueTV.setText("" + Format.m1(_bean.nominalValue, 4));
+                    gcUslTV.setText("" + Format.m1(_bean.usl, 4));
+                    gcLslTV.setText("" + Format.m1(_bean.lsl, 4));
+                    _3aTV.setText("" + Format.m1((_bean.averageValue + _bean.a * -3), 4));
+                    _aTV.setText("" + Format.m1((_bean.averageValue + _bean.a * 3), 4));
                     cpTV.setText("" + Format.m1(_bean.cp, 2));
                     cpkTV.setText("" + Format.m1(_bean.cpk, 2));
                     cplTV.setText("" + Format.m1(_bean.cpl, 2));
@@ -762,7 +763,7 @@ public class SPCStatisticalActivity extends BaseActivity {
         double d2 = Constants.d2[mFilterBean.groupSize - 2];
         deviation2 = rbar / d2;
 
-        pp = T / (6 * deviation);
+        pp = T / (6 * deviation2);
         pa = (_bean.averageValue - U) / (T / 2);
         PPKu = Math.abs(upperValue - _bean.averageValue) / (3 * deviation2);
         PPKl = Math.abs(_bean.averageValue - lowValue) / (3 * deviation2);
@@ -789,6 +790,41 @@ public class SPCStatisticalActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+
+        timeRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                android.util.Log.d("wlDebug", "timeRG check id = " + checkedId);
+                if (timeRG.getCheckedRadioButtonId() == R.id.auto_time_rb) {
+                    // 自动情况下，edt不可以写;
+                    xuclEdt.setEnabled(false);
+                    xlclEdt.setEnabled(false);
+                } else {
+                    xuclEdt.setEnabled(true);
+                    xlclEdt.setEnabled(true);
+                }
+            }
+        });
+
+        lineRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                android.util.Log.d("wlDebug", "lineRG check id = " + checkedId);
+                if (timeRG.getCheckedRadioButtonId() == R.id.auto_time_rb) {
+                    // 自动情况下，edt不可以写;
+                    ruclEdt.setEnabled(false);
+                    rlclEdt.setEnabled(false);
+                } else {
+                    ruclEdt.setEnabled(true);
+                    rlclEdt.setEnabled(true);
+                }
+            }
+        });
+
+        xuclEdt.setEnabled(false);
+        xlclEdt.setEnabled(false);
+        ruclEdt.setEnabled(false);
+        rlclEdt.setEnabled(false);
 
         mResultBeanDao = getDaoSession().getResultBeanDao();
         ((RadioButton) lineRG.getChildAt(0)).setChecked(true);
