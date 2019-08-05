@@ -1,9 +1,14 @@
 package alauncher.cn.measuringinstrument;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +19,7 @@ import alauncher.cn.measuringinstrument.view.AccoutManagementActivity;
 import alauncher.cn.measuringinstrument.view.CalibrationActivity;
 import alauncher.cn.measuringinstrument.view.CodeActivity;
 import alauncher.cn.measuringinstrument.view.DataActivity;
+import alauncher.cn.measuringinstrument.view.LoginActivity;
 import alauncher.cn.measuringinstrument.view.MeasuringActivity;
 import alauncher.cn.measuringinstrument.view.ParameterManagementActivity;
 import alauncher.cn.measuringinstrument.view.SPCStatisticalActivity;
@@ -59,6 +65,36 @@ public class MainActivity extends BaseActivity {
         rv.addItemDecoration(new RecyclerItemDecoration(24, 3));
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(_adapter);
+
+        actionIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog builder = new AlertDialog.Builder(MainActivity.this)
+                        .create();
+                builder.show();
+                if (builder.getWindow() == null) return;
+                builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
+                TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
+                Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
+                Button sure = (Button) builder.findViewById(R.id.btn_sure);
+                if (msg == null || cancle == null || sure == null) return;
+                msg.setText("确认注销当前账号？");
+                cancle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        builder.dismiss();
+                    }
+                });
+                sure.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        builder.dismiss();
+                        finish();
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    }
+                });
+            }
+        });
     }
 
     class MainInfo {

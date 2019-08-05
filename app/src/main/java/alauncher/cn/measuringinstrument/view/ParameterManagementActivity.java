@@ -286,6 +286,9 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
             case 5:
                 result = 5.0;
                 break;
+            case 6:
+                result = 6.0;
+                break;
         }
         return result;
     }

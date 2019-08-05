@@ -22,10 +22,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bin.david.form.annotation.SmartColumn;
-import com.bin.david.form.core.SmartTable;
-import com.bin.david.form.data.column.Column;
-import com.bin.david.form.data.table.TableData;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -64,7 +60,6 @@ import alauncher.cn.measuringinstrument.utils.Format;
 import androidx.core.content.ContextCompat;
 
 import butterknife.BindView;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 import static alauncher.cn.measuringinstrument.App.getDaoSession;
@@ -779,7 +774,6 @@ public class SPCStatisticalActivity extends BaseActivity {
         return _bean;
     }
 
-
     private void updateChartDatas(List<Entry> values) {
         LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
         set1.setValues(values);
@@ -903,8 +897,11 @@ public class SPCStatisticalActivity extends BaseActivity {
         {   // // X-Axis Style // //
             xAxis = chart.getXAxis();
 
+            chart.getXAxis().setDrawGridLines(false);
+            rChart.getXAxis().setDrawGridLines(false);
+
             // vertical grid lines
-            xAxis.enableGridDashedLine(10f, 10f, 0f);
+            // xAxis.enableGridDashedLine(10f, 10f, 0f);
         }
 
         YAxis yAxis;
@@ -914,8 +911,12 @@ public class SPCStatisticalActivity extends BaseActivity {
             // disable dual axis (only use LEFT axis)
             chart.getAxisRight().setEnabled(false);
             rChart.getAxisRight().setEnabled(false);
+
+            chart.getAxisLeft().setDrawGridLines(false);
+            rChart.getAxisLeft().setDrawGridLines(false);
+
             // horizontal grid lines
-            yAxis.enableGridDashedLine(10f, 10f, 0f);
+            // yAxis.enableGridDashedLine(10f, 10f, 0f);
         }
         clearChart();
 
@@ -939,8 +940,8 @@ public class SPCStatisticalActivity extends BaseActivity {
 
         set1.setDrawIcons(false);
 
-        // draw dashed line
-        set1.enableDashedLine(10f, 5f, 0f);
+        // draw dashed line 设置虚线;
+        // set1.enableDashedLine(10f, 5f, 0f);
 
         // black lines and points
         set1.setColor(Color.BLACK);
@@ -973,8 +974,8 @@ public class SPCStatisticalActivity extends BaseActivity {
         // draw selection line as dashed
         set1.enableDashedHighlightLine(10f, 5f, 0f);
 
-        // set the filled area
-        set1.setDrawFilled(true);
+        // set the filled area 设置填充颜色，明明很棒的效果，客户不要;
+        set1.setDrawFilled(false);
         set1.setFillFormatter(new IFillFormatter() {
             @Override
             public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {

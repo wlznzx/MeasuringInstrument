@@ -154,6 +154,7 @@
             android:orientation="vertical">
 
             <EditText
+                android:id="@+id/code_1_edt"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -161,6 +162,7 @@
                 android:text="@string/code1_name" />
 
             <EditText
+                android:id="@+id/code_2_edt"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -169,6 +171,7 @@
                 android:text="@string/code2_name" />
 
             <EditText
+                android:id="@+id/code_3_edt"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -177,6 +180,7 @@
                 android:text="@string/code3_name" />
 
             <EditText
+                android:id="@+id/code_4_edt"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -185,6 +189,7 @@
                 android:text="@string/code4_name" />
 
             <EditText
+                android:id="@+id/code_5_edt"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -192,6 +197,7 @@
                 android:text="@string/code5_name" />
 
             <EditText
+                android:id="@+id/code_6_edt"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -199,6 +205,7 @@
                 android:text="@string/code6_name" />
 
             <EditText
+                android:id="@+id/code_7_edt"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -206,6 +213,7 @@
                 android:text="@string/code7_name" />
 
             <EditText
+                android:id="@+id/code_8_edt"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -213,6 +221,7 @@
                 android:text="@string/code8_name" />
 
             <EditText
+                android:id="@+id/code_9_edt"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -220,6 +229,7 @@
                 android:text="@string/code9_name" />
 
             <EditText
+                android:id="@+id/code_10_edt"
                 style="@style/TextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

@@ -80,12 +80,30 @@ public class MValueView extends View {
         // 公差的单位是毫米，所以需要 * 1000;
         upper_tolerance_value = upper;
         lower_tolerance_value = lower;
+
+        if (pResolution == 6) {
+            double _x = upper_tolerance_value - lower_tolerance_value;
+            android.util.Log.d("wlDebug", "_x = " + _x);
+            if (_x < 0.01) {
+                pResolution = 0.1;
+            } else if (_x < 0.02) {
+                pResolution = 0.2;
+            } else if (_x < 0.05) {
+                pResolution = 0.5;
+            } else if (_x < 0.1) {
+                pResolution = 1;
+            } else if (_x < 0.2) {
+                pResolution = 2;
+            } else {
+                pResolution = 5;
+            }
+        }
+
         resolution = pResolution / 1000;
         hw = 0.9 * upper_tolerance_value + 0.1 * lower_tolerance_value;
         lw = 0.1 * upper_tolerance_value + 0.9 * lower_tolerance_value;
 
         baseValue = Arith.div(((nominal + upper_tolerance_value) + (nominal + lower_tolerance_value)), 2);
-
         android.util.Log.d("wlDebug", "nominal_value = " + nominal_value + " upper_tolerance_value = " + upper_tolerance_value + " lower_tolerance_value = " + lower_tolerance_value + " resolution = " + resolution);
     }
 

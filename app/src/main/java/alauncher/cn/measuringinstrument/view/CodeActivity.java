@@ -1,21 +1,25 @@
 package alauncher.cn.measuringinstrument.view;
 
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
 import butterknife.BindView;
-import butterknife.OnCheckedChanged;
+import butterknife.BindViews;
 
 
 public class CodeActivity extends BaseActivity {
 
     @BindView(R.id.code_rg)
     RadioGroup mCodeRadioGroup;
+
+    @BindViews({R.id.code_1_edt, R.id.code_2_edt, R.id.code_3_edt, R.id.code_4_edt, R.id.code_5_edt, R.id.code_6_edt, R.id.code_7_edt, R.id.code_8_edt, R.id.code_9_edt, R.id.code_10_edt})
+    public EditText codeEdts[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +88,21 @@ public class CodeActivity extends BaseActivity {
                 SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
                 _bean.setCodeID(codeID);
                 App.getDaoSession().getSetupBeanDao().update(_bean);
-                actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
+                CodeBean _CodeBean = App.getDaoSession().getCodeBeanDao().load((long) codeID);
+                if (_CodeBean != null) {
+                    actionTips.setText(App.handlerAccout + " " + _CodeBean.getName());
+                } else {
+                    actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
+                }
             }
         });
+
+        for (int i = 0; i < codeEdts.length; i++) {
+            CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) (i + 1));
+            if (_bean != null) {
+                codeEdts[i].setText(_bean.getName());
+            }
+        }
     }
 
 
@@ -118,4 +134,15 @@ public class CodeActivity extends BaseActivity {
         return R.id.code_1;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        for (int i = 0; i < codeEdts.length; i++) {
+            if (App.getDaoSession().getCodeBeanDao().load((long) (i + 1)) == null) {
+                App.getDaoSession().getCodeBeanDao().insert(new CodeBean((i + 1), codeEdts[i].getText().toString().trim()));
+            } else {
+                App.getDaoSession().getCodeBeanDao().update(new CodeBean((i + 1), codeEdts[i].getText().toString().trim()));
+            }
+        }
+    }
 }

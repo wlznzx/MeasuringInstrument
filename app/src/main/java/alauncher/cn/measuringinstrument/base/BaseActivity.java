@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import alauncher.cn.measuringinstrument.App;
+import alauncher.cn.measuringinstrument.bean.CodeBean;
 import androidx.annotation.Nullable;
 
 import android.util.Log;
@@ -34,7 +35,7 @@ public abstract class BaseActivity extends Activity implements BaseView {
     protected BaseActivity mActivity;
 
     @BindView(R.id.action_bar_icon)
-    ImageView actionIV;
+    public ImageView actionIV;
 
     @BindView(R.id.action_bar_title)
     TextView actionTitleTV;
@@ -82,7 +83,13 @@ public abstract class BaseActivity extends Activity implements BaseView {
     @Override
     protected void onResume() {
         super.onResume();
-        actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
+
+        CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
+        if (_bean != null) {
+            actionTips.setText(App.handlerAccout + " " + _bean.getName());
+        } else {
+            actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
+        }
     }
 
     /**
