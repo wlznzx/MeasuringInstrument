@@ -143,6 +143,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
+                android:visibility="gone"
                 android:text="11" />
         </RadioGroup>
 
@@ -238,6 +239,7 @@
 
             <EditText
                 style="@style/TextStyle"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"

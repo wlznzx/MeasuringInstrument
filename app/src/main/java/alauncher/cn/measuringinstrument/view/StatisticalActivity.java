@@ -30,8 +30,6 @@ import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 
-import org.nfunk.jep.function.Str;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -603,9 +601,9 @@ public class StatisticalActivity extends BaseActivity {
             }
         }
 
-        /*这个函数在doInBackground调用publishProgress(int i)时触发，虽然调用时只有一个参数
+        /* 这个函数在doInBackground调用publishProgress(int i)时触发，虽然调用时只有一个参数
          但是这里取到的是一个数组,所以要用progesss[0]来取值
-         第n个参数就用progress[n]来取值   */
+         第n个参数就用progress[n]来取值 */
         @Override
         protected void onProgressUpdate(Integer... progresses) {
             //"loading..." + progresses[0] + "%"
