@@ -137,9 +137,9 @@ public class BackupActivity extends BaseActivity implements BackupTask.BackupInt
         if (resultCode == Activity.RESULT_OK) {//是否选择，没选择就不会继续
             Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。
             String _path = getPath(this, uri);
+            _path = getDataColumn(this, uri, null, null);
             android.util.Log.d("wlDebug", "_path = " + _path);
-            if (_path == null || _path.equals("")) _path = uri.getPath();
-            android.util.Log.d("wlDebug", "_path2 = " + _path);
+            _path = uri.getPath();
             selectPathBtn.setText(_path);
         }
     }

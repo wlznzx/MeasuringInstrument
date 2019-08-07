@@ -54,7 +54,7 @@ public class CodeActivity extends BaseActivity {
                         break;
                     case R.id.code_4:
                         codeID = 4;
-                        //女
+                        //女r
                         break;
                     case R.id.code_5:
                         codeID = 5;
