@@ -61,6 +61,9 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.login_btn)
     public void onLogin(View v) {
+
+        // CrashReport.testJavaCrash();
+
         String accoutStr = loginUserNameEdt.getText().toString().trim();
         if (accoutStr == null || accoutStr.equals("")) {
             Toast.makeText(this, R.string.username_notnull, Toast.LENGTH_SHORT).show();

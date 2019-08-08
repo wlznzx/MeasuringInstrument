@@ -394,7 +394,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                         k = Arith.div(_temp, _temp2, 10);
                         c = mCalibrationPresenter.calculationC(y1, k, x1);
                         BigDecimal bg = new BigDecimal(k * 1000 + "");
-                        bg.setScale(6);
+                        bg.setScale(6,BigDecimal.ROUND_HALF_UP);
                         // 倍率小数点后6位;
                         kValueEdt[i].setText(bg.toString());
                         android.util.Log.d("wlDebug", "c = " + c);

@@ -38,7 +38,7 @@ public abstract class BaseActivity extends Activity implements BaseView {
     public ImageView actionIV;
 
     @BindView(R.id.action_bar_title)
-    TextView actionTitleTV;
+    public TextView actionTitleTV;
 
     @BindView(R.id.action_bar_tips)
     public TextView actionTips;

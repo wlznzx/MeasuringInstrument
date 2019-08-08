@@ -2,6 +2,9 @@ package alauncher.cn.measuringinstrument;
 
 import android.app.Application;
 
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.crashreport.CrashReport;
+
 import org.greenrobot.greendao.database.Database;
 
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
@@ -76,6 +79,8 @@ public class App extends Application {
             getDaoSession().getStoreBeanDao().insert(_bean);
         }
 
+        Bugly.init(getApplicationContext(), "e4d9621d74", false);
+        // CrashReport.initCrashReport(getApplicationContext(), "e4d9621d74", false);
         // initTestDatas();
     }
 

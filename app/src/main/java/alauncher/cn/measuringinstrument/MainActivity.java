@@ -1,9 +1,12 @@
 package alauncher.cn.measuringinstrument;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -94,6 +97,34 @@ public class MainActivity extends BaseActivity {
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                     }
                 });
+            }
+        });
+
+
+        actionTitleTV.setOnClickListener(new View.OnClickListener() {
+            final static int COUNTS = 5;//点击次数
+            final static long DURATION = 2 * 1000;//规定有效时间
+            long[] mHits = new long[COUNTS];
+
+            @Override
+            public void onClick(View v) {
+                System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
+                //实现左移，然后最后一个位置更新距离开机的时间，如果最后一个时间和最开始时间小于DURATION，即连续5次点击
+                mHits[mHits.length - 1] = SystemClock.uptimeMillis();
+                if (mHits[0] >= (SystemClock.uptimeMillis() - DURATION)) {
+                    // String tips = "您已在[" + DURATION + "]ms内连续点击【" + mHits.length + "】次了！！！";
+                    // Toast.makeText(MainActivity.this, tips, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    ComponentName cn = new ComponentName("com.android.launcher3", "com.android.launcher3.Launcher");
+                    intent.setComponent(cn);
+                    try {
+                        startActivity(intent);
+                    } catch (ActivityNotFoundException e) {
+
+                    }
+
+                }
             }
         });
     }
