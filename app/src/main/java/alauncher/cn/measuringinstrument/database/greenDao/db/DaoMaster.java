@@ -22,7 +22,6 @@ public class DaoMaster extends AbstractDaoMaster {
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
         CalibrationBeanDao.createTable(db, ifNotExists);
-        CodeBeanDao.createTable(db, ifNotExists);
         ForceCalibrationBeanDao.createTable(db, ifNotExists);
         GroupBeanDao.createTable(db, ifNotExists);
         ParameterBeanDao.createTable(db, ifNotExists);
@@ -31,12 +30,12 @@ public class DaoMaster extends AbstractDaoMaster {
         SetupBeanDao.createTable(db, ifNotExists);
         StoreBeanDao.createTable(db, ifNotExists);
         UserDao.createTable(db, ifNotExists);
+        CodeBeanDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
         CalibrationBeanDao.dropTable(db, ifExists);
-        CodeBeanDao.dropTable(db, ifExists);
         ForceCalibrationBeanDao.dropTable(db, ifExists);
         GroupBeanDao.dropTable(db, ifExists);
         ParameterBeanDao.dropTable(db, ifExists);
@@ -45,6 +44,7 @@ public class DaoMaster extends AbstractDaoMaster {
         SetupBeanDao.dropTable(db, ifExists);
         StoreBeanDao.dropTable(db, ifExists);
         UserDao.dropTable(db, ifExists);
+        CodeBeanDao.dropTable(db, ifExists);
     }
 
     /**
@@ -64,7 +64,6 @@ public class DaoMaster extends AbstractDaoMaster {
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
         registerDaoClass(CalibrationBeanDao.class);
-        registerDaoClass(CodeBeanDao.class);
         registerDaoClass(ForceCalibrationBeanDao.class);
         registerDaoClass(GroupBeanDao.class);
         registerDaoClass(ParameterBeanDao.class);
@@ -73,6 +72,7 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(SetupBeanDao.class);
         registerDaoClass(StoreBeanDao.class);
         registerDaoClass(UserDao.class);
+        registerDaoClass(CodeBeanDao.class);
     }
 
     public DaoSession newSession() {

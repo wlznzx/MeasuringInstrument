@@ -71,8 +71,8 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
 
     private double k[] = new double[4];
 
-    DecimalFormat decimalFormat = new DecimalFormat("#,##0.0000");
-    DecimalFormat decimalFormat6 = new DecimalFormat("#,##0.000000");
+    // DecimalFormat decimalFormat = new DecimalFormat("#,##0.0000");
+    // DecimalFormat decimalFormat6 = new DecimalFormat("#,##0.000000");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,10 +145,10 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
             kValueEdt[2].setText(nf.format(bean.getCh3KValue() * 1000));
             kValueEdt[3].setText(nf.format(bean.getCh4KValue() * 1000));
             // 补偿值;
-            compensationValueEdt[0].setText(decimalFormat.format(bean.getCh1CompensationValue()));
-            compensationValueEdt[1].setText(decimalFormat.format(bean.getCh2CompensationValue()));
-            compensationValueEdt[2].setText(decimalFormat.format(bean.getCh3CompensationValue()));
-            compensationValueEdt[3].setText(decimalFormat.format(bean.getCh4CompensationValue()));
+            compensationValueEdt[0].setText(String.valueOf(bean.getCh1CompensationValue()));
+            compensationValueEdt[1].setText(String.valueOf(bean.getCh2CompensationValue()));
+            compensationValueEdt[2].setText(String.valueOf(bean.getCh3CompensationValue()));
+            compensationValueEdt[3].setText(String.valueOf(bean.getCh4CompensationValue()));
 
             for (int i = 0; i < calibrationTypeSP.length; i++) {
                 kValueEdt[i].setEnabled(calibrationTypeSP[i].getSelectedItemId() == 0);
@@ -184,23 +184,25 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
             case R.id.calibration_save_btn:
                 doCalc();
                 CalibrationBean _bean = view2Bean();
+                android.util.Log.d("wlDebug", _bean.toString());
                 // 判断倍率;
-                if (_bean.getCh1KValue() < _bean.getCh1LowerLimitRate() || _bean.getCh1KValue() > _bean.getCh1UpperLimitRate()) {
+                if (_bean.getCh1KValue() < (_bean.getCh1LowerLimitRate() / 1000) || _bean.getCh1KValue() > (_bean.getCh1UpperLimitRate() / 1000)) {
                     Toast.makeText(this, "Ch1测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (_bean.getCh2KValue() < _bean.getCh2LowerLimitRate() || _bean.getCh2KValue() > _bean.getCh2UpperLimitRate()) {
+                if (_bean.getCh2KValue() < (_bean.getCh2LowerLimitRate() / 1000) || _bean.getCh2KValue() > (_bean.getCh2UpperLimitRate() / 1000)) {
                     Toast.makeText(this, "Ch2测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (_bean.getCh3KValue() < _bean.getCh3LowerLimitRate() || _bean.getCh3KValue() > _bean.getCh3UpperLimitRate()) {
+                if (_bean.getCh3KValue() < (_bean.getCh3LowerLimitRate() / 1000) || _bean.getCh3KValue() > (_bean.getCh3UpperLimitRate() / 1000)) {
                     Toast.makeText(this, "Ch3测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (_bean.getCh4KValue() < _bean.getCh4LowerLimitRate() || _bean.getCh4KValue() > _bean.getCh4UpperLimitRate()) {
+                if (_bean.getCh4KValue() < (_bean.getCh4LowerLimitRate() / 1000) || _bean.getCh4KValue() > (_bean.getCh4UpperLimitRate() / 1000)) {
                     Toast.makeText(this, "Ch4测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                Toast.makeText(this, "校验保存成功.", Toast.LENGTH_SHORT).show();
                 mCalibrationPresenter.saveCalibration(_bean);
                 break;
             case R.id.select_all_btn:
@@ -332,7 +334,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
             @Override
             public void run() {
                 for (int i = 0; i < 4; i++) {
-                    measureValueEdt[i].setText(decimalFormat.format(ys[i]));
+                    measureValueEdt[i].setText(String.valueOf(ys[i]));
                 }
             }
         });
@@ -346,7 +348,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                 double k = 0, c = 0;
                 if (calibrationTypeSP[i].getSelectedItemId() == 0) {
                     try {
-                        android.util.Log.d("wlDebug", "is ?= " + smallPartADEdt[i].getText() + "sAD = " + smallPartADEdt[i].getText().equals(""));
+                        // android.util.Log.d("wlDebug", "is ?= " + smallPartADEdt[i].getText() + "sAD = " + smallPartADEdt[i].getText().equals(""));
                         if (!smallPartADEdt[i].getText().toString().trim().equals("")) {
                             double y1 = Double.valueOf(smallPartEdt[i].getText().toString().trim());
                             int x1 = Integer.parseInt(smallPartADEdt[i].getText().toString().trim(), 10);
@@ -355,7 +357,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                             android.util.Log.d("wlDebug", "y1 = " + y1 + " x1 = " + x1 + " k = " + k + " c = " + c);
                             BigDecimal _c = new BigDecimal(c + "");
                             measureValueEdt[i].setText(_c + "");
-                            compensationValueEdt[i].setText(decimalFormat.format(_c));
+                            compensationValueEdt[i].setText(String.valueOf(_c));
                         } else if (!bigPartADEdt[i].getText().equals("")) {
                             double y2 = Double.valueOf(bigPartCHEdt[i].getText().toString().trim());
                             int x2 = Integer.parseInt(bigPartADEdt[i].getText().toString().trim(), 10);
@@ -364,7 +366,8 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                             android.util.Log.d("wlDebug", "y2 = " + y2 + " x = " + x2 + " k = " + k + " c = " + c);
                             BigDecimal _c = new BigDecimal(c + "");
                             measureValueEdt[i].setText(_c + "");
-                            compensationValueEdt[i].setText(decimalFormat.format(_c));
+//                            compensationValueEdt[i].setText(decimalFormat.format(_c));
+                            compensationValueEdt[i].setText(String.valueOf(_c.doubleValue()));
                         }
                     } catch (NumberFormatException e) {
                         android.util.Log.d("wlDebug", "---------", e);
@@ -393,12 +396,11 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                         BigDecimal bg = new BigDecimal(k * 1000 + "");
                         bg.setScale(6);
                         // 倍率小数点后6位;
-                        kValueEdt[i].setText(decimalFormat6.format(bg));
-                        // kValueEdt[i].setText(decimalFormat.format(k));
-                        compensationValueEdt[i].setText(decimalFormat.format(c));
+                        kValueEdt[i].setText(bg.toString());
+                        android.util.Log.d("wlDebug", "c = " + c);
+                        compensationValueEdt[i].setText(String.valueOf(c));
 
                     } catch (NumberFormatException e) {
-                        android.util.Log.d("wlDebug", "---------", e);
                         Toast.makeText(this, "请先取得对应件的AD值", Toast.LENGTH_SHORT).show();
                     }
                 }

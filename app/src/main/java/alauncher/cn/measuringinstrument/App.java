@@ -76,7 +76,7 @@ public class App extends Application {
             getDaoSession().getStoreBeanDao().insert(_bean);
         }
 
-        initTestDatas();
+        // initTestDatas();
     }
 
     public static DaoSession getDaoSession() {
