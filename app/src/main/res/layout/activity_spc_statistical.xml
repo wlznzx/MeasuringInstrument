@@ -365,7 +365,8 @@
         android:id="@+id/statistical_chart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5" />
+        android:layout_weight="5"
+        android:visibility="gone" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/r_chart"
@@ -406,7 +407,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/delete_spc_result"

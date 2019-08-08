@@ -44,7 +44,9 @@ import alauncher.cn.measuringinstrument.utils.NumberUtils;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import alauncher.cn.measuringinstrument.widget.AdditionalDialog;
 import alauncher.cn.measuringinstrument.widget.MValueView;
+
 import androidx.core.content.ContextCompat;
+
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
@@ -59,6 +61,9 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
 
     @BindView(R.id.value_btn)
     public TextView valueBtn;
+
+    @BindViews({R.id.group_m1, R.id.group_m2, R.id.group_m3, R.id.group_m4})
+    public TextView mGroupMs[];
 
     @BindViews({R.id.m1_text_value, R.id.m2_text_value, R.id.m3_text_value, R.id.m4_text_value})
     public TextView mTValues[];
@@ -444,28 +449,34 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         for (int i = 0; i < mTValues.length; i++) {
             mTValues[i].setText("");
         }
+        String[] group = mMeasuringPresenter.getMGroupValues(mValues);
         switch (curMode) {
             case 0:
                 for (int i = 0; i < mTValues.length; i++) {
                     mTValues[i].setText(NumberUtils.get4bits(mValues[i]));
                     mMValueViews[i].setMValue(mValues[i]);
+                    mGroupMs[i].setText(group[i]);
                 }
                 break;
             case 1:
                 mTValues[3].setText(NumberUtils.get4bits(mValues[0]));
                 mMValueViews[3].setMValue(mValues[0]);
+                mGroupMs[3].setText(group[0]);
                 break;
             case 2:
                 mTValues[3].setText(NumberUtils.get4bits(mValues[1]));
                 mMValueViews[3].setMValue(mValues[1]);
+                mGroupMs[3].setText(group[1]);
                 break;
             case 3:
                 mTValues[3].setText(NumberUtils.get4bits(mValues[2]));
                 mMValueViews[3].setMValue(mValues[2]);
+                mGroupMs[3].setText(group[2]);
                 break;
             case 4:
                 mTValues[3].setText("" + mValues[3]);
                 mMValueViews[3].setMValue(mValues[3]);
+                mGroupMs[3].setText(group[3]);
                 break;
         }
     }
@@ -569,11 +580,18 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         }
     }
 
+    private boolean doAutoStoreEnable = true;
+
     private void doAutoStore() {
         double mValue = curMValues[mStoreBean.getMValue()];
         if (mValue > mStoreBean.getLowLimitValue() && mValue < mStoreBean.getUpLimitValue()) {
             // Do Save;
-            doSave();
+            if (doAutoStoreEnable) {
+                doAutoStoreEnable = false;
+                doSave();
+            }
+        } else {
+            doAutoStoreEnable = true;
         }
         handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime() * 1000);
     }

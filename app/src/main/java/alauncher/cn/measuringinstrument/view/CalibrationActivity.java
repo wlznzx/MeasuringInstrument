@@ -388,9 +388,10 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                         android.util.Log.d("wlDebug", "_temp = " + _temp + "_temp2 = " + _temp2);
 
 //                        k = _temp / _temp2;
-                        k = Arith.div(_temp, _temp2);
+                        k = Arith.div(_temp, _temp2, 10);
                         c = mCalibrationPresenter.calculationC(y1, k, x1);
                         BigDecimal bg = new BigDecimal(k * 1000 + "");
+                        bg.setScale(6);
                         // 倍率小数点后6位;
                         kValueEdt[i].setText(decimalFormat6.format(bg));
                         // kValueEdt[i].setText(decimalFormat.format(k));

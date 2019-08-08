@@ -734,7 +734,7 @@ public class SPCStatisticalActivity extends BaseActivity {
         cpu = (upperValue - _bean.averageValue) / (3 * deviation);
         cpk = Math.min(CPKu, CPKl);
 
-        _bean.cp = cp;
+        // _bean.cp = cp;
         _bean.cpl = cpl;
         _bean.cpu = cpu;
         _bean.cpk = cpk;
@@ -766,7 +766,9 @@ public class SPCStatisticalActivity extends BaseActivity {
         ppu = (upperValue - _bean.averageValue) / (3 * deviation2);
         ppk = Math.min(PPKl, PPKu);
 
-        _bean.pp = pp;
+
+        _bean.cp = pp;
+        _bean.pp = cp;
         _bean.ppl = ppl;
         _bean.ppu = ppu;
         _bean.ppk = ppk;
@@ -791,11 +793,11 @@ public class SPCStatisticalActivity extends BaseActivity {
                 android.util.Log.d("wlDebug", "timeRG check id = " + checkedId);
                 if (timeRG.getCheckedRadioButtonId() == R.id.auto_time_rb) {
                     // 自动情况下，edt不可以写;
-                    xuclEdt.setEnabled(false);
-                    xlclEdt.setEnabled(false);
+                    startTimeBtn.setEnabled(false);
+                    stopTimeBtn.setEnabled(false);
                 } else {
-                    xuclEdt.setEnabled(true);
-                    xlclEdt.setEnabled(true);
+                    startTimeBtn.setEnabled(true);
+                    stopTimeBtn.setEnabled(true);
                 }
             }
         });
@@ -804,17 +806,23 @@ public class SPCStatisticalActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 android.util.Log.d("wlDebug", "lineRG check id = " + checkedId);
-                if (timeRG.getCheckedRadioButtonId() == R.id.auto_time_rb) {
+                if (lineRG.getCheckedRadioButtonId() == R.id.auto_line_rb) {
                     // 自动情况下，edt不可以写;
                     ruclEdt.setEnabled(false);
                     rlclEdt.setEnabled(false);
+                    xuclEdt.setEnabled(false);
+                    xlclEdt.setEnabled(false);
                 } else {
                     ruclEdt.setEnabled(true);
                     rlclEdt.setEnabled(true);
+                    xuclEdt.setEnabled(true);
+                    xlclEdt.setEnabled(true);
                 }
             }
         });
 
+        startTimeBtn.setEnabled(false);
+        stopTimeBtn.setEnabled(false);
         xuclEdt.setEnabled(false);
         xlclEdt.setEnabled(false);
         ruclEdt.setEnabled(false);

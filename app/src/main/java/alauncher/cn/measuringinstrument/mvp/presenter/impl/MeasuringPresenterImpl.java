@@ -209,13 +209,13 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         for (int i = 0; i < 4; i++) {
             GroupBean _bean = mGroupBeans[i];
             if (_bean != null) {
-                if (ms[i] < _bean.getA_upper_limit() && ms[i] > _bean.getA_lower_limit()) {
+                if (ms[i] < _bean.getA_upper_limit() && ms[i] >= _bean.getA_lower_limit()) {
                     result[i] = "A";
-                } else if (ms[i] < _bean.getB_upper_limit() && ms[i] > _bean.getB_lower_limit()) {
+                } else if (ms[i] < _bean.getB_upper_limit() && ms[i] >= _bean.getB_lower_limit()) {
                     result[i] = "B";
-                } else if (ms[i] < _bean.getC_upper_limit() && ms[i] > _bean.getC_lower_limit()) {
+                } else if (ms[i] < _bean.getC_upper_limit() && ms[i] >= _bean.getC_lower_limit()) {
                     result[i] = "C";
-                } else if (ms[i] < _bean.getD_upper_limit() && ms[i] > _bean.getD_lower_limit()) {
+                } else if (ms[i] < _bean.getD_upper_limit() && ms[i] >= _bean.getD_lower_limit()) {
                     result[i] = "D";
                 } else {
                     result[i] = "未分组";

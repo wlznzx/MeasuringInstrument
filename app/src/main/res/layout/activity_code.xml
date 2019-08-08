@@ -14,7 +14,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="25dp"
         android:layout_marginRight="15dp">
 
         <TextView
@@ -61,6 +61,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
+                android:background="#32455A64"
                 android:text="02" />
 
             <RadioButton
@@ -70,6 +71,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
+                android:background="#64455A64"
                 android:text="03" />
 
             <RadioButton
@@ -79,6 +81,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
+                android:background="#32455A64"
                 android:text="04" />
 
             <RadioButton
@@ -88,6 +91,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
+                android:background="#64455A64"
                 android:text="05" />
 
             <RadioButton
@@ -97,6 +101,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
+                android:background="#32455A64"
                 android:text="06" />
 
             <RadioButton
@@ -106,6 +111,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
+                android:background="#64455A64"
                 android:text="07" />
 
             <RadioButton
@@ -115,6 +121,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
+                android:background="#32455A64"
                 android:text="08" />
 
             <RadioButton
@@ -124,6 +131,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
+                android:background="#64455A64"
                 android:text="09" />
 
             <RadioButton
@@ -133,6 +141,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
+                android:background="#32455A64"
                 android:text="10" />
 
             <RadioButton
@@ -169,6 +178,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
+                android:background="#32455A64"
                 android:text="@string/code2_name" />
 
             <EditText
@@ -178,6 +188,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
+                android:background="#64455A64"
                 android:text="@string/code3_name" />
 
             <EditText
@@ -187,6 +198,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
+                android:background="#32455A64"
                 android:text="@string/code4_name" />
 
             <EditText
@@ -195,6 +207,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:background="#64455A64"
                 android:text="@string/code5_name" />
 
             <EditText
@@ -203,6 +216,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:background="#32455A64"
                 android:text="@string/code6_name" />
 
             <EditText
@@ -211,6 +225,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:background="#64455A64"
                 android:text="@string/code7_name" />
 
             <EditText
@@ -219,6 +234,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:background="#32455A64"
                 android:text="@string/code8_name" />
 
             <EditText
@@ -227,6 +243,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:background="#64455A64"
                 android:text="@string/code9_name" />
 
             <EditText
@@ -235,6 +252,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:background="#32455A64"
                 android:text="@string/code10_name" />
 
             <EditText

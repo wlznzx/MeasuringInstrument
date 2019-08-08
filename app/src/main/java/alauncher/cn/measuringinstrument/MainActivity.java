@@ -66,6 +66,7 @@ public class MainActivity extends BaseActivity {
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(_adapter);
 
+        actionIV.setImageResource(R.drawable.power_button);
         actionIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,7 +197,10 @@ public class MainActivity extends BaseActivity {
                 // outRect.left = itemSpace;
             }
         }
+    }
 
-
+    @Override
+    public void onBackPressed() {
+        // super.onBackPressed();
     }
 }
