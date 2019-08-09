@@ -14,11 +14,19 @@
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
         android:orientation="vertical">
+        
+        <ImageView
+            android:layout_gravity="center"
+            android:src="@drawable/et_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
 
         <TextView
             style="@style/MTitleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
             android:text="@string/login_title" />
 
         <LinearLayout

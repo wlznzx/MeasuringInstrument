@@ -67,7 +67,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
     @BindViews({R.id.ch1_k_edt, R.id.ch2_k_edt, R.id.ch3_k_edt, R.id.ch4_k_edt})
     public EditText kValueEdt[];
 
-    private int[] currentCHADValue = {4230, 8241, 12342, 14537};
+    private int[] currentCHADValue = {16815, 16015, 13896, 13277};
 
     private double k[] = new double[4];
 
@@ -140,10 +140,10 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
             k[3] = bean.getCh4KValue();
 
             NumberFormat nf = NumberFormat.getInstance();
-            kValueEdt[0].setText(nf.format(bean.getCh1KValue() * 1000));
-            kValueEdt[1].setText(nf.format(bean.getCh2KValue() * 1000));
-            kValueEdt[2].setText(nf.format(bean.getCh3KValue() * 1000));
-            kValueEdt[3].setText(nf.format(bean.getCh4KValue() * 1000));
+            kValueEdt[0].setText(String.valueOf(bean.getCh1KValue() * 1000));
+            kValueEdt[1].setText(String.valueOf(bean.getCh2KValue() * 1000));
+            kValueEdt[2].setText(String.valueOf(bean.getCh3KValue() * 1000));
+            kValueEdt[3].setText(String.valueOf(bean.getCh4KValue() * 1000));
             // 补偿值;
             compensationValueEdt[0].setText(String.valueOf(bean.getCh1CompensationValue()));
             compensationValueEdt[1].setText(String.valueOf(bean.getCh2CompensationValue()));
@@ -164,7 +164,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
             case R.id.samll_part_btn:
                 for (int i = 0; i < smallPartADEdt.length; i++)
                     try {
-                        int x = Integer.parseInt(measureADEdt[i].getText().toString().trim(), 10) - 100;
+                        int x = Integer.parseInt(measureADEdt[i].getText().toString().trim(), 10);
                         smallPartADEdt[i].setText("" + x);
                     } catch (NumberFormatException e) {
 
@@ -174,7 +174,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
             case R.id.big_part_btn:
                 for (int i = 0; i < smallPartADEdt.length; i++) {
                     try {
-                        int x = Integer.parseInt(measureADEdt[i].getText().toString().trim(), 10) + 100;
+                        int x = Integer.parseInt(measureADEdt[i].getText().toString().trim(), 10);
                         bigPartADEdt[i].setText("" + x);
                     } catch (NumberFormatException e) {
 
@@ -334,7 +334,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
             @Override
             public void run() {
                 for (int i = 0; i < 4; i++) {
-                    measureValueEdt[i].setText(String.valueOf(ys[i]));
+                    measureValueEdt[i].setText(String.valueOf(Arith.round(ys[i], 4)));
                 }
             }
         });
@@ -356,8 +356,8 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                             c = mCalibrationPresenter.calculationC(y1, k, x1);
                             android.util.Log.d("wlDebug", "y1 = " + y1 + " x1 = " + x1 + " k = " + k + " c = " + c);
                             BigDecimal _c = new BigDecimal(c + "");
-                            measureValueEdt[i].setText(_c + "");
-                            compensationValueEdt[i].setText(String.valueOf(_c));
+                            // measureValueEdt[i].setText(_c + "");
+                            compensationValueEdt[i].setText(String.valueOf(Arith.round(c, 4)));
                         } else if (!bigPartADEdt[i].getText().equals("")) {
                             double y2 = Double.valueOf(bigPartCHEdt[i].getText().toString().trim());
                             int x2 = Integer.parseInt(bigPartADEdt[i].getText().toString().trim(), 10);
@@ -365,9 +365,9 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                             c = mCalibrationPresenter.calculationC(y2, k, x2);
                             android.util.Log.d("wlDebug", "y2 = " + y2 + " x = " + x2 + " k = " + k + " c = " + c);
                             BigDecimal _c = new BigDecimal(c + "");
-                            measureValueEdt[i].setText(_c + "");
+                            // measureValueEdt[i].setText(_c + "");
 //                            compensationValueEdt[i].setText(decimalFormat.format(_c));
-                            compensationValueEdt[i].setText(String.valueOf(_c.doubleValue()));
+                            compensationValueEdt[i].setText(String.valueOf(Arith.round(c, 4)));
                         }
                     } catch (NumberFormatException e) {
                         android.util.Log.d("wlDebug", "---------", e);
@@ -393,12 +393,13 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
 //                        k = _temp / _temp2;
                         k = Arith.div(_temp, _temp2, 10);
                         c = mCalibrationPresenter.calculationC(y1, k, x1);
-                        BigDecimal bg = new BigDecimal(k * 1000 + "");
-                        bg.setScale(6,BigDecimal.ROUND_HALF_UP);
+//                        BigDecimal bg = new BigDecimal(k * 1000 + "");
+                        double bg = Arith.round(k * 1000, 6);
+//                        bg.setScale(6, BigDecimal.ROUND_HALF_UP);
                         // 倍率小数点后6位;
-                        kValueEdt[i].setText(bg.toString());
+                        kValueEdt[i].setText(String.valueOf(bg));
                         android.util.Log.d("wlDebug", "c = " + c);
-                        compensationValueEdt[i].setText(String.valueOf(c));
+                        compensationValueEdt[i].setText(String.valueOf(Arith.round(c, 4)));
 
                     } catch (NumberFormatException e) {
                         Toast.makeText(this, "请先取得对应件的AD值", Toast.LENGTH_SHORT).show();

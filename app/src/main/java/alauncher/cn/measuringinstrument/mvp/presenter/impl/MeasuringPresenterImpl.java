@@ -308,10 +308,10 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 e.printStackTrace();
             }
         }
-        _values[0] = m1;
-        _values[1] = m2;
-        _values[2] = m3;
-        _values[3] = m4;
+        _values[0] = Arith.round(m1,4);
+        _values[1] = Arith.round(m2,4);
+        _values[2] = Arith.round(m3,4);
+        _values[3] = Arith.round(m4,4);
         return _values;
     }
 
