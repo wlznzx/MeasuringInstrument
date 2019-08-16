@@ -38,12 +38,13 @@ public class GroupBean {
     public String b_describe;
     public String c_describe;
     public String d_describe;
+
     @Generated(hash = 1397330295)
     public GroupBean(Long id, long code_id, int m_index, double a_upper_limit,
-            double a_lower_limit, double b_upper_limit, double b_lower_limit,
-            double c_upper_limit, double c_lower_limit, double d_upper_limit,
-            double d_lower_limit, String a_describe, String b_describe,
-            String c_describe, String d_describe) {
+                     double a_lower_limit, double b_upper_limit, double b_lower_limit,
+                     double c_upper_limit, double c_lower_limit, double d_upper_limit,
+                     double d_lower_limit, String a_describe, String b_describe,
+                     String c_describe, String d_describe) {
         this.id = id;
         this.code_id = code_id;
         this.m_index = m_index;
@@ -60,96 +61,127 @@ public class GroupBean {
         this.c_describe = c_describe;
         this.d_describe = d_describe;
     }
+
     @Generated(hash = 405578774)
     public GroupBean() {
     }
+
     public Long getId() {
         return this.id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public long getCode_id() {
         return this.code_id;
     }
+
     public void setCode_id(long code_id) {
         this.code_id = code_id;
     }
+
     public int getM_index() {
         return this.m_index;
     }
+
     public void setM_index(int m_index) {
         this.m_index = m_index;
     }
+
     public double getA_upper_limit() {
         return this.a_upper_limit;
     }
+
     public void setA_upper_limit(double a_upper_limit) {
         this.a_upper_limit = a_upper_limit;
     }
+
     public double getA_lower_limit() {
         return this.a_lower_limit;
     }
+
     public void setA_lower_limit(double a_lower_limit) {
         this.a_lower_limit = a_lower_limit;
     }
+
     public double getB_upper_limit() {
         return this.b_upper_limit;
     }
+
     public void setB_upper_limit(double b_upper_limit) {
         this.b_upper_limit = b_upper_limit;
     }
+
     public double getB_lower_limit() {
         return this.b_lower_limit;
     }
+
     public void setB_lower_limit(double b_lower_limit) {
         this.b_lower_limit = b_lower_limit;
     }
+
     public double getC_upper_limit() {
         return this.c_upper_limit;
     }
+
     public void setC_upper_limit(double c_upper_limit) {
         this.c_upper_limit = c_upper_limit;
     }
+
     public double getC_lower_limit() {
         return this.c_lower_limit;
     }
+
     public void setC_lower_limit(double c_lower_limit) {
         this.c_lower_limit = c_lower_limit;
     }
+
     public double getD_upper_limit() {
         return this.d_upper_limit;
     }
+
     public void setD_upper_limit(double d_upper_limit) {
         this.d_upper_limit = d_upper_limit;
     }
+
     public double getD_lower_limit() {
         return this.d_lower_limit;
     }
+
     public void setD_lower_limit(double d_lower_limit) {
         this.d_lower_limit = d_lower_limit;
     }
+
     public String getA_describe() {
         return this.a_describe;
     }
+
     public void setA_describe(String a_describe) {
         this.a_describe = a_describe;
     }
+
     public String getB_describe() {
         return this.b_describe;
     }
+
     public void setB_describe(String b_describe) {
         this.b_describe = b_describe;
     }
+
     public String getC_describe() {
         return this.c_describe;
     }
+
     public void setC_describe(String c_describe) {
         this.c_describe = c_describe;
     }
+
     public String getD_describe() {
         return this.d_describe;
     }
+
     public void setD_describe(String d_describe) {
         this.d_describe = d_describe;
     }

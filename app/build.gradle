@@ -90,6 +90,7 @@ dependencies {
     implementation files('libs/jxl-2.6.12.jar')
     implementation files('libs/bugly_crash_release.jar')
     implementation files('libs/commons-math3-3.6.1.jar')
+    implementation files('libs/postgresql-42.2.6.jar')
     // implementation files('libs/bugly_crashreport_upgrade-1.4.1.aar')
     implementation 'com.github.huangyanbin:SmartTable:2.2.0'
 
