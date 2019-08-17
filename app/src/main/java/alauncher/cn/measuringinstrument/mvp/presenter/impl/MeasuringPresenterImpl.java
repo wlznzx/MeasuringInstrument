@@ -97,7 +97,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
                     /**/
                     for (byte _byte : paramComBean.bRec) {
-                        if (_byte == 0x53) {
+                        if (_byte == 0x53 && !isCommandStart) {
                             isCommandStart = true;
                             command_index = 0;
                         }
@@ -105,7 +105,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             command[command_index] = _byte;
                             command_index++;
                         }
-                        if (_byte == 0x54) {
+                        if (_byte == 0x54 && command_index == 12) {
                             isCommandStart = false;
                             String _value = ByteUtil.ByteArrToHex(command);
 

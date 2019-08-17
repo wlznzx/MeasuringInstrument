@@ -230,7 +230,7 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
 
     @Override
     public void onDataUpdate(int[] values) {
-        android.util.Log.d("wlDebug", "1 = " + values[0]);
+        // android.util.Log.d("wlDebug", "1 = " + values[0]);
         currentCHADValue = values;
         runOnUiThread(new Runnable() {
             @Override

@@ -116,6 +116,7 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     protected void onDestroy() {
         super.onDestroy();
         stopAutoStore();
+        if(inValue)mMeasuringPresenter.stopMeasuing();
     }
 
     @Override
@@ -321,6 +322,11 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         chart.getData().notifyDataChanged();
         chart.notifyDataSetChanged();
         chart.invalidate();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override

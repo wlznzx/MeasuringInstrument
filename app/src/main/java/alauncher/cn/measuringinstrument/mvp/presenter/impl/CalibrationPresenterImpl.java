@@ -47,8 +47,9 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
             serialHelper = new SerialHelper(sPort, iBaudRate) {
                 @Override
                 protected void onDataReceived(ComBean paramComBean) {
+                    android.util.Log.d("wlDebug","brc = " + ByteUtil.ByteArrToHex(paramComBean.bRec));
                     for (byte _byte : paramComBean.bRec) {
-                        if (_byte == 0x53) {
+                        if (_byte == 0x53 && !isCommandStart) {
                             isCommandStart = true;
                             command_index = 0;
                         }
@@ -56,7 +57,7 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
                             command[command_index] = _byte;
                             command_index++;
                         }
-                        if (_byte == 0x54) {
+                        if (_byte == 0x54 && command_index == 12) {
                             isCommandStart = false;
                             String _value = ByteUtil.ByteArrToHex(command);
                             /*
@@ -79,27 +80,27 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
                             android.util.Log.d("wlDebug", "ch4 = " + ch4);
                             */
 
-                            android.util.Log.d("wlDebug", "_value = " + _value);
+                            // android.util.Log.d("wlDebug", "_value = " + _value);
                             _chValue[0] = command[2];
                             _chValue[1] = command[3];
                             int x1 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
                             Double ch1 = Double.valueOf(x1);
-                            android.util.Log.d("wlDebug", "ch1 = " + ch1);
+                            // android.util.Log.d("wlDebug", "ch1 = " + ch1);
                             _chValue[0] = command[4];
                             _chValue[1] = command[5];
                             int x2 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
                             Double ch2 = Double.valueOf(x2);
-                            android.util.Log.d("wlDebug", "ch2 = " + ch2);
+                            // android.util.Log.d("wlDebug", "ch2 = " + ch2);
                             _chValue[0] = command[6];
                             _chValue[1] = command[7];
                             int x3 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
                             Double ch3 = Double.valueOf(x3);
-                            android.util.Log.d("wlDebug", "ch3 = " + ch3);
+                            // android.util.Log.d("wlDebug", "ch3 = " + ch3);
                             _chValue[0] = command[8];
                             _chValue[1] = command[9];
                             int x4 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
                             Double ch4 = Double.valueOf(x4);
-                            android.util.Log.d("wlDebug", "ch4 = " + ch4);
+                            // android.util.Log.d("wlDebug", "ch4 = " + ch4);
 
                             if (mView != null) {
                                 if (mView != null)

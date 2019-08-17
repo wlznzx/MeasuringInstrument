@@ -18,12 +18,13 @@ import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
 import alauncher.cn.measuringinstrument.utils.Arith;
+import alauncher.cn.measuringinstrument.utils.DateUtils;
+import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import butterknife.BindView;
 import butterknife.OnClick;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-
 
 public class LoginActivity extends BaseActivity {
 
@@ -63,7 +64,6 @@ public class LoginActivity extends BaseActivity {
         double _b = Arith.getStandardDeviation(null);
         android.util.Log.d("wlDebug", "_b = " + _b);
 
-        // tPostgreSQL();
     }
 
     private void tPostgreSQL() {
@@ -99,6 +99,14 @@ public class LoginActivity extends BaseActivity {
         System.out.println("Opened database successfully");
     }
 
+    private void goSQL() {
+        try {
+            JdbcUtil.addResult2("恩梯", "Paul002", 1, "Mac",
+                    "OK", "no reason", "ADMIN", DateUtils.getDate(System.currentTimeMillis()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @OnClick(R.id.login_btn)
     public void onLogin(View v) {
@@ -106,7 +114,7 @@ public class LoginActivity extends BaseActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                tPostgreSQL();
+                goSQL();
             }
         }).start();
 

@@ -43,8 +43,8 @@ public class UriToPathUtil {
                     final String[] split = docId.split(":");
                     final String type = split[0];
                     // if ("primary".equalsIgnoreCase(type)) {
-                        path = Environment.getExternalStorageDirectory() + "/" + split[1];
-                        return path;
+                    path = Environment.getExternalStorageDirectory() + "/" + split[1];
+                    return path;
                     // }
                 } else if (isDownloadsDocument(uri)) {
                     // DownloadsProvider
