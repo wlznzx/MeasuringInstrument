@@ -15,6 +15,7 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
+import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.widget.CalculateDialog;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -85,6 +86,8 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
         } else {
             session.getParameterBeanDao().update(mParameterBean);
         }
+
+
         Toast.makeText(this, "保存成功.", Toast.LENGTH_SHORT).show();
     }
 
@@ -291,5 +294,14 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
                 break;
         }
         return result;
+    }
+
+    private void syncToServer(final ParameterBean _bean) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                JdbcUtil.addParamConfig(App.factory_code,App.machine_code,App.getSetupBean().getCodeID(),"程序" + App.getSetupBean().getCodeID(),"","","",);
+            }
+        }).start();
     }
 }

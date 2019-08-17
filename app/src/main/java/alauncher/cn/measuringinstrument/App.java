@@ -32,6 +32,10 @@ public class App extends Application {
 
     public static String handlerAccout = "吴工";
 
+    public static String factory_code = "恩梯量仪Android版";
+
+    public static String machine_code = "machine_code";
+
     @Override
     public void onCreate() {
         super.onCreate();

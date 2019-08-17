@@ -76,7 +76,6 @@ public class LoginActivity extends BaseActivity {
                             "dfqtech", "dfqtech2016");
             android.util.Log.d("wlDebug", "connect success.");
 
-
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("select * from ntqc_result limit 10");
             while (rs.next()) {
@@ -102,7 +101,12 @@ public class LoginActivity extends BaseActivity {
     private void goSQL() {
         try {
             JdbcUtil.addResult2("恩梯", "Paul002", 1, "Mac",
-                    "OK", "no reason", "ADMIN", DateUtils.getDate(System.currentTimeMillis()));
+                    "OK", "no reason", "ADMIN", DateUtils.getDate(System.currentTimeMillis()),
+                    "M1", "M2", "M3", "M4",
+                    8, 6, 4, 5,
+                    "A", "B", "C", "D",
+                    "换刀", "换刀", "换刀", "换刀"
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
