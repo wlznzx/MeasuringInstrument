@@ -10,7 +10,7 @@
     </style>
 
     <style name="TextStyle">
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center</item>
@@ -18,6 +18,13 @@
         <item name="android:background">@null</item>
         <item name="android:layout_marginTop">15dp</item>
         <item name="android:layout_marginBottom">15dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <style name="SPTextStyle">
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
     </style>
@@ -61,10 +68,12 @@
 
     <style name="TextStyleSelected" parent="TextStyle">
         <item name="android:background">@drawable/btn_selector</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
     </style>
 
     <style name="EdNumOnlyStyle">
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center</item>
@@ -73,6 +82,20 @@
         <item name="android:background">@drawable/edittext_focused</item>
         <item name="android:layout_marginTop">15dp</item>
         <item name="android:layout_marginBottom">15dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <style name="EdNumOnlyStyleSPC">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:inputType">numberSigned|numberDecimal</item>
+        <item name="android:background">@drawable/edittext_focused</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
     </style>
@@ -125,6 +148,16 @@
         <item name="android:background">@null</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <style name="MeMValueStyle" parent="MValueStyle">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:background">@drawable/shape</item>
+    </style>
+
+    <style name="MeMTitleStyle" parent="MTitleStyle">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="ButtonBaseStyle">

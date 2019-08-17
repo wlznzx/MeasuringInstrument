@@ -7,6 +7,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.greendao.database.Database;
 
+import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
@@ -83,7 +84,7 @@ public class App extends Application {
             getDaoSession().getStoreBeanDao().insert(_bean);
         }
 
-        Bugly.init(getApplicationContext(), "e4d9621d74", false);
+         Bugly.init(getApplicationContext(), "e4d9621d74", false);
         // CrashReport.initCrashReport(getApplicationContext(), "e4d9621d74", false);
         // initTestDatas();
     }
@@ -100,6 +101,17 @@ public class App extends Application {
         SetupBean _bean = getSetupBean();
         _bean.setIsAutoPopUp(isPopUp);
         getDaoSession().getSetupBeanDao().update(_bean);
+    }
+
+    public static String getCodeName(){
+        String codeName = "";
+        CodeBean _CodeBean = App.getDaoSession().getCodeBeanDao().load((long) getSetupBean().getCodeID());
+        if (_CodeBean != null) {
+            codeName = _CodeBean.getName();
+        } else {
+            codeName = "程序" + App.getSetupBean().getCodeID();
+        }
+        return codeName;
     }
 
     public void initTestDatas() {

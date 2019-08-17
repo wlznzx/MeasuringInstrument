@@ -99,29 +99,18 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void goSQL() {
-        try {
-            JdbcUtil.addResult2("恩梯", "Paul002", 1, "Mac",
-                    "OK", "no reason", "ADMIN", DateUtils.getDate(System.currentTimeMillis()),
-                    "M1", "M2", "M3", "M4",
-                    8, 6, 4, 5,
-                    "A", "B", "C", "D",
-                    "换刀", "换刀", "换刀", "换刀"
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @OnClick(R.id.login_btn)
     public void onLogin(View v) {
-
+/*
         new Thread(new Runnable() {
             @Override
             public void run() {
                 goSQL();
             }
         }).start();
-
+*/
         // CrashReport.testJavaCrash();
 
         String accoutStr = loginUserNameEdt.getText().toString().trim();

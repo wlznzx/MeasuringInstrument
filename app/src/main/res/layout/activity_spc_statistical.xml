@@ -26,7 +26,7 @@
 
         <Spinner
             android:id="@+id/code_sp"
-            style="@style/TextStyle"
+            style="@style/SPTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -41,7 +41,7 @@
 
         <Spinner
             android:id="@+id/target_sp"
-            style="@style/TextStyle"
+            style="@style/SPTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -63,7 +63,7 @@
 
         <Spinner
             android:id="@+id/group_size_sp"
-            style="@style/TextStyle"
+            style="@style/SPTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -78,7 +78,7 @@
 
         <Spinner
             android:id="@+id/group_num_sp"
-            style="@style/TextStyle"
+            style="@style/SPTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -223,7 +223,7 @@
 
             <EditText
                 android:id="@+id/xucl_edt"
-                style="@style/EdNumOnlyStyle"
+                style="@style/EdNumOnlyStyleSPC"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -238,7 +238,7 @@
 
             <EditText
                 android:id="@+id/xlcl_edt"
-                style="@style/EdNumOnlyStyle"
+                style="@style/EdNumOnlyStyleSPC"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -274,7 +274,7 @@
 
             <EditText
                 android:id="@+id/rucl_edt"
-                style="@style/EdNumOnlyStyle"
+                style="@style/EdNumOnlyStyleSPC"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -289,7 +289,7 @@
 
             <EditText
                 android:id="@+id/rlcl_edt"
-                style="@style/EdNumOnlyStyle"
+                style="@style/EdNumOnlyStyleSPC"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -366,7 +366,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:visibility="gone" />
+        android:visibility="invisible" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/r_chart"

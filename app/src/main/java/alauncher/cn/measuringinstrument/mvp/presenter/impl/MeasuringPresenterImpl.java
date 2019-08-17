@@ -17,6 +17,7 @@ import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.utils.Arith;
+import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import tp.xmaihh.serialport.SerialHelper;
 import tp.xmaihh.serialport.bean.ComBean;
@@ -200,6 +201,20 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             _bean.setWorkid("");
         }
         App.getDaoSession().getResultBeanDao().insert(_bean);
+        toSQLServer(_bean);
+    }
+
+    private void toSQLServer(ResultBean _bean) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JdbcUtil.addResult2(App.factory_code, App.machine_code, App.getSetupBean().getCodeID(), "", _bean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
 
@@ -308,10 +323,10 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 e.printStackTrace();
             }
         }
-        _values[0] = Arith.round(m1,4);
-        _values[1] = Arith.round(m2,4);
-        _values[2] = Arith.round(m3,4);
-        _values[3] = Arith.round(m4,4);
+        _values[0] = Arith.round(m1, 4);
+        _values[1] = Arith.round(m2, 4);
+        _values[2] = Arith.round(m3, 4);
+        _values[3] = Arith.round(m4, 4);
         return _values;
     }
 

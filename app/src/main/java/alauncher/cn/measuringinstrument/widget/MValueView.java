@@ -3,14 +3,18 @@ package alauncher.cn.measuringinstrument.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.SweepGradient;
 import android.util.AttributeSet;
 import android.view.View;
 
 import alauncher.cn.measuringinstrument.utils.Arith;
+
 import androidx.annotation.Nullable;
 
 public class MValueView extends View {
@@ -130,6 +134,7 @@ public class MValueView extends View {
         double _upper_step = nominal_value + upper_tolerance_value - baseValue;
         float _HLLineHeight = (float) ((3 * offectHeight) - ((_upper_step / resolution) * stepHeight));
 
+        paint.setShader(null);
         paint.setColor(Color.RED);
         // canvas.drawLine(stepWidth + border, _HLLineHeight + border, stepWidth * 3 + border, _HLLineHeight + border, paint);
         // canvas.drawText("HL " + upper_tolerance_value, stepWidth * 3 + border + textMargin, _HLLineHeight + border + textMargin, paint);
@@ -193,38 +198,51 @@ public class MValueView extends View {
         paint.setStrokeWidth(border * 2);
         rect = new RectF(stepWidth, 2, stepWidth * 3, getBottom() - 14);
         canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
-        canvas.drawRoundRect(rect, 4, 4, paint);
+        // canvas.drawRoundRect(rect, 4, 4, paint); // 不画线了.
 
         double _value = mValue - baseValue;
         if (_value > 0) {
             float _top = (float) ((3 * offectHeight) - _value / resolution * stepHeight);
+            if (_top < 0) _top = 0;
             float _bottom = getMeasuredHeight() / 2;
-            rect = new RectF(stepWidth + border, 3 + _top, stepWidth * 3 - border, _bottom);
+            rect = new RectF(stepWidth + border, _top, stepWidth * 3 - border, _bottom);
         } else {
-
             _value = Math.abs(_value);
             float _top = getMeasuredHeight() / 2;
+            if (_top < 0) _top = 0;
             float _bottom = (float) (_top + _value / resolution * stepHeight);
-            rect = new RectF(stepWidth + border, 3 + _top, stepWidth * 3 - border, _bottom);
+            rect = new RectF(stepWidth + border, _top, stepWidth * 3 - border, _bottom);
         }
 
+        LinearGradient linearGradient = null;
         if (_value > 0) {
             if (_value > _upper_step) {
-                paint.setColor(Color.RED);
+                // paint.setColor(Color.RED);
+                linearGradient = new LinearGradient(0, 0, 200, 0, Color.WHITE, Color.RED, Shader.TileMode.MIRROR);
             } else if (_value > hw) {
-                paint.setColor(Color.YELLOW);
+                // paint.setColor(Color.YELLOW);
+                linearGradient = new LinearGradient(0, 0, 200, 0, Color.WHITE, Color.YELLOW, Shader.TileMode.MIRROR);
+
             } else {
-                paint.setColor(Color.GREEN);
+                // paint.setColor(Color.GREEN);
+                linearGradient = new LinearGradient(0, 0, 200, 0, Color.WHITE, Color.GREEN, Shader.TileMode.MIRROR);
+
             }
         } else {
             if (_value < _lower_step) {
-                paint.setColor(Color.RED);
+                // `paint.setColor(Color.RED);
+                linearGradient = new LinearGradient(0, 0, 200, 0, Color.WHITE, Color.RED, Shader.TileMode.MIRROR);
+
             } else if (_value < lw) {
-                paint.setColor(Color.YELLOW);
+                // paint.setColor(Color.YELLOW);
+                linearGradient = new LinearGradient(0, 0, 200, 0, Color.WHITE, Color.YELLOW, Shader.TileMode.MIRROR);
             } else {
-                paint.setColor(Color.GREEN);
+                // paint.setColor(Color.GREEN);
+                linearGradient = new LinearGradient(0, 0, 200, 0, Color.WHITE, Color.GREEN, Shader.TileMode.MIRROR);
+
             }
         }
+        paint.setShader(linearGradient);
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRoundRect(rect, 4, 4, paint);
     }

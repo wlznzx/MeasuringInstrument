@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:background="@android:color/black"
     android:orientation="vertical">
 
     <include
@@ -18,7 +19,7 @@
 
         <TextView
             android:id="@+id/group_m1"
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -26,7 +27,7 @@
 
         <TextView
             android:id="@+id/group_m2"
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -34,7 +35,7 @@
 
         <TextView
             android:id="@+id/group_m3"
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -42,7 +43,7 @@
 
         <TextView
             android:id="@+id/group_m4"
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -58,7 +59,7 @@
 
         <TextView
             android:id="@+id/m1_text_value"
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -66,7 +67,7 @@
 
         <TextView
             android:id="@+id/m2_text_value"
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -74,7 +75,7 @@
 
         <TextView
             android:id="@+id/m3_text_value"
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -82,93 +83,100 @@
 
         <TextView
             android:id="@+id/m4_text_value"
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/m4" />
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10"
-        android:orientation="horizontal">
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/m_chart"
-            android:layout_width="0dp"
+        android:layout_weight="10">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="3"
-            android:visibility="gone" />
+            android:orientation="horizontal">
 
-        <alauncher.cn.measuringinstrument.widget.MValueView
-            android:id="@+id/m1_value"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="1" />
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/m_chart"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="3"
+                android:visibility="gone" />
 
-        <alauncher.cn.measuringinstrument.widget.MValueView
-            android:id="@+id/m2_value"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="1" />
+            <alauncher.cn.measuringinstrument.widget.MValueView
+                android:id="@+id/m1_value"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1" />
 
-        <alauncher.cn.measuringinstrument.widget.MValueView
-            android:id="@+id/m3_value"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="1" />
+            <alauncher.cn.measuringinstrument.widget.MValueView
+                android:id="@+id/m2_value"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1" />
 
-        <alauncher.cn.measuringinstrument.widget.MValueView
-            android:id="@+id/m4_value"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="1" />
-    </LinearLayout>
+            <alauncher.cn.measuringinstrument.widget.MValueView
+                android:id="@+id/m3_value"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/action_bar_height"
-        android:orientation="horizontal">
+            <alauncher.cn.measuringinstrument.widget.MValueView
+                android:id="@+id/m4_value"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/m1_title"
-            style="@style/MTitleStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/m1" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/action_bar_height"
+            android:paddingTop="25dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/m2_title"
-            style="@style/MTitleStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/m2" />
+            <TextView
+                android:id="@+id/m1_title"
+                style="@style/MeMTitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/m1" />
 
-        <TextView
-            android:id="@+id/m3_title"
-            style="@style/MTitleStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/m3" />
+            <TextView
+                android:id="@+id/m2_title"
+                style="@style/MeMTitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/m2" />
 
-        <TextView
-            android:id="@+id/m4_title"
-            style="@style/MTitleStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/m4" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/m3_title"
+                style="@style/MeMTitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/m3" />
+
+            <TextView
+                android:id="@+id/m4_title"
+                style="@style/MeMTitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/m4" />
+        </LinearLayout>
+    </FrameLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -177,28 +185,28 @@
         android:visibility="gone">
 
         <TextView
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/total_production" />
 
         <TextView
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/qualified_number" />
 
         <TextView
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/unqualified_number" />
 
         <TextView
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -212,7 +220,7 @@
 
         <TextView
             android:id="@+id/m1_describe"
-            style="@style/MTitleStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -220,7 +228,7 @@
 
         <TextView
             android:id="@+id/m2_describe"
-            style="@style/MTitleStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -228,7 +236,7 @@
 
         <TextView
             android:id="@+id/m3_describe"
-            style="@style/MTitleStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -236,7 +244,7 @@
 
         <TextView
             android:id="@+id/m4_describe"
-            style="@style/MTitleStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -250,28 +258,28 @@
         android:visibility="gone">
 
         <TextView
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="258" />
 
         <TextView
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="256" />
 
         <TextView
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="2" />
 
         <TextView
-            style="@style/MValueStyle"
+            style="@style/MeMValueStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -298,6 +306,7 @@
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/eq_24px"
                 android:text="@string/get_value"
+                android:textSize="18sp"
                 android:textColor="@android:color/white" />
         </FrameLayout>
 
@@ -313,6 +322,7 @@
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/archive_24px"
                 android:text="@string/save"
+                android:textSize="18sp"
                 android:textColor="@android:color/white" />
         </FrameLayout>
 
@@ -328,6 +338,7 @@
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/assignment_24px"
                 android:text="@string/additional"
+                android:textSize="18sp"
                 android:textColor="@android:color/white" />
         </FrameLayout>
 
@@ -343,6 +354,7 @@
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/swap_horiz_24px"
                 android:text="@string/swap"
+                android:textSize="18sp"
                 android:textColor="@android:color/white" />
         </FrameLayout>
     </LinearLayout>

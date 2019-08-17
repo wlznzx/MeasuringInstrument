@@ -86,8 +86,9 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
         } else {
             session.getParameterBeanDao().update(mParameterBean);
         }
+        // android.util.Log.d("wlDebug", mParameterBean.toString());
 
-
+        syncToServer(mParameterBean);
         Toast.makeText(this, "保存成功.", Toast.LENGTH_SHORT).show();
     }
 
@@ -300,7 +301,12 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
         new Thread(new Runnable() {
             @Override
             public void run() {
-                JdbcUtil.addParamConfig(App.factory_code,App.machine_code,App.getSetupBean().getCodeID(),"程序" + App.getSetupBean().getCodeID(),"","","",);
+                try {
+                    JdbcUtil.addParamConfig(App.factory_code, App.machine_code, App.getSetupBean().getCodeID(),
+                            "程序" + App.getSetupBean().getCodeID(), "", "", "", 0, 0, "rmk", _bean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
     }

@@ -116,7 +116,7 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     protected void onDestroy() {
         super.onDestroy();
         stopAutoStore();
-        if(inValue)mMeasuringPresenter.stopMeasuing();
+        if (inValue) mMeasuringPresenter.stopMeasuing();
     }
 
     @Override
