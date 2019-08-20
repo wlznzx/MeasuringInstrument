@@ -1,6 +1,7 @@
 package alauncher.cn.measuringinstrument.view;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Typeface;
@@ -32,9 +33,11 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
+import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.bean.SetupBean;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ForceCalibrationBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
@@ -43,6 +46,7 @@ import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImp
 import alauncher.cn.measuringinstrument.utils.NumberUtils;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import alauncher.cn.measuringinstrument.widget.AdditionalDialog;
+import alauncher.cn.measuringinstrument.widget.ChooseCodeDialog;
 import alauncher.cn.measuringinstrument.widget.MValueView;
 
 import androidx.core.content.ContextCompat;
@@ -202,11 +206,11 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         if (builder.getWindow() == null) return;
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
         TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
-        Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
+        Button cancel = (Button) builder.findViewById(R.id.btn_cancle);
         Button sure = (Button) builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancle == null || sure == null) return;
+        if (msg == null || cancel == null || sure == null) return;
         msg.setText("请校验后继续测量.");
-        cancle.setOnClickListener(new View.OnClickListener() {
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 builder.dismiss();
@@ -444,10 +448,83 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     public void btnClick(View view) {
         switch (view.getId()) {
             case R.id.swap_btn:
+                /*
                 if (curMode < 4) curMode++;
                 else curMode = 0;
                 setMode(curMode);
+                */
+                // new ChooseCodeDialog(this).show();
+                for (int i = 0; i < 10; i++) {
+                    CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) (i + 1));
+                    if (_bean != null) {
+                        province[i] = _bean.getName();
+                    } else {
+                        province[i] = "程序 " + (i + 1);
+                    }
+                }
+                showSingleChoiceButton();
                 break;
+        }
+    }
+
+    private String[] province = new String[10];
+    private Button btnSingleChoiceList;
+
+    private ButtonOnClick buttonOnClick = new ButtonOnClick(1);
+
+
+    private void showSingleChoiceButton() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("请选择程序");
+        builder.setSingleChoiceItems(province, App.getSetupBean().getCodeID() - 1, buttonOnClick);
+        builder.setPositiveButton("确定", buttonOnClick);
+        builder.setNegativeButton("取消", buttonOnClick);
+        builder.show();
+    }
+
+    private class ButtonOnClick implements DialogInterface.OnClickListener {
+
+        private int index; // 表示选项的索引
+
+        public ButtonOnClick(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            // which表示单击的按钮索引，所有的选项索引都是大于0，按钮索引都是小于0的。
+            if (which >= 0) {
+                //如果单击的是列表项，将当前列表项的索引保存在index中。
+                //如果想单击列表项后关闭对话框，可在此处调用dialog.cancel()
+                //或是用dialog.dismiss()方法。
+                index = which;
+            } else {
+                //用户单击的是【确定】按钮
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    //显示用户选择的是第几个列表项。
+                    final AlertDialog ad = new AlertDialog.Builder(
+                            MeasuringActivity.this).setMessage(
+                            "你选择的是" + province[index]).show();
+                    //五秒钟后自动关闭。
+                    SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
+                    _bean.setCodeID(index + 1);
+                    App.getDaoSession().getSetupBeanDao().update(_bean);
+                    Handler hander = new Handler();
+                    Runnable runnable = new Runnable() {
+
+                        @Override
+                        public void run() {
+                            ad.dismiss();
+                        }
+                    };
+                    hander.postDelayed(runnable, 5 * 200);
+                }
+                //用户单击的是【取消】按钮
+                else if (which == DialogInterface.BUTTON_NEGATIVE) {
+                    //Toast.makeText(SingleChoiceItemsTest.this, "你没有选择任何东西",
+                    //      Toast.LENGTH_LONG);
+                }
+            }
         }
     }
 

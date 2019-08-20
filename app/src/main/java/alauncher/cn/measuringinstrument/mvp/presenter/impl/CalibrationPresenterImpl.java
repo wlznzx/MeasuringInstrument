@@ -47,7 +47,7 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
             serialHelper = new SerialHelper(sPort, iBaudRate) {
                 @Override
                 protected void onDataReceived(ComBean paramComBean) {
-                    android.util.Log.d("wlDebug","brc = " + ByteUtil.ByteArrToHex(paramComBean.bRec));
+                    android.util.Log.d("wlDebug", "brc = " + ByteUtil.ByteArrToHex(paramComBean.bRec));
                     for (byte _byte : paramComBean.bRec) {
                         if (_byte == 0x53 && !isCommandStart) {
                             isCommandStart = true;

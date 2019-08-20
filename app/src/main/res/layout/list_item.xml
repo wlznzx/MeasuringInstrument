@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/data_layout"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="12dp"
+        android:gravity="center"
+        android:src="@mipmap/ic_uncheck"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/data_num"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/data_handler"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/handler" />
+
+    <TextView
+        android:id="@+id/data_time"
+        style="@style/TextStyle"
+        android:layout_width="140dp"
+        android:layout_height="match_parent"
+        android:text="@string/time" />
+
+    <TextView
+        android:id="@+id/data_workpiece_id"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/workpiece_id" />
+
+    <TextView
+        android:id="@+id/data_event"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/event" />
+
+    <TextView
+        android:id="@+id/data_result"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/result" />
+
+    <TextView
+        android:id="@+id/data_m1"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m1" />
+
+    <TextView
+        android:id="@+id/data_m1_group"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m1_group" />
+
+    <TextView
+        android:id="@+id/data_m2"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m2" />
+
+    <TextView
+        android:id="@+id/data_m2_group"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m2_group" />
+
+    <TextView
+        android:id="@+id/data_m3"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m3" />
+
+    <TextView
+        android:id="@+id/data_m3_group"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m3_group" />
+
+    <TextView
+        android:id="@+id/data_m4"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4" />
+
+    <TextView
+        android:id="@+id/data_m4_group"
+        style="@style/TextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m4_group" />
+
+</LinearLayout>
