@@ -33,9 +33,9 @@ public class App extends Application {
 
     public static String handlerAccout = "吴工";
 
-    public static String factory_code = "恩梯量仪Android版";
+    public static String factory_code = "TEFA";
 
-    public static String machine_code = "machine_code";
+    public static String machine_code = "TEFA_A_001";
 
     @Override
     public void onCreate() {

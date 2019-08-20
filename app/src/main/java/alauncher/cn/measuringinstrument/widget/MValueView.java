@@ -218,28 +218,24 @@ public class MValueView extends View {
         if (_value > 0) {
             if (_value > _upper_step) {
                 // paint.setColor(Color.RED);
-                linearGradient = new LinearGradient(0, 0, 200, 0, Color.WHITE, Color.RED, Shader.TileMode.MIRROR);
+                linearGradient = new LinearGradient(0, 0, 200, 0, 0xF0FF0000, Color.RED, Shader.TileMode.MIRROR);
             } else if (_value > hw) {
                 // paint.setColor(Color.YELLOW);
-                linearGradient = new LinearGradient(0, 0, 200, 0, Color.WHITE, Color.YELLOW, Shader.TileMode.MIRROR);
-
+                linearGradient = new LinearGradient(0, 0, 200, 0, 0xF0FFFF00, Color.YELLOW, Shader.TileMode.MIRROR);
             } else {
                 // paint.setColor(Color.GREEN);
-                linearGradient = new LinearGradient(0, 0, 200, 0, Color.WHITE, Color.GREEN, Shader.TileMode.MIRROR);
-
+                linearGradient = new LinearGradient(0, 0, 200, 0, 0xF000FF00, Color.GREEN, Shader.TileMode.MIRROR);
             }
         } else {
             if (_value < _lower_step) {
                 // `paint.setColor(Color.RED);
-                linearGradient = new LinearGradient(0, 0, 200, 0, Color.WHITE, Color.RED, Shader.TileMode.MIRROR);
-
+                linearGradient = new LinearGradient(0, 0, 200, 0, 0xF0FF0000, Color.RED, Shader.TileMode.MIRROR);
             } else if (_value < lw) {
                 // paint.setColor(Color.YELLOW);
-                linearGradient = new LinearGradient(0, 0, 200, 0, Color.WHITE, Color.YELLOW, Shader.TileMode.MIRROR);
+                linearGradient = new LinearGradient(0, 0, 200, 0, 0xF0FFFF00, Color.YELLOW, Shader.TileMode.MIRROR);
             } else {
                 // paint.setColor(Color.GREEN);
-                linearGradient = new LinearGradient(0, 0, 200, 0, Color.WHITE, Color.GREEN, Shader.TileMode.MIRROR);
-
+                linearGradient = new LinearGradient(0, 0, 200, 0, 0xF000FF00, Color.GREEN, Shader.TileMode.MIRROR);
             }
         }
         paint.setShader(linearGradient);

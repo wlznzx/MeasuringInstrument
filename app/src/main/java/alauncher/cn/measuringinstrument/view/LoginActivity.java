@@ -7,8 +7,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
@@ -77,7 +79,13 @@ public class LoginActivity extends BaseActivity {
             android.util.Log.d("wlDebug", "connect success.");
 
             stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from ntqc_result limit 10");
+            String factory_code = App.factory_code;
+            int prog_id = App.getSetupBean().getCodeID();
+            String param_key = "M1";
+            String sql = "select * from ntqc_param_config where factory_code = " +
+                    factory_code + " and machine_code = " + App.machine_code + " and param_key = " + param_key + " and prog_id = " + prog_id;
+            android.util.Log.d("wlDebug", "sql = " + sql);
+            ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String result = rs.getString("result");
@@ -86,16 +94,32 @@ public class LoginActivity extends BaseActivity {
 
             long timg = System.currentTimeMillis();
 
-            String sql = "INSERT INTO ntqc_result (factory_code,machine_code,prog_id,serial_number,result,ng_reason,operator,operate_time) "
-                    + "VALUES ('TEFA', 'Paul002', '32', '28','OK','Not','ADMIN','2019-08-16 15:50:57' );";
-            stmt.executeUpdate(sql);
+//            String sql = "INSERT INTO ntqc_equipment (factory_code,factory_name,machine_code,machine_name," +
+//                    "manufacturer,manufacture_date,rmk,operator,operate_time) VALUES (?,?,?,?,?,?,?,?,?);";
+//            PreparedStatement pstmt = (PreparedStatement) c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
+//            pstmt.setString(1, App.factory_code);
+//            pstmt.setString(2, App.factory_code);
+//            pstmt.setString(3, App.machine_code);
+//            pstmt.setString(4, App.machine_code);
+//            pstmt.setString(5, "恩梯量仪");
+//            pstmt.setDate(6, new java.sql.Date(System.currentTimeMillis()));
+//            pstmt.setString(7, "");
+//            pstmt.setString(8, "吴工");
+//            pstmt.setTimestamp(9, new Timestamp(System.currentTimeMillis()));
+//            pstmt.executeUpdate();//执行sql
 
+
+//            String sql = "INSERT INTO ntqc_equipment_status (equipment_id,status,update_time) VALUES (?,?,?);";
+//            PreparedStatement pstmt = (PreparedStatement) c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
+//            pstmt.setInt(1, 31);
+//            pstmt.setString(2, "0");
+//            pstmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+//            pstmt.executeUpdate();//执行sql
+            c.close();
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
         }
-        System.out.println("Opened database successfully");
     }
 
     private void goSQL() {
@@ -103,14 +127,12 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.login_btn)
     public void onLogin(View v) {
-/*
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                goSQL();
-            }
-        }).start();
-*/
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                tPostgreSQL();
+//            }
+//        }).start();
         // CrashReport.testJavaCrash();
 
         String accoutStr = loginUserNameEdt.getText().toString().trim();

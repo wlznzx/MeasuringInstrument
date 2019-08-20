@@ -404,6 +404,7 @@ public class SPCStatisticalActivity extends BaseActivity {
                     updateChartDatas(_bean.mValues);
                 } else if (spc_mode == GCNLT_MODE) {
                     GCNLTBean _bean = (GCNLTBean) result;
+                    android.util.Log.d("wlDebug", "bean = " + _bean.toString());
                     averageValueTV.setText("" + Format.m1(_bean.averageValue, 4));
                     maxValueTV.setText("" + Format.m1(_bean.maxValue, 4));
                     minValueTV.setText("" + Format.m1(_bean.minValue, 4));
@@ -444,9 +445,9 @@ public class SPCStatisticalActivity extends BaseActivity {
 
         String queryString = "";
         if (mFilterBean.isTimeAuto()) {
-            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.CodeID.columnName + " = " + mFilterBean.getCodeID() + " order by _id asc limit " + _limit;
+            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.CodeID.columnName + " = " + mFilterBean.getCodeID() + " order by _id desc limit " + _limit;
         } else {
-            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.TimeStamp.columnName + " between " + startTimeStamp + " and " + stopTimeStamp + " order by _id asc limit " + _limit;
+            queryString = "SELECT * FROM " + ResultBeanDao.TABLENAME + " where " + ResultBeanDao.Properties.TimeStamp.columnName + " between " + startTimeStamp + " and " + stopTimeStamp + " order by _id desc limit " + _limit;
         }
 
         Cursor cursor = mResultBeanDao.getDatabase().rawQuery(queryString, null);
@@ -723,7 +724,24 @@ public class SPCStatisticalActivity extends BaseActivity {
         T = upperValue - lowValue;
         U = (upperValue + lowValue) / 2;
         StandardDeviation StandardDeviation = new StandardDeviation();//标准差
-        deviation = StandardDeviation.evaluate(values);
+        // deviation = StandardDeviation.evaluate(values);
+        double rbar = 0;
+        ArrayList<Double> _mList = new ArrayList<>();
+        double[] _rGroup = new double[mFilterBean.getGroupNum()];
+        for (int i = 0; i < mFilterBean.getGroupNum(); i++) {
+            double _r = 0;
+            double[] rGroup = new double[mFilterBean.getGroupSize()];
+            for (int j = 0; j < mFilterBean.getGroupSize(); j++) {
+                int index = i * mFilterBean.getGroupSize() + j;
+//                android.util.Log.d("wlDebug", "index = " + index);
+                rGroup[j] = values[index];
+            }
+            _r = max.evaluate(rGroup) - min.evaluate(rGroup);
+            _rGroup[i] = _r;
+        }
+        rbar = mean.evaluate(_rGroup);
+        double d2 = Constants.d2[mFilterBean.groupSize - 2];
+        deviation = rbar / d2;
         double cp, ca, CPKu, CPKl, cpl, cpu, cpk;
         _bean.a = deviation;
         cp = T / (6 * deviation);
@@ -740,24 +758,8 @@ public class SPCStatisticalActivity extends BaseActivity {
         _bean.cpk = cpk;
 
         double pp, pa, PPKu, PPKl, ppl, ppu, ppk, deviation2;
-        double rbar = 0;
-        ArrayList<Double> _mList = new ArrayList<>();
-        double[] _rGroup = new double[mFilterBean.getGroupNum()];
-        for (int i = 0; i < mFilterBean.getGroupNum(); i++) {
-            double _r = 0;
-            double[] rGroup = new double[mFilterBean.getGroupSize()];
-            for (int j = 0; j < mFilterBean.getGroupSize(); j++) {
-                int index = i * mFilterBean.getGroupSize() + j;
-                android.util.Log.d("wlDebug", "index = " + index);
-                rGroup[j] = values[index];
-            }
-            _r = max.evaluate(rGroup) - min.evaluate(rGroup);
-            _rGroup[i] = _r;
-        }
-        rbar = mean.evaluate(_rGroup);
-        double d2 = Constants.d2[mFilterBean.groupSize - 2];
-        deviation2 = rbar / d2;
 
+        deviation2 = StandardDeviation.evaluate(values);
         pp = T / (6 * deviation2);
         pa = (_bean.averageValue - U) / (T / 2);
         PPKu = Math.abs(upperValue - _bean.averageValue) / (3 * deviation2);
@@ -767,8 +769,8 @@ public class SPCStatisticalActivity extends BaseActivity {
         ppk = Math.min(PPKl, PPKu);
 
 
-        _bean.cp = pp;
-        _bean.pp = cp;
+        _bean.cp = cp;
+        _bean.pp = pp;
         _bean.ppl = ppl;
         _bean.ppu = ppu;
         _bean.ppk = ppk;

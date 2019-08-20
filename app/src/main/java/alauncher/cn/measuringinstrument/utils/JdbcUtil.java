@@ -106,7 +106,7 @@ public class JdbcUtil {
         String result_detail_sql = "insert into ntqc_result_detail (result_id,name,m_value,r_value,g_value,e_value) VALUES (?,?,?,?,?,?);";
         PreparedStatement m1pstmt = conn.prepareStatement(result_detail_sql, Statement.RETURN_GENERATED_KEYS);
         m1pstmt.setInt(1, autoIncKey);
-        m1pstmt.setString(2, "M1");
+        m1pstmt.setString(2, "1");
         m1pstmt.setFloat(3, (float) _bean.getM1());
         m1pstmt.setFloat(4, 0);
         m1pstmt.setString(5, _bean.getM1_group());
@@ -115,7 +115,7 @@ public class JdbcUtil {
 
         PreparedStatement m2pstmt = conn.prepareStatement(result_detail_sql, Statement.RETURN_GENERATED_KEYS);
         m2pstmt.setInt(1, autoIncKey);
-        m2pstmt.setString(2, "M2");
+        m2pstmt.setString(2, "2");
         m2pstmt.setFloat(3, (float) _bean.getM2());
         m2pstmt.setFloat(4, 0);
         m2pstmt.setString(5, _bean.getM2_group());
@@ -124,7 +124,7 @@ public class JdbcUtil {
 
         PreparedStatement m3pstmt = conn.prepareStatement(result_detail_sql, Statement.RETURN_GENERATED_KEYS);
         m3pstmt.setInt(1, autoIncKey);
-        m3pstmt.setString(2, "M3");
+        m3pstmt.setString(2, "3");
         m3pstmt.setFloat(3, (float) _bean.getM3());
         m3pstmt.setFloat(4, 0);
         m3pstmt.setString(5, _bean.getM3_group());
@@ -133,7 +133,7 @@ public class JdbcUtil {
 
         PreparedStatement m4pstmt = conn.prepareStatement(result_detail_sql, Statement.RETURN_GENERATED_KEYS);
         m4pstmt.setInt(1, autoIncKey);
-        m4pstmt.setString(2, "M4");
+        m4pstmt.setString(2, "4");
         m4pstmt.setFloat(3, (float) _bean.getM4());
         m4pstmt.setFloat(4, 0);
         m4pstmt.setString(5, _bean.getM4_group());
@@ -153,12 +153,15 @@ public class JdbcUtil {
         Connection conn = getConnection();
         String sql = "insert into ntqc_param_config (factory_code,machine_code,prog_id," +
                 "prog_name,param_key,param_name,type,nominal_value,lower_tolerance,upper_tolerance,warning_up,warning_low,rmk) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
+
+//        String sql = "insert into ntqc_param_config (factory_code,machine_code,prog_id," +
+//                "prog_name,param_key,param_name,type,nominal_value,lower_tolerance,upper_tolerance,warning_up,warning_low,rmk) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
         pstmt.setString(1, factory_code);
         pstmt.setString(2, machine_code);
         pstmt.setInt(3, App.getSetupBean().getCodeID());
         pstmt.setString(4, App.getCodeName());
-        pstmt.setString(5, param_key);
+        pstmt.setString(5, "M1");
         pstmt.setString(6, _bean.getM1_describe());
         pstmt.setString(7, type);
         pstmt.setFloat(8, Float.valueOf(String.valueOf(_bean.getM1_nominal_value())));
@@ -225,18 +228,21 @@ public class JdbcUtil {
         pstmt4.setString(13, rmk);
         pstmt4.executeUpdate();//执行sql
         */
+        pstmt.setString(5, "M2");
         pstmt.setString(6, _bean.getM2_describe());
         pstmt.setFloat(8, (float) _bean.getM2_nominal_value());
         pstmt.setFloat(9, (float) _bean.getM2_lower_tolerance_value());
         pstmt.setFloat(10, (float) _bean.getM2_upper_tolerance_value());
         pstmt.executeUpdate();//执行sql
 
+        pstmt.setString(5, "M3");
         pstmt.setString(6, _bean.getM3_describe());
         pstmt.setFloat(8, (float) _bean.getM3_nominal_value());
         pstmt.setFloat(9, (float) _bean.getM3_lower_tolerance_value());
         pstmt.setFloat(10, (float) _bean.getM3_upper_tolerance_value());
         pstmt.executeUpdate();//执行sql
 
+        pstmt.setString(5, "M4");
         pstmt.setString(6, _bean.getM4_describe());
         pstmt.setFloat(8, (float) _bean.getM4_nominal_value());
         pstmt.setFloat(9, (float) _bean.getM4_lower_tolerance_value());

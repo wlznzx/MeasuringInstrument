@@ -249,12 +249,17 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
      *
      */
     public String getMResults(double[] ms) {
+
+        if (mParameterBean == null) {
+            return "未设置参数";
+        }
+
         for (int i = 0; i < 4; i++) {
             if (ms[i] > upperValue[i] || ms[i] < lowerValue[i]) {
-                return "不合格";
+                return "NG";
             }
         }
-        return "合格";
+        return "OK";
     }
 
     /*

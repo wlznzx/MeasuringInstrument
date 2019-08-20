@@ -455,34 +455,37 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         for (int i = 0; i < mTValues.length; i++) {
             mTValues[i].setText("");
         }
+        String result = ((MeasuringPresenterImpl) mMeasuringPresenter).getMResults(mValues);
+        mGroupMs[0].setText("结果: " + result);
         String[] group = mMeasuringPresenter.getMGroupValues(mValues);
         switch (curMode) {
             case 0:
                 for (int i = 0; i < mTValues.length; i++) {
                     mTValues[i].setText(NumberUtils.get4bits(mValues[i]));
                     mMValueViews[i].setMValue(mValues[i]);
-                    mGroupMs[i].setText(group[i]);
+                    // mGroupMs[i].setText(group[i]);
                 }
+                mGroupMs[1].setText("M1分组: " + group[0]); // 显示M1分组;
                 break;
             case 1:
                 mTValues[3].setText(NumberUtils.get4bits(mValues[0]));
                 mMValueViews[3].setMValue(mValues[0]);
-                mGroupMs[3].setText(group[0]);
+                mGroupMs[1].setText("M1分组: " + group[0]);
                 break;
             case 2:
                 mTValues[3].setText(NumberUtils.get4bits(mValues[1]));
                 mMValueViews[3].setMValue(mValues[1]);
-                mGroupMs[3].setText(group[1]);
+                mGroupMs[1].setText("M2分组: " + group[1]);
                 break;
             case 3:
                 mTValues[3].setText(NumberUtils.get4bits(mValues[2]));
                 mMValueViews[3].setMValue(mValues[2]);
-                mGroupMs[3].setText(group[2]);
+                mGroupMs[1].setText("M3分组: " + group[2]);
                 break;
             case 4:
                 mTValues[3].setText("" + mValues[3]);
                 mMValueViews[3].setMValue(mValues[3]);
-                mGroupMs[3].setText(group[3]);
+                mGroupMs[1].setText("M4分组: " + group[3]);
                 break;
         }
     }

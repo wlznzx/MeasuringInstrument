@@ -10,9 +10,14 @@ public class Format {
 
     //默认除法运算精度
     public static double m1(double f, int scale) {
-        BigDecimal bg = new BigDecimal(f);
-        double f1 = bg.setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
-        return f1;
+        try{
+            BigDecimal bg = new BigDecimal(f);
+            double f1 = bg.setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+            return f1;
+        }catch (Exception e){
+
+        }
+        return 0;
     }
 
 };
