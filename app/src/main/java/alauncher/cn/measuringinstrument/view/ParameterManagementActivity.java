@@ -88,7 +88,7 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
         }
         // android.util.Log.d("wlDebug", mParameterBean.toString());
 
-        syncToServer(mParameterBean);
+        // syncToServer(mParameterBean);
         Toast.makeText(this, "保存成功.", Toast.LENGTH_SHORT).show();
     }
 
@@ -297,6 +297,7 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
         return result;
     }
 
+    /*
     private void syncToServer(final ParameterBean _bean) {
         new Thread(new Runnable() {
             @Override
@@ -310,4 +311,5 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
             }
         }).start();
     }
+    */
 }

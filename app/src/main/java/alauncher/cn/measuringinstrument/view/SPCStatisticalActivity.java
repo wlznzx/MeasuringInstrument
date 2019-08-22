@@ -192,6 +192,8 @@ public class SPCStatisticalActivity extends BaseActivity {
 
     private FilterBean mFilterBean;
 
+    ParameterBean mParameterBean;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -379,6 +381,12 @@ public class SPCStatisticalActivity extends BaseActivity {
                     yAxis.removeAllLimitLines();
                     yAxis.addLimitLine(getLimitLine(_bean.xUCL, "上控制线"));
                     yAxis.addLimitLine(getLimitLine(_bean.xLCL, "下控制线"));
+                    android.util.Log.d("wllDebug", "_bean.xUCL = " + _bean.xUCL);
+                    android.util.Log.d("wllDebug", "_bean.xLCL = " + _bean.xLCL);
+                    yAxis.addLimitLine(getLimitLine(_bean.xUCL, "上公差线"));
+                    yAxis.addLimitLine(getLimitLine(_bean.lowerValue, "下公差线"));
+                    android.util.Log.d("wllDebug", "_bean.upperValue = " + _bean.upperValue);
+                    android.util.Log.d("wllDebug", "_bean.lowerValue = " + _bean.lowerValue);
                     updateChartDatas(_bean.xValues);
                     // 绘制R图;
                     YAxis rYAxis = rChart.getAxisLeft();
@@ -581,6 +589,31 @@ public class SPCStatisticalActivity extends BaseActivity {
         _bean.minXY = minX;
         _bean.maxRY = maxR;
         _bean.minRY = minR;
+
+        ParameterBean _ParameterBean = App.getDaoSession().getParameterBeanDao().load(mFilterBean.codeID);
+        if (_ParameterBean != null) {
+            switch (mFilterBean.getTargetNum()) {
+                case 0:
+                    _bean.upperValue = (float) (_ParameterBean.getM1_nominal_value() + _ParameterBean.getM1_upper_tolerance_value());
+                    _bean.lowerValue = (float) (_ParameterBean.getM1_nominal_value() + _ParameterBean.getM1_lower_tolerance_value());
+                    break;
+                case 1:
+                    _bean.upperValue = (float) (_ParameterBean.getM2_nominal_value() + _ParameterBean.getM2_upper_tolerance_value());
+                    _bean.lowerValue = (float) (_ParameterBean.getM2_nominal_value() + _ParameterBean.getM2_lower_tolerance_value());
+                    break;
+                case 2:
+                    _bean.upperValue = (float) (_ParameterBean.getM3_nominal_value() + _ParameterBean.getM3_upper_tolerance_value());
+                    _bean.lowerValue = (float) (_ParameterBean.getM3_nominal_value() + _ParameterBean.getM3_lower_tolerance_value());
+                    break;
+                case 3:
+                    _bean.upperValue = (float) (_ParameterBean.getM4_nominal_value() + _ParameterBean.getM4_upper_tolerance_value());
+                    _bean.lowerValue = (float) (_ParameterBean.getM4_nominal_value() + _ParameterBean.getM4_lower_tolerance_value());
+                    break;
+            }
+        } else {
+            _bean.upperValue = (float) (xbar + Constants.A2[mFilterBean.groupSize - 2] * 0);
+            _bean.lowerValue = (float) (xbar - Constants.A2[mFilterBean.groupSize - 2] * 0);
+        }
 
         android.util.Log.d("wlDebug", _bean.toString());
         return _bean;
@@ -788,7 +821,7 @@ public class SPCStatisticalActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
+        mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
         timeRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -1179,6 +1212,10 @@ public class SPCStatisticalActivity extends BaseActivity {
         float minRY;
         // R图的数据；
         ArrayList<Entry> rValues;
+
+        float upperValue;
+
+        float lowerValue;
 
         @Override
         public String toString() {

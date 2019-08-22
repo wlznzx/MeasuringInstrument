@@ -109,6 +109,7 @@ public class MValueView extends View {
 
         baseValue = Arith.div(((nominal + upper_tolerance_value) + (nominal + lower_tolerance_value)), 2);
         android.util.Log.d("wlDebug", "nominal_value = " + nominal_value + " upper_tolerance_value = " + upper_tolerance_value + " lower_tolerance_value = " + lower_tolerance_value + " resolution = " + resolution);
+        invalidate();
     }
 
     public void setMValue(double pValue) {

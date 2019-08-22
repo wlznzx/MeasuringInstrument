@@ -86,7 +86,8 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
         _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
 
         mResultBeanDao = App.getDaoSession().getResultBeanDao();
-        mDataAdapter = new DataAdapter(DataActivity.this, mResultBeanDao.queryBuilder().orderDesc(ResultBeanDao.Properties.Id).list());
+        mDataAdapter = new DataAdapter(DataActivity.this, mResultBeanDao.queryBuilder()
+                .where(ResultBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBeanDao.Properties.Id).list());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(DataActivity.this);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(mDataAdapter);

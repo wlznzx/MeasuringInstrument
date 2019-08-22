@@ -348,22 +348,26 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     public void setMTitle(int mode) {
         switch (mode) {
             case 0:
-                mTitle[0].setText(R.string.m1);
-                mTitle[1].setText(R.string.m2);
-                mTitle[2].setText(R.string.m3);
-                mTitle[3].setText(R.string.m4);
-                mDescribes[0].setVisibility(View.VISIBLE);
-                mDescribes[1].setVisibility(View.VISIBLE);
-                mDescribes[2].setVisibility(View.VISIBLE);
+//                mTitle[0].setText(R.string.m1);
+//                mTitle[1].setText(R.string.m2);
+//                mTitle[2].setText(R.string.m3);
+//                mTitle[3].setText(R.string.m4);
+//                mDescribes[0].setVisibility(View.VISIBLE);
+//                mDescribes[1].setVisibility(View.VISIBLE);
+//                mDescribes[2].setVisibility(View.VISIBLE);
+                mParameterBean = mMeasuringPresenter.getParameterBean();
                 if (mParameterBean != null) {
                     mMValueViews[0].init(mParameterBean.getM1_nominal_value(), mParameterBean.getM1_upper_tolerance_value(), mParameterBean.getM1_lower_tolerance_value(), mParameterBean.getM1_scale());
                     mMValueViews[1].init(mParameterBean.getM2_nominal_value(), mParameterBean.getM2_upper_tolerance_value(), mParameterBean.getM2_lower_tolerance_value(), mParameterBean.getM2_scale());
                     mMValueViews[2].init(mParameterBean.getM3_nominal_value(), mParameterBean.getM3_upper_tolerance_value(), mParameterBean.getM3_lower_tolerance_value(), mParameterBean.getM3_scale());
                     mMValueViews[3].init(mParameterBean.getM4_nominal_value(), mParameterBean.getM4_upper_tolerance_value(), mParameterBean.getM4_lower_tolerance_value(), mParameterBean.getM4_scale());
                     mDescribes[0].setText(mParameterBean.getM1_describe());
-                    mDescribes[1].setText(mParameterBean.getM2_describe());
-                    mDescribes[2].setText(mParameterBean.getM3_describe());
-                    mDescribes[3].setText(mParameterBean.getM4_describe());
+//                    mDescribes[1].setText(mParameterBean.getM2_describe());
+//                    mDescribes[2].setText(mParameterBean.getM3_describe());
+//                    mDescribes[3].setText(mParameterBean.getM4_describe());
+                } else {
+                    mMValueViews[0].init(0, 7, -7, 6);
+                    mDescribes[0].setText("M1");
                 }
                 break;
             case 1:
@@ -509,15 +513,26 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                     SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
                     _bean.setCodeID(index + 1);
                     App.getDaoSession().getSetupBeanDao().update(_bean);
-                    Handler hander = new Handler();
-                    Runnable runnable = new Runnable() {
+                    ((MeasuringPresenterImpl) mMeasuringPresenter).initParameter();
+//                    setMode(0);
+                    setMTitle(0);
+                    CodeBean _CodeBean = App.getDaoSession().getCodeBeanDao().load((long) (index + 1));
+                    if (_CodeBean != null) {
+                        actionTips.setText(App.handlerAccout + " " + _CodeBean.getName());
+                    } else {
+                        actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
+                    }
 
-                        @Override
-                        public void run() {
-                            ad.dismiss();
-                        }
-                    };
-                    hander.postDelayed(runnable, 5 * 200);
+                    ad.dismiss();
+//                    Handler hander = new Handler();
+//                    Runnable runnable = new Runnable() {
+//
+//                        @Override
+//                        public void run() {
+//                            ad.dismiss();
+//                        }
+//                    };
+//                    hander.postDelayed(runnable, 5 * 200);
                 }
                 //用户单击的是【取消】按钮
                 else if (which == DialogInterface.BUTTON_NEGATIVE) {

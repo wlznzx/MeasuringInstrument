@@ -29,9 +29,11 @@ import alauncher.cn.measuringinstrument.view.SPCStatisticalActivity;
 import alauncher.cn.measuringinstrument.view.StatisticalActivity;
 import alauncher.cn.measuringinstrument.view.StoreActivity;
 import alauncher.cn.measuringinstrument.view.SystemManagementActivity;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivity {
