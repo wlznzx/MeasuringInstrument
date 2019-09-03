@@ -10,8 +10,10 @@ import java.util.List;
 
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
+import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,9 +34,12 @@ public class DataAdapter extends RecyclerView.Adapter<ViewHolder> {
     private OnItemClickListener mOnItemClickListener;
     List<ResultBean> datas;
 
-    public DataAdapter(Context context, List<ResultBean> pDatas) {
+    private ParameterBean mParameterBean;
+
+    public DataAdapter(Context context, List<ResultBean> pDatas, ParameterBean parameterBean) {
         this.context = context;
         datas = pDatas;
+        mParameterBean = parameterBean;
     }
 
 
@@ -106,6 +111,17 @@ public class DataAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.setText(R.id.data_time, DateUtils.getDate(datas.get(position).getTimeStamp()));
         holder.setText(R.id.data_result, "" + datas.get(position).getResult());
         holder.setText(R.id.data_num, "" + (position + 1));
+
+        if (mParameterBean != null) {
+            holder.setVisible(R.id.data_m1, mParameterBean.getM1_enable() ? true : false);
+            holder.setVisible(R.id.data_m1_group, mParameterBean.getM1_enable() ? true : false);
+            holder.setVisible(R.id.data_m2, mParameterBean.getM2_enable() ? true : false);
+            holder.setVisible(R.id.data_m2_group, mParameterBean.getM2_enable() ? true : false);
+            holder.setVisible(R.id.data_m3, mParameterBean.getM3_enable() ? true : false);
+            holder.setVisible(R.id.data_m3_group, mParameterBean.getM3_enable() ? true : false);
+            holder.setVisible(R.id.data_m4, mParameterBean.getM4_enable() ? true : false);
+            holder.setVisible(R.id.data_m4_group, mParameterBean.getM4_enable() ? true : false);
+        }
 
         if (position % 2 == 0) {
             // holder.setBackgroundColor(R.id.data_layout, Color.argb(250, 255, 255, 255));

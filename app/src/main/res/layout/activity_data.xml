@@ -42,7 +42,7 @@
 
                 <TextView
                     style="@style/TextStyle"
-                    android:layout_width="140dp"
+                    android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:text="@string/time" />
 
@@ -65,48 +65,56 @@
                     android:text="@string/result" />
 
                 <TextView
+                    android:id="@+id/m1_title"
                     style="@style/TextStyle"
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
                     android:text="@string/m1" />
 
                 <TextView
+                    android:id="@+id/m1_group_title"
                     style="@style/TextStyle"
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
                     android:text="@string/m1_group" />
 
                 <TextView
+                    android:id="@+id/m2_title"
                     style="@style/TextStyle"
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
                     android:text="@string/m2" />
 
                 <TextView
+                    android:id="@+id/m2_group_title"
                     style="@style/TextStyle"
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
                     android:text="@string/m2_group" />
 
                 <TextView
+                    android:id="@+id/m3_title"
                     style="@style/TextStyle"
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
                     android:text="@string/m3" />
 
                 <TextView
+                    android:id="@+id/m3_group_title"
                     style="@style/TextStyle"
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
                     android:text="@string/m3_group" />
 
                 <TextView
+                    android:id="@+id/m4_title"
                     style="@style/TextStyle"
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
                     android:text="@string/m4" />
 
                 <TextView
+                    android:id="@+id/m4_group_title"
                     style="@style/TextStyle"
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
@@ -220,9 +228,9 @@
         android:id="@+id/btn_filter"
         android:layout_width="80dp"
         android:layout_height="33dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="10dp"
         android:background="@drawable/button_noclickable_shape"
-        android:layout_gravity="center_horizontal"
         android:text="@string/filter"
         android:textColor="#b7b8bd"
         android:textSize="14sp" />
