@@ -73,7 +73,15 @@ public class ParameterBean {
 
     public String m4_code;
 
-    @Generated(hash = 343421238)
+    public boolean m1_enable;
+
+    public boolean m2_enable;
+
+    public boolean m3_enable;
+
+    public boolean m4_enable;
+
+    @Generated(hash = 1353469702)
     public ParameterBean(long code_id, String m1_describe, String m2_describe, String m3_describe,
             String m4_describe, double m1_nominal_value, double m2_nominal_value,
             double m3_nominal_value, double m4_nominal_value, double m1_upper_tolerance_value,
@@ -83,7 +91,8 @@ public class ParameterBean {
             double m4_lower_tolerance_value, double m1_offect, double m2_offect, double m3_offect,
             double m4_offect, int m1_resolution, int m2_resolution, int m3_resolution,
             int m4_resolution, double m1_scale, double m2_scale, double m3_scale, double m4_scale,
-            String m1_code, String m2_code, String m3_code, String m4_code) {
+            String m1_code, String m2_code, String m3_code, String m4_code, boolean m1_enable,
+            boolean m2_enable, boolean m3_enable, boolean m4_enable) {
         this.code_id = code_id;
         this.m1_describe = m1_describe;
         this.m2_describe = m2_describe;
@@ -117,6 +126,10 @@ public class ParameterBean {
         this.m2_code = m2_code;
         this.m3_code = m3_code;
         this.m4_code = m4_code;
+        this.m1_enable = m1_enable;
+        this.m2_enable = m2_enable;
+        this.m3_enable = m3_enable;
+        this.m4_enable = m4_enable;
     }
 
     @Generated(hash = 530727603)
@@ -424,5 +437,37 @@ public class ParameterBean {
                 ", m3_code='" + m3_code + '\'' +
                 ", m4_code='" + m4_code + '\'' +
                 '}';
+    }
+
+    public boolean getM1_enable() {
+        return this.m1_enable;
+    }
+
+    public void setM1_enable(boolean m1_enable) {
+        this.m1_enable = m1_enable;
+    }
+
+    public boolean getM2_enable() {
+        return this.m2_enable;
+    }
+
+    public void setM2_enable(boolean m2_enable) {
+        this.m2_enable = m2_enable;
+    }
+
+    public boolean getM3_enable() {
+        return this.m3_enable;
+    }
+
+    public void setM3_enable(boolean m3_enable) {
+        this.m3_enable = m3_enable;
+    }
+
+    public boolean getM4_enable() {
+        return this.m4_enable;
+    }
+
+    public void setM4_enable(boolean m4_enable) {
+        this.m4_enable = m4_enable;
     }
 }

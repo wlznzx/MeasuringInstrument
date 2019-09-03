@@ -46,7 +46,6 @@ import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImp
 import alauncher.cn.measuringinstrument.utils.NumberUtils;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import alauncher.cn.measuringinstrument.widget.AdditionalDialog;
-import alauncher.cn.measuringinstrument.widget.ChooseCodeDialog;
 import alauncher.cn.measuringinstrument.widget.MValueView;
 
 import androidx.core.content.ContextCompat;
@@ -133,6 +132,14 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
         mMeasuringPresenter = new MeasuringPresenterImpl(this);
         initChart();
         onMeasuringDataUpdate(curMValues);
+        initParameters();
+        if (App.getSetupBean().getIsAutoPopUp()) {
+            showAddDialog();
+        }
+        mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
+    }
+
+    private void initParameters() {
         mParameterBean = mMeasuringPresenter.getParameterBean();
         if (mParameterBean != null) {
             mMValueViews[0].init(mParameterBean.getM1_nominal_value(), mParameterBean.getM1_upper_tolerance_value(), mParameterBean.getM1_lower_tolerance_value(), mParameterBean.getM1_scale());
@@ -144,12 +151,32 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
             mDescribes[1].setText(mParameterBean.getM2_describe());
             mDescribes[2].setText(mParameterBean.getM3_describe());
             mDescribes[3].setText(mParameterBean.getM4_describe());
-        }
 
-        if (App.getSetupBean().getIsAutoPopUp()) {
-            showAddDialog();
+            for (int i = 0; i < 4; i++) {
+                boolean isEnable = true;
+                if (0 == i) {
+                    isEnable = mParameterBean.getM1_enable();
+                } else if (1 == i) {
+                    isEnable = mParameterBean.getM2_enable();
+                } else if (2 == i) {
+                    isEnable = mParameterBean.getM3_enable();
+                } else if (3 == i) {
+                    isEnable = mParameterBean.getM4_enable();
+                }
+                mTValues[i].setVisibility(isEnable ? View.VISIBLE : View.INVISIBLE);
+                mMValueViews[i].setVisibility(isEnable ? View.VISIBLE : View.INVISIBLE);
+                mTitle[i].setVisibility(isEnable ? View.VISIBLE : View.INVISIBLE);
+                mDescribes[i].setVisibility(isEnable ? View.VISIBLE : View.INVISIBLE);
+            }
+        } else {
+            for (int i = 0; i < 4; i++) {
+                mMValueViews[i].init(0, 7, -7, 6);
+                mTValues[i].setVisibility(true ? View.VISIBLE : View.INVISIBLE);
+                mMValueViews[i].setVisibility(true ? View.VISIBLE : View.INVISIBLE);
+                mTitle[i].setVisibility(true ? View.VISIBLE : View.INVISIBLE);
+                mDescribes[i].setVisibility(true ? View.VISIBLE : View.INVISIBLE);
+            }
         }
-        mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
     }
 
     @OnClick({R.id.value_btn, R.id.additional_btn, R.id.measure_save_btn})
@@ -515,7 +542,8 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                     App.getDaoSession().getSetupBeanDao().update(_bean);
                     ((MeasuringPresenterImpl) mMeasuringPresenter).initParameter();
 //                    setMode(0);
-                    setMTitle(0);
+//                    setMTitle(0);
+                    initParameters();
                     CodeBean _CodeBean = App.getDaoSession().getCodeBeanDao().load((long) (index + 1));
                     if (_CodeBean != null) {
                         actionTips.setText(App.handlerAccout + " " + _CodeBean.getName());

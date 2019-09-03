@@ -23,33 +23,34 @@
             android:layout_margin="10dp"
             android:layout_weight="1"></View>
 
-        <TextView
-            style="@style/TextStyle"
+        <CheckBox
+            android:id="@+id/ch1_rb"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="M1" />
 
-        <TextView
-            style="@style/TextStyle"
+        <CheckBox
+            android:id="@+id/ch2_rb"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="M2" />
 
-        <TextView
-            style="@style/TextStyle"
+        <CheckBox
+            android:id="@+id/ch3_rb"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="M3" />
 
-        <TextView
-            style="@style/TextStyle"
+        <CheckBox
+            android:id="@+id/ch4_rb"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="M4" />
+
     </LinearLayout>
 
     <!-- 描述 -->

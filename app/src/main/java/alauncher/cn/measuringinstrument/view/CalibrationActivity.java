@@ -8,7 +8,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import alauncher.cn.measuringinstrument.App;
@@ -403,6 +402,8 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
 
                     } catch (NumberFormatException e) {
                         Toast.makeText(this, "请先取得对应件的AD值", Toast.LENGTH_SHORT).show();
+                    } catch (ArithmeticException e) {
+                        Toast.makeText(this, "大小件取值无差异", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

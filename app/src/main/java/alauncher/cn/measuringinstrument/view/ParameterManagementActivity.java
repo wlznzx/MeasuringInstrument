@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -15,7 +16,6 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
-import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.widget.CalculateDialog;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -50,6 +50,9 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
 
     @BindView(R.id.save_btn)
     public Button saveBtn;
+
+    @BindViews({R.id.ch1_rb, R.id.ch2_rb, R.id.ch3_rb, R.id.ch4_rb})
+    public List<CheckBox> mCheckBoxs;
 
     public DaoSession session;
 
@@ -208,6 +211,11 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
             formulaEd.get(1).setText(mParameterBean.getM2_code());
             formulaEd.get(2).setText(mParameterBean.getM3_code());
             formulaEd.get(3).setText(mParameterBean.getM4_code());
+
+            mCheckBoxs.get(0).setChecked(mParameterBean.getM1_enable());
+            mCheckBoxs.get(1).setChecked(mParameterBean.getM2_enable());
+            mCheckBoxs.get(2).setChecked(mParameterBean.getM3_enable());
+            mCheckBoxs.get(3).setChecked(mParameterBean.getM4_enable());
         }
     }
 
@@ -267,6 +275,11 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
 //        mParameterBean.setM2_code(code);
 //        mParameterBean.setM3_code(code);
 //        mParameterBean.setM4_code(code);
+
+        mParameterBean.setM1_enable(mCheckBoxs.get(0).isChecked());
+        mParameterBean.setM2_enable(mCheckBoxs.get(1).isChecked());
+        mParameterBean.setM3_enable(mCheckBoxs.get(2).isChecked());
+        mParameterBean.setM4_enable(mCheckBoxs.get(3).isChecked());
     }
 
     private double getRbyID(int i) {

@@ -7,10 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
@@ -20,8 +18,6 @@ import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
 import alauncher.cn.measuringinstrument.utils.Arith;
-import alauncher.cn.measuringinstrument.utils.DateUtils;
-import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import butterknife.BindView;
 import butterknife.OnClick;
 

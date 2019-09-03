@@ -210,7 +210,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         if (mParameterBean != null) {
             _bean.setResult(getMResults(ms));
         } else {
-            _bean.setResult("未设置参数");
+            _bean.setResult("- -");
         }
 
         String[] _group = getMGroupValues(ms);
@@ -260,10 +260,10 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 } else if (ms[i] < _bean.getD_upper_limit() && ms[i] >= _bean.getD_lower_limit()) {
                     result[i] = "D";
                 } else {
-                    result[i] = "未分组";
+                    result[i] = "- -";
                 }
             } else {
-                result[i] = "未分组";
+                result[i] = "- -";
             }
         }
         return result;
@@ -278,11 +278,21 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     public String getMResults(double[] ms) {
 
         if (mParameterBean == null) {
-            return "未设置参数";
+            return "- -";
         }
 
-        for (int i = 0; i < 1; i++) {
-            if (ms[i] > upperValue[i] || ms[i] < lowerValue[i]) {
+        for (int i = 0; i < 4; i++) {
+            boolean isEnable = true;
+            if (0 == i) {
+                isEnable = mParameterBean.getM1_enable();
+            } else if (1 == i) {
+                isEnable = mParameterBean.getM2_enable();
+            } else if (2 == i) {
+                isEnable = mParameterBean.getM3_enable();
+            } else if (3 == i) {
+                isEnable = mParameterBean.getM4_enable();
+            }
+            if ((ms[i] > upperValue[i] || ms[i] < lowerValue[i]) && isEnable) {
                 return "NG";
             }
         }

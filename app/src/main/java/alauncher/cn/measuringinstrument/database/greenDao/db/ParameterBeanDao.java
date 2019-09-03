@@ -57,6 +57,10 @@ public class ParameterBeanDao extends AbstractDao<ParameterBean, Long> {
         public final static Property M2_code = new Property(30, String.class, "m2_code", false, "M2_CODE");
         public final static Property M3_code = new Property(31, String.class, "m3_code", false, "M3_CODE");
         public final static Property M4_code = new Property(32, String.class, "m4_code", false, "M4_CODE");
+        public final static Property M1_enable = new Property(33, boolean.class, "m1_enable", false, "M1_ENABLE");
+        public final static Property M2_enable = new Property(34, boolean.class, "m2_enable", false, "M2_ENABLE");
+        public final static Property M3_enable = new Property(35, boolean.class, "m3_enable", false, "M3_ENABLE");
+        public final static Property M4_enable = new Property(36, boolean.class, "m4_enable", false, "M4_ENABLE");
     }
 
 
@@ -104,7 +108,11 @@ public class ParameterBeanDao extends AbstractDao<ParameterBean, Long> {
                 "\"M1_CODE\" TEXT," + // 29: m1_code
                 "\"M2_CODE\" TEXT," + // 30: m2_code
                 "\"M3_CODE\" TEXT," + // 31: m3_code
-                "\"M4_CODE\" TEXT);"); // 32: m4_code
+                "\"M4_CODE\" TEXT," + // 32: m4_code
+                "\"M1_ENABLE\" INTEGER NOT NULL ," + // 33: m1_enable
+                "\"M2_ENABLE\" INTEGER NOT NULL ," + // 34: m2_enable
+                "\"M3_ENABLE\" INTEGER NOT NULL ," + // 35: m3_enable
+                "\"M4_ENABLE\" INTEGER NOT NULL );"); // 36: m4_enable
     }
 
     /** Drops the underlying database table. */
@@ -181,6 +189,10 @@ public class ParameterBeanDao extends AbstractDao<ParameterBean, Long> {
         if (m4_code != null) {
             stmt.bindString(33, m4_code);
         }
+        stmt.bindLong(34, entity.getM1_enable() ? 1L: 0L);
+        stmt.bindLong(35, entity.getM2_enable() ? 1L: 0L);
+        stmt.bindLong(36, entity.getM3_enable() ? 1L: 0L);
+        stmt.bindLong(37, entity.getM4_enable() ? 1L: 0L);
     }
 
     @Override
@@ -251,6 +263,10 @@ public class ParameterBeanDao extends AbstractDao<ParameterBean, Long> {
         if (m4_code != null) {
             stmt.bindString(33, m4_code);
         }
+        stmt.bindLong(34, entity.getM1_enable() ? 1L: 0L);
+        stmt.bindLong(35, entity.getM2_enable() ? 1L: 0L);
+        stmt.bindLong(36, entity.getM3_enable() ? 1L: 0L);
+        stmt.bindLong(37, entity.getM4_enable() ? 1L: 0L);
     }
 
     @Override
@@ -293,7 +309,11 @@ public class ParameterBeanDao extends AbstractDao<ParameterBean, Long> {
             cursor.isNull(offset + 29) ? null : cursor.getString(offset + 29), // m1_code
             cursor.isNull(offset + 30) ? null : cursor.getString(offset + 30), // m2_code
             cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31), // m3_code
-            cursor.isNull(offset + 32) ? null : cursor.getString(offset + 32) // m4_code
+            cursor.isNull(offset + 32) ? null : cursor.getString(offset + 32), // m4_code
+            cursor.getShort(offset + 33) != 0, // m1_enable
+            cursor.getShort(offset + 34) != 0, // m2_enable
+            cursor.getShort(offset + 35) != 0, // m3_enable
+            cursor.getShort(offset + 36) != 0 // m4_enable
         );
         return entity;
     }
@@ -333,6 +353,10 @@ public class ParameterBeanDao extends AbstractDao<ParameterBean, Long> {
         entity.setM2_code(cursor.isNull(offset + 30) ? null : cursor.getString(offset + 30));
         entity.setM3_code(cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31));
         entity.setM4_code(cursor.isNull(offset + 32) ? null : cursor.getString(offset + 32));
+        entity.setM1_enable(cursor.getShort(offset + 33) != 0);
+        entity.setM2_enable(cursor.getShort(offset + 34) != 0);
+        entity.setM3_enable(cursor.getShort(offset + 35) != 0);
+        entity.setM4_enable(cursor.getShort(offset + 36) != 0);
      }
     
     @Override
