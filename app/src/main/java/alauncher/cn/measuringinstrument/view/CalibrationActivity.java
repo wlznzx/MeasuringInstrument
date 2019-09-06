@@ -216,8 +216,8 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
 
     @OnCheckedChanged({R.id.ch1_rb, R.id.ch2_rb, R.id.ch3_rb, R.id.ch4_rb})
     public void radioButtonCheckChange(boolean isChecked) {
-         doUpdateMeasureADValue();
-         doCalcMeasureValue(currentCHADValue);
+        // doUpdateMeasureADValue();
+        // doCalcMeasureValue(currentCHADValue);
     }
 
     @OnItemSelected({R.id.calibration_method_sp_m1, R.id.calibration_method_sp_m2, R.id.calibration_method_sp_m3, R.id.calibration_method_sp_m4})
@@ -258,8 +258,8 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
 
 
     private CalibrationBean view2Bean() {
-        CalibrationBean _bean =  App.getDaoSession().getCalibrationBeanDao().load((long) App.getSetupBean().getCodeID());
-        if(_bean == null){
+        CalibrationBean _bean = App.getDaoSession().getCalibrationBeanDao().load((long) App.getSetupBean().getCodeID());
+        if (_bean == null) {
             _bean = new CalibrationBean();
         }
         _bean.setCode_id(App.getSetupBean().getCodeID());
@@ -289,10 +289,14 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
         _bean.setCh3LowerLimitRate(Double.valueOf(lowerLimitEdt[2].getText().toString().trim()));
         _bean.setCh4LowerLimitRate(Double.valueOf(lowerLimitEdt[3].getText().toString().trim()));
         // 倍率;
-        if(chRbs[0].isChecked())_bean.setCh1KValue(Double.valueOf(kValueEdt[0].getText().toString().trim()) / 1000);
-        if(chRbs[1].isChecked())_bean.setCh2KValue(Double.valueOf(kValueEdt[1].getText().toString().trim()) / 1000);
-        if(chRbs[2].isChecked())_bean.setCh3KValue(Double.valueOf(kValueEdt[2].getText().toString().trim()) / 1000);
-        if(chRbs[3].isChecked())_bean.setCh4KValue(Double.valueOf(kValueEdt[3].getText().toString().trim()) / 1000);
+        if (chRbs[0].isChecked())
+            _bean.setCh1KValue(Double.valueOf(kValueEdt[0].getText().toString().trim()) / 1000);
+        if (chRbs[1].isChecked())
+            _bean.setCh2KValue(Double.valueOf(kValueEdt[1].getText().toString().trim()) / 1000);
+        if (chRbs[2].isChecked())
+            _bean.setCh3KValue(Double.valueOf(kValueEdt[2].getText().toString().trim()) / 1000);
+        if (chRbs[3].isChecked())
+            _bean.setCh4KValue(Double.valueOf(kValueEdt[3].getText().toString().trim()) / 1000);
         // 偏差;
 
         _bean.setCh1CompensationValue(Double.valueOf(compensationValueEdt[0].getText().toString().trim()));
@@ -336,9 +340,9 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
             @Override
             public void run() {
                 for (int i = 0; i < 4; i++) {
-                    if(chRbs[i].isChecked()){
+                    if (chRbs[i].isChecked()) {
                         measureValueEdt[i].setText(String.valueOf(Arith.round(ys[i], 4)));
-                    }else{
+                    } else {
                         measureValueEdt[i].setText("");
                     }
                 }

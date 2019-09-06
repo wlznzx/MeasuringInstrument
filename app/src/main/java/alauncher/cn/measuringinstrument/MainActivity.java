@@ -21,6 +21,7 @@ import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.view.AccoutManagementActivity;
 import alauncher.cn.measuringinstrument.view.CalibrationActivity;
 import alauncher.cn.measuringinstrument.view.CodeActivity;
+import alauncher.cn.measuringinstrument.view.CodeDetailActivity;
 import alauncher.cn.measuringinstrument.view.DataActivity;
 import alauncher.cn.measuringinstrument.view.LoginActivity;
 import alauncher.cn.measuringinstrument.view.MeasuringActivity;
@@ -178,7 +179,7 @@ public class MainActivity extends BaseActivity {
                             openActivty(AccoutManagementActivity.class, datas.get(position).strID);
                             break;
                         case 5:
-                            openActivty(CodeActivity.class, datas.get(position).strID);
+                            openActivty(CodeDetailActivity.class, datas.get(position).strID);
                             break;
                         case 6:
                             openActivty(SystemManagementActivity.class, datas.get(position).strID);

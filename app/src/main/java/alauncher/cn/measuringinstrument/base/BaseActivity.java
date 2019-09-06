@@ -10,11 +10,13 @@ import android.os.Bundle;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -28,7 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public abstract class BaseActivity extends Activity implements BaseView {
+public abstract class BaseActivity extends AppCompatActivity implements BaseView {
     protected ViewGroup bar_layout = null;
     private static final String TAG = "BaseActivity";
 
@@ -50,6 +52,7 @@ public abstract class BaseActivity extends Activity implements BaseView {
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);//设置无ActionBar，单在继承AppCompat?Activity时无效，继承Activity时才有效
         //保持竖屏
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 
         //当系统版本为4.4或者4.4以上时可以使用沉浸式状态栏
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

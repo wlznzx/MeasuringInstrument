@@ -118,8 +118,11 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        /*
         stopAutoStore();
         if (inValue) mMeasuringPresenter.stopMeasuing();
+        */
+        stopValue();
     }
 
     @Override
@@ -137,6 +140,7 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
             showAddDialog();
         }
         mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
+        startValue();
     }
 
     private void initParameters() {
@@ -208,6 +212,24 @@ public class MeasuringActivity extends BaseActivity implements MeasuringActivity
                 }
                 break;
         }
+    }
+
+    private void startValue() {
+        // start 取值;
+        if (inValue) return;
+        inValue = true;
+        mMeasuringPresenter.startMeasuing();
+        valueBtn.setText(R.string.in_value);
+        startAutoStore();
+    }
+
+    private void stopValue() {
+        // stop 取值;
+        if (!inValue) return;
+        inValue = false;
+        mMeasuringPresenter.stopMeasuing();
+        valueBtn.setText(R.string.get_value);
+        stopAutoStore();
     }
 
     private boolean doSave() {

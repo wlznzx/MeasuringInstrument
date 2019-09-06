@@ -28,10 +28,10 @@
             android:name=".MainActivity"
             android:fitsSystemWindows="true">
             <intent-filter>
-                <!--<action android:name="android.intent.action.MAIN" />-->
+                <action android:name="android.intent.action.MAIN" />
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-                <!--<category android:name="android.intent.category.HOME" />-->
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -39,10 +39,9 @@
             android:name=".view.LoginActivity"
             android:fitsSystemWindows="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.HOME" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -76,6 +75,13 @@
         </activity>
         <activity
             android:name=".view.AccoutManagementActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.CodeDetailActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -153,6 +159,14 @@
 
         <activity
             android:name=".view.ForceCalibrationActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".view.CodeDetialActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
