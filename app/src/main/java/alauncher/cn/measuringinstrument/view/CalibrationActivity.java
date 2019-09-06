@@ -185,19 +185,19 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
                 CalibrationBean _bean = view2Bean();
                 android.util.Log.d("wlDebug", _bean.toString());
                 // 判断倍率;
-                if (_bean.getCh1KValue() < (_bean.getCh1LowerLimitRate() / 1000) || _bean.getCh1KValue() > (_bean.getCh1UpperLimitRate() / 1000)) {
+                if (chRbs[0].isChecked() && (_bean.getCh1KValue() < (_bean.getCh1LowerLimitRate() / 1000) || _bean.getCh1KValue() > (_bean.getCh1UpperLimitRate() / 1000))) {
                     Toast.makeText(this, "Ch1测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (_bean.getCh2KValue() < (_bean.getCh2LowerLimitRate() / 1000) || _bean.getCh2KValue() > (_bean.getCh2UpperLimitRate() / 1000)) {
+                if (chRbs[1].isChecked() && (_bean.getCh2KValue() < (_bean.getCh2LowerLimitRate() / 1000) || _bean.getCh2KValue() > (_bean.getCh2UpperLimitRate() / 1000))) {
                     Toast.makeText(this, "Ch2测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (_bean.getCh3KValue() < (_bean.getCh3LowerLimitRate() / 1000) || _bean.getCh3KValue() > (_bean.getCh3UpperLimitRate() / 1000)) {
+                if (chRbs[2].isChecked() && (_bean.getCh3KValue() < (_bean.getCh3LowerLimitRate() / 1000) || _bean.getCh3KValue() > (_bean.getCh3UpperLimitRate() / 1000))) {
                     Toast.makeText(this, "Ch3测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (_bean.getCh4KValue() < (_bean.getCh4LowerLimitRate() / 1000) || _bean.getCh4KValue() > (_bean.getCh4UpperLimitRate() / 1000)) {
+                if (chRbs[3].isChecked() && (_bean.getCh4KValue() < (_bean.getCh4LowerLimitRate() / 1000) || _bean.getCh4KValue() > (_bean.getCh4UpperLimitRate() / 1000))) {
                     Toast.makeText(this, "Ch4测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -216,8 +216,8 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
 
     @OnCheckedChanged({R.id.ch1_rb, R.id.ch2_rb, R.id.ch3_rb, R.id.ch4_rb})
     public void radioButtonCheckChange(boolean isChecked) {
-        doUpdateMeasureADValue();
-        doCalcMeasureValue(currentCHADValue);
+         doUpdateMeasureADValue();
+         doCalcMeasureValue(currentCHADValue);
     }
 
     @OnItemSelected({R.id.calibration_method_sp_m1, R.id.calibration_method_sp_m2, R.id.calibration_method_sp_m3, R.id.calibration_method_sp_m4})
@@ -234,10 +234,10 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < measureADEdt.length; i++) {
-                    measureADEdt[i].setText(String.valueOf(currentCHADValue[i]));
-                    // doCalcMeasureValue();
-                }
+//                for (int i = 0; i < measureADEdt.length; i++) {
+//                    measureADEdt[i].setText(String.valueOf(currentCHADValue[i]));
+//                }
+                doUpdateMeasureADValue();
             }
         });
         doCalcMeasureValue(values);
@@ -258,7 +258,10 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
 
 
     private CalibrationBean view2Bean() {
-        CalibrationBean _bean = new CalibrationBean();
+        CalibrationBean _bean =  App.getDaoSession().getCalibrationBeanDao().load((long) App.getSetupBean().getCodeID());
+        if(_bean == null){
+            _bean = new CalibrationBean();
+        }
         _bean.setCode_id(App.getSetupBean().getCodeID());
         // 校验模式
         _bean.setCh1CalibrationType((int) calibrationTypeSP[0].getSelectedItemId());
@@ -286,10 +289,10 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
         _bean.setCh3LowerLimitRate(Double.valueOf(lowerLimitEdt[2].getText().toString().trim()));
         _bean.setCh4LowerLimitRate(Double.valueOf(lowerLimitEdt[3].getText().toString().trim()));
         // 倍率;
-        _bean.setCh1KValue(Double.valueOf(kValueEdt[0].getText().toString().trim()) / 1000);
-        _bean.setCh2KValue(Double.valueOf(kValueEdt[1].getText().toString().trim()) / 1000);
-        _bean.setCh3KValue(Double.valueOf(kValueEdt[2].getText().toString().trim()) / 1000);
-        _bean.setCh4KValue(Double.valueOf(kValueEdt[3].getText().toString().trim()) / 1000);
+        if(chRbs[0].isChecked())_bean.setCh1KValue(Double.valueOf(kValueEdt[0].getText().toString().trim()) / 1000);
+        if(chRbs[1].isChecked())_bean.setCh2KValue(Double.valueOf(kValueEdt[1].getText().toString().trim()) / 1000);
+        if(chRbs[2].isChecked())_bean.setCh3KValue(Double.valueOf(kValueEdt[2].getText().toString().trim()) / 1000);
+        if(chRbs[3].isChecked())_bean.setCh4KValue(Double.valueOf(kValueEdt[3].getText().toString().trim()) / 1000);
         // 偏差;
 
         _bean.setCh1CompensationValue(Double.valueOf(compensationValueEdt[0].getText().toString().trim()));
@@ -326,14 +329,18 @@ public class CalibrationActivity extends BaseActivity implements CalibrationActi
 
                 }
             } else {
-                measureValueEdt[i].setText("");
+                // measureValueEdt[i].setText("");
             }
         }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 for (int i = 0; i < 4; i++) {
-                    measureValueEdt[i].setText(String.valueOf(Arith.round(ys[i], 4)));
+                    if(chRbs[i].isChecked()){
+                        measureValueEdt[i].setText(String.valueOf(Arith.round(ys[i], 4)));
+                    }else{
+                        measureValueEdt[i].setText("");
+                    }
                 }
             }
         });
