@@ -21,6 +21,7 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.FilterBean;
+import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.ResultData;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
@@ -35,6 +36,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 
 import static alauncher.cn.measuringinstrument.view.adapter.DataAdapter.MYLIVE_MODE_CHECK;
 import static alauncher.cn.measuringinstrument.view.adapter.DataAdapter.MYLIVE_MODE_EDIT;
@@ -59,6 +61,12 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
     @BindView(R.id.ll_mycollection_bottom_dialog)
     LinearLayout mLlMycollectionBottomDialog;
 
+    @BindViews({R.id.m1_title, R.id.m2_title, R.id.m3_title, R.id.m4_title})
+    TextView[] mTitleViews;
+
+    @BindViews({R.id.m1_group_title, R.id.m2_group_title, R.id.m3_group_title, R.id.m4_group_title})
+    TextView[] mTitleGroupViews;
+
     public ResultBeanDao mResultBeanDao;
 
     DataAdapter mDataAdapter;
@@ -67,6 +75,8 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
     private boolean isSelectAll = false;
     private boolean editorStatus = false;
     private int index = 0;
+
+    private ParameterBean mParameterBean;
 
     private String[] title = {"操作员", "时间", "工件号", "事件", "结果", "M1", "M1分组", "M2", "M2分组", "M3", "M3分组", "M4", "M4分组"};
 
@@ -86,8 +96,11 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
         _datas.add(new ResultData(1, "操作员", System.currentTimeMillis(), 123456, "换刀", 1, 0.7023, 0.7023, 0.7023, 0.7023));
 
         mResultBeanDao = App.getDaoSession().getResultBeanDao();
+
+        mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
+
         mDataAdapter = new DataAdapter(DataActivity.this, mResultBeanDao.queryBuilder()
-                .where(ResultBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBeanDao.Properties.Id).list());
+                .where(ResultBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBeanDao.Properties.Id).list(), mParameterBean);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(DataActivity.this);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(mDataAdapter);
@@ -98,6 +111,17 @@ public class DataActivity extends BaseActivity implements View.OnClickListener, 
         quitBtn.setOnClickListener(this);
         excelBtn.setOnClickListener(this);
         filterBtn.setOnClickListener(this);
+
+        if (mParameterBean != null) {
+            mTitleViews[0].setVisibility(mParameterBean.getM1_enable() ? View.VISIBLE : View.GONE);
+            mTitleGroupViews[0].setVisibility(mParameterBean.getM1_enable() ? View.VISIBLE : View.GONE);
+            mTitleViews[1].setVisibility(mParameterBean.getM2_enable() ? View.VISIBLE : View.GONE);
+            mTitleGroupViews[1].setVisibility(mParameterBean.getM2_enable() ? View.VISIBLE : View.GONE);
+            mTitleViews[2].setVisibility(mParameterBean.getM3_enable() ? View.VISIBLE : View.GONE);
+            mTitleGroupViews[2].setVisibility(mParameterBean.getM3_enable() ? View.VISIBLE : View.GONE);
+            mTitleViews[3].setVisibility(mParameterBean.getM4_enable() ? View.VISIBLE : View.GONE);
+            mTitleGroupViews[3].setVisibility(mParameterBean.getM4_enable() ? View.VISIBLE : View.GONE);
+        }
     }
 
     /**

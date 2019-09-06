@@ -125,7 +125,6 @@ public class MainActivity extends BaseActivity {
                     } catch (ActivityNotFoundException e) {
                         Toast.makeText(MainActivity.this, "未找到主界面.", Toast.LENGTH_SHORT).show();
                     }
-
                 }
             }
         });
