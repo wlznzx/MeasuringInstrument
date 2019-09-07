@@ -19,7 +19,7 @@
         android:layout_gravity="bottom"
         app:tabGravity="fill"
         app:tabIndicatorFullWidth="false"
-        app:tabIndicatorGravity="top"
+        app:tabIndicatorGravity="bottom"
         app:tabMaxWidth="0dp"
         app:tabMode="fixed" />
 

@@ -22,9 +22,9 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.view.fragment.BaseInfoFragment;
+import alauncher.cn.measuringinstrument.view.fragment.CodeBaseInfoFragment;
+import alauncher.cn.measuringinstrument.view.fragment.ForceCalibrationFragment;
 import butterknife.BindView;
-import butterknife.ButterKnife;
-
 
 public class CodeDetailActivity extends BaseActivity {
 
@@ -52,30 +52,33 @@ public class CodeDetailActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        BaseInfoFragment bookListFragment = null;
-        BaseInfoFragment findBookFragment = null;
+        CodeBaseInfoFragment codeBaseInfoFragment = null;
+        ForceCalibrationFragment forceCalibrationFragment = null;
         BaseInfoFragment launcherFragment = null;
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment instanceof BaseInfoFragment) {
-                bookListFragment = (BaseInfoFragment) fragment;
-            } else if (fragment instanceof BaseInfoFragment) {
-                findBookFragment = (BaseInfoFragment) fragment;
+                codeBaseInfoFragment = (CodeBaseInfoFragment) fragment;
+            } else if (fragment instanceof alauncher.cn.measuringinstrument.view.fragment.CodeBaseInfoFragment) {
+                forceCalibrationFragment = (ForceCalibrationFragment) fragment;
             } else if (fragment instanceof BaseInfoFragment) {
                 launcherFragment = (BaseInfoFragment) fragment;
             }
         }
-        if (bookListFragment == null)
-            bookListFragment = new BaseInfoFragment();
-        if (findBookFragment == null)
-            findBookFragment = new BaseInfoFragment();
+        if (codeBaseInfoFragment == null)
+            codeBaseInfoFragment = new CodeBaseInfoFragment();
+        if (forceCalibrationFragment == null)
+            forceCalibrationFragment = new ForceCalibrationFragment();
         if (launcherFragment == null)
             launcherFragment = new BaseInfoFragment();
 
-        String[] mTitles = new String[]{getString(R.string.add_title), getString(R.string.add_title), getString(R.string.app_name)};
+
+        String[] mTitles = new String[]{getString(R.string.code_base_info),
+                getString(R.string.code_force_cailbration),
+                getString(R.string.code_step)};
         mTitleList = Arrays.asList(mTitles);
 
 
-        mFragmentList = Arrays.asList(bookListFragment, findBookFragment, launcherFragment);
+        mFragmentList = Arrays.asList(codeBaseInfoFragment, forceCalibrationFragment, launcherFragment);
 
         tabFragmentPageAdapter = new TabFragmentPageAdapter(getSupportFragmentManager());
         mVp.setAdapter(tabFragmentPageAdapter);

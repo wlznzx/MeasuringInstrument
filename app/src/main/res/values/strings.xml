@@ -162,4 +162,12 @@
     <string name="group_num">子组数</string>
     <string name="time_mode">时间区间</string>
     <string name="num">序号</string>
+
+    <string name="code_base_info">基本信息</string>
+    <string name="code_force_cailbration">强制校准</string>
+    <string name="code_workpiece_pic">工件图</string>
+    <string name="code_step">分布策略</string>
+    <string name="code_discrimination">判异</string>
+    <string name="machine_tool">机床</string>
+    <string name="spare_parts">零件</string>
 </resources>
