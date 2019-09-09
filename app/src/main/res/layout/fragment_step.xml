@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/code_step_title"
+        android:textSize="18sp" />
+
+    <TableLayout
+        android:id="@+id/table1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:collapseColumns="8"
+        android:padding="3dip"
+        android:shrinkColumns="1"
+        android:stretchColumns="0">
+
+        <TableRow>
+
+            <Button android:text="该列可伸展" />
+
+            <Button android:text="该列可收缩" />
+
+            <Button android:text="我被隐藏了" />
+        </>
+
+        <TableRow>
+
+            <TextView android:text="我向行方向伸展，我可以很长    " />
+
+            <TextView android:text="我向列方向收缩，我可以很深" />
+        </TableRow>
+
+    </TableLayout>
+</LinearLayout>
