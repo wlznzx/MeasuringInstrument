@@ -20,6 +20,7 @@ import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.view.AccoutManagementActivity;
 import alauncher.cn.measuringinstrument.view.CalibrationActivity;
+import alauncher.cn.measuringinstrument.view.CodeActivity;
 import alauncher.cn.measuringinstrument.view.CodeDetailActivity;
 import alauncher.cn.measuringinstrument.view.DataActivity;
 import alauncher.cn.measuringinstrument.view.LoginActivity;
@@ -49,6 +50,18 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initLayout() {
         setContentView(R.layout.activity_main);
+
+        int value = 0;
+        value |= 1;
+        // value |= 8;
+        value |= 4;
+        value |= 2;
+
+        android.util.Log.d("wlDebug", "value = " + value);
+        android.util.Log.d("wlDebug", String.valueOf((value & 8) > 0));
+        android.util.Log.d("wlDebug", String.valueOf((value & 4) > 0));
+        android.util.Log.d("wlDebug", String.valueOf((value & 2) > 0));
+        android.util.Log.d("wlDebug", String.valueOf((value & 1) > 0));
     }
 
     @Override
@@ -178,7 +191,7 @@ public class MainActivity extends BaseActivity {
                             openActivty(AccoutManagementActivity.class, datas.get(position).strID);
                             break;
                         case 5:
-                            openActivty(CodeDetailActivity.class, datas.get(position).strID);
+                            openActivty(CodeActivity.class, datas.get(position).strID);
                             break;
                         case 6:
                             openActivty(SystemManagementActivity.class, datas.get(position).strID);

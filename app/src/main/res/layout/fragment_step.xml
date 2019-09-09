@@ -1,43 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/code_step_title"
-        android:textSize="18sp" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
 
-    <TableLayout
-        android:id="@+id/table1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:collapseColumns="8"
-        android:padding="3dip"
-        android:shrinkColumns="1"
-        android:stretchColumns="0">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/code_step_title"
+            android:textSize="18sp" />
 
-        <TableRow>
+        <TableLayout
+            android:id="@+id/table1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:collapseColumns="8"
+            android:gravity="center"
+            android:padding="3dip">
 
-            <Button android:text="该列可伸展" />
+            <TableRow>
 
-            <Button android:text="该列可收缩" />
+                <Button android:text="步骤" />
 
-            <Button android:text="我被隐藏了" />
-        </>
+                <Button android:text="M1" />
 
-        <TableRow>
+                <Button android:text="M2" />
 
-            <TextView android:text="我向行方向伸展，我可以很长    " />
+                <Button android:text="M3" />
 
-            <TextView android:text="我向列方向收缩，我可以很深" />
-        </TableRow>
+                <Button android:text="M4" />
 
-    </TableLayout>
-</LinearLayout>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:text="@string/step_1" />
+
+                <CheckBox
+                    android:id="@+id/step_1_m1_cb"
+                    style="@style/CodeCheckBoxStyle" />
+
+                <CheckBox
+                    android:id="@+id/step_1_m2_cb"
+                    style="@style/CodeCheckBoxStyle" />
+
+                <CheckBox
+                    android:id="@+id/step_1_m3_cb"
+                    style="@style/CodeCheckBoxStyle" />
+
+                <CheckBox
+                    android:id="@+id/step_1_m4_cb"
+                    style="@style/CodeCheckBoxStyle" />
+
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:text="@string/step_2" />
+
+                <CheckBox
+                    android:id="@+id/step_2_m1_cb"
+                    style="@style/CodeCheckBoxStyle" />
+
+                <CheckBox
+                    android:id="@+id/step_2_m2_cb"
+                    style="@style/CodeCheckBoxStyle" />
+
+                <CheckBox
+                    android:id="@+id/step_2_m3_cb"
+                    style="@style/CodeCheckBoxStyle" />
+
+                <CheckBox
+                    android:id="@+id/step_2_m4_cb"
+                    style="@style/CodeCheckBoxStyle" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:text="@string/step_3" />
+
+                <CheckBox
+                    android:id="@+id/step_3_m1_cb"
+                    style="@style/CodeCheckBoxStyle" />
+
+                <CheckBox
+                    android:id="@+id/step_3_m2_cb"
+                    style="@style/CodeCheckBoxStyle" />
+
+                <CheckBox
+                    android:id="@+id/step_3_m3_cb"
+                    style="@style/CodeCheckBoxStyle" />
+
+                <CheckBox
+                    android:id="@+id/step_3_m4_cb"
+                    style="@style/CodeCheckBoxStyle" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:text="@string/step_4" />
+
+                <CheckBox
+                    android:id="@+id/step_4_m1_cb"
+                    style="@style/CodeCheckBoxStyle" />
+
+                <CheckBox
+                    android:id="@+id/step_4_m2_cb"
+                    style="@style/CodeCheckBoxStyle" />
+
+                <CheckBox
+                    android:id="@+id/step_4_m3_cb"
+                    style="@style/CodeCheckBoxStyle" />
+
+                <CheckBox
+                    android:id="@+id/step_4_m4_cb"
+                    style="@style/CodeCheckBoxStyle" />
+            </TableRow>
+
+        </TableLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/value_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/eq_24px"
+                android:text="@string/get_value"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/set_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/archive_24px"
+                android:text="@string/save"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/additional_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/assignment_24px"
+                android:text="@string/additional"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/swap_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/swap_horiz_24px"
+                android:text="@string/swap"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </FrameLayout>
+    </LinearLayout>
+</RelativeLayout>
+

@@ -22,9 +22,11 @@ import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
 import alauncher.cn.measuringinstrument.widget.UserEditDialog;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 

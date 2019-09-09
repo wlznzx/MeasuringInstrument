@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import alauncher.cn.measuringinstrument.R;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -23,6 +25,10 @@ public class CodeStepFragment extends Fragment {
     private boolean resumed = false;
     private boolean isRecreate;
     private int group;
+
+
+    @BindView(R.id.table1)
+    public TableLayout tableLayout;
 
 //    private BookShelfAdapter bookShelfAdapter;
 
@@ -38,8 +44,9 @@ public class CodeStepFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 //        return super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.activity_backup, container, false);
+        View view = inflater.inflate(R.layout.fragment_step, container, false);
         unbinder = ButterKnife.bind(this, view);
+        // tableLayout.setColumnCollapsed(0, true);
         return view;
     }
 

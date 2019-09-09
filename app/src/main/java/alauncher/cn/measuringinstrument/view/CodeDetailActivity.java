@@ -23,6 +23,7 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.view.fragment.BaseInfoFragment;
 import alauncher.cn.measuringinstrument.view.fragment.CodeBaseInfoFragment;
+import alauncher.cn.measuringinstrument.view.fragment.CodeStepFragment;
 import alauncher.cn.measuringinstrument.view.fragment.ForceCalibrationFragment;
 import butterknife.BindView;
 
@@ -54,14 +55,14 @@ public class CodeDetailActivity extends BaseActivity {
     protected void initView() {
         CodeBaseInfoFragment codeBaseInfoFragment = null;
         ForceCalibrationFragment forceCalibrationFragment = null;
-        BaseInfoFragment launcherFragment = null;
+        CodeStepFragment launcherFragment = null;
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment instanceof BaseInfoFragment) {
                 codeBaseInfoFragment = (CodeBaseInfoFragment) fragment;
             } else if (fragment instanceof alauncher.cn.measuringinstrument.view.fragment.CodeBaseInfoFragment) {
                 forceCalibrationFragment = (ForceCalibrationFragment) fragment;
             } else if (fragment instanceof BaseInfoFragment) {
-                launcherFragment = (BaseInfoFragment) fragment;
+                launcherFragment = (CodeStepFragment) fragment;
             }
         }
         if (codeBaseInfoFragment == null)
@@ -69,7 +70,7 @@ public class CodeDetailActivity extends BaseActivity {
         if (forceCalibrationFragment == null)
             forceCalibrationFragment = new ForceCalibrationFragment();
         if (launcherFragment == null)
-            launcherFragment = new BaseInfoFragment();
+            launcherFragment = new CodeStepFragment();
 
 
         String[] mTitles = new String[]{getString(R.string.code_base_info),

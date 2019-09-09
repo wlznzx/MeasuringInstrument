@@ -34,7 +34,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="13"
         android:orientation="horizontal">
 
         <RadioGroup
@@ -50,8 +51,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="true"
                 android:background="#64455A64"
+                android:checked="true"
                 android:text="01" />
 
             <RadioButton
@@ -60,8 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false"
                 android:background="#32455A64"
+                android:checked="false"
                 android:text="02" />
 
             <RadioButton
@@ -70,8 +71,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false"
                 android:background="#64455A64"
+                android:checked="false"
                 android:text="03" />
 
             <RadioButton
@@ -80,8 +81,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false"
                 android:background="#32455A64"
+                android:checked="false"
                 android:text="04" />
 
             <RadioButton
@@ -90,8 +91,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false"
                 android:background="#64455A64"
+                android:checked="false"
                 android:text="05" />
 
             <RadioButton
@@ -100,8 +101,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false"
                 android:background="#32455A64"
+                android:checked="false"
                 android:text="06" />
 
             <RadioButton
@@ -110,8 +111,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false"
                 android:background="#64455A64"
+                android:checked="false"
                 android:text="07" />
 
             <RadioButton
@@ -120,8 +121,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false"
                 android:background="#32455A64"
+                android:checked="false"
                 android:text="08" />
 
             <RadioButton
@@ -130,8 +131,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false"
                 android:background="#64455A64"
+                android:checked="false"
                 android:text="09" />
 
             <RadioButton
@@ -140,8 +141,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false"
                 android:background="#32455A64"
+                android:checked="false"
                 android:text="10" />
 
             <RadioButton
@@ -151,8 +152,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:checked="false"
-                android:visibility="gone"
-                android:text="11" />
+                android:text="11"
+                android:visibility="gone" />
         </RadioGroup>
 
 
@@ -177,8 +178,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false"
                 android:background="#32455A64"
+                android:checked="false"
                 android:text="@string/code2_name" />
 
             <EditText
@@ -187,8 +188,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false"
                 android:background="#64455A64"
+                android:checked="false"
                 android:text="@string/code3_name" />
 
             <EditText
@@ -197,8 +198,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:checked="false"
                 android:background="#32455A64"
+                android:checked="false"
                 android:text="@string/code4_name" />
 
             <EditText
@@ -257,11 +258,73 @@
 
             <EditText
                 style="@style/CodeTextStyle"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="@string/code11_name" />
+                android:text="@string/code11_name"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_weight="1"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/value_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/eq_24px"
+                android:text="@string/get_value"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/measure_save_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/archive_24px"
+                android:text="@string/save"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/set_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:drawableTop="@drawable/settings_24px"
+                android:text="@string/set"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </FrameLayout>
+    </LinearLayout>
+
 </LinearLayout>

@@ -1,5 +1,6 @@
 package alauncher.cn.measuringinstrument.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -11,6 +12,7 @@ import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
 import butterknife.BindView;
 import butterknife.BindViews;
+import butterknife.OnClick;
 
 
 public class CodeActivity extends BaseActivity {
@@ -145,4 +147,10 @@ public class CodeActivity extends BaseActivity {
             }
         }
     }
+
+    @OnClick(R.id.set_btn)
+    public void onSetBtnClick() {
+        startActivity(new Intent(this, CodeDetailActivity.class));
+    }
+
 }
