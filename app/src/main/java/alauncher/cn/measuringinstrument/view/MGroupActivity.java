@@ -48,8 +48,6 @@ public class MGroupActivity extends BaseActivity {
     protected void initView() {
         mIndex = getIntent().getIntExtra("M_INDEX", 0);
 
-        android.util.Log.d("wlDebug", "mIndex = " + mIndex);
-
         mDao = App.getDaoSession().getGroupBeanDao();
         GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
         if (_bean != null) {
@@ -105,6 +103,8 @@ public class MGroupActivity extends BaseActivity {
         Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
     }
 
+    @OnClick(R.id.)
+
     private GroupBean view2Bean() {
         GroupBean _bean = new GroupBean();
         _bean.setCode_id(App.getSetupBean().getCodeID());
@@ -132,8 +132,6 @@ public class MGroupActivity extends BaseActivity {
         _bean.setB_describe(describes[1].getText().toString());
         _bean.setC_describe(describes[2].getText().toString());
         _bean.setD_describe(describes[3].getText().toString());
-
-        android.util.Log.d("wlDebug", _bean.toString());
         return _bean;
     }
 

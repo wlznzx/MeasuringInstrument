@@ -17,7 +17,6 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
-import alauncher.cn.measuringinstrument.utils.Arith;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -47,21 +46,17 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initLayout() {
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login_new);
     }
 
     @Override
     protected void initView() {
         mUserDao = App.getDaoSession().getUserDao();
         users = mUserDao.loadAll();
-        for (User user : users) {
-            android.util.Log.d("wlDebug", user.toString());
-        }
+//        for (User user : users) {
+//            android.util.Log.d("wlDebug", user.toString());
+//        }
         actionTips.setVisibility(View.INVISIBLE);
-
-        double _b = Arith.getStandardDeviation(null);
-        android.util.Log.d("wlDebug", "_b = " + _b);
-
     }
 
     private void tPostgreSQL() {
@@ -123,14 +118,6 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.login_btn)
     public void onLogin(View v) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                tPostgreSQL();
-//            }
-//        }).start();
-        // CrashReport.testJavaCrash();
-
         String accoutStr = loginUserNameEdt.getText().toString().trim();
         if (accoutStr == null || accoutStr.equals("")) {
             Toast.makeText(this, R.string.username_notnull, Toast.LENGTH_SHORT).show();

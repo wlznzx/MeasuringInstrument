@@ -127,17 +127,22 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
     @OnClick({R.id.grouping_m1, R.id.grouping_m2, R.id.grouping_m3, R.id.grouping_m4})
     public void onGroupClick(View v) {
         int m_num = -1;
+        int title = R.string.grouping;
         switch (v.getId()) {
             case R.id.grouping_m1:
                 m_num = 1;
+                title = R.string.m1_group;
                 break;
             case R.id.grouping_m2:
+                title = R.string.m2_group;
                 m_num = 2;
                 break;
             case R.id.grouping_m3:
+                title = R.string.m3_group;
                 m_num = 3;
                 break;
             case R.id.grouping_m4:
+                title = R.string.m4_group;
                 m_num = 4;
                 break;
             default:
@@ -145,6 +150,7 @@ public class ParameterManagementActivity extends BaseActivity implements Calcula
         }
         Intent intent = new Intent(this, MGroupActivity.class);
         intent.putExtra("M_INDEX", m_num);
+        intent.putExtra("Title", title);
         startActivity(intent);
     }
 

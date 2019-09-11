@@ -17,4 +17,6 @@
 
     <color name="listViewColor1">#455A64</color>
     <color name="listViewColor2">#40455A64</color>
+
+    <color name="textInputLayout">#3E4C59</color>
 </resources>
