@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
@@ -40,7 +41,9 @@ public class SystemManagementActivity extends BaseActivity {
         _datas.add(new MainInfo(R.string.communication, R.drawable.settings_ethernet));
         _datas.add(new MainInfo(R.string.io, R.drawable.settings_input_svideo));
         _datas.add(new MainInfo(R.string.system_backup, R.drawable.archive));
-        _datas.add(new MainInfo(R.string.force_calibration, R.drawable.straighten));
+        // _datas.add(new MainInfo(R.string.force_calibration, R.drawable.straighten));
+        _datas.add(new MainInfo(R.string.set, R.drawable.settings));
+        _datas.add(new MainInfo(R.string.wifi_str, R.drawable.wifi));
         MainLayoutAdapter _adapter = new MainLayoutAdapter(_datas);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
@@ -93,7 +96,10 @@ public class SystemManagementActivity extends BaseActivity {
                             startActivity(new Intent(SystemManagementActivity.this, BackupActivity.class).putExtra("Title", R.string.system_backup));
                             break;
                         case 3:
-                            startActivity(new Intent(SystemManagementActivity.this, ForceCalibrationActivity.class).putExtra("Title", R.string.force_calibration));
+                            startActivity(new Intent(SystemManagementActivity.this, SetActivity.class).putExtra("Title", R.string.set));
+                            break;
+                        case 4:
+                            startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
                             break;
                         default:
                             break;

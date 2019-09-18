@@ -1,6 +1,7 @@
 package alauncher.cn.measuringinstrument;
 
 import android.app.Application;
+import android.support.multidex.MultiDex;
 
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -8,7 +9,9 @@ import com.tencent.bugly.crashreport.CrashReport;
 import org.greenrobot.greendao.database.Database;
 
 import alauncher.cn.measuringinstrument.bean.CodeBean;
+import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
+import alauncher.cn.measuringinstrument.bean.RememberPasswordBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
@@ -31,7 +34,7 @@ public class App extends Application {
 
     public static long SETTING_ID = 1;
 
-    public static String handlerAccout = "吴工";
+    public static String handlerAccout = "恩梯";
 
     public static String factory_code = "TEFA";
 
@@ -40,6 +43,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        MultiDex.install(this);
         DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(this, "mi.db", null);
         Database db = openHelper.getWritableDb();
         DaoMaster daoMaster = new DaoMaster(db);
@@ -60,9 +64,39 @@ public class App extends Application {
             _user.setName("管理员");
             _user.setStatus(0);
             _user.setId("1");
+            _user.setLimit(0);
             getDaoSession().getUserDao().insert(_user);
+
+            User _tester = new User();
+            _tester.setAccout("et_tester");
+            _tester.setPassword("123456");
+            _tester.setName("测试员");
+            _tester.setStatus(0);
+            _tester.setId("2");
+            _tester.setLimit(4);
+            getDaoSession().getUserDao().insert(_tester);
         }
 
+
+        if (getDaoSession().getRememberPasswordBeanDao().load(App.SETTING_ID) == null) {
+            RememberPasswordBean _bean = new RememberPasswordBean();
+            _bean.setId(SETTING_ID);
+            _bean.setAccount("");
+            _bean.setPassowrd("");
+            _bean.setIsRemeber(false);
+            _bean.setLogined(false);
+            getDaoSession().getRememberPasswordBeanDao().insertOrReplace(_bean);
+        }
+
+        if (getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID) == null) {
+            DeviceInfoBean _bean = new DeviceInfoBean();
+            _bean.setId(SETTING_ID);
+            _bean.setFactoryCode(getResources().getString(R.string.default_factory_code));
+            _bean.setFactoryName(getResources().getString(R.string.default_factory_name));
+            _bean.setManufacturer(getResources().getString(R.string.manufacturer));
+            _bean.setDeviceName(getResources().getString(R.string.default_device_name));
+            getDaoSession().getDeviceInfoBeanDao().insertOrReplace(_bean);
+        }
 
         if (getDaoSession().getForceCalibrationBeanDao().load(SETTING_ID) == null) {
             ForceCalibrationBean _bean = new ForceCalibrationBean();
@@ -84,7 +118,7 @@ public class App extends Application {
             getDaoSession().getStoreBeanDao().insert(_bean);
         }
 
-         Bugly.init(getApplicationContext(), "e4d9621d74", false);
+        Bugly.init(getApplicationContext(), "e4d9621d74", false);
         // CrashReport.initCrashReport(getApplicationContext(), "e4d9621d74", false);
         // initTestDatas();
     }
@@ -103,7 +137,7 @@ public class App extends Application {
         getDaoSession().getSetupBeanDao().update(_bean);
     }
 
-    public static String getCodeName(){
+    public static String getCodeName() {
         String codeName = "";
         CodeBean _CodeBean = App.getDaoSession().getCodeBeanDao().load((long) getSetupBean().getCodeID());
         if (_CodeBean != null) {

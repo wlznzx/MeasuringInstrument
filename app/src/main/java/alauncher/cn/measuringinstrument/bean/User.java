@@ -26,15 +26,18 @@ public class User {
 
     public String id;
 
-    @Generated(hash = 172240613)
+    public int limit;
+
+    @Generated(hash = 668259641)
     public User(String accout, @NotNull String name, @NotNull String password,
-                int status, String email, String id) {
+            int status, String email, String id, int limit) {
         this.accout = accout;
         this.name = name;
         this.password = password;
         this.status = status;
         this.email = email;
         this.id = id;
+        this.limit = limit;
     }
 
     @Generated(hash = 586692638)
@@ -99,5 +102,13 @@ public class User {
                 ", email='" + email + '\'' +
                 ", id='" + id + '\'' +
                 '}';
+    }
+
+    public int getLimit() {
+        return this.limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 }

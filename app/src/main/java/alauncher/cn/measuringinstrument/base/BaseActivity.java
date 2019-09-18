@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +27,7 @@ import java.lang.reflect.Field;
 
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.mvpbase.BaseView;
+import alauncher.cn.measuringinstrument.bean.User;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -87,10 +89,15 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         super.onResume();
 
         CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
+        User user = App.getDaoSession().getUserDao().load(App.handlerAccout);
+        String _name = App.handlerAccout;
+        if (user != null) {
+            _name = user.getName();
+        }
         if (_bean != null) {
-            actionTips.setText(App.handlerAccout + " " + _bean.getName());
+            actionTips.setText(_name + " " + _bean.getName());
         } else {
-            actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
+            actionTips.setText(_name + " 程序" + App.getSetupBean().getCodeID());
         }
     }
 

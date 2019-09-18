@@ -21,7 +21,6 @@ import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.view.AccoutManagementActivity;
 import alauncher.cn.measuringinstrument.view.CalibrationActivity;
 import alauncher.cn.measuringinstrument.view.CodeActivity;
-import alauncher.cn.measuringinstrument.view.CodeDetailActivity;
 import alauncher.cn.measuringinstrument.view.DataActivity;
 import alauncher.cn.measuringinstrument.view.LoginActivity;
 import alauncher.cn.measuringinstrument.view.MeasuringActivity;
@@ -50,33 +49,36 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initLayout() {
         setContentView(R.layout.activity_main);
-
+        /*
         int value = 0;
         value |= 1;
-        // value |= 8;
+        value |= 8;
         value |= 4;
         value |= 2;
-
         android.util.Log.d("wlDebug", "value = " + value);
         android.util.Log.d("wlDebug", String.valueOf((value & 8) > 0));
         android.util.Log.d("wlDebug", String.valueOf((value & 4) > 0));
         android.util.Log.d("wlDebug", String.valueOf((value & 2) > 0));
         android.util.Log.d("wlDebug", String.valueOf((value & 1) > 0));
+        */
     }
 
     @Override
     protected void initView() {
         List<MainInfo> _datas = new ArrayList();
         _datas.add(new MainInfo(R.string.measuring, R.drawable.equalizer));
-        _datas.add(new MainInfo(R.string.data_query, R.drawable.find_in_page));
-        _datas.add(new MainInfo(R.string.parameter_management, R.drawable.functions));
-        _datas.add(new MainInfo(R.string.calibration, R.drawable.straighten));
-        _datas.add(new MainInfo(R.string.user_management, R.drawable.account_box));
-        _datas.add(new MainInfo(R.string.program_management, R.drawable.code));
-        _datas.add(new MainInfo(R.string.system_management, R.drawable.phonelink_setup));
-        _datas.add(new MainInfo(R.string.store, R.drawable.archive));
-        _datas.add(new MainInfo(R.string.spc_analysis, R.drawable.show_chart));
-        _datas.add(new MainInfo(R.string.statistical_report, R.drawable.assignment));
+
+        if (App.getDaoSession().getUserDao().load(App.handlerAccout).getLimit() < 2) {
+            _datas.add(new MainInfo(R.string.data_query, R.drawable.find_in_page));
+            _datas.add(new MainInfo(R.string.parameter_management, R.drawable.functions));
+            _datas.add(new MainInfo(R.string.calibration, R.drawable.straighten));
+            _datas.add(new MainInfo(R.string.user_management, R.drawable.account_box));
+            _datas.add(new MainInfo(R.string.program_management, R.drawable.code));
+            _datas.add(new MainInfo(R.string.system_management, R.drawable.phonelink_setup));
+            _datas.add(new MainInfo(R.string.store, R.drawable.archive));
+            _datas.add(new MainInfo(R.string.spc_analysis, R.drawable.show_chart));
+            _datas.add(new MainInfo(R.string.statistical_report, R.drawable.assignment));
+        }
         MainLayoutAdapter _adapter = new MainLayoutAdapter(_datas);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);

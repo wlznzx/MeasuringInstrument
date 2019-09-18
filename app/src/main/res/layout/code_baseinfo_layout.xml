@@ -8,7 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
         android:orientation="vertical">
 
         <TextView
@@ -38,7 +37,7 @@
                 android:text="@string/machine_tool" />
 
             <EditText
-                android:id="@+id/accout_edt"
+                android:id="@+id/machine_tool_edt"
                 style="@style/EdWordStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -59,7 +58,7 @@
                 android:text="@string/spare_parts" />
 
             <EditText
-                android:id="@+id/fullname_edt"
+                android:id="@+id/parts_edt"
                 style="@style/EdTextStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -180,42 +179,84 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3" />
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:visibility="invisible">
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/no"
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
-                android:background="@null"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="No"
-                android:textColor="#7D7D7D"
-                android:textSize="16sp" />
+                android:visibility="gone">
 
-            <View
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:background="#E4E4E4" />
+                <TextView
+                    android:id="@+id/value_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableTop="@drawable/eq_24px"
+                    android:text="@string/get_value"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+            </FrameLayout>
 
-            <Button
-                android:id="@+id/yes"
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="10dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/save_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableTop="@drawable/archive_24px"
+                    android:text="@string/save"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@null"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="Yes"
-                android:textColor="#38ADFF"
-                android:textSize="16sp" />
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/additional_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableTop="@drawable/assignment_24px"
+                    android:text="@string/additional"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/swap_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableTop="@drawable/swap_horiz_24px"
+                    android:text="@string/swap"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 

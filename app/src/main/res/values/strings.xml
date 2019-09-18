@@ -118,7 +118,7 @@
     <string name="btn_8">8</string>
     <string name="btn_9">9</string>
     <string name="btn_0">0</string>
-    <string name="btn_clear">C</string>
+    <string name="btn_clear">清空</string>
     <string name="btn_plus">+</string>
     <string name="btn_minus">-</string>
     <string name="btn_multiply">×</string>
@@ -176,4 +176,20 @@
     <string name="step_3">步骤三</string>
     <string name="step_4">步骤四</string>
     <string name="remember_password">记住密码</string>
+    <string name="quick_login">快速登入</string>
+    <string name="factory_code">工厂编号</string>
+    <string name="factory_name">工厂名称</string>
+    <string name="device_info">设备信息</string>
+    <string name="default_factory_code">123456789</string>
+    <string name="default_factory_name">无锡恩梯量仪科技有限公司</string>
+    <string name="manufacturer">制造商</string>
+    <string name="device_name">设备名称</string>
+    <string name="default_device_name">物联网量仪</string>
+    <string name="device_code">设备编号</string>
+    <string name="default_device_code">02</string>
+    <string name="software_version">软件版本</string>
+    <string name="kernel_version">内核版本</string>
+    <string name="default_kernel_version">v1.0</string>
+    <string name="base_version">内部版本</string>
+    <string name="wifi_str">Wifi</string>
 </resources>

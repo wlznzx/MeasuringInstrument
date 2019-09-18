@@ -7,4 +7,6 @@
     <dimen name="main_text_size">18sp</dimen>
     <dimen name="swipe_size">50dp</dimen>
 
+
+    <dimen name="item_height">56dp</dimen>
 </resources>

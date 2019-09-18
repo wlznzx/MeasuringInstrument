@@ -1,12 +1,16 @@
 package alauncher.cn.measuringinstrument.view;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import alauncher.cn.measuringinstrument.App;
+import alauncher.cn.measuringinstrument.MainActivity;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.bean.GroupBean;
@@ -28,7 +32,7 @@ public class MGroupActivity extends BaseActivity {
     public EditText describes[];
 
     @BindView(R.id.save_btn)
-    public Button saveBtn;
+    public TextView saveBtn;
 
     private GroupBeanDao mDao;
 
@@ -51,19 +55,15 @@ public class MGroupActivity extends BaseActivity {
         mDao = App.getDaoSession().getGroupBeanDao();
         GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
         if (_bean != null) {
-
             android.util.Log.d("wlDebug", _bean.toString());
-
             upperLimits[0].setText(_bean.getA_upper_limit() + "");
             upperLimits[1].setText(_bean.getB_upper_limit() + "");
             upperLimits[2].setText(_bean.getC_upper_limit() + "");
             upperLimits[3].setText(_bean.getD_upper_limit() + "");
-
             lowerLimits[0].setText(_bean.getA_lower_limit() + "");
             lowerLimits[1].setText(_bean.getB_lower_limit() + "");
             lowerLimits[2].setText(_bean.getC_lower_limit() + "");
             lowerLimits[3].setText(_bean.getD_lower_limit() + "");
-
             describes[0].setText(_bean.getA_describe());
             describes[1].setText(_bean.getB_describe());
             describes[2].setText(_bean.getC_describe());
@@ -74,7 +74,6 @@ public class MGroupActivity extends BaseActivity {
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
         GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
-
         GroupBean mGroupBean = view2Bean();
         if (mGroupBean.getA_upper_limit() < mGroupBean.getA_lower_limit()) {
             Toast.makeText(this, "分组A的上限必须大于下限，请检查输入.", Toast.LENGTH_SHORT).show();
@@ -98,12 +97,38 @@ public class MGroupActivity extends BaseActivity {
             GroupBean saveBean = view2Bean();
             saveBean.setId(_bean.getId());
             App.getDaoSession().getGroupBeanDao().update(saveBean);
-            // android.util.Log.d("wlDebug", "Save Bean " + _bean.toString());
         }
         Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
     }
 
-    @OnClick(R.id.)
+    @OnClick(R.id.clear_btn)
+    public void onClear(View v) {
+        final AlertDialog builder = new AlertDialog.Builder(MGroupActivity.this)
+                .create();
+        builder.show();
+        if (builder.getWindow() == null) return;
+        builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
+        TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
+        Button cancel = (Button) builder.findViewById(R.id.btn_cancle);
+        Button sure = (Button) builder.findViewById(R.id.btn_sure);
+        if (msg == null || cancel == null || sure == null) return;
+        msg.setText("确认清空该组数据？");
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+            }
+        });
+        sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+                GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
+                if (_bean != null) mDao.delete(_bean);
+                finish();
+            }
+        });
+    }
 
     private GroupBean view2Bean() {
         GroupBean _bean = new GroupBean();

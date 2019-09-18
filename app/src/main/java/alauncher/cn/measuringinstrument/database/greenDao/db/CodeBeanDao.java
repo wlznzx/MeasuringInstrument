@@ -26,6 +26,8 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
     public static class Properties {
         public final static Property CodeID = new Property(0, long.class, "codeID", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
+        public final static Property MachineTool = new Property(2, String.class, "machineTool", false, "MACHINE_TOOL");
+        public final static Property Parts = new Property(3, String.class, "parts", false, "PARTS");
     }
 
 
@@ -42,7 +44,9 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"CODE_BEAN\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 0: codeID
-                "\"NAME\" TEXT);"); // 1: name
+                "\"NAME\" TEXT," + // 1: name
+                "\"MACHINE_TOOL\" TEXT," + // 2: machineTool
+                "\"PARTS\" TEXT);"); // 3: parts
     }
 
     /** Drops the underlying database table. */
@@ -60,6 +64,16 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
         if (name != null) {
             stmt.bindString(2, name);
         }
+ 
+        String machineTool = entity.getMachineTool();
+        if (machineTool != null) {
+            stmt.bindString(3, machineTool);
+        }
+ 
+        String parts = entity.getParts();
+        if (parts != null) {
+            stmt.bindString(4, parts);
+        }
     }
 
     @Override
@@ -70,6 +84,16 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
         String name = entity.getName();
         if (name != null) {
             stmt.bindString(2, name);
+        }
+ 
+        String machineTool = entity.getMachineTool();
+        if (machineTool != null) {
+            stmt.bindString(3, machineTool);
+        }
+ 
+        String parts = entity.getParts();
+        if (parts != null) {
+            stmt.bindString(4, parts);
         }
     }
 
@@ -82,7 +106,9 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
     public CodeBean readEntity(Cursor cursor, int offset) {
         CodeBean entity = new CodeBean( //
             cursor.getLong(offset + 0), // codeID
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // name
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // machineTool
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // parts
         );
         return entity;
     }
@@ -91,6 +117,8 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
     public void readEntity(Cursor cursor, CodeBean entity, int offset) {
         entity.setCodeID(cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setMachineTool(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setParts(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
      }
     
     @Override

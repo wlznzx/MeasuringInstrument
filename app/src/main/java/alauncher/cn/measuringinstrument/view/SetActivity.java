@@ -3,7 +3,6 @@ package alauncher.cn.measuringinstrument.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -24,9 +23,10 @@ import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.view.fragment.CodeBaseInfoFragment;
 import alauncher.cn.measuringinstrument.view.fragment.CodeStepFragment;
 import alauncher.cn.measuringinstrument.view.fragment.ForceCalibrationFragment;
+import alauncher.cn.measuringinstrument.view.fragment.InfoFragment;
 import butterknife.BindView;
 
-public class CodeDetailActivity extends BaseActivity {
+public class SetActivity extends BaseActivity {
 
     @BindView(R.id.tab_tl_indicator)
     protected TabLayout mTlIndicator;
@@ -52,33 +52,21 @@ public class CodeDetailActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        CodeBaseInfoFragment codeBaseInfoFragment = null;
-        ForceCalibrationFragment forceCalibrationFragment = null;
-        CodeStepFragment launcherFragment = null;
+        InfoFragment codeBaseInfoFragment = null;
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            if (fragment instanceof CodeBaseInfoFragment) {
-                codeBaseInfoFragment = (CodeBaseInfoFragment) fragment;
-            } else if (fragment instanceof alauncher.cn.measuringinstrument.view.fragment.CodeBaseInfoFragment) {
-                forceCalibrationFragment = (ForceCalibrationFragment) fragment;
-            } else if (fragment instanceof CodeStepFragment) {
-                launcherFragment = (CodeStepFragment) fragment;
+            if (fragment instanceof InfoFragment) {
+                codeBaseInfoFragment = (InfoFragment) fragment;
             }
         }
         if (codeBaseInfoFragment == null)
-            codeBaseInfoFragment = new CodeBaseInfoFragment();
-        if (forceCalibrationFragment == null)
-            forceCalibrationFragment = new ForceCalibrationFragment();
-        if (launcherFragment == null)
-            launcherFragment = new CodeStepFragment();
+            codeBaseInfoFragment = new InfoFragment();
 
 
-        String[] mTitles = new String[]{getString(R.string.code_base_info),
-                getString(R.string.code_force_cailbration),
-                getString(R.string.code_step)};
+        String[] mTitles = new String[]{getString(R.string.device_info)};
         mTitleList = Arrays.asList(mTitles);
 
 
-        mFragmentList = Arrays.asList(codeBaseInfoFragment, forceCalibrationFragment, launcherFragment);
+        mFragmentList = Arrays.asList(codeBaseInfoFragment);
 
         tabFragmentPageAdapter = new TabFragmentPageAdapter(getSupportFragmentManager());
         mVp.setAdapter(tabFragmentPageAdapter);

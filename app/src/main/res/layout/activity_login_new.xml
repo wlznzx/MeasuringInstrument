@@ -148,8 +148,8 @@
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16dp"
-                android:visibility="gone"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/login_btn"
@@ -167,16 +167,35 @@
         </LinearLayout>
 
 
-        <CheckBox
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/calibri"
-            android:text="@string/remember_password"
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
-            android:textSize="16sp" />
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/is_remember_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/calibri"
+                android:text="@string/remember_password"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/quick_login_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="26dp"
+                android:fontFamily="@font/calibri"
+                android:text="@string/quick_login"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+        </LinearLayout>
 
 
     </LinearLayout>

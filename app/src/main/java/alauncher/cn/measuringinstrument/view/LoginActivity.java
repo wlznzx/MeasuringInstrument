@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -15,9 +17,11 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.MainActivity;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.bean.RememberPasswordBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
 import butterknife.BindView;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 import java.sql.Connection;
@@ -33,6 +37,9 @@ public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.login_btn)
     public Button loginBtn;
+
+    @BindView(R.id.is_remember_cb)
+    public CheckBox isRemeberCB;
 
     private UserDao mUserDao;
 
@@ -57,6 +64,15 @@ public class LoginActivity extends BaseActivity {
 //            android.util.Log.d("wlDebug", user.toString());
 //        }
         actionTips.setVisibility(View.INVISIBLE);
+
+        RememberPasswordBean _bean = App.getDaoSession().getRememberPasswordBeanDao().load(App.SETTING_ID);
+        if (_bean.getIsRemeber() && _bean.getLogined()) {
+            loginUserNameEdt.setText(_bean.getAccount());
+            loginUserPasswordEdt.setText(_bean.getPassowrd());
+        }
+
+
+        isRemeberCB.setChecked(_bean.getIsRemeber());
     }
 
     private void tPostgreSQL() {
@@ -141,10 +157,31 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         App.handlerAccout = accoutStr;
+
+        RememberPasswordBean _bean = App.getDaoSession().getRememberPasswordBeanDao().load(App.SETTING_ID);
+        if(_bean.getIsRemeber()){
+            _bean.setLogined(true);
+            _bean.setAccount(accoutStr);
+            _bean.setPassowrd(passwordStr);
+            App.getDaoSession().getRememberPasswordBeanDao().insertOrReplace(_bean);
+        }
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
+    @OnClick(R.id.quick_login_btn)
+    public void onQuickBtn(View v) {
+        App.handlerAccout = "et_tester";
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+    }
+
+    @OnCheckedChanged(R.id.is_remember_cb)
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        RememberPasswordBean _bean = App.getDaoSession().getRememberPasswordBeanDao().load(App.SETTING_ID);
+        _bean.setIsRemeber(isChecked);
+        App.getDaoSession().getRememberPasswordBeanDao().insertOrReplace(_bean);
+    }
 
     @Override
     public void onBackPressed() {

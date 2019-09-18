@@ -140,11 +140,14 @@ public class CodeActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         for (int i = 0; i < codeEdts.length; i++) {
-            if (App.getDaoSession().getCodeBeanDao().load((long) (i + 1)) == null) {
-                App.getDaoSession().getCodeBeanDao().insert(new CodeBean((i + 1), codeEdts[i].getText().toString().trim()));
+            CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) (i + 1));
+            if (_bean == null) {
+                _bean = new CodeBean((i + 1), codeEdts[i].getText().toString().trim(), "", "");
             } else {
-                App.getDaoSession().getCodeBeanDao().update(new CodeBean((i + 1), codeEdts[i].getText().toString().trim()));
+                _bean.setCodeID((i + 1));
+                _bean.setName(codeEdts[i].getText().toString().trim());
             }
+            App.getDaoSession().getCodeBeanDao().insertOrReplace(_bean);
         }
     }
 

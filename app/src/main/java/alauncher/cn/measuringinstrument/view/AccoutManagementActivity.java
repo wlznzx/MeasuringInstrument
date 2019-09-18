@@ -140,6 +140,9 @@ public class AccoutManagementActivity extends BaseActivity implements UserEditDi
                                     Toast.makeText(AccoutManagementActivity.this, "管理员账号不能删除.", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+                                if (mDatas.get(position).getAccout().equals("etTester")) {
+
+                                }
                                 mUserDao.delete(mDatas.get(position));
                                 updateUI();
                             }

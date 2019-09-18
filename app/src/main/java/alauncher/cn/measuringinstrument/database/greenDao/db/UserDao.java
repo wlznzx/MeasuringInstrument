@@ -30,6 +30,7 @@ public class UserDao extends AbstractDao<User, String> {
         public final static Property Status = new Property(3, int.class, "status", false, "STATUS");
         public final static Property Email = new Property(4, String.class, "email", false, "EMAIL");
         public final static Property Id = new Property(5, String.class, "id", false, "ID");
+        public final static Property Limit = new Property(6, int.class, "limit", false, "LIMIT");
     }
 
 
@@ -50,7 +51,8 @@ public class UserDao extends AbstractDao<User, String> {
                 "\"PASSWORD\" TEXT NOT NULL ," + // 2: password
                 "\"STATUS\" INTEGER NOT NULL ," + // 3: status
                 "\"EMAIL\" TEXT," + // 4: email
-                "\"ID\" TEXT);"); // 5: id
+                "\"ID\" TEXT," + // 5: id
+                "\"LIMIT\" INTEGER NOT NULL );"); // 6: limit
     }
 
     /** Drops the underlying database table. */
@@ -80,6 +82,7 @@ public class UserDao extends AbstractDao<User, String> {
         if (id != null) {
             stmt.bindString(6, id);
         }
+        stmt.bindLong(7, entity.getLimit());
     }
 
     @Override
@@ -103,6 +106,7 @@ public class UserDao extends AbstractDao<User, String> {
         if (id != null) {
             stmt.bindString(6, id);
         }
+        stmt.bindLong(7, entity.getLimit());
     }
 
     @Override
@@ -118,7 +122,8 @@ public class UserDao extends AbstractDao<User, String> {
             cursor.getString(offset + 2), // password
             cursor.getInt(offset + 3), // status
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // email
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // id
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // id
+            cursor.getInt(offset + 6) // limit
         );
         return entity;
     }
@@ -131,6 +136,7 @@ public class UserDao extends AbstractDao<User, String> {
         entity.setStatus(cursor.getInt(offset + 3));
         entity.setEmail(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setId(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setLimit(cursor.getInt(offset + 6));
      }
     
     @Override

@@ -62,7 +62,7 @@ android {
 }
 
 greendao {
-    schemaVersion 19 //数据库版本号
+    schemaVersion 23 //数据库版本号
     daoPackage 'alauncher.cn.measuringinstrument.database.greenDao.db'
 // 设置DaoMaster、DaoSession、Dao 包名
     targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用.不要用/
@@ -95,6 +95,7 @@ dependencies {
     implementation files('libs/postgresql-42.2.6.jre7.jar')
     // implementation files('libs/bugly_crashreport_upgrade-1.4.1.aar')
     implementation 'com.github.huangyanbin:SmartTable:2.2.0'
+    implementation 'com.android.support:multidex:1.0.1'
 
     implementation 'com.google.android.material:material:1.1.0-alpha09'
     // implementation 'com.tencent.bugly:crashreport_upgrade:1.4.1'
