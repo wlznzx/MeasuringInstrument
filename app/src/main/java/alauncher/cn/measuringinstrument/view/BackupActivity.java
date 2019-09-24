@@ -21,13 +21,14 @@ import android.widget.Toast;
 
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.utils.BackupTask;
 import alauncher.cn.measuringinstrument.utils.UriToPathUtil;
 import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class BackupActivity extends BaseActivity implements BackupTask.BackupInterface {
+public class BackupActivity extends BaseOActivity implements BackupTask.BackupInterface {
 
 
     @BindView(R.id.select_path_btn)

@@ -10,13 +10,14 @@ import org.nfunk.jep.function.Str;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ForceCalibrationBeanDao;
 import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class ForceCalibrationActivity extends BaseActivity {
+public class ForceCalibrationActivity extends BaseOActivity {
 
     @BindView(R.id.force_calibration_sp)
     public Spinner forceCalibrationSP;

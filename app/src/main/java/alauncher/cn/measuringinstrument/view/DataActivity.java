@@ -20,6 +20,7 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.FilterBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
@@ -41,7 +42,7 @@ import butterknife.BindViews;
 import static alauncher.cn.measuringinstrument.view.adapter.DataAdapter.MYLIVE_MODE_CHECK;
 import static alauncher.cn.measuringinstrument.view.adapter.DataAdapter.MYLIVE_MODE_EDIT;
 
-public class DataActivity extends BaseActivity implements View.OnClickListener, DataAdapter.OnItemClickListener, FilterDialog.FilterInterface {
+public class DataActivity extends BaseOActivity implements View.OnClickListener, DataAdapter.OnItemClickListener, FilterDialog.FilterInterface {
 
     @BindView(R.id.rv)
     RecyclerView rv;

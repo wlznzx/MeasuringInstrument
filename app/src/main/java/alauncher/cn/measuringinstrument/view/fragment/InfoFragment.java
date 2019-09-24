@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.utils.BuildUtils;
 import butterknife.BindView;

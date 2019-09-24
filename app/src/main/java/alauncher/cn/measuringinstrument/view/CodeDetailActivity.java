@@ -71,7 +71,6 @@ public class CodeDetailActivity extends BaseActivity {
         if (launcherFragment == null)
             launcherFragment = new CodeStepFragment();
 
-
         String[] mTitles = new String[]{getString(R.string.code_base_info),
                 getString(R.string.code_force_cailbration),
                 getString(R.string.code_step)};
@@ -82,7 +81,7 @@ public class CodeDetailActivity extends BaseActivity {
 
         tabFragmentPageAdapter = new TabFragmentPageAdapter(getSupportFragmentManager());
         mVp.setAdapter(tabFragmentPageAdapter);
-        mVp.setOffscreenPageLimit(2);
+        mVp.setOffscreenPageLimit(1);
         mTlIndicator.setupWithViewPager(mVp);
     }
 

@@ -17,6 +17,7 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.MainActivity;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.RememberPasswordBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
@@ -27,7 +28,7 @@ import butterknife.OnClick;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseOActivity {
 
     @BindView(R.id.login_user_name_edt)
     public EditText loginUserNameEdt;

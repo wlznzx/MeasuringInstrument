@@ -100,9 +100,6 @@ public class SetActivity extends BaseActivity {
         @Override
         public int getCount() {
             int size = mFragmentList.size();
-
-            android.util.Log.d("wlDebug", "size = " + size);
-            android.util.Log.d("wlDebug", "T size = " + mTitleList.size());
             return size;
         }
 

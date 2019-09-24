@@ -7,21 +7,23 @@ import android.widget.RadioGroup;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
+import alauncher.cn.measuringinstrument.bean.User;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
 
 
-public class CodeActivity extends BaseActivity {
-
+public class CodeActivity extends BaseOActivity {
+    /**/
     @BindView(R.id.code_rg)
     RadioGroup mCodeRadioGroup;
 
     @BindViews({R.id.code_1_edt, R.id.code_2_edt, R.id.code_3_edt, R.id.code_4_edt, R.id.code_5_edt, R.id.code_6_edt, R.id.code_7_edt, R.id.code_8_edt, R.id.code_9_edt, R.id.code_10_edt})
     public EditText codeEdts[];
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class CodeActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+
         mCodeRadioGroup.check(getCodeID(App.getSetupBean().getCodeID()));
         mCodeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -87,14 +90,19 @@ public class CodeActivity extends BaseActivity {
                         //女
                         break;
                 }
-                SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
-                _bean.setCodeID(codeID);
-                App.getDaoSession().getSetupBeanDao().update(_bean);
-                CodeBean _CodeBean = App.getDaoSession().getCodeBeanDao().load((long) codeID);
-                if (_CodeBean != null) {
-                    actionTips.setText(App.handlerAccout + " " + _CodeBean.getName());
+                SetupBean _sbean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
+                _sbean.setCodeID(codeID);
+                App.getDaoSession().getSetupBeanDao().update(_sbean);
+                CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
+                User user = App.getDaoSession().getUserDao().load(App.handlerAccout);
+                String _name = App.handlerAccout;
+                if (user != null) {
+                    _name = user.getName();
+                }
+                if (_bean != null) {
+                    actionTips.setText(_name + " " + _bean.getName());
                 } else {
-                    actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
+                    actionTips.setText(_name + " 程序" + App.getSetupBean().getCodeID());
                 }
             }
         });
@@ -106,7 +114,6 @@ public class CodeActivity extends BaseActivity {
             }
         }
     }
-
 
     private int getCodeID(int code) {
         switch (code) {
@@ -139,6 +146,7 @@ public class CodeActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        /* */
         for (int i = 0; i < codeEdts.length; i++) {
             CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) (i + 1));
             if (_bean == null) {
@@ -149,11 +157,14 @@ public class CodeActivity extends BaseActivity {
             }
             App.getDaoSession().getCodeBeanDao().insertOrReplace(_bean);
         }
+
     }
 
     @OnClick(R.id.set_btn)
     public void onSetBtnClick() {
-        startActivity(new Intent(this, CodeDetailActivity.class));
+        Intent intent = new Intent(this, CodeDetailActivity.class);
+        intent.putExtra("Title", R.string.code_set);
+        startActivity(intent);
     }
 
 }

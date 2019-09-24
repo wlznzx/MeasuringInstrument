@@ -12,6 +12,7 @@ import java.util.Set;
 
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 
 import androidx.annotation.NonNull;
@@ -20,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
 
-public class SystemManagementActivity extends BaseActivity {
+public class SystemManagementActivity extends BaseOActivity {
 
     @BindView(R.id.rv)
     RecyclerView rv;

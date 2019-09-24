@@ -10,13 +10,14 @@ import android.widget.Toast;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StoreBeanDao;
 import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class StoreActivity extends BaseActivity {
+public class StoreActivity extends BaseOActivity {
 
     @BindView(R.id.store_mode_rg)
     RadioGroup storeModeRG;

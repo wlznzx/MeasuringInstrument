@@ -32,7 +32,6 @@ public class JdbcUtil {
             Connection c = DriverManager
                     .getConnection("jdbc:postgresql://47.98.58.40:5432/NT_CLOUD",
                             "dfqtech", "dfqtech2016");
-            android.util.Log.d("wlDebug", "connect success.");
             return c;
         } catch (SQLException e) {
             e.printStackTrace();

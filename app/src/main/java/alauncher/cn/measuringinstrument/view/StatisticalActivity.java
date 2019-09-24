@@ -37,6 +37,7 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
@@ -48,7 +49,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class StatisticalActivity extends BaseActivity {
+public class StatisticalActivity extends BaseOActivity {
 
     @BindView(R.id.statistical_chart)
     public LineChart chart;

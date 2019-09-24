@@ -17,11 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.view.AccoutManagementActivity;
 import alauncher.cn.measuringinstrument.view.CalibrationActivity;
 import alauncher.cn.measuringinstrument.view.CodeActivity;
 import alauncher.cn.measuringinstrument.view.DataActivity;
+import alauncher.cn.measuringinstrument.view.IOActivity;
 import alauncher.cn.measuringinstrument.view.LoginActivity;
 import alauncher.cn.measuringinstrument.view.MeasuringActivity;
 import alauncher.cn.measuringinstrument.view.ParameterManagementActivity;
@@ -34,9 +36,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import alauncher.cn.measuringinstrument.view.TActivity;
 import butterknife.BindView;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseOActivity {
 
     @BindView(R.id.rv)
     RecyclerView rv;

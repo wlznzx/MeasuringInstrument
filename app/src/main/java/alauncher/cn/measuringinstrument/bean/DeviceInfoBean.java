@@ -20,16 +20,19 @@ public class DeviceInfoBean {
 
     public String factoryName;
 
+    public String deviceCode;
+
     public String deviceName;
 
     public String manufacturer;
 
-    @Generated(hash = 874649939)
+    @Generated(hash = 748189063)
     public DeviceInfoBean(Long id, String factoryCode, String factoryName,
-            String deviceName, String manufacturer) {
+            String deviceCode, String deviceName, String manufacturer) {
         this.id = id;
         this.factoryCode = factoryCode;
         this.factoryName = factoryName;
+        this.deviceCode = deviceCode;
         this.deviceName = deviceName;
         this.manufacturer = manufacturer;
     }
@@ -76,5 +79,13 @@ public class DeviceInfoBean {
 
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    public String getDeviceCode() {
+        return this.deviceCode;
+    }
+
+    public void setDeviceCode(String deviceCode) {
+        this.deviceCode = deviceCode;
     }
 }

@@ -13,6 +13,7 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.MainActivity;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.GroupBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;
 import butterknife.BindView;
@@ -20,7 +21,7 @@ import butterknife.BindViews;
 import butterknife.OnClick;
 
 
-public class MGroupActivity extends BaseActivity {
+public class MGroupActivity extends BaseOActivity {
 
     @BindViews({R.id.a_upper_limit_edt, R.id.b_upper_limit_edt, R.id.c_upper_limit_edt, R.id.d_upper_limit_edt})
     public EditText upperLimits[];

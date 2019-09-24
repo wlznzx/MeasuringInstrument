@@ -32,6 +32,7 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
@@ -54,7 +55,7 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
 
-public class MeasuringActivity extends BaseActivity implements MeasuringActivityView, AdditionalDialog.AdditionDialogInterface {
+public class MeasuringActivity extends BaseOActivity implements MeasuringActivityView, AdditionalDialog.AdditionDialogInterface {
 
     @BindViews({R.id.m1_value, R.id.m2_value, R.id.m3_value, R.id.m4_value})
     public MValueView[] mMValueViews;

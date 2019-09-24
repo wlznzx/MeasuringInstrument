@@ -13,6 +13,7 @@ import java.text.NumberFormat;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.mvp.presenter.CalibrationPresenter;
 import alauncher.cn.measuringinstrument.mvp.presenter.impl.CalibrationPresenterImpl;
@@ -24,7 +25,7 @@ import butterknife.OnClick;
 import butterknife.OnItemSelected;
 
 
-public class CalibrationActivity extends BaseActivity implements CalibrationActivityView {
+public class CalibrationActivity extends BaseOActivity implements CalibrationActivityView {
 
     private CalibrationPresenter mCalibrationPresenter;
 

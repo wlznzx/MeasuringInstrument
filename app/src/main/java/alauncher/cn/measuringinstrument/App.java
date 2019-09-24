@@ -94,6 +94,7 @@ public class App extends Application {
             _bean.setFactoryCode(getResources().getString(R.string.default_factory_code));
             _bean.setFactoryName(getResources().getString(R.string.default_factory_name));
             _bean.setManufacturer(getResources().getString(R.string.manufacturer));
+
             _bean.setDeviceName(getResources().getString(R.string.default_device_name));
             getDaoSession().getDeviceInfoBeanDao().insertOrReplace(_bean);
         }
@@ -146,6 +147,10 @@ public class App extends Application {
             codeName = "程序" + App.getSetupBean().getCodeID();
         }
         return codeName;
+    }
+
+    public static DeviceInfoBean getDeviceInfo() {
+        return getDaoSession().getDeviceInfoBeanDao().load(SETTING_ID);
     }
 
     public void initTestDatas() {

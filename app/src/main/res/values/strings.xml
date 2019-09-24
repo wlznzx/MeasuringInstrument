@@ -192,4 +192,5 @@
     <string name="default_kernel_version">v1.0</string>
     <string name="base_version">内部版本</string>
     <string name="wifi_str">Wifi</string>
+    <string name="code_set">程序详细设置</string>
 </resources>

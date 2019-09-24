@@ -14,6 +14,7 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
 import alauncher.cn.measuringinstrument.widget.CalculateDialog;
@@ -22,7 +23,7 @@ import butterknife.BindViews;
 import butterknife.OnClick;
 
 
-public class ParameterManagementActivity extends BaseActivity implements CalculateDialog.CodeInterface {
+public class ParameterManagementActivity extends BaseOActivity implements CalculateDialog.CodeInterface {
 
     @BindViews({R.id.describe_m1, R.id.describe_m2, R.id.describe_m3, R.id.describe_m4})
     public EditText[] describeEd;
