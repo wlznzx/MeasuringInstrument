@@ -116,7 +116,7 @@ public class AccoutManagementActivity extends BaseActivity implements UserEditDi
      */
     private OnItemMenuClickListener mMenuItemClickListener = new OnItemMenuClickListener() {
         @Override
-        public void onItemClick(SwipeMenuBridge menuBridge, int position) {
+        public void onItemClick(SwipeMenuBridge menuBridge, final int position) {
             menuBridge.closeMenu();
 
             int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。

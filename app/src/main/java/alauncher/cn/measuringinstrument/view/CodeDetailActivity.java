@@ -90,9 +90,6 @@ public class CodeDetailActivity extends BaseActivity {
         View tabView = LayoutInflater.from(this).inflate(R.layout.tab_view_icon_right, null);
         TextView tv = tabView.findViewById(R.id.tabtext);
         tv.setText(name);
-        // ImageView im = tabView.findViewById(R.id.tabicon);
-        // im.setVisibility(View.VISIBLE);
-        // im.setImageResource(R.drawable.ic_arrow_drop_down);
         return tabView;
     }
 
@@ -111,9 +108,6 @@ public class CodeDetailActivity extends BaseActivity {
         @Override
         public int getCount() {
             int size = mFragmentList.size();
-
-            android.util.Log.d("wlDebug", "size = " + size);
-            android.util.Log.d("wlDebug", "T size = " + mTitleList.size());
             return size;
         }
 

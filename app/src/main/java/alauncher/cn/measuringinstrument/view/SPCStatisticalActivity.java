@@ -448,7 +448,6 @@ public class SPCStatisticalActivity extends BaseOActivity {
         int _limit = mFilterBean.getGroupNum() * mFilterBean.getGroupSize();
 
         if (!mFilterBean.isTimeAuto() && startTimeStamp >= stopTimeStamp) {
-            Toast.makeText(SPCStatisticalActivity.this, "起始时间不可大于结束时间，请确认输入.", Toast.LENGTH_SHORT).show();
             return null;
         }
 

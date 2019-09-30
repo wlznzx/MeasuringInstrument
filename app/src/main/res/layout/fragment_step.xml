@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusable="true"
@@ -168,7 +168,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/set_btn"
+                android:id="@+id/save_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -178,37 +178,6 @@
                 android:textSize="18sp" />
         </FrameLayout>
 
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/additional_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:drawableTop="@drawable/assignment_24px"
-                android:text="@string/additional"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/swap_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:drawableTop="@drawable/swap_horiz_24px"
-                android:text="@string/swap"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
-        </FrameLayout>
     </LinearLayout>
 </RelativeLayout>
 

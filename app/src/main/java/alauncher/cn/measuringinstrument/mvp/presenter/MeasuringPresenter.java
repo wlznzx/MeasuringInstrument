@@ -13,7 +13,9 @@ public interface MeasuringPresenter {
 
     ParameterBean getParameterBean();
 
-    void saveResult(double[] ms, AddInfoBean bean);
+    String saveResult(double[] ms, AddInfoBean bean);
 
     String[] getMGroupValues(double[] ms);
+
+    int getStep();
 }

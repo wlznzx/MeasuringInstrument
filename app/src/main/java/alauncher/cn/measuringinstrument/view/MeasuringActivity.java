@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -31,7 +33,6 @@ import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
@@ -48,9 +49,6 @@ import alauncher.cn.measuringinstrument.utils.NumberUtils;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import alauncher.cn.measuringinstrument.widget.AdditionalDialog;
 import alauncher.cn.measuringinstrument.widget.MValueView;
-
-import androidx.core.content.ContextCompat;
-
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
@@ -78,8 +76,10 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     @BindViews({R.id.m1_describe, R.id.m2_describe, R.id.m3_describe, R.id.m4_describe})
     public TextView mDescribes[];
 
+    @BindView(R.id.measure_save_btn)
+    public TextView saveTv;
+
     protected Typeface tfRegular;
-    protected Typeface tfLight;
 
     private double[] curMValues = {1.8, -2.8, 0.8, -0.4};
 
@@ -115,7 +115,6 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         super.onCreate(savedInstanceState);
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -134,6 +133,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     @Override
     protected void initView() {
         mMeasuringPresenter = new MeasuringPresenterImpl(this);
+        updateGetValueTips();
         initChart();
         onMeasuringDataUpdate(curMValues);
         initParameters();
@@ -242,11 +242,20 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
             return false;
         }
         mMeasuringPresenter.saveResult(curMValues, mAddInfoBean);
+        updateGetValueTips();
         Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
         updateChartDatas();
         _bean.setUsrNum(_bean.getUsrNum() - 1);
         _dao.update(_bean);
         return true;
+    }
+
+    private void updateGetValueTips() {
+        if (mMeasuringPresenter.getStep() == -1) {
+            saveTv.setText(R.string.save);
+        } else {
+            saveTv.setText(String.format(getResources().getString(R.string.step_tips), mMeasuringPresenter.getStep() + 1));
+        }
     }
 
     private void showForceDialog() {

@@ -7,13 +7,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
@@ -50,7 +50,7 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
     public List<Button> groupingBtn;
 
     @BindView(R.id.save_btn)
-    public Button saveBtn;
+    public TextView saveBtn;
 
     @BindViews({R.id.ch1_rb, R.id.ch2_rb, R.id.ch3_rb, R.id.ch4_rb})
     public List<CheckBox> mCheckBoxs;

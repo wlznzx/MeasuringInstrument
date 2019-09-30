@@ -11,8 +11,8 @@
     </string-array>
 
     <string-array name="calibration_method_values" translatable="false">
-        <item>one piece</item>
-        <item>two piece</item>
+        <item>单件校准</item>
+        <item>双件校准</item>
     </string-array>
 
     <string-array name="m_values" translatable="false">

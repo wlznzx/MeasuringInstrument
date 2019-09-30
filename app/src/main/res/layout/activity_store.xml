@@ -17,13 +17,6 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <TextView
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/store_method" />
-
         <RadioGroup
             android:id="@+id/store_mode_rg"
             android:layout_width="0dp"
@@ -46,6 +39,13 @@
                 android:layout_weight="1"
                 android:text="@string/manual" />
         </RadioGroup>
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/store_method" />
     </LinearLayout>
 
     <LinearLayout
@@ -53,20 +53,21 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
+        <Spinner
+            android:id="@+id/store_value_sp"
+            style="@style/SPTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="3"
+            android:entries="@array/m_values"></Spinner>
+
         <TextView
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/store_condition" />
-
-        <Spinner
-            android:id="@+id/store_value_sp"
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:entries="@array/m_values"></Spinner>
 
         <TextView
             style="@style/TextStyle"
@@ -79,13 +80,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-
-        <TextView
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/upper_limit" />
 
         <EditText
             android:id="@+id/store_upper_limit_edt"
@@ -100,6 +94,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="@string/upper_limit" />
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/mm" />
     </LinearLayout>
 
@@ -107,13 +108,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-
-        <TextView
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/lower_limit" />
 
         <EditText
             android:id="@+id/store_lower_limit_edt"
@@ -128,6 +122,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="@string/lower_limit" />
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/mm" />
     </LinearLayout>
 
@@ -135,13 +136,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-
-        <TextView
-            style="@style/TextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/retention_time" />
 
         <EditText
             android:id="@+id/store_time"
@@ -151,6 +145,13 @@
             android:layout_weight="3"
             android:inputType="number"
             android:text="0"></EditText>
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/retention_time" />
 
         <TextView
             style="@style/TextStyle"

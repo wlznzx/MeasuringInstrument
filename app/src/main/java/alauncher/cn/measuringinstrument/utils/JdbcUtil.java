@@ -80,9 +80,78 @@ public class JdbcUtil {
         return re;
     }
 
+    public static int selectDevice(String machine_code) {
+        int count = 0;
+        Connection con = getConnection();
+        String sql = "select count(*) from ntqc_equipment where machine_code = '" + machine_code + "'";
+        try {
+
+            PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs = null;
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+
+    }
+
+    public static int addDevice(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) {
+        Connection con = getConnection();
+        String sql = "insert into ntqc_equipment (factory_code,factory_name,machine_code,machine_name,manufacturer,manufacture_date,rmk,operator,operate_time) values (?,?,?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, factory_code);
+            pstmt.setString(2, factory_name);
+            pstmt.setString(3, machine_code);
+            pstmt.setString(4, machine_name);
+            pstmt.setString(5, manufacturer);
+            pstmt.setTimestamp(6, new java.sql.Timestamp(System.currentTimeMillis()));
+            pstmt.setString(7, rmk);
+            pstmt.setString(8, operator);
+            pstmt.setTimestamp(9, new java.sql.Timestamp(System.currentTimeMillis()));
+            return pstmt.executeUpdate();//执行sql
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static int updateDevice(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) {
+        Connection conn = getConnection();
+        String sql = "update ntqc_equipment set factory_code=?,factory_name=?,machine_name=?,manufacturer=?,rmk=?,operator=?,operate_time=? where machine_code=?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, factory_code);
+            pstmt.setString(2, factory_name);
+            pstmt.setString(3, machine_name);
+            pstmt.setString(4, manufacturer);
+            pstmt.setString(5, rmk);
+            pstmt.setString(6, operator);
+            pstmt.setTimestamp(7, new java.sql.Timestamp(System.currentTimeMillis()));
+            pstmt.setString(8, machine_code);
+            return pstmt.executeUpdate();//执行sql
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    public static int insertOrReplace(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) {
+        if (selectDevice(machine_code) > 0) {
+            updateDevice(factory_code, factory_name, machine_code, machine_name, manufacturer, rmk, operator);
+        } else {
+            addDevice(factory_code, factory_name, machine_code, machine_name, manufacturer, rmk, operator);
+        }
+        return 1;
+    }
+
 
     public static int addResult2(String factory_code, String machine_code, int prog_id, String serial_number,
-                                 ResultBean _bean) throws Exception {
+                                 final ResultBean _bean) throws Exception {
         Connection conn = getConnection();
         String sql = "insert into ntqc_result (factory_code,machine_code,prog_id,serial_number,result,ng_reason,operator,operate_time) VALUES (?,?,?,?,?,?,?,?);";
         PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS

@@ -3,6 +3,7 @@ package alauncher.cn.measuringinstrument.bean;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Index;
 
 /**
  * 日期：2019/8/5 0025 9:27
@@ -10,20 +11,21 @@ import org.greenrobot.greendao.annotation.Id;
  * 作者： wlznzx
  * 描述：
  */
-@Entity
+@Entity(indexes = {@Index(value = "codeID DESC, stepID DESC", unique = true)})
 public class StepBean {
 
-    @Id
+    @Id(autoincrement = true)
+    public Long id;
+
     public long codeID;
 
     public int stepID;
-
     // 0011;
     public int measured;
 
-
-    @Generated(hash = 1869239251)
-    public StepBean(long codeID, int stepID, int measured) {
+    @Generated(hash = 872925347)
+    public StepBean(Long id, long codeID, int stepID, int measured) {
+        this.id = id;
         this.codeID = codeID;
         this.stepID = stepID;
         this.measured = measured;
@@ -64,4 +66,22 @@ public class StepBean {
         this.measured = measured;
     }
 
+    @Override
+    public String toString() {
+        return "StepBean{" +
+                "codeID=" + codeID +
+                ", stepID=" + stepID +
+                ", measured=" + measured +
+                '}';
+    }
+
+
+    public Long getId() {
+        return this.id;
+    }
+
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

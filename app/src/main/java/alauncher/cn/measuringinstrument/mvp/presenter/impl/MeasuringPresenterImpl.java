@@ -8,16 +8,21 @@ import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 
+import java.util.List;
+
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.bean.StepBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.StepBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.utils.JdbcUtil;
+import alauncher.cn.measuringinstrument.utils.StepUtils;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import tp.xmaihh.serialport.SerialHelper;
 import tp.xmaihh.serialport.bean.ComBean;
@@ -29,6 +34,7 @@ import tp.xmaihh.serialport.utils.ByteUtil;
  * 作者： wlznzx
  * 描述：
  */
+
 public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     final String TAG = "MeasuringPresenterImpl";
@@ -59,6 +65,15 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     private double[] lowerValue = new double[4];
 
     // 附加信息;
+    private List<StepBean> stepBeans;
+
+    // 总共有的测量步骤
+    private int maxStep;
+
+    // 缓存测量值;
+    private double[] tempMs = new double[4];
+
+    private int currentStep = -1;
 
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
@@ -85,6 +100,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 mGroupBeans[i] = _dao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(i + 1)).unique();
             }
         }
+
+        stepBeans = App.getDaoSession().
+                getStepBeanDao().queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderAsc(StepBeanDao.Properties.StepID).list();
+        maxStep = stepBeans.size();
+        if (maxStep > 0) currentStep = 0;
+
     }
 
     public void initParameter() {
@@ -112,6 +133,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 mGroupBeans[i] = _dao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(i + 1)).unique();
             }
         }
+
     }
 
     @Override
@@ -121,8 +143,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             serialHelper = new SerialHelper(sPort, iBaudRate) {
                 @Override
                 protected void onDataReceived(ComBean paramComBean) {
-                    // android.util.Log.d("wlDebug", "_value = " + ByteUtil.ByteArrToHex(paramComBean.bRec));
-
                     /**/
                     for (byte _byte : paramComBean.bRec) {
                         if (_byte == 0x53 && !isCommandStart) {
@@ -198,7 +218,26 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     }
 
     @Override
-    public void saveResult(double[] ms, AddInfoBean bean) {
+    public String saveResult(double[] ms, AddInfoBean bean) {
+        if (stepBeans.size() > 0) {
+            StepBean _bean = stepBeans.get(getStep());
+            for (int i = 0; i < ms.length; i++) {
+                if (StepUtils.getChannelByStep(i, _bean.getMeasured())) {
+                    android.util.Log.d("wlDebug", "获取第" + i + "值:" + ms[i]);
+                    tempMs[i] = ms[i];
+                }
+            }
+            if (getStep() == maxStep - 1) {
+                doSave(tempMs, bean);
+            }
+            nextStep();
+        }
+
+//        doSave(tempMs, bean);
+        return "";
+    }
+
+    private void doSave(double[] ms, AddInfoBean bean) {
         ResultBean _bean = new ResultBean();
         _bean.setHandlerAccout(App.handlerAccout);
         _bean.setCodeID(App.getSetupBean().getCodeID());
@@ -231,7 +270,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         // toSQLServer(_bean);
     }
 
-    private void toSQLServer(ResultBean _bean) {
+    private void toSQLServer(final ResultBean _bean) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -267,6 +306,24 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             }
         }
         return result;
+    }
+
+    private void nextStep() {
+        if (currentStep < maxStep - 1) {
+            currentStep++;
+        } else {
+            currentStep = 0;
+        }
+    }
+
+    /*
+     *
+     * 获取当前测量步骤;
+     *
+     * */
+    @Override
+    public int getStep() {
+        return currentStep;
     }
 
 

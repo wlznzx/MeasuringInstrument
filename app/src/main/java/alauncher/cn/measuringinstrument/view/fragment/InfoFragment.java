@@ -15,6 +15,8 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.utils.BuildUtils;
+import alauncher.cn.measuringinstrument.utils.DeviceUtils;
+import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -76,10 +78,20 @@ public class InfoFragment extends Fragment {
             _bean.setFactoryName(factoryNameEdt.getText().toString().trim());
             _bean.setManufacturer(manufacturerEdt.getText().toString().trim());
             _bean.setDeviceName(deviceNameEdt.getText().toString().trim());
-
+            _bean.setDeviceCode(DeviceUtils.getLocalMacAddress(getContext()));
         }
         App.getDaoSession().getDeviceInfoBeanDao().insertOrReplace(_bean);
         Toast.makeText(getContext(), "保存成功", Toast.LENGTH_SHORT).show();
+
+        /*
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                JdbcUtil.insertOrReplace(_bean.getFactoryCode(), _bean.getFactoryName(), _bean.getDeviceCode(), _bean.getDeviceName(), _bean.getManufacturer(),
+                        "rmk3", App.handlerAccout);
+            }
+        }).start();
+        */
     }
 
     @Override

@@ -2,6 +2,7 @@ package alauncher.cn.measuringinstrument.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -9,6 +10,8 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
@@ -18,15 +21,15 @@ import alauncher.cn.measuringinstrument.MainActivity;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
+import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.bean.RememberPasswordBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
+import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 
 public class LoginActivity extends BaseOActivity {
 
@@ -74,6 +77,18 @@ public class LoginActivity extends BaseOActivity {
 
 
         isRemeberCB.setChecked(_bean.getIsRemeber());
+
+        DeviceInfoBean _dBean = App.getDeviceInfo();
+        /*
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                JdbcUtil.insertOrReplace(_dBean.getFactoryCode(), _dBean.getFactoryName(), _dBean.getDeviceCode(), _dBean.getDeviceName(), _dBean.getManufacturer(),
+                        _dBean.getRmk(), App.handlerAccout);
+                //Log.d("wlDebug", "count = " + JdbcUtil.selectDevice("SXFA1011"));
+            }
+        }).start();
+        */
     }
 
     private void tPostgreSQL() {
@@ -160,7 +175,7 @@ public class LoginActivity extends BaseOActivity {
         App.handlerAccout = accoutStr;
 
         RememberPasswordBean _bean = App.getDaoSession().getRememberPasswordBeanDao().load(App.SETTING_ID);
-        if(_bean.getIsRemeber()){
+        if (_bean.getIsRemeber()) {
             _bean.setLogined(true);
             _bean.setAccount(accoutStr);
             _bean.setPassowrd(passwordStr);

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,6 +65,7 @@ public class ForceCalibrationFragment extends Fragment {
         switch (v.getId()) {
             case R.id.save_btn:
                 mForceCalibrationBeanDao.update(view2Bean());
+                Toast.makeText(getContext(), "校验保存成功.", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

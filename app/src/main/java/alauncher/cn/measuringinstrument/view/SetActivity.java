@@ -20,9 +20,6 @@ import java.util.List;
 
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
-import alauncher.cn.measuringinstrument.view.fragment.CodeBaseInfoFragment;
-import alauncher.cn.measuringinstrument.view.fragment.CodeStepFragment;
-import alauncher.cn.measuringinstrument.view.fragment.ForceCalibrationFragment;
 import alauncher.cn.measuringinstrument.view.fragment.InfoFragment;
 import butterknife.BindView;
 
@@ -70,7 +67,7 @@ public class SetActivity extends BaseActivity {
 
         tabFragmentPageAdapter = new TabFragmentPageAdapter(getSupportFragmentManager());
         mVp.setAdapter(tabFragmentPageAdapter);
-        mVp.setOffscreenPageLimit(2);
+        mVp.setOffscreenPageLimit(3);
         mTlIndicator.setupWithViewPager(mVp);
     }
 

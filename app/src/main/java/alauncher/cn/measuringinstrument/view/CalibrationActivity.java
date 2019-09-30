@@ -12,7 +12,6 @@ import java.text.NumberFormat;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.mvp.presenter.CalibrationPresenter;
@@ -186,6 +185,7 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
                 CalibrationBean _bean = view2Bean();
                 android.util.Log.d("wlDebug", _bean.toString());
                 // 判断倍率;
+                /*
                 if (chRbs[0].isChecked() && (_bean.getCh1KValue() < (_bean.getCh1LowerLimitRate() / 1000) || _bean.getCh1KValue() > (_bean.getCh1UpperLimitRate() / 1000))) {
                     Toast.makeText(this, "Ch1测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
                     return;
@@ -200,6 +200,23 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
                 }
                 if (chRbs[3].isChecked() && (_bean.getCh4KValue() < (_bean.getCh4LowerLimitRate() / 1000) || _bean.getCh4KValue() > (_bean.getCh4UpperLimitRate() / 1000))) {
                     Toast.makeText(this, "Ch4测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                */
+                if (chRbs[0].isChecked() && (_bean.getCh1KValue() < -10 || _bean.getCh1KValue() > 10)) {
+                    Toast.makeText(this, "Ch1测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (chRbs[1].isChecked() && (_bean.getCh2KValue() < -10 || _bean.getCh2KValue() > 10)) {
+                    Toast.makeText(this, "Ch2测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (chRbs[2].isChecked() && (_bean.getCh3KValue() < -10 || _bean.getCh3KValue() > 10)) {
+                    Toast.makeText(this, "Ch3测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (chRbs[3].isChecked() && (_bean.getCh4KValue() < -10 || _bean.getCh4KValue() > 10)) {
+                    Toast.makeText(this, "Ch4测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Toast.makeText(this, "校验保存成功.", Toast.LENGTH_SHORT).show();
