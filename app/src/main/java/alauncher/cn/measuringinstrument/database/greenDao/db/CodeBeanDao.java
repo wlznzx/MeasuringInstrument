@@ -28,6 +28,8 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property MachineTool = new Property(2, String.class, "machineTool", false, "MACHINE_TOOL");
         public final static Property Parts = new Property(3, String.class, "parts", false, "PARTS");
+        public final static Property IsEnableStep = new Property(4, boolean.class, "isEnableStep", false, "IS_ENABLE_STEP");
+        public final static Property WorkpiecePic = new Property(5, byte[].class, "workpiecePic", false, "WORKPIECE_PIC");
     }
 
 
@@ -46,7 +48,9 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
                 "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 0: codeID
                 "\"NAME\" TEXT," + // 1: name
                 "\"MACHINE_TOOL\" TEXT," + // 2: machineTool
-                "\"PARTS\" TEXT);"); // 3: parts
+                "\"PARTS\" TEXT," + // 3: parts
+                "\"IS_ENABLE_STEP\" INTEGER NOT NULL ," + // 4: isEnableStep
+                "\"WORKPIECE_PIC\" BLOB);"); // 5: workpiecePic
     }
 
     /** Drops the underlying database table. */
@@ -74,6 +78,12 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
         if (parts != null) {
             stmt.bindString(4, parts);
         }
+        stmt.bindLong(5, entity.getIsEnableStep() ? 1L: 0L);
+ 
+        byte[] workpiecePic = entity.getWorkpiecePic();
+        if (workpiecePic != null) {
+            stmt.bindBlob(6, workpiecePic);
+        }
     }
 
     @Override
@@ -95,6 +105,12 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
         if (parts != null) {
             stmt.bindString(4, parts);
         }
+        stmt.bindLong(5, entity.getIsEnableStep() ? 1L: 0L);
+ 
+        byte[] workpiecePic = entity.getWorkpiecePic();
+        if (workpiecePic != null) {
+            stmt.bindBlob(6, workpiecePic);
+        }
     }
 
     @Override
@@ -108,7 +124,9 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
             cursor.getLong(offset + 0), // codeID
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // machineTool
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // parts
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // parts
+            cursor.getShort(offset + 4) != 0, // isEnableStep
+            cursor.isNull(offset + 5) ? null : cursor.getBlob(offset + 5) // workpiecePic
         );
         return entity;
     }
@@ -119,6 +137,8 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setMachineTool(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setParts(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setIsEnableStep(cursor.getShort(offset + 4) != 0);
+        entity.setWorkpiecePic(cursor.isNull(offset + 5) ? null : cursor.getBlob(offset + 5));
      }
     
     @Override

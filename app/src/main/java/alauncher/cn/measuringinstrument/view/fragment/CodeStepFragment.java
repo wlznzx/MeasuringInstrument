@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,9 +18,11 @@ import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
+import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.StepBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StepBeanDao;
 import alauncher.cn.measuringinstrument.utils.StepUtils;
+import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
@@ -54,15 +58,25 @@ public class CodeStepFragment extends Fragment {
     @BindViews({R.id.step_1_m4_cb, R.id.step_2_m4_cb, R.id.step_3_m4_cb, R.id.step_4_m4_cb})
     CheckBox[] m4CheckBoxs;
 
+    @BindView(R.id.table1)
+    public TableLayout table;
+
+    @BindViews({R.id.step_row_1,R.id.step_row_2,R.id.step_row_3,R.id.step_row_4})
+    TableRow[] rows;
+
+    private int showRows = 4;
+
     int CodeID;
     private StepBeanDao dao;
 
+    private ParameterBean mParameterBean;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CodeID = App.getSetupBean().getCodeID();
         dao = App.getDaoSession().getStepBeanDao();
+        mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
     }
 
     @Nullable
@@ -98,36 +112,50 @@ public class CodeStepFragment extends Fragment {
                 }
             }
         }
+
+        if(!mParameterBean.getM1_enable()){
+            table.setColumnCollapsed(1,true);
+            showRows--;
+        }
+        if(!mParameterBean.getM2_enable()){
+            table.setColumnCollapsed(2,true);
+            showRows--;
+        }
+        if(!mParameterBean.getM3_enable()){
+            table.setColumnCollapsed(3,true);
+            showRows--;
+        }
+        if(!mParameterBean.getM4_enable()){
+            table.setColumnCollapsed(4,true);
+            showRows--;
+        }
+        for(int i = 0; i < showRows; i++){
+            rows[i].setVisibility(View.VISIBLE);
+        }
+
         return view;
     }
 
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
+        int[] step = new int[4];
+        step[0] = getMeasuredByCheckoutBoxs(step1CheckBoxs);
+        step[1] = getMeasuredByCheckoutBoxs(step2CheckBoxs);
+        step[2] = getMeasuredByCheckoutBoxs(step3CheckBoxs);
+        step[3] = getMeasuredByCheckoutBoxs(step4CheckBoxs);
+
         StepBeanDao dao = App.getDaoSession().getStepBeanDao();
-        StepBean _bean = new StepBean();
-        _bean.setCodeID(CodeID);
-        _bean.setStepID(1);
-        _bean.setMeasured(getMeasuredByCheckoutBoxs(step1CheckBoxs));
-        dao.insertOrReplace(_bean);
-
-
-        StepBean _bean2= new StepBean();
-        _bean2.setCodeID(CodeID);
-        _bean2.setStepID(2);
-        _bean2.setMeasured(getMeasuredByCheckoutBoxs(step2CheckBoxs));
-        dao.insertOrReplace(_bean2);
-
-        StepBean _bean3 = new StepBean();
-        _bean3.setCodeID(CodeID);
-        _bean3.setStepID(3);
-        _bean3.setMeasured(getMeasuredByCheckoutBoxs(step3CheckBoxs));
-        dao.insertOrReplace(_bean3);
-
-        StepBean _bean4 = new StepBean();
-        _bean4.setCodeID(CodeID);
-        _bean4.setStepID(4);
-        _bean4.setMeasured(getMeasuredByCheckoutBoxs(step4CheckBoxs));
-        dao.insertOrReplace(_bean4);
+        List<StepBean> stepBeans = dao.queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
+        for(StepBean _bean : stepBeans){
+            dao.delete(_bean);
+        }
+        for(int i = 0;i < showRows;i++){
+            StepBean _bean = new StepBean();
+            _bean.setCodeID(CodeID);
+            _bean.setStepID(i + 1);
+            _bean.setMeasured(step[i]);
+            if(step[i] != 0)dao.insertOrReplace(_bean);
+        }
         Toast.makeText(getContext(), "保存成功.", Toast.LENGTH_SHORT).show();
     }
 
@@ -143,7 +171,8 @@ public class CodeStepFragment extends Fragment {
             for (int i = 0; i < m1CheckBoxs.length; i++) {
                 if (m1CheckBoxs[i].isChecked()) {
                     if (m1CheckBoxs[i].getId() != buttonView.getId()) {
-                        m1CheckBoxs[i].setChecked(false);
+                        // m1CheckBoxs[i].setChecked(false);
+                        buttonView.setChecked(false);
                     }
                 }
             }
@@ -157,6 +186,7 @@ public class CodeStepFragment extends Fragment {
                 if (m2CheckBoxs[i].isChecked()) {
                     if (m2CheckBoxs[i].getId() != buttonView.getId()) {
                         m2CheckBoxs[i].setChecked(false);
+                        buttonView.setChecked(false);
                     }
                 }
             }
@@ -169,7 +199,8 @@ public class CodeStepFragment extends Fragment {
             for (int i = 0; i < m3CheckBoxs.length; i++) {
                 if (m3CheckBoxs[i].isChecked()) {
                     if (m3CheckBoxs[i].getId() != buttonView.getId()) {
-                        m3CheckBoxs[i].setChecked(false);
+//                        m3CheckBoxs[i].setChecked(false);
+                        buttonView.setChecked(false);
                     }
                 }
             }
@@ -182,13 +213,13 @@ public class CodeStepFragment extends Fragment {
             for (int i = 0; i < m4CheckBoxs.length; i++) {
                 if (m4CheckBoxs[i].isChecked()) {
                     if (m4CheckBoxs[i].getId() != buttonView.getId()) {
-                        m4CheckBoxs[i].setChecked(false);
+//                        m4CheckBoxs[i].setChecked(false);
+                        buttonView.setChecked(false);
                     }
                 }
             }
         }
     }
-
 
     private int getMeasuredByCheckoutBoxs(CheckBox[] cbs) {
         int _value = 0;

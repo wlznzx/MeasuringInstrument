@@ -22,12 +22,26 @@ public class SetupBean {
 
     public boolean isAutoPopUp;
 
-    @Generated(hash = 1297150129)
-    public SetupBean(Long id, int codeID, String accout, boolean isAutoPopUp) {
+    public double xUpperLine;
+
+    public double xLowerLine;
+
+    public double rUpperLine;
+
+    public double rLowerLine;
+
+    @Generated(hash = 572711874)
+    public SetupBean(Long id, int codeID, String accout, boolean isAutoPopUp,
+            double xUpperLine, double xLowerLine, double rUpperLine,
+            double rLowerLine) {
         this.id = id;
         this.codeID = codeID;
         this.accout = accout;
         this.isAutoPopUp = isAutoPopUp;
+        this.xUpperLine = xUpperLine;
+        this.xLowerLine = xLowerLine;
+        this.rUpperLine = rUpperLine;
+        this.rLowerLine = rLowerLine;
     }
 
     @Generated(hash = 4168623)
@@ -64,6 +78,38 @@ public class SetupBean {
 
     public void setIsAutoPopUp(boolean isAutoPopUp) {
         this.isAutoPopUp = isAutoPopUp;
+    }
+
+    public double getXUpperLine() {
+        return this.xUpperLine;
+    }
+
+    public void setXUpperLine(double xUpperLine) {
+        this.xUpperLine = xUpperLine;
+    }
+
+    public double getXLowerLine() {
+        return this.xLowerLine;
+    }
+
+    public void setXLowerLine(double xLowerLine) {
+        this.xLowerLine = xLowerLine;
+    }
+
+    public double getRUpperLine() {
+        return this.rUpperLine;
+    }
+
+    public void setRUpperLine(double rUpperLine) {
+        this.rUpperLine = rUpperLine;
+    }
+
+    public double getRLowerLine() {
+        return this.rLowerLine;
+    }
+
+    public void setRLowerLine(double rLowerLine) {
+        this.rLowerLine = rLowerLine;
     }
 
 }

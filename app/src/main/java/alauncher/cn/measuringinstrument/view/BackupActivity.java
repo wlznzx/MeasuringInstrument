@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.utils.BackupTask;
 import alauncher.cn.measuringinstrument.utils.UriToPathUtil;
@@ -57,8 +56,7 @@ public class BackupActivity extends BaseOActivity implements BackupTask.BackupIn
 
     @Override
     protected void initView() {
-        // dataBackup();
-        // dataRecover();
+
     }
 
     @OnClick({R.id.select_path_btn, R.id.in_btn, R.id.out_btn})

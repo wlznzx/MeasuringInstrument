@@ -37,7 +37,9 @@ public class CodeActivity extends BaseOActivity {
 
     @Override
     protected void initView() {
-
+        for (EditText edt : codeEdts) {
+            edt.setEnabled(false);
+        }
         mCodeRadioGroup.check(getCodeID(App.getSetupBean().getCodeID()));
         mCodeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -146,7 +148,7 @@ public class CodeActivity extends BaseOActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        /* */
+        /*
         for (int i = 0; i < codeEdts.length; i++) {
             CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) (i + 1));
             if (_bean == null) {
@@ -157,7 +159,7 @@ public class CodeActivity extends BaseOActivity {
             }
             App.getDaoSession().getCodeBeanDao().insertOrReplace(_bean);
         }
-
+        */
     }
 
     @OnClick(R.id.set_btn)

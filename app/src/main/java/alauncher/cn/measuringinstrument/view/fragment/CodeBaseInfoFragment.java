@@ -22,7 +22,6 @@ import butterknife.Unbinder;
 public class CodeBaseInfoFragment extends Fragment {
 
     private Unbinder unbinder;
-    private boolean resumed = false;
 
     @BindView(R.id.machine_tool_edt)
     public EditText machineToolEdt;
@@ -30,11 +29,11 @@ public class CodeBaseInfoFragment extends Fragment {
     @BindView(R.id.parts_edt)
     public EditText partEdt;
 
+    @BindView(R.id.code_name_edt)
+    public EditText codeNameEdt;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            resumed = savedInstanceState.getBoolean("resumed");
-        }
         super.onCreate(savedInstanceState);
     }
 
@@ -52,10 +51,11 @@ public class CodeBaseInfoFragment extends Fragment {
         CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
         if (_bean == null) {
             _bean = new CodeBean(App.getSetupBean().getCodeID(), "",
-                    machineToolEdt.getText().toString().trim(), partEdt.getText().toString().trim());
+                    machineToolEdt.getText().toString().trim(), partEdt.getText().toString().trim(),false,null);
         } else {
             _bean.setMachineTool(machineToolEdt.getText().toString().trim());
             _bean.setParts(partEdt.getText().toString().trim());
+            _bean.setName(codeNameEdt.getText().toString().trim());
         }
         App.getDaoSession().getCodeBeanDao().insertOrReplace(_bean);
         Toast.makeText(getContext(), "保存成功", Toast.LENGTH_SHORT).show();
@@ -64,14 +64,10 @@ public class CodeBaseInfoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (resumed) {
-            resumed = false;
-        }
     }
 
     @Override
     public void onPause() {
-        resumed = true;
         super.onPause();
     }
 
@@ -86,6 +82,7 @@ public class CodeBaseInfoFragment extends Fragment {
         if (_bean != null) {
             machineToolEdt.setText(_bean.getMachineTool());
             partEdt.setText(_bean.getParts());
+            codeNameEdt.setText(_bean.getName());
         } else {
 
         }

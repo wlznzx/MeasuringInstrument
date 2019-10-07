@@ -28,6 +28,10 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Long> {
         public final static Property CodeID = new Property(1, int.class, "codeID", false, "CODE_ID");
         public final static Property Accout = new Property(2, String.class, "accout", false, "ACCOUT");
         public final static Property IsAutoPopUp = new Property(3, boolean.class, "isAutoPopUp", false, "IS_AUTO_POP_UP");
+        public final static Property XUpperLine = new Property(4, double.class, "xUpperLine", false, "X_UPPER_LINE");
+        public final static Property XLowerLine = new Property(5, double.class, "xLowerLine", false, "X_LOWER_LINE");
+        public final static Property RUpperLine = new Property(6, double.class, "rUpperLine", false, "R_UPPER_LINE");
+        public final static Property RLowerLine = new Property(7, double.class, "rLowerLine", false, "R_LOWER_LINE");
     }
 
 
@@ -46,7 +50,11 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"CODE_ID\" INTEGER NOT NULL ," + // 1: codeID
                 "\"ACCOUT\" TEXT," + // 2: accout
-                "\"IS_AUTO_POP_UP\" INTEGER NOT NULL );"); // 3: isAutoPopUp
+                "\"IS_AUTO_POP_UP\" INTEGER NOT NULL ," + // 3: isAutoPopUp
+                "\"X_UPPER_LINE\" REAL NOT NULL ," + // 4: xUpperLine
+                "\"X_LOWER_LINE\" REAL NOT NULL ," + // 5: xLowerLine
+                "\"R_UPPER_LINE\" REAL NOT NULL ," + // 6: rUpperLine
+                "\"R_LOWER_LINE\" REAL NOT NULL );"); // 7: rLowerLine
     }
 
     /** Drops the underlying database table. */
@@ -70,6 +78,10 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Long> {
             stmt.bindString(3, accout);
         }
         stmt.bindLong(4, entity.getIsAutoPopUp() ? 1L: 0L);
+        stmt.bindDouble(5, entity.getXUpperLine());
+        stmt.bindDouble(6, entity.getXLowerLine());
+        stmt.bindDouble(7, entity.getRUpperLine());
+        stmt.bindDouble(8, entity.getRLowerLine());
     }
 
     @Override
@@ -87,6 +99,10 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Long> {
             stmt.bindString(3, accout);
         }
         stmt.bindLong(4, entity.getIsAutoPopUp() ? 1L: 0L);
+        stmt.bindDouble(5, entity.getXUpperLine());
+        stmt.bindDouble(6, entity.getXLowerLine());
+        stmt.bindDouble(7, entity.getRUpperLine());
+        stmt.bindDouble(8, entity.getRLowerLine());
     }
 
     @Override
@@ -100,7 +116,11 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getInt(offset + 1), // codeID
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // accout
-            cursor.getShort(offset + 3) != 0 // isAutoPopUp
+            cursor.getShort(offset + 3) != 0, // isAutoPopUp
+            cursor.getDouble(offset + 4), // xUpperLine
+            cursor.getDouble(offset + 5), // xLowerLine
+            cursor.getDouble(offset + 6), // rUpperLine
+            cursor.getDouble(offset + 7) // rLowerLine
         );
         return entity;
     }
@@ -111,6 +131,10 @@ public class SetupBeanDao extends AbstractDao<SetupBean, Long> {
         entity.setCodeID(cursor.getInt(offset + 1));
         entity.setAccout(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setIsAutoPopUp(cursor.getShort(offset + 3) != 0);
+        entity.setXUpperLine(cursor.getDouble(offset + 4));
+        entity.setXLowerLine(cursor.getDouble(offset + 5));
+        entity.setRUpperLine(cursor.getDouble(offset + 6));
+        entity.setRLowerLine(cursor.getDouble(offset + 7));
      }
     
     @Override

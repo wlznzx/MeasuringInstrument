@@ -388,7 +388,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="2px"
         android:src="@color/colorPrimary"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"

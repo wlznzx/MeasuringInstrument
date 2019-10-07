@@ -17,17 +17,20 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <View
+        <TextView
+            style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="1"></View>
+            android:layout_weight="1"
+            android:text="@string/show_item" />
 
         <CheckBox
             android:id="@+id/ch1_rb"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:text="M1" />
 
         <CheckBox
@@ -35,6 +38,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:text="M2" />
 
         <CheckBox
@@ -42,6 +47,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:text="M3" />
 
         <CheckBox
@@ -49,6 +56,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:text="M4" />
 
     </LinearLayout>
@@ -65,7 +74,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/describe" />
+            android:text="@string/parameter_name" />
 
         <EditText
             android:id="@+id/describe_m1"
@@ -346,6 +355,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/formula_tv"
             style="@style/TextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"

@@ -104,7 +104,10 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         stepBeans = App.getDaoSession().
                 getStepBeanDao().queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderAsc(StepBeanDao.Properties.StepID).list();
         maxStep = stepBeans.size();
-        if (maxStep > 0) currentStep = 0;
+        if (maxStep > 0)
+            currentStep = 0;
+        else
+            currentStep = -1;
 
     }
 
@@ -134,6 +137,13 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             }
         }
 
+        stepBeans = App.getDaoSession().
+                getStepBeanDao().queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderAsc(StepBeanDao.Properties.StepID).list();
+        maxStep = stepBeans.size();
+        if (maxStep > 0)
+            currentStep = 0;
+        else
+            currentStep = -1;
     }
 
     @Override
@@ -231,9 +241,9 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 doSave(tempMs, bean);
             }
             nextStep();
+        } else {
+            doSave(ms, bean);
         }
-
-//        doSave(tempMs, bean);
         return "";
     }
 
@@ -326,6 +336,14 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         return currentStep;
     }
 
+    public StepBean getStepBean(){
+        if (stepBeans.size() > 0) {
+            StepBean _bean = stepBeans.get(currentStep);
+            return _bean;
+        } else {
+            return null;
+        }
+    }
 
     /*
      *

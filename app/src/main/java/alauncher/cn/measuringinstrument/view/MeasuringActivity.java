@@ -1,16 +1,22 @@
 package alauncher.cn.measuringinstrument.view;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +35,12 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import alauncher.cn.measuringinstrument.App;
+import alauncher.cn.measuringinstrument.MainActivity;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
@@ -40,12 +49,14 @@ import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
+import alauncher.cn.measuringinstrument.bean.StepBean;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ForceCalibrationBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImpl;
 import alauncher.cn.measuringinstrument.utils.NumberUtils;
+import alauncher.cn.measuringinstrument.utils.StepUtils;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import alauncher.cn.measuringinstrument.widget.AdditionalDialog;
 import alauncher.cn.measuringinstrument.widget.MValueView;
@@ -182,6 +193,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
                 mDescribes[i].setVisibility(true ? View.VISIBLE : View.INVISIBLE);
             }
         }
+        updateGetValueTips();
     }
 
     @OnClick({R.id.value_btn, R.id.additional_btn, R.id.measure_save_btn})
@@ -254,7 +266,16 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         if (mMeasuringPresenter.getStep() == -1) {
             saveTv.setText(R.string.save);
         } else {
-            saveTv.setText(String.format(getResources().getString(R.string.step_tips), mMeasuringPresenter.getStep() + 1));
+            StepBean _bean = ((MeasuringPresenterImpl)mMeasuringPresenter).getStepBean();
+            if(_bean != null){
+                saveTv.setText(String.format(getResources().getString(R.string.step_tips), _bean.getStepID()));
+                for(int i = 0; i < 4 ; i++){
+                    mMValueViews[i].setVisibility(StepUtils.getChannelByStep(i,_bean.getMeasured()) ? View.VISIBLE : View.INVISIBLE);
+                    mTValues[i].setVisibility(StepUtils.getChannelByStep(i,_bean.getMeasured()) ? View.VISIBLE : View.INVISIBLE);
+                    mTitle[i].setVisibility(StepUtils.getChannelByStep(i,_bean.getMeasured()) ? View.VISIBLE : View.INVISIBLE);
+                    mDescribes[i].setVisibility(StepUtils.getChannelByStep(i,_bean.getMeasured()) ? View.VISIBLE : View.INVISIBLE);
+                }
+            }
         }
     }
 
@@ -525,7 +546,8 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
                         province[i] = "程序 " + (i + 1);
                     }
                 }
-                showSingleChoiceButton();
+                // showSingleChoiceButton();
+                showGridDialog();
                 break;
         }
     }
@@ -543,6 +565,52 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         builder.setPositiveButton("确定", buttonOnClick);
         builder.setNegativeButton("取消", buttonOnClick);
         builder.show();
+    }
+
+    private void showGridDialog() {
+        View view = LayoutInflater.from(this).inflate(R.layout.gridview_dialog, null);
+        // 设置style 控制默认dialog带来的边距问题
+        final Dialog dialog = new Dialog(this, R.style.common_dialog);
+        dialog.setContentView(view);
+        dialog.show();
+        GridView gridview = (GridView) view.findViewById(R.id.gridview);
+        final List<Map<String, Object>> item = getData();
+        // SimpleAdapter对象，匹配ArrayList中的元素
+        SimpleAdapter simpleAdapter = new SimpleAdapter(this, item, R.layout.gridview_item, new String[]{"itemName"}, new int[]{R.id.grid_name});
+        gridview.setAdapter(simpleAdapter);
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
+                _bean.setCodeID(arg2 + 1);
+                App.getDaoSession().getSetupBeanDao().update(_bean);
+                ((MeasuringPresenterImpl) mMeasuringPresenter).initParameter();
+                initParameters();
+                CodeBean _CodeBean = App.getDaoSession().getCodeBeanDao().load((long) (arg2 + 1));
+                if (_CodeBean != null) {
+                    actionTips.setText(App.handlerAccout + " " + _CodeBean.getName());
+                } else {
+                    actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
+                }
+                dialog.dismiss();
+            }
+        });
+    }
+
+    /**
+     * 将数据ArrayList中
+     *
+     * @return
+     */
+    private List<Map<String, Object>> getData() {
+        List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+        for (int i = 0; i < province.length; i++) {
+            Map<String, Object> item = new HashMap<String, Object>();
+            item.put("itemName", province[i]);
+            items.add(item);
+        }
+        return items;
+
     }
 
     private class ButtonOnClick implements DialogInterface.OnClickListener {
@@ -568,7 +636,6 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
                     final AlertDialog ad = new AlertDialog.Builder(
                             MeasuringActivity.this).setMessage(
                             "你选择的是" + province[index]).show();
-                    //五秒钟后自动关闭。
                     SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
                     _bean.setCodeID(index + 1);
                     App.getDaoSession().getSetupBeanDao().update(_bean);
@@ -609,6 +676,11 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         }
         String result = ((MeasuringPresenterImpl) mMeasuringPresenter).getMResults(mValues);
         mGroupMs[0].setText("结果: " + result);
+        if (result.equals("NG")) {
+            mGroupMs[0].setBackgroundResource(R.drawable.red_shape);
+        } else {
+            mGroupMs[0].setBackgroundResource(R.drawable.green_shape);
+        }
         String[] group = mMeasuringPresenter.getMGroupValues(mValues);
         switch (curMode) {
             case 0:

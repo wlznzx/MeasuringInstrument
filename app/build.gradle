@@ -7,8 +7,8 @@ android {
         applicationId "alauncher.cn.measuringinstrument"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 13
-        versionName "v2.2"
+        versionCode 14
+        versionName "v3.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -62,7 +62,7 @@ android {
 }
 
 greendao {
-    schemaVersion 24 //数据库版本号
+    schemaVersion 25 //数据库版本号
     daoPackage 'alauncher.cn.measuringinstrument.database.greenDao.db'
 // 设置DaoMaster、DaoSession、Dao 包名
     targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用.不要用/
@@ -99,6 +99,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.1'
 
     implementation 'com.google.android.material:material:1.1.0-alpha09'
+
     // implementation 'com.tencent.bugly:crashreport_upgrade:1.4.1'
     // implementation 'com.tencent.bugly:crashreport:3.0.0'
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
@@ -110,6 +111,7 @@ android.applicationVariants.all {
     variant ->
         variant.outputs.all {
             //这里修改apk文件名
-            outputFileName = "Measuring.apk"
+            def today = new Date().format('yyyy-MM-dd');
+            outputFileName = "Measuring" + "_${today}" + "_${android.defaultConfig.versionName}.apk"
         }
 }

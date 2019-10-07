@@ -47,10 +47,10 @@ import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.bean.SetupBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.utils.CommonUtil;
 import alauncher.cn.measuringinstrument.utils.Constants;
@@ -201,6 +201,17 @@ public class SPCStatisticalActivity extends BaseOActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
+        _bean.setXUpperLine(Double.valueOf(xuclEdt.getText().toString().trim()));
+        _bean.setXLowerLine(Double.valueOf(xlclEdt.getText().toString().trim()));
+        _bean.setRUpperLine(Double.valueOf(ruclEdt.getText().toString().trim()));
+        _bean.setRLowerLine(Double.valueOf(rlclEdt.getText().toString().trim()));
+        App.getDaoSession().getSetupBeanDao().insertOrReplace(_bean);
+    }
+
+    @Override
     protected void initLayout() {
         setContentView(R.layout.activity_spc_statistical);
     }
@@ -262,7 +273,7 @@ public class SPCStatisticalActivity extends BaseOActivity {
                 new SPCTask().execute();
                 break;
             case R.id.delete_spc_result:
-
+                clearChart();
                 break;
 
         }
@@ -384,7 +395,7 @@ public class SPCStatisticalActivity extends BaseOActivity {
                     yAxis.addLimitLine(getLimitLine(_bean.xLCL, "下控制线"));
                     android.util.Log.d("wllDebug", "_bean.xUCL = " + _bean.xUCL);
                     android.util.Log.d("wllDebug", "_bean.xLCL = " + _bean.xLCL);
-                    yAxis.addLimitLine(getLimitLine(_bean.xUCL, "上公差线"));
+                    yAxis.addLimitLine(getLimitLine(_bean.upperValue, "上公差线"));
                     yAxis.addLimitLine(getLimitLine(_bean.lowerValue, "下公差线"));
                     android.util.Log.d("wllDebug", "_bean.upperValue = " + _bean.upperValue);
                     android.util.Log.d("wllDebug", "_bean.lowerValue = " + _bean.lowerValue);
@@ -397,6 +408,13 @@ public class SPCStatisticalActivity extends BaseOActivity {
                     rYAxis.addLimitLine(getLimitLine(_bean.rUCL, "上控制线"));
                     rYAxis.addLimitLine(getLimitLine(_bean.rLCL, "下控制线"));
                     /**/
+                    if (rChart.getData() == null) {
+                        ArrayList<ILineDataSet> rDataSets = new ArrayList<>();
+                        rDataSets.add(getLineDataSet(getDemoValues(), "R")); // add the data sets
+                        // create a data object with the data sets
+                        LineData rData = new LineData(rDataSets);
+                        rChart.setData(rData);
+                    }
                     LineDataSet _set1 = (LineDataSet) rChart.getData().getDataSetByIndex(0);
                     _set1.setValues(_bean.rValues);
                     rChart.getData().notifyDataChanged();
@@ -812,6 +830,13 @@ public class SPCStatisticalActivity extends BaseOActivity {
     }
 
     private void updateChartDatas(List<Entry> values) {
+        if (chart.getData() == null) {
+            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+            dataSets.add(getLineDataSet(getDemoValues(), "M")); // add the data sets
+            // create a data object with the data sets
+            LineData data = new LineData(dataSets);
+            chart.setData(data);
+        }
         LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
         set1.setValues(values);
         chart.getData().notifyDataChanged();
@@ -836,6 +861,13 @@ public class SPCStatisticalActivity extends BaseOActivity {
                 }
             }
         });
+
+        SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
+        xuclEdt.setText(String.valueOf(_bean.getXUpperLine()));
+        xlclEdt.setText(String.valueOf(_bean.getXLowerLine()));
+
+        ruclEdt.setText(String.valueOf(_bean.getRUpperLine()));
+        rlclEdt.setText(String.valueOf(_bean.getRLowerLine()));
 
         lineRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -919,7 +951,9 @@ public class SPCStatisticalActivity extends BaseOActivity {
         chart.setTouchEnabled(true);
         rChart.setTouchEnabled(true);
 
-        // set listeners
+        chart.setDoubleTapToZoomEnabled(false);
+        rChart.setDoubleTapToZoomEnabled(false);
+
         // chart.setOnChartValueSelectedListener(this);
         chart.setDrawGridBackground(false);
         rChart.setDrawGridBackground(false);
@@ -961,7 +995,8 @@ public class SPCStatisticalActivity extends BaseOActivity {
             // horizontal grid lines
             // yAxis.enableGridDashedLine(10f, 10f, 0f);
         }
-        clearChart();
+        //
+
 
     }
 
@@ -1038,10 +1073,9 @@ public class SPCStatisticalActivity extends BaseOActivity {
     }
 
     private void clearChart() {
-
+        /*
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(getLineDataSet(getDemoValues(), "M")); // add the data sets
-        // create a data object with the data sets
         LineData data = new LineData(dataSets);
         chart.setData(data);
         chart.getAxisLeft().removeAllLimitLines();
@@ -1052,14 +1086,31 @@ public class SPCStatisticalActivity extends BaseOActivity {
 
         ArrayList<ILineDataSet> rDataSets = new ArrayList<>();
         rDataSets.add(getLineDataSet(getDemoValues(), "R")); // add the data sets
-        // create a data object with the data sets
         LineData rData = new LineData(rDataSets);
         rChart.setData(rData);
         rChart.getAxisLeft().removeAllLimitLines();
         rChart.getData().notifyDataChanged();
         rChart.notifyDataSetChanged();
         rChart.invalidate();
-
+        */
+        chart.clear();
+        rChart.clear();
+        averageValueTV.setText("");
+        maxValueTV.setText("");
+        minValueTV.setText("");
+        nominalValueTV.setText("");
+        gcUslTV.setText("");
+        gcLslTV.setText("");
+        _3aTV.setText("");
+        _aTV.setText("");
+        cpTV.setText("");
+        cpkTV.setText("");
+        cplTV.setText("");
+        cpuTV.setText("");
+        ppTV.setText("");
+        ppkTV.setText("");
+        pplTV.setText("");
+        ppuTV.setText("");
     }
 
     private ArrayList<Entry> getDemoValues() {

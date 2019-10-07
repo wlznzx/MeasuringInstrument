@@ -6,7 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
@@ -37,11 +41,17 @@ public class UserEditDialog extends Dialog {
     @BindView(R.id.status_sp)
     public Spinner statusSP;
 
+    @BindView(R.id.limit_sp)
+    public Spinner limitSP;
+
     @BindView(R.id.workpiece_edt)
     public EditText workpieceEdt;
 
     @BindView(R.id.email_edt)
     public EditText emailEdt;
+
+    @BindView(R.id.user_dialog_title_tv)
+    public TextView dialogTitleTV;
 
 
     AdditionDialogInterface mAdditionDialogInterface;
@@ -52,11 +62,18 @@ public class UserEditDialog extends Dialog {
 
     private User mUser;
 
+    public Map<Integer,Integer> spMap = new HashMap<>();
+    public Map<Integer,Integer> toMap = new HashMap<>();
 
     public UserEditDialog(Context context) {
         super(context);
         mContext = context;
         mUserDao = App.getDaoSession().getUserDao();
+        spMap.put(0,0);
+        spMap.put(1,4);
+
+        toMap.put(0,0);
+        toMap.put(4,1);
     }
 
     public UserEditDialog(Context context, int themeResId) {
@@ -75,6 +92,7 @@ public class UserEditDialog extends Dialog {
 
 
     public void goEditMode(User user) {
+        dialogTitleTV.setText(R.string.edit_user_title);
         mUser = user;
         mUser.getAccout();
         accoutEdt.setText(mUser.getAccout());
@@ -83,6 +101,7 @@ public class UserEditDialog extends Dialog {
         passwordEdt.setText(mUser.getPassword());
         rePasswordEdt.setText(mUser.getPassword());
         statusSP.setSelection(mUser.getStatus());
+        limitSP.setSelection(toMap.get(mUser.getLimit()));
         emailEdt.setText(mUser.getEmail());
         workpieceEdt.setText(mUser.getId());
     }
@@ -154,6 +173,8 @@ public class UserEditDialog extends Dialog {
         _user.setStatus((int) statusSP.getSelectedItemId());
         _user.setEmail(emailEdt.getText().toString().trim());
         _user.setId(workpieceEdt.getText().toString().trim());
+        int _id = (int) limitSP.getSelectedItemId();
+        _user.setLimit(spMap.get(_id));
         android.util.Log.d("wlDebug", _user.toString());
         dismiss();
         if (mUser != null) {

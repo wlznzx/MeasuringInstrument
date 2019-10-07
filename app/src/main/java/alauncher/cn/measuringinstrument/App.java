@@ -105,6 +105,8 @@ public class App extends Application {
             _bean.setCodeID(1);
             _bean.setAccout("wl");
             _bean.setIsAutoPopUp(false);
+            _bean.setXUpperLine(0.007);
+            _bean.setXLowerLine(-0.007);
             getDaoSession().getSetupBeanDao().insert(_bean);
         }
 
@@ -198,8 +200,31 @@ public class App extends Application {
             if (getDaoSession().getCalibrationBeanDao().load((long) i) == null) {
                 CalibrationBean _bean = new CalibrationBean();
                 _bean.setCode_id(i);
-                _bean.setCh1BigPartStandard(30.059);
-                _bean.setCh1SmallPartStandard(30.0168);
+                if (1 == i) {
+                    _bean.setCh1BigPartStandard(30.059);
+                    _bean.setCh1SmallPartStandard(30.0168);
+
+                    _bean.setCh2BigPartStandard(30.059);
+                    _bean.setCh2SmallPartStandard(30.0168);
+
+                    _bean.setCh3BigPartStandard(30.059);
+                    _bean.setCh3SmallPartStandard(30.0168);
+
+                    _bean.setCh4BigPartStandard(30.059);
+                    _bean.setCh4SmallPartStandard(30.0168);
+                } else {
+                    _bean.setCh1BigPartStandard(30.04);
+                    _bean.setCh1SmallPartStandard(30);
+
+                    _bean.setCh2BigPartStandard(30.04);
+                    _bean.setCh2SmallPartStandard(30);
+
+                    _bean.setCh3BigPartStandard(30.04);
+                    _bean.setCh3SmallPartStandard(30);
+
+                    _bean.setCh4BigPartStandard(30.04);
+                    _bean.setCh4SmallPartStandard(30);
+                }
                 _bean.setCh1CalibrationType(1);
                 _bean.setCh1CompensationValue(0.007);
                 _bean.setCh1KValue(0.01);
@@ -268,27 +293,40 @@ public class App extends Application {
 
             // 初始化分组;
             if (getDaoSession().getGroupBeanDao().load((long) i) == null) {
-                GroupBean _bean = new GroupBean();
-                _bean.setCode_id(i);
-                _bean.setM_index(1);
-                _bean.setA_describe("恩");
-                _bean.setA_upper_limit(30.04);
-                _bean.setA_lower_limit(30.03);
+                for (int j = 1; j <= 4; j++) {
+                    GroupBean _bean = new GroupBean();
+                    _bean.setCode_id(i);
+                    _bean.setM_index(j);
+                    _bean.setA_describe("恩");
+                    _bean.setA_upper_limit(30.04);
+                    _bean.setA_lower_limit(30.03);
 
-                _bean.setB_describe("梯");
-                _bean.setB_upper_limit(30.03);
-                _bean.setB_lower_limit(30.02);
+                    _bean.setB_describe("梯");
+                    _bean.setB_upper_limit(30.03);
+                    _bean.setB_lower_limit(30.02);
 
-                _bean.setC_describe("科");
-                _bean.setC_upper_limit(30.02);
-                _bean.setC_lower_limit(30.01);
+                    _bean.setC_describe("科");
+                    _bean.setC_upper_limit(30.02);
+                    _bean.setC_lower_limit(30.01);
 
-                _bean.setD_describe("技");
-                _bean.setD_upper_limit(30.01);
-                _bean.setD_lower_limit(30);
-                getDaoSession().getGroupBeanDao().insert(_bean);
+                    _bean.setD_describe("技");
+                    _bean.setD_upper_limit(30.01);
+                    _bean.setD_lower_limit(30);
+                    getDaoSession().getGroupBeanDao().insert(_bean);
+                }
+            }
+
+            if (getDaoSession().getCodeBeanDao().load((long) (i)) == null) {
+                CodeBean _bean = new CodeBean();
+                _bean.setCodeID(i);
+                _bean.setName("程序" + i);
+                _bean.setMachineTool(getResources().getString(R.string.machine_tool) + i);
+                _bean.setParts(getResources().getString(R.string.spare_parts) + i);
+                getDaoSession().getCodeBeanDao().insert(_bean);
             }
         }
+
+         // initTestDatas();
     }
 
     public void initTestDatas() {

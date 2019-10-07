@@ -57,6 +57,8 @@ public abstract class BaseOActivity extends Activity implements BaseView {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             // 透明导航栏
             // getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
         this.mActivity = this;
         //初始化布局

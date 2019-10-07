@@ -16,14 +16,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.view.AccoutManagementActivity;
 import alauncher.cn.measuringinstrument.view.CalibrationActivity;
 import alauncher.cn.measuringinstrument.view.CodeActivity;
 import alauncher.cn.measuringinstrument.view.DataActivity;
-import alauncher.cn.measuringinstrument.view.IOActivity;
 import alauncher.cn.measuringinstrument.view.LoginActivity;
 import alauncher.cn.measuringinstrument.view.MeasuringActivity;
 import alauncher.cn.measuringinstrument.view.ParameterManagementActivity;
@@ -36,7 +34,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import alauncher.cn.measuringinstrument.view.TActivity;
 import butterknife.BindView;
 
 public class MainActivity extends BaseOActivity {
@@ -52,18 +49,6 @@ public class MainActivity extends BaseOActivity {
     @Override
     protected void initLayout() {
         setContentView(R.layout.activity_main);
-        /*
-        int value = 0;
-        value |= 1;
-        value |= 8;
-        value |= 4;
-        value |= 2;
-        android.util.Log.d("wlDebug", "value = " + value);
-        android.util.Log.d("wlDebug", String.valueOf((value & 8) > 0));
-        android.util.Log.d("wlDebug", String.valueOf((value & 4) > 0));
-        android.util.Log.d("wlDebug", String.valueOf((value & 2) > 0));
-        android.util.Log.d("wlDebug", String.valueOf((value & 1) > 0));
-        */
     }
 
     @Override
@@ -81,6 +66,7 @@ public class MainActivity extends BaseOActivity {
             _datas.add(new MainInfo(R.string.store, R.drawable.archive));
             _datas.add(new MainInfo(R.string.spc_analysis, R.drawable.show_chart));
             _datas.add(new MainInfo(R.string.statistical_report, R.drawable.assignment));
+            _datas.add(new MainInfo(R.string.logout,R.drawable.logout_96));
         }
         MainLayoutAdapter _adapter = new MainLayoutAdapter(_datas);
 
@@ -93,33 +79,9 @@ public class MainActivity extends BaseOActivity {
         actionIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog builder = new AlertDialog.Builder(MainActivity.this)
-                        .create();
-                builder.show();
-                if (builder.getWindow() == null) return;
-                builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
-                TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
-                Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
-                Button sure = (Button) builder.findViewById(R.id.btn_sure);
-                if (msg == null || cancle == null || sure == null) return;
-                msg.setText("确认注销当前账号？");
-                cancle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        builder.dismiss();
-                    }
-                });
-                sure.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        builder.dismiss();
-                        finish();
-                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    }
-                });
+                logout();
             }
         });
-
 
         actionTitleTV.setOnClickListener(new View.OnClickListener() {
             final static int COUNTS = 5;//点击次数
@@ -144,6 +106,33 @@ public class MainActivity extends BaseOActivity {
                         Toast.makeText(MainActivity.this, "未找到主界面.", Toast.LENGTH_SHORT).show();
                     }
                 }
+            }
+        });
+    }
+
+    private void logout(){
+        final AlertDialog builder = new AlertDialog.Builder(MainActivity.this)
+                .create();
+        builder.show();
+        if (builder.getWindow() == null) return;
+        builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
+        TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
+        Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
+        Button sure = (Button) builder.findViewById(R.id.btn_sure);
+        if (msg == null || cancle == null || sure == null) return;
+        msg.setText("确认注销当前账号？");
+        cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+            }
+        });
+        sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+                finish();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
             }
         });
     }
@@ -210,6 +199,8 @@ public class MainActivity extends BaseOActivity {
                         case 9:
                             openActivty(StatisticalActivity.class, datas.get(position).strID);
                             break;
+                        case 10:
+                            logout();
                         default:
                             break;
                     }

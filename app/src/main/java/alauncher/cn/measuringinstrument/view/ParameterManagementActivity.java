@@ -16,7 +16,9 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
+import alauncher.cn.measuringinstrument.bean.StepBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
+import alauncher.cn.measuringinstrument.database.greenDao.db.StepBeanDao;
 import alauncher.cn.measuringinstrument.widget.CalculateDialog;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -55,6 +57,9 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
     @BindViews({R.id.ch1_rb, R.id.ch2_rb, R.id.ch3_rb, R.id.ch4_rb})
     public List<CheckBox> mCheckBoxs;
 
+    @BindView(R.id.formula_tv)
+    public TextView formulaTv;
+
     public DaoSession session;
 
     public String m1_code, m2_code, m3_code, m4_code;
@@ -84,14 +89,21 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
 
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
-        view2Bean();
+        if(!view2Bean())return;
         if (session.getParameterBeanDao().load((long) App.getSetupBean().getCodeID()) == null) {
             session.getParameterBeanDao().insert(mParameterBean);
         } else {
             session.getParameterBeanDao().update(mParameterBean);
         }
-        // android.util.Log.d("wlDebug", mParameterBean.toString());
+        // 清空分步信息；
 
+        StepBeanDao _dao = App.getDaoSession().getStepBeanDao();
+
+        List<StepBean> stepBeans = _dao.queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
+
+        for(StepBean _bean : stepBeans){
+            _dao.delete(_bean);
+        }
         // syncToServer(mParameterBean);
         Toast.makeText(this, "保存成功.", Toast.LENGTH_SHORT).show();
     }
@@ -226,67 +238,73 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
         }
     }
 
-    private void view2Bean() {
-        mParameterBean.setCode_id(App.getSetupBean().getCodeID());
-        // 分辨率
-        mParameterBean.setM1_resolution((int) resolutionSp[0].getSelectedItemId());
-        mParameterBean.setM2_resolution((int) resolutionSp[1].getSelectedItemId());
-        mParameterBean.setM3_resolution((int) resolutionSp[2].getSelectedItemId());
-        mParameterBean.setM4_resolution((int) resolutionSp[3].getSelectedItemId());
-        // 名义值
-        mParameterBean.setM1_nominal_value(Double.valueOf(nominalValueEd[0].getText().toString().trim()));
-        mParameterBean.setM2_nominal_value(Double.valueOf(nominalValueEd[1].getText().toString().trim()));
-        mParameterBean.setM3_nominal_value(Double.valueOf(nominalValueEd[2].getText().toString().trim()));
-        mParameterBean.setM4_nominal_value(Double.valueOf(nominalValueEd[3].getText().toString().trim()));
-        // 上公差
-        mParameterBean.setM1_upper_tolerance_value(Double.valueOf(upperToleranceEd[0].getText().toString().trim()));
-        mParameterBean.setM2_upper_tolerance_value(Double.valueOf(upperToleranceEd[1].getText().toString().trim()));
-        mParameterBean.setM3_upper_tolerance_value(Double.valueOf(upperToleranceEd[2].getText().toString().trim()));
-        mParameterBean.setM4_upper_tolerance_value(Double.valueOf(upperToleranceEd[3].getText().toString().trim()));
-        // 下公差
-        mParameterBean.setM1_lower_tolerance_value(Double.valueOf(lowerToleranceEd[0].getText().toString().trim()));
-        mParameterBean.setM2_lower_tolerance_value(Double.valueOf(lowerToleranceEd[1].getText().toString().trim()));
-        mParameterBean.setM3_lower_tolerance_value(Double.valueOf(lowerToleranceEd[2].getText().toString().trim()));
-        mParameterBean.setM4_lower_tolerance_value(Double.valueOf(lowerToleranceEd[3].getText().toString().trim()));
-        // 偏差
-        mParameterBean.setM1_offect(Double.valueOf(offectEd[0].getText().toString().trim()));
-        mParameterBean.setM2_offect(Double.valueOf(offectEd[1].getText().toString().trim()));
-        mParameterBean.setM3_offect(Double.valueOf(offectEd[2].getText().toString().trim()));
-        mParameterBean.setM4_offect(Double.valueOf(offectEd[3].getText().toString().trim()));
+    private boolean view2Bean() {
+        try{
+            mParameterBean.setCode_id(App.getSetupBean().getCodeID());
+            // 分辨率
+            mParameterBean.setM1_resolution((int) resolutionSp[0].getSelectedItemId());
+            mParameterBean.setM2_resolution((int) resolutionSp[1].getSelectedItemId());
+            mParameterBean.setM3_resolution((int) resolutionSp[2].getSelectedItemId());
+            mParameterBean.setM4_resolution((int) resolutionSp[3].getSelectedItemId());
+            // 名义值
+            mParameterBean.setM1_nominal_value(Double.valueOf(nominalValueEd[0].getText().toString().trim()));
+            mParameterBean.setM2_nominal_value(Double.valueOf(nominalValueEd[1].getText().toString().trim()));
+            mParameterBean.setM3_nominal_value(Double.valueOf(nominalValueEd[2].getText().toString().trim()));
+            mParameterBean.setM4_nominal_value(Double.valueOf(nominalValueEd[3].getText().toString().trim()));
+            // 上公差
+            mParameterBean.setM1_upper_tolerance_value(Double.valueOf(upperToleranceEd[0].getText().toString().trim()));
+            mParameterBean.setM2_upper_tolerance_value(Double.valueOf(upperToleranceEd[1].getText().toString().trim()));
+            mParameterBean.setM3_upper_tolerance_value(Double.valueOf(upperToleranceEd[2].getText().toString().trim()));
+            mParameterBean.setM4_upper_tolerance_value(Double.valueOf(upperToleranceEd[3].getText().toString().trim()));
+            // 下公差
+            mParameterBean.setM1_lower_tolerance_value(Double.valueOf(lowerToleranceEd[0].getText().toString().trim()));
+            mParameterBean.setM2_lower_tolerance_value(Double.valueOf(lowerToleranceEd[1].getText().toString().trim()));
+            mParameterBean.setM3_lower_tolerance_value(Double.valueOf(lowerToleranceEd[2].getText().toString().trim()));
+            mParameterBean.setM4_lower_tolerance_value(Double.valueOf(lowerToleranceEd[3].getText().toString().trim()));
+            // 偏差
+            mParameterBean.setM1_offect(Double.valueOf(offectEd[0].getText().toString().trim()));
+            mParameterBean.setM2_offect(Double.valueOf(offectEd[1].getText().toString().trim()));
+            mParameterBean.setM3_offect(Double.valueOf(offectEd[2].getText().toString().trim()));
+            mParameterBean.setM4_offect(Double.valueOf(offectEd[3].getText().toString().trim()));
 
-        // 分辨率
+            // 分辨率
 //        mParameterBean.setM1_resolution((int) resolutionSp[0].getSelectedItemId());
 //        mParameterBean.setM2_resolution((int) resolutionSp[1].getSelectedItemId());
 //        mParameterBean.setM3_resolution((int) resolutionSp[2].getSelectedItemId());
 //        mParameterBean.setM4_resolution((int) resolutionSp[3].getSelectedItemId());
 
-        // 描述
-        mParameterBean.setM1_describe(describeEd[0].getText().toString());
-        mParameterBean.setM2_describe(describeEd[1].getText().toString());
-        mParameterBean.setM3_describe(describeEd[2].getText().toString());
-        mParameterBean.setM4_describe(describeEd[3].getText().toString());
+            // 描述
+            mParameterBean.setM1_describe(describeEd[0].getText().toString());
+            mParameterBean.setM2_describe(describeEd[1].getText().toString());
+            mParameterBean.setM3_describe(describeEd[2].getText().toString());
+            mParameterBean.setM4_describe(describeEd[3].getText().toString());
 
 
-        mParameterBean.setM1_scale(getRbyID((int) resolutionSp[0].getSelectedItemId()));
-        mParameterBean.setM2_scale(getRbyID((int) resolutionSp[1].getSelectedItemId()));
-        mParameterBean.setM3_scale(getRbyID((int) resolutionSp[2].getSelectedItemId()));
-        mParameterBean.setM4_scale(getRbyID((int) resolutionSp[3].getSelectedItemId()));
+            mParameterBean.setM1_scale(getRbyID((int) resolutionSp[0].getSelectedItemId()));
+            mParameterBean.setM2_scale(getRbyID((int) resolutionSp[1].getSelectedItemId()));
+            mParameterBean.setM3_scale(getRbyID((int) resolutionSp[2].getSelectedItemId()));
+            mParameterBean.setM4_scale(getRbyID((int) resolutionSp[3].getSelectedItemId()));
 
 //        describeEd[0].setText(mParameterBean.getM1_describe());
 //        describeEd[1].setText(mParameterBean.getM2_describe());
 //        describeEd[2].setText(mParameterBean.getM3_describe());
 //        describeEd[3].setText(mParameterBean.getM4_describe());
 
-        //公式
+            //公式
 //        mParameterBean.setM1_code(formulaEd.get(0).getText().toString());
 //        mParameterBean.setM2_code(code);
 //        mParameterBean.setM3_code(code);
 //        mParameterBean.setM4_code(code);
 
-        mParameterBean.setM1_enable(mCheckBoxs.get(0).isChecked());
-        mParameterBean.setM2_enable(mCheckBoxs.get(1).isChecked());
-        mParameterBean.setM3_enable(mCheckBoxs.get(2).isChecked());
-        mParameterBean.setM4_enable(mCheckBoxs.get(3).isChecked());
+            mParameterBean.setM1_enable(mCheckBoxs.get(0).isChecked());
+            mParameterBean.setM2_enable(mCheckBoxs.get(1).isChecked());
+            mParameterBean.setM3_enable(mCheckBoxs.get(2).isChecked());
+            mParameterBean.setM4_enable(mCheckBoxs.get(3).isChecked());
+        }catch (NumberFormatException e){
+            Toast.makeText(this,R.string.number_format_tips,Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private double getRbyID(int i) {

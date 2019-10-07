@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginLeft="18dp"
             android:text="@string/code_step_title"
             android:textSize="18sp" />
 
@@ -41,7 +42,10 @@
 
             </TableRow>
 
-            <TableRow>
+            <TableRow
+                android:id="@+id/step_row_1"
+                android:visibility="gone"
+                >
 
                 <TextView
                     android:layout_gravity="center"
@@ -65,7 +69,9 @@
 
             </TableRow>
 
-            <TableRow>
+            <TableRow
+                android:id="@+id/step_row_2"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_gravity="center"
@@ -88,7 +94,9 @@
                     style="@style/CodeCheckBoxStyle" />
             </TableRow>
 
-            <TableRow>
+            <TableRow
+                android:id="@+id/step_row_3"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_gravity="center"
@@ -111,7 +119,9 @@
                     style="@style/CodeCheckBoxStyle" />
             </TableRow>
 
-            <TableRow>
+            <TableRow
+                android:id="@+id/step_row_4"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_gravity="center"

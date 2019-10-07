@@ -129,8 +129,9 @@
     <string name="event_id">事件号</string>
     <string name="is_auto_show">是否自动弹出</string>
     <string name="add_title">附加信息</string>
-    <string name="add_user_title">添加管理员</string>
-    <string name="full_name">全名*</string>
+    <string name="add_user_title">添加用户</string>
+    <string name="edit_user_title">编辑用户信息</string>
+    <string name="full_name">名称*</string>
     <string name="password">密码</string>
     <string name="repassword">重复密码</string>
     <string name="accout_user">账号*</string>
@@ -147,7 +148,7 @@
     <string name="filter_title">筛选</string>
     <string name="start_time">开始时间</string>
     <string name="end_time">结束时间</string>
-    <string name="filter">筛选</string>
+    <string name="filter">\u3000筛选\u3000</string>
     <string name="normal">正常</string>
     <string name="not_supporte">暂不支持</string>
     <string name="refresh">刷新</string>
@@ -196,7 +197,15 @@
 
     <string name="step_tips">步骤%1$d取值</string>
     <string name="over_tips">Ch%1$d测量倍率超过设定范围，无法保存.</string>
-
+    <string name="input_fail">输入异常，请检查</string>
+    <string name="parameter_name">参数名</string>
+    <string name="show_item">显示项</string>
+    <string name="limit">权限</string>
+    <string name="instruction_book">打开说明书</string>
+    <string name="number_format_tips">数据异常，保存失败，请检查。</string>
+    <string name="logout">注销</string>
+    <string name="workpiece_pic">工件图</string>
+    <string name="add_workpiece_pic">选择图片</string>
 
 
 </resources>

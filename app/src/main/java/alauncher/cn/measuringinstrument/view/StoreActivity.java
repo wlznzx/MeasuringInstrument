@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StoreBeanDao;
@@ -65,8 +64,13 @@ public class StoreActivity extends BaseOActivity {
         _bean.setId(App.SETTING_ID);
         _bean.setMValue(storeValueSP.getSelectedItemPosition());
         _bean.setStoreMode(storeModeRG.getCheckedRadioButtonId() == R.id.store_auto ? 1 : 2);
-        _bean.setUpLimitValue(Double.valueOf(storeUpperLimitEdt.getText().toString().trim()));
-        _bean.setLowLimitValue(Double.valueOf(storeLowerLimitEdt.getText().toString().trim()));
+        try{
+            _bean.setUpLimitValue(Double.valueOf(storeUpperLimitEdt.getText().toString().trim()));
+            _bean.setLowLimitValue(Double.valueOf(storeLowerLimitEdt.getText().toString().trim()));
+        }catch (NumberFormatException e){
+            Toast.makeText(this, R.string.input_fail, Toast.LENGTH_SHORT).show();
+            return null;
+        }
         _bean.setDelayTime(Integer.valueOf(storeDelayTime.getText().toString().trim()));
         return _bean;
     }
@@ -75,8 +79,11 @@ public class StoreActivity extends BaseOActivity {
     public void OnClick(View v) {
         switch (v.getId()) {
             case R.id.save_btn:
-                mStoreBeanDao.update(view2Bean());
-                Toast.makeText(this, "保存成功.", Toast.LENGTH_SHORT).show();
+                StoreBean _bean = view2Bean();
+                if(_bean != null){
+                    mStoreBeanDao.update(_bean);
+                    Toast.makeText(this, "保存成功.", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }

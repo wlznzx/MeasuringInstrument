@@ -16,7 +16,6 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.utils.BuildUtils;
 import alauncher.cn.measuringinstrument.utils.DeviceUtils;
-import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

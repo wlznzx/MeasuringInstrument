@@ -224,15 +224,40 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_filter"
-        android:layout_width="80dp"
-        android:layout_height="33dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/button_noclickable_shape"
-        android:text="@string/filter"
-        android:textColor="#b7b8bd"
-        android:textSize="14sp" />
+<!--    <Button-->
+<!--        android:id="@+id/btn_filter"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:background="@drawable/button_noclickable_shape"-->
+<!--        android:text="@string/filter"-->
+<!--        android:textColor="#b7b8bd"-->
+<!--        android:textSize="14sp" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/btn_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/archive_24px"
+                android:text="@string/filter"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </FrameLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

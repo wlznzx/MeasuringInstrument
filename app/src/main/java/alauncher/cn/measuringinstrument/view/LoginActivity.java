@@ -19,13 +19,11 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.MainActivity;
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.bean.RememberPasswordBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
-import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
@@ -187,7 +185,7 @@ public class LoginActivity extends BaseOActivity {
 
     @OnClick(R.id.quick_login_btn)
     public void onQuickBtn(View v) {
-        App.handlerAccout = "et_tester";
+        App.handlerAccout = "operator";
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }

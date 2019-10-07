@@ -20,6 +20,7 @@ import java.util.List;
 
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.view.fragment.HelpFragment;
 import alauncher.cn.measuringinstrument.view.fragment.InfoFragment;
 import butterknife.BindView;
 
@@ -50,20 +51,26 @@ public class SetActivity extends BaseActivity {
     @Override
     protected void initView() {
         InfoFragment codeBaseInfoFragment = null;
+        HelpFragment helpFragment = null;
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment instanceof InfoFragment) {
                 codeBaseInfoFragment = (InfoFragment) fragment;
+            }
+            if (fragment instanceof HelpFragment) {
+                helpFragment = (HelpFragment) fragment;
             }
         }
         if (codeBaseInfoFragment == null)
             codeBaseInfoFragment = new InfoFragment();
 
+        if (helpFragment == null)
+            helpFragment = new HelpFragment();
 
-        String[] mTitles = new String[]{getString(R.string.device_info)};
+        String[] mTitles = new String[]{getString(R.string.device_info), "帮助"};
         mTitleList = Arrays.asList(mTitles);
 
 
-        mFragmentList = Arrays.asList(codeBaseInfoFragment);
+        mFragmentList = Arrays.asList(codeBaseInfoFragment, helpFragment);
 
         tabFragmentPageAdapter = new TabFragmentPageAdapter(getSupportFragmentManager());
         mVp.setAdapter(tabFragmentPageAdapter);

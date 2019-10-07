@@ -183,6 +183,7 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             case R.id.calibration_save_btn:
                 doCalc();
                 CalibrationBean _bean = view2Bean();
+                if(_bean == null) return;
                 android.util.Log.d("wlDebug", _bean.toString());
                 // 判断倍率;
                 /*
@@ -264,7 +265,7 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
     @Override
     protected void onPause() {
         super.onPause();
-        mCalibrationPresenter.saveCalibration(view2Bean());
+        // mCalibrationPresenter.saveCalibration(view2Bean());
         mCalibrationPresenter.stopValueing();
     }
 
@@ -281,46 +282,51 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             _bean = new CalibrationBean();
         }
         _bean.setCode_id(App.getSetupBean().getCodeID());
-        // 校验模式
-        _bean.setCh1CalibrationType((int) calibrationTypeSP[0].getSelectedItemId());
-        _bean.setCh2CalibrationType((int) calibrationTypeSP[1].getSelectedItemId());
-        _bean.setCh3CalibrationType((int) calibrationTypeSP[2].getSelectedItemId());
-        _bean.setCh4CalibrationType((int) calibrationTypeSP[3].getSelectedItemId());
-        // 小件标准
-        _bean.setCh1SmallPartStandard(Double.valueOf(smallPartEdt[0].getText().toString().trim()));
-        _bean.setCh2SmallPartStandard(Double.valueOf(smallPartEdt[1].getText().toString().trim()));
-        _bean.setCh3SmallPartStandard(Double.valueOf(smallPartEdt[2].getText().toString().trim()));
-        _bean.setCh4SmallPartStandard(Double.valueOf(smallPartEdt[3].getText().toString().trim()));
-        // 大件标准
-        _bean.setCh1BigPartStandard(Double.valueOf(bigPartCHEdt[0].getText().toString().trim()));
-        _bean.setCh2BigPartStandard(Double.valueOf(bigPartCHEdt[1].getText().toString().trim()));
-        _bean.setCh3BigPartStandard(Double.valueOf(bigPartCHEdt[2].getText().toString().trim()));
-        _bean.setCh4BigPartStandard(Double.valueOf(bigPartCHEdt[3].getText().toString().trim()));
-        // 倍率上限;
-        _bean.setCh1UpperLimitRate(Double.valueOf(upperLimitEdt[0].getText().toString().trim()));
-        _bean.setCh2UpperLimitRate(Double.valueOf(upperLimitEdt[1].getText().toString().trim()));
-        _bean.setCh3UpperLimitRate(Double.valueOf(upperLimitEdt[2].getText().toString().trim()));
-        _bean.setCh4UpperLimitRate(Double.valueOf(upperLimitEdt[3].getText().toString().trim()));
-        // 倍率下限;
-        _bean.setCh1LowerLimitRate(Double.valueOf(lowerLimitEdt[0].getText().toString().trim()));
-        _bean.setCh2LowerLimitRate(Double.valueOf(lowerLimitEdt[1].getText().toString().trim()));
-        _bean.setCh3LowerLimitRate(Double.valueOf(lowerLimitEdt[2].getText().toString().trim()));
-        _bean.setCh4LowerLimitRate(Double.valueOf(lowerLimitEdt[3].getText().toString().trim()));
-        // 倍率;
-        if (chRbs[0].isChecked())
-            _bean.setCh1KValue(Double.valueOf(kValueEdt[0].getText().toString().trim()) / 1000);
-        if (chRbs[1].isChecked())
-            _bean.setCh2KValue(Double.valueOf(kValueEdt[1].getText().toString().trim()) / 1000);
-        if (chRbs[2].isChecked())
-            _bean.setCh3KValue(Double.valueOf(kValueEdt[2].getText().toString().trim()) / 1000);
-        if (chRbs[3].isChecked())
-            _bean.setCh4KValue(Double.valueOf(kValueEdt[3].getText().toString().trim()) / 1000);
-        // 偏差;
+        try{
+            // 校验模式
+            _bean.setCh1CalibrationType((int) calibrationTypeSP[0].getSelectedItemId());
+            _bean.setCh2CalibrationType((int) calibrationTypeSP[1].getSelectedItemId());
+            _bean.setCh3CalibrationType((int) calibrationTypeSP[2].getSelectedItemId());
+            _bean.setCh4CalibrationType((int) calibrationTypeSP[3].getSelectedItemId());
+            // 小件标准
+            _bean.setCh1SmallPartStandard(Double.valueOf(smallPartEdt[0].getText().toString().trim()));
+            _bean.setCh2SmallPartStandard(Double.valueOf(smallPartEdt[1].getText().toString().trim()));
+            _bean.setCh3SmallPartStandard(Double.valueOf(smallPartEdt[2].getText().toString().trim()));
+            _bean.setCh4SmallPartStandard(Double.valueOf(smallPartEdt[3].getText().toString().trim()));
+            // 大件标准
+            _bean.setCh1BigPartStandard(Double.valueOf(bigPartCHEdt[0].getText().toString().trim()));
+            _bean.setCh2BigPartStandard(Double.valueOf(bigPartCHEdt[1].getText().toString().trim()));
+            _bean.setCh3BigPartStandard(Double.valueOf(bigPartCHEdt[2].getText().toString().trim()));
+            _bean.setCh4BigPartStandard(Double.valueOf(bigPartCHEdt[3].getText().toString().trim()));
+            // 倍率上限;
+            _bean.setCh1UpperLimitRate(Double.valueOf(upperLimitEdt[0].getText().toString().trim()));
+            _bean.setCh2UpperLimitRate(Double.valueOf(upperLimitEdt[1].getText().toString().trim()));
+            _bean.setCh3UpperLimitRate(Double.valueOf(upperLimitEdt[2].getText().toString().trim()));
+            _bean.setCh4UpperLimitRate(Double.valueOf(upperLimitEdt[3].getText().toString().trim()));
+            // 倍率下限;
+            _bean.setCh1LowerLimitRate(Double.valueOf(lowerLimitEdt[0].getText().toString().trim()));
+            _bean.setCh2LowerLimitRate(Double.valueOf(lowerLimitEdt[1].getText().toString().trim()));
+            _bean.setCh3LowerLimitRate(Double.valueOf(lowerLimitEdt[2].getText().toString().trim()));
+            _bean.setCh4LowerLimitRate(Double.valueOf(lowerLimitEdt[3].getText().toString().trim()));
+            // 倍率;
+            if (chRbs[0].isChecked())
+                _bean.setCh1KValue(Double.valueOf(kValueEdt[0].getText().toString().trim()) / 1000);
+            if (chRbs[1].isChecked())
+                _bean.setCh2KValue(Double.valueOf(kValueEdt[1].getText().toString().trim()) / 1000);
+            if (chRbs[2].isChecked())
+                _bean.setCh3KValue(Double.valueOf(kValueEdt[2].getText().toString().trim()) / 1000);
+            if (chRbs[3].isChecked())
+                _bean.setCh4KValue(Double.valueOf(kValueEdt[3].getText().toString().trim()) / 1000);
+            // 偏差;
 
-        _bean.setCh1CompensationValue(Double.valueOf(compensationValueEdt[0].getText().toString().trim()));
-        _bean.setCh2CompensationValue(Double.valueOf(compensationValueEdt[1].getText().toString().trim()));
-        _bean.setCh3CompensationValue(Double.valueOf(compensationValueEdt[2].getText().toString().trim()));
-        _bean.setCh4CompensationValue(Double.valueOf(compensationValueEdt[3].getText().toString().trim()));
+            _bean.setCh1CompensationValue(Double.valueOf(compensationValueEdt[0].getText().toString().trim()));
+            _bean.setCh2CompensationValue(Double.valueOf(compensationValueEdt[1].getText().toString().trim()));
+            _bean.setCh3CompensationValue(Double.valueOf(compensationValueEdt[2].getText().toString().trim()));
+            _bean.setCh4CompensationValue(Double.valueOf(compensationValueEdt[3].getText().toString().trim()));
+        }catch (NumberFormatException e){
+            Toast.makeText(this,R.string.number_format_tips,Toast.LENGTH_SHORT).show();
+            return null;
+        }
         return _bean;
     }
 
