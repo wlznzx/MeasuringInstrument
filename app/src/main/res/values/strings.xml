@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MeasuringInstrument</string>
+    <string name="app_name">恩梯量仪</string>
     <string name="measuring">Measuring</string>
     <string name="data_query">Data duery</string>
     <string name="parameter_management">Parameter management</string>
@@ -206,6 +206,9 @@
     <string name="logout">注销</string>
     <string name="workpiece_pic">工件图</string>
     <string name="add_workpiece_pic">选择图片</string>
+    <string name="upgrade">升级</string>
+    <string name="no_more_version">当前已是最新版本</string>
+    <string name="ip_address">服务端IP</string>
 
 
 </resources>

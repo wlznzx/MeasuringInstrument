@@ -13,6 +13,7 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
+import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
@@ -75,6 +76,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     private int currentStep = -1;
 
+    private DeviceInfoBean _dBean;
+
+    public int canShow = 15;
+
+    public boolean[] mGeted = {false, false, false, false};
+
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
@@ -109,6 +116,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         else
             currentStep = -1;
 
+        _dBean = App.getDeviceInfo();
     }
 
     public void initParameter() {
@@ -235,6 +243,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 if (StepUtils.getChannelByStep(i, _bean.getMeasured())) {
                     android.util.Log.d("wlDebug", "获取第" + i + "值:" + ms[i]);
                     tempMs[i] = ms[i];
+                    mGeted[i] = true;
                 }
             }
             if (getStep() == maxStep - 1) {
@@ -248,6 +257,9 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     }
 
     private void doSave(double[] ms, AddInfoBean bean) {
+        for (int i = 0; i < mGeted.length; i++) {
+            mGeted[i] = false;
+        }
         ResultBean _bean = new ResultBean();
         _bean.setHandlerAccout(App.handlerAccout);
         _bean.setCodeID(App.getSetupBean().getCodeID());
@@ -277,7 +289,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             _bean.setWorkid("");
         }
         App.getDaoSession().getResultBeanDao().insert(_bean);
-        // toSQLServer(_bean);
+        toSQLServer(_bean);
     }
 
     private void toSQLServer(final ResultBean _bean) {
@@ -285,7 +297,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             @Override
             public void run() {
                 try {
-                    JdbcUtil.addResult2(App.factory_code, App.machine_code, App.getSetupBean().getCodeID(), "", _bean);
+                    JdbcUtil.addResult2(_dBean.getFactoryCode(), _dBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _bean);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -326,6 +338,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         }
     }
 
+
     /*
      *
      * 获取当前测量步骤;
@@ -336,7 +349,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         return currentStep;
     }
 
-    public StepBean getStepBean(){
+    public StepBean getStepBean() {
         if (stepBeans.size() > 0) {
             StepBean _bean = stepBeans.get(currentStep);
             return _bean;

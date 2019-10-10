@@ -29,6 +29,7 @@ public class DeviceUtils {
             mac = mac.toLowerCase();
         }
         // return "YU:QI:NO:1";
+        if(mac == null)return "ALauncher";
         return mac;
     }
 

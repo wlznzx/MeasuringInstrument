@@ -1,5 +1,6 @@
 package alauncher.cn.measuringinstrument.view;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import alauncher.cn.measuringinstrument.base.ViewHolder;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.tencent.bugly.beta.Beta;
 
 import butterknife.BindView;
 
@@ -45,6 +48,7 @@ public class SystemManagementActivity extends BaseOActivity {
         // _datas.add(new MainInfo(R.string.force_calibration, R.drawable.straighten));
         _datas.add(new MainInfo(R.string.set, R.drawable.settings));
         _datas.add(new MainInfo(R.string.wifi_str, R.drawable.wifi));
+        _datas.add(new MainInfo(R.string.upgrade, R.drawable.upgrade));
         MainLayoutAdapter _adapter = new MainLayoutAdapter(_datas);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
@@ -101,6 +105,13 @@ public class SystemManagementActivity extends BaseOActivity {
                             break;
                         case 4:
                             startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
+                            break;
+                        case 5:
+//                            ComponentName cn = new ComponentName("com.tencent.bugly.beta.ui", "com.tencent.bugly.beta.ui.BetaActivity");
+//                            Intent intent = new Intent();
+//                            intent.setComponent(cn);
+//                            startActivity(intent);
+                            Beta.checkUpgrade();
                             break;
                         default:
                             break;

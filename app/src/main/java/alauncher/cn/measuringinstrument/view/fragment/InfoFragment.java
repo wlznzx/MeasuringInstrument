@@ -15,7 +15,11 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.utils.BuildUtils;
+import alauncher.cn.measuringinstrument.utils.Constants;
 import alauncher.cn.measuringinstrument.utils.DeviceUtils;
+import alauncher.cn.measuringinstrument.utils.JdbcUtil;
+import alauncher.cn.measuringinstrument.utils.SPUtils;
+import alauncher.cn.measuringinstrument.utils.SystemPropertiesProxy;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -50,6 +54,9 @@ public class InfoFragment extends Fragment {
     @BindView(R.id.device_name_edt)
     public EditText deviceNameEdt;
 
+    @BindView(R.id.ip_edt)
+    public EditText ipEdt;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
@@ -77,12 +84,14 @@ public class InfoFragment extends Fragment {
             _bean.setFactoryName(factoryNameEdt.getText().toString().trim());
             _bean.setManufacturer(manufacturerEdt.getText().toString().trim());
             _bean.setDeviceName(deviceNameEdt.getText().toString().trim());
-            _bean.setDeviceCode(DeviceUtils.getLocalMacAddress(getContext()));
+            _bean.setDeviceCode(deviceCodeEdt.getText().toString().trim());
         }
         App.getDaoSession().getDeviceInfoBeanDao().insertOrReplace(_bean);
         Toast.makeText(getContext(), "保存成功", Toast.LENGTH_SHORT).show();
 
-        /*
+        SPUtils.put(getContext(), Constants.IP_KEY, ipEdt.getText().toString().trim());
+        android.util.Log.d("wlDebug", "info = " + _bean.toString());
+        JdbcUtil.IP = String.valueOf(SPUtils.get(getContext(), Constants.IP_KEY,"47.98.58.40"));
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -90,7 +99,6 @@ public class InfoFragment extends Fragment {
                         "rmk3", App.handlerAccout);
             }
         }).start();
-        */
     }
 
     @Override
@@ -124,9 +132,10 @@ public class InfoFragment extends Fragment {
         } else {
 
         }
+        ipEdt.setText(String.valueOf(SPUtils.get(getContext(), Constants.IP_KEY, "47.98.58.40")));
         softwareVersionEdt.setText(BuildUtils.packageName(getContext()));
         kernelVersionEdt.setText(BuildUtils.getLinuxCore_Ver());
-        deviceCodeEdt.setText(BuildUtils.getLocalMacAddress(getContext()));
+        deviceCodeEdt.setText(SystemPropertiesProxy.getString(getContext(), "ro.serialno"));
         baseVersionEdt.setText(BuildUtils.getInner_Ver());
     }
 

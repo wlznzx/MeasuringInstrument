@@ -16,4 +16,6 @@ public class Constants {
 
     public static final double[] d2 = {1.13, 1.69, 2.06, 2.33, 2.53, 2.70, 2.85, 2.97, 3.08};
 
+    public static final String IP_KEY = "IP_KEY";
+
 }

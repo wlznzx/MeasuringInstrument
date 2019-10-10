@@ -2,9 +2,15 @@ package alauncher.cn.measuringinstrument;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
+import android.widget.Toast;
 
 import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.UpgradeInfo;
+import com.tencent.bugly.beta.upgrade.UpgradeListener;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.greendao.database.Database;
@@ -22,7 +28,15 @@ import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoMaster;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
+import alauncher.cn.measuringinstrument.utils.Constants;
 import alauncher.cn.measuringinstrument.utils.DeviceUtils;
+import alauncher.cn.measuringinstrument.utils.JdbcUtil;
+import alauncher.cn.measuringinstrument.utils.SPUtils;
+import alauncher.cn.measuringinstrument.utils.SystemPropertiesProxy;
+import alauncher.cn.measuringinstrument.view.CodeActivity;
+import alauncher.cn.measuringinstrument.view.SystemManagementActivity;
+import alauncher.cn.measuringinstrument.view.TActivity;
+import alauncher.cn.measuringinstrument.view.UpgradeActivity;
 
 /**
  * 日期：2019/4/25 0025 10:27
@@ -30,7 +44,7 @@ import alauncher.cn.measuringinstrument.utils.DeviceUtils;
  * 作者： wlznzx
  * 描述：
  */
-public class App extends Application {
+public class App extends MultiDexApplication {
 
 
     private static DaoSession mDaoSession;
@@ -66,7 +80,24 @@ public class App extends Application {
             }
         }).start();
 
-        Bugly.init(getApplicationContext(), "e4d9621d74", false);
+//        Beta.autoCheckUpgrade = true;
+        // Beta.canShowUpgradeActs.add(SystemManagementActivity.class);
+        Beta.enableNotification = false;
+        Beta.upgradeListener = new UpgradeListener() {
+            @Override
+            public void onUpgrade(int ret, UpgradeInfo strategy, boolean isManual, boolean isSilence) {
+                if (strategy != null) {
+                    Intent i = new Intent();
+                    i.setClass(getApplicationContext(), UpgradeActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+                } else {
+                    Toast.makeText(App.this, R.string.no_more_version, Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+        Bugly.init(getApplicationContext(), "e4d9621d74", true);
+
         // CrashReport.initCrashReport(getApplicationContext(), "e4d9621d74", false);
     }
 
@@ -100,6 +131,9 @@ public class App extends Application {
     }
 
     public void initDefaultDate() {
+
+        JdbcUtil.IP = String.valueOf(SPUtils.get(this, Constants.IP_KEY,"47.98.58.40"));
+
         if (getDaoSession().getSetupBeanDao().load(SETTING_ID) == null) {
             SetupBean _bean = new SetupBean();
             _bean.setCodeID(1);
@@ -169,9 +203,10 @@ public class App extends Application {
             _bean.setFactoryCode(getResources().getString(R.string.default_factory_code));
             _bean.setFactoryName(getResources().getString(R.string.default_factory_name));
             _bean.setManufacturer(getResources().getString(R.string.manufacturer));
-            _bean.setDeviceCode(DeviceUtils.getLocalMacAddress(this));
+            _bean.setDeviceCode(SystemPropertiesProxy.getString(this,"ro.serialno"));
             _bean.setDeviceName(getResources().getString(R.string.default_device_name));
             _bean.setRmk("rmk");
+            android.util.Log.d("wlDebug","info = " + _bean.toString());
             getDaoSession().getDeviceInfoBeanDao().insertOrReplace(_bean);
         }
 
@@ -326,7 +361,7 @@ public class App extends Application {
             }
         }
 
-         // initTestDatas();
+        // initTestDatas();
     }
 
     public void initTestDatas() {

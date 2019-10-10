@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 
 import alauncher.cn.measuringinstrument.App;
-import alauncher.cn.measuringinstrument.MainActivity;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
@@ -266,15 +264,17 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         if (mMeasuringPresenter.getStep() == -1) {
             saveTv.setText(R.string.save);
         } else {
-            StepBean _bean = ((MeasuringPresenterImpl)mMeasuringPresenter).getStepBean();
-            if(_bean != null){
+            StepBean _bean = ((MeasuringPresenterImpl) mMeasuringPresenter).getStepBean();
+            if (_bean != null) {
                 saveTv.setText(String.format(getResources().getString(R.string.step_tips), _bean.getStepID()));
+                /*
                 for(int i = 0; i < 4 ; i++){
                     mMValueViews[i].setVisibility(StepUtils.getChannelByStep(i,_bean.getMeasured()) ? View.VISIBLE : View.INVISIBLE);
                     mTValues[i].setVisibility(StepUtils.getChannelByStep(i,_bean.getMeasured()) ? View.VISIBLE : View.INVISIBLE);
                     mTitle[i].setVisibility(StepUtils.getChannelByStep(i,_bean.getMeasured()) ? View.VISIBLE : View.INVISIBLE);
                     mDescribes[i].setVisibility(StepUtils.getChannelByStep(i,_bean.getMeasured()) ? View.VISIBLE : View.INVISIBLE);
                 }
+                */
             }
         }
     }
@@ -671,9 +671,9 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     }
 
     private void updateMValues(double[] mValues) {
-        for (int i = 0; i < mTValues.length; i++) {
-            mTValues[i].setText("");
-        }
+//        for (int i = 0; i < mTValues.length; i++) {
+//            mTValues[i].setText("");
+//        }
         String result = ((MeasuringPresenterImpl) mMeasuringPresenter).getMResults(mValues);
         mGroupMs[0].setText("结果: " + result);
         if (result.equals("NG")) {
@@ -685,11 +685,13 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         switch (curMode) {
             case 0:
                 for (int i = 0; i < mTValues.length; i++) {
-                    mTValues[i].setText(NumberUtils.get4bits(mValues[i]));
-                    mMValueViews[i].setMValue(mValues[i]);
+                    if(!((MeasuringPresenterImpl)mMeasuringPresenter).mGeted[i]){
+                        mTValues[i].setText(NumberUtils.get4bits(mValues[i]));
+                        mMValueViews[i].setMValue(mValues[i]);
+                    }
                     // mGroupMs[i].setText(group[i]);
                 }
-                mGroupMs[1].setText("M1分组: " + group[0]); // 显示M1分组;
+                if(!((MeasuringPresenterImpl)mMeasuringPresenter).mGeted[0])mGroupMs[1].setText("M1分组: " + group[0]); // 显示M1分组;
                 break;
             case 1:
                 mTValues[3].setText(NumberUtils.get4bits(mValues[0]));

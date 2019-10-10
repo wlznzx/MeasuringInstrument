@@ -29,8 +29,8 @@ public class DeviceInfoBean {
     public String rmk;
 
     @Generated(hash = 243295899)
-    public DeviceInfoBean(Long id, String factoryCode, String factoryName,
-            String deviceCode, String deviceName, String manufacturer, String rmk) {
+    public DeviceInfoBean(Long id, String factoryCode, String factoryName, String deviceCode,
+            String deviceName, String manufacturer, String rmk) {
         this.id = id;
         this.factoryCode = factoryCode;
         this.factoryName = factoryName;
@@ -38,6 +38,19 @@ public class DeviceInfoBean {
         this.deviceName = deviceName;
         this.manufacturer = manufacturer;
         this.rmk = rmk;
+    }
+
+    @Override
+    public String toString() {
+        return "DeviceInfoBean{" +
+                "id=" + id +
+                ", factoryCode='" + factoryCode + '\'' +
+                ", factoryName='" + factoryName + '\'' +
+                ", deviceCode='" + deviceCode + '\'' +
+                ", deviceName='" + deviceName + '\'' +
+                ", manufacturer='" + manufacturer + '\'' +
+                ", rmk='" + rmk + '\'' +
+                '}';
     }
 
     @Generated(hash = 784809703)

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MeasuringInstrument</string>
+    <string name="app_name">恩梯量仪</string>
     <string name="measuring">测量</string>
     <string name="data_query">数据查询</string>
     <string name="parameter_management">参数管理</string>

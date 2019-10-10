@@ -22,15 +22,17 @@ public class JdbcUtil {
     //驱动程序类
     private static String driverClass = null;
 
+    public static String IP = "47.98.58.40";
+
     /**
      * 获取连接方法
      */
-    public static Connection getConnection() {
+    public static Connection getConnection() throws NoClassDefFoundError {
         try {
             // Connection conn = DriverManager.getConnection(url, user, password);
             Class.forName("org.postgresql.Driver");
             Connection c = DriverManager
-                    .getConnection("jdbc:postgresql://47.98.58.40:5432/NT_CLOUD",
+                    .getConnection("jdbc:postgresql://" + getIP() + ":5432/NT_CLOUD",
                             "dfqtech", "dfqtech2016");
             return c;
         } catch (SQLException e) {
@@ -39,8 +41,14 @@ public class JdbcUtil {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+        } catch (NoClassDefFoundError e) {
+            e.printStackTrace();
         }
         return null;
+    }
+
+    public static String getIP(){
+        return IP;
     }
 
     /**
@@ -69,6 +77,7 @@ public class JdbcUtil {
     public static int addResult(String factory_code, String machine_code, int prog_id, String serial_number,
                                 String result, String ng_reason, String operator, String operate_time) throws Exception {
         Connection con = getConnection();
+        if (con == null) return -1;
         // String sql = "insert into aistu values('" + name + "'," + id + ",'" + age + "','" + email + "','" + tel + "','" + salary + "','" + riqi + "')";
         String sql = "insert into ntqc_result (factory_code,machine_code,prog_id,serial_number,result,ng_reason,operator,operate_time) "
                 + "values('" + factory_code + "','" + machine_code + "','" + prog_id + "','" + serial_number + "','" + result + "','" + ng_reason + "','" + operator + "','" + operate_time + "')";
@@ -83,6 +92,7 @@ public class JdbcUtil {
     public static int selectDevice(String machine_code) {
         int count = 0;
         Connection con = getConnection();
+        if (con == null) return -1;
         String sql = "select count(*) from ntqc_equipment where machine_code = '" + machine_code + "'";
         try {
 
@@ -96,11 +106,11 @@ public class JdbcUtil {
             e.printStackTrace();
         }
         return count;
-
     }
 
     public static int addDevice(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) {
         Connection con = getConnection();
+        if (con == null) return -1;
         String sql = "insert into ntqc_equipment (factory_code,factory_name,machine_code,machine_name,manufacturer,manufacture_date,rmk,operator,operate_time) values (?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -122,6 +132,7 @@ public class JdbcUtil {
 
     public static int updateDevice(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) {
         Connection conn = getConnection();
+        if (conn == null) return -1;
         String sql = "update ntqc_equipment set factory_code=?,factory_name=?,machine_name=?,manufacturer=?,rmk=?,operator=?,operate_time=? where machine_code=?";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -140,6 +151,7 @@ public class JdbcUtil {
         return 1;
     }
 
+
     public static int insertOrReplace(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) {
         if (selectDevice(machine_code) > 0) {
             updateDevice(factory_code, factory_name, machine_code, machine_name, manufacturer, rmk, operator);
@@ -153,6 +165,7 @@ public class JdbcUtil {
     public static int addResult2(String factory_code, String machine_code, int prog_id, String serial_number,
                                  final ResultBean _bean) throws Exception {
         Connection conn = getConnection();
+        if (conn == null) return -1;
         String sql = "insert into ntqc_result (factory_code,machine_code,prog_id,serial_number,result,ng_reason,operator,operate_time) VALUES (?,?,?,?,?,?,?,?);";
         PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
         pstmt.setString(1, factory_code);
@@ -221,6 +234,7 @@ public class JdbcUtil {
                                      String param_name, String type,
                                      float warning_up, float warning_low, String rmk, ParameterBean _bean) throws Exception {
         Connection conn = getConnection();
+        if (conn == null) return -1;
         String sql = "insert into ntqc_param_config (factory_code,machine_code,prog_id," +
                 "prog_name,param_key,param_name,type,nominal_value,lower_tolerance,upper_tolerance,warning_up,warning_low,rmk) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
@@ -318,7 +332,77 @@ public class JdbcUtil {
         pstmt.setFloat(9, (float) _bean.getM4_lower_tolerance_value());
         pstmt.setFloat(10, (float) _bean.getM4_upper_tolerance_value());
         pstmt.executeUpdate();//执行sql
-
         return 1;
+    }
+
+    public static int updateParamConfig(String factory_code, String machine_code, int prog_id, String prog_name, String param_key,
+                                        String param_name, String type,
+                                        float warning_up, float warning_low, String rmk, ParameterBean _bean) throws Exception {
+        Connection conn = getConnection();
+        if (conn == null) return -1;
+        String sql = "update ntqc_param_config set factory_code=?,prog_name=?,param_name=?,type=?,nominal_value=?,lower_tolerance=?,upper_tolerance=?,warning_up=?,warning_low=?,rmk=? where machine_code=? and prog_id=? and param_key=?";
+        PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
+        pstmt.setString(1, factory_code);
+        //pstmt.setString(2, machine_code);
+        // pstmt.setInt(3, App.getSetupBean().getCodeID());
+        pstmt.setString(2, App.getCodeName());
+        // pstmt.setString(5, "M1");
+        pstmt.setString(3, _bean.getM1_describe());
+        pstmt.setString(4, type);
+        pstmt.setFloat(5, Float.valueOf(String.valueOf(_bean.getM1_nominal_value())));
+        pstmt.setFloat(6, (float) _bean.getM1_lower_tolerance_value());
+        pstmt.setFloat(7, (float) _bean.getM1_upper_tolerance_value());
+        pstmt.setFloat(8, warning_up);
+        pstmt.setFloat(9, warning_low);
+        pstmt.setString(10, rmk);
+
+        pstmt.setString(11, machine_code);
+        pstmt.setInt(12, App.getSetupBean().getCodeID());
+        pstmt.setString(13, "M1");
+        pstmt.executeUpdate();//执行sql
+
+        // Code M2
+        pstmt.setString(3, _bean.getM2_describe());
+        pstmt.setFloat(5, Float.valueOf(String.valueOf(_bean.getM2_nominal_value())));
+        pstmt.setFloat(6, (float) _bean.getM2_lower_tolerance_value());
+        pstmt.setFloat(7, (float) _bean.getM2_upper_tolerance_value());
+        pstmt.setString(13, "M2");
+        pstmt.executeUpdate();//执行sql
+
+        // Code M3
+        pstmt.setString(3, _bean.getM3_describe());
+        pstmt.setFloat(5, Float.valueOf(String.valueOf(_bean.getM3_nominal_value())));
+        pstmt.setFloat(6, (float) _bean.getM3_lower_tolerance_value());
+        pstmt.setFloat(7, (float) _bean.getM3_upper_tolerance_value());
+        pstmt.setString(13, "M3");
+        pstmt.executeUpdate();//执行sql
+
+        // Code M4
+        pstmt.setString(3, _bean.getM4_describe());
+        pstmt.setFloat(5, Float.valueOf(String.valueOf(_bean.getM4_nominal_value())));
+        pstmt.setFloat(6, (float) _bean.getM4_lower_tolerance_value());
+        pstmt.setFloat(7, (float) _bean.getM4_upper_tolerance_value());
+        pstmt.setString(13, "M4");
+        pstmt.executeUpdate();//执行sql
+        return 1;
+
+    }
+
+    public static int selectParamConfig(String machine_code, int prog_id, String param_key) {
+        int count = 0;
+        Connection con = getConnection();
+        if (con == null) return -1;
+        String sql = "select count(*) from ntqc_param_config where machine_code = '" + machine_code + "' and " + "prog_id = '" + prog_id + "' and param_key = '" + param_key + "'";
+        try {
+            PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs = null;
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 }

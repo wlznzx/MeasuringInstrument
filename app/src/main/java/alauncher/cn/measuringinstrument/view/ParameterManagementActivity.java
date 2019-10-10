@@ -15,10 +15,12 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
+import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.StepBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StepBeanDao;
+import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.widget.CalculateDialog;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -66,6 +68,8 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
 
     public ParameterBean mParameterBean;
 
+    private DeviceInfoBean _dBean;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,11 +89,12 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
             mParameterBean.setCode_id(App.getSetupBean().getCodeID());
         }
         updateUI();
+        _dBean = App.getDeviceInfo();
     }
 
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
-        if(!view2Bean())return;
+        if (!view2Bean()) return;
         if (session.getParameterBeanDao().load((long) App.getSetupBean().getCodeID()) == null) {
             session.getParameterBeanDao().insert(mParameterBean);
         } else {
@@ -101,10 +106,10 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
 
         List<StepBean> stepBeans = _dao.queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
 
-        for(StepBean _bean : stepBeans){
+        for (StepBean _bean : stepBeans) {
             _dao.delete(_bean);
         }
-        // syncToServer(mParameterBean);
+        syncToServer(mParameterBean);
         Toast.makeText(this, "保存成功.", Toast.LENGTH_SHORT).show();
     }
 
@@ -239,7 +244,7 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
     }
 
     private boolean view2Bean() {
-        try{
+        try {
             mParameterBean.setCode_id(App.getSetupBean().getCodeID());
             // 分辨率
             mParameterBean.setM1_resolution((int) resolutionSp[0].getSelectedItemId());
@@ -300,8 +305,8 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
             mParameterBean.setM2_enable(mCheckBoxs.get(1).isChecked());
             mParameterBean.setM3_enable(mCheckBoxs.get(2).isChecked());
             mParameterBean.setM4_enable(mCheckBoxs.get(3).isChecked());
-        }catch (NumberFormatException e){
-            Toast.makeText(this,R.string.number_format_tips,Toast.LENGTH_SHORT).show();
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, R.string.number_format_tips, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -335,19 +340,25 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
         return result;
     }
 
-    /*
     private void syncToServer(final ParameterBean _bean) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    JdbcUtil.addParamConfig(App.factory_code, App.machine_code, App.getSetupBean().getCodeID(),
-                            "程序" + App.getSetupBean().getCodeID(), "", "", "", 0, 0, "rmk", _bean);
+
+                    int ret = JdbcUtil.selectParamConfig(_dBean.getDeviceCode(),App.getSetupBean().getCodeID(),"M1");
+                    android.util.Log.d("wlDebug", "" + ret);
+                    if(ret > 0){
+                        JdbcUtil.updateParamConfig(_dBean.getFactoryCode(), _dBean.getDeviceCode(), App.getSetupBean().getCodeID(),
+                                "程序" + App.getSetupBean().getCodeID(), "", "", "0", 0, 0, "rmk", _bean);
+                    } else {
+                        JdbcUtil.addParamConfig(_dBean.getFactoryCode(), _dBean.getDeviceCode(), App.getSetupBean().getCodeID(),
+                            "程序" + App.getSetupBean().getCodeID(), "", "", "0", 0, 0, "rmk", _bean);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }).start();
     }
-    */
 }

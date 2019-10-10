@@ -24,6 +24,7 @@ import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.bean.RememberPasswordBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
+import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
@@ -76,14 +77,15 @@ public class LoginActivity extends BaseOActivity {
 
         isRemeberCB.setChecked(_bean.getIsRemeber());
 
-        DeviceInfoBean _dBean = App.getDeviceInfo();
         /*
+        DeviceInfoBean _dBean = App.getDeviceInfo();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 JdbcUtil.insertOrReplace(_dBean.getFactoryCode(), _dBean.getFactoryName(), _dBean.getDeviceCode(), _dBean.getDeviceName(), _dBean.getManufacturer(),
                         _dBean.getRmk(), App.handlerAccout);
-                //Log.d("wlDebug", "count = " + JdbcUtil.selectDevice("SXFA1011"));
+                Log.d("wlDebug", "count = " + JdbcUtil.selectDevice("SXFA1011"));
             }
         }).start();
         */
