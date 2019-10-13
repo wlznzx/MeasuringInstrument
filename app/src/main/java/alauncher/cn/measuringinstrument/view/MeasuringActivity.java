@@ -54,7 +54,6 @@ import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImpl;
 import alauncher.cn.measuringinstrument.utils.NumberUtils;
-import alauncher.cn.measuringinstrument.utils.StepUtils;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import alauncher.cn.measuringinstrument.widget.AdditionalDialog;
 import alauncher.cn.measuringinstrument.widget.MValueView;
@@ -675,23 +674,26 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 //            mTValues[i].setText("");
 //        }
         String result = ((MeasuringPresenterImpl) mMeasuringPresenter).getMResults(mValues);
-        mGroupMs[0].setText("结果: " + result);
-        if (result.equals("NG")) {
-            mGroupMs[0].setBackgroundResource(R.drawable.red_shape);
-        } else {
-            mGroupMs[0].setBackgroundResource(R.drawable.green_shape);
+        if (!((MeasuringPresenterImpl) mMeasuringPresenter).mGeted[0]) {
+            mGroupMs[0].setText("结果: " + result);
+            if (result.equals("NG")) {
+                mGroupMs[0].setBackgroundResource(R.drawable.red_shape);
+            } else {
+                mGroupMs[0].setBackgroundResource(R.drawable.green_shape);
+            }
         }
         String[] group = mMeasuringPresenter.getMGroupValues(mValues);
         switch (curMode) {
             case 0:
                 for (int i = 0; i < mTValues.length; i++) {
-                    if(!((MeasuringPresenterImpl)mMeasuringPresenter).mGeted[i]){
+                    if (!((MeasuringPresenterImpl) mMeasuringPresenter).mGeted[i]) {
                         mTValues[i].setText(NumberUtils.get4bits(mValues[i]));
                         mMValueViews[i].setMValue(mValues[i]);
                     }
                     // mGroupMs[i].setText(group[i]);
                 }
-                if(!((MeasuringPresenterImpl)mMeasuringPresenter).mGeted[0])mGroupMs[1].setText("M1分组: " + group[0]); // 显示M1分组;
+                if (!((MeasuringPresenterImpl) mMeasuringPresenter).mGeted[0])
+                    mGroupMs[1].setText("M1分组: " + group[0]); // 显示M1分组;
                 break;
             case 1:
                 mTValues[3].setText(NumberUtils.get4bits(mValues[0]));

@@ -3,12 +3,9 @@ package alauncher.cn.measuringinstrument.view;
 import android.os.Bundle;
 
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 
-
 public class IOActivity extends BaseOActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

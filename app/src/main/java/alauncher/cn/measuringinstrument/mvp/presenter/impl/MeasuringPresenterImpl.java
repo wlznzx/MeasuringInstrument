@@ -78,8 +78,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     private DeviceInfoBean _dBean;
 
-    public int canShow = 15;
-
     public boolean[] mGeted = {false, false, false, false};
 
     public MeasuringPresenterImpl(MeasuringActivityView view) {

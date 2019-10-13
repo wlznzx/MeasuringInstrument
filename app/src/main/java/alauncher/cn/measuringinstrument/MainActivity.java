@@ -203,7 +203,8 @@ public class MainActivity extends BaseOActivity {
                             openActivty(StatisticalActivity.class, datas.get(position).strID);
                             break;
                         case 10:
-                            logout();
+//                            logout();
+                            exitDialog();
                         default:
                             break;
                     }
@@ -246,5 +247,10 @@ public class MainActivity extends BaseOActivity {
     @Override
     public void onBackPressed() {
         // super.onBackPressed();
+    }
+
+
+    private void exitDialog() {
+        new AlertDialog.Builder(this).setTitle("列表框").setItems(new String[]{"Item1", "Item2"}, null).show();
     }
 }
