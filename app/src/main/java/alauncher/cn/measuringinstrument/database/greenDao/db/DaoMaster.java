@@ -23,34 +23,34 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void createAllTables(Database db, boolean ifNotExists) {
         CalibrationBeanDao.createTable(db, ifNotExists);
         CodeBeanDao.createTable(db, ifNotExists);
-        DeviceInfoBeanDao.createTable(db, ifNotExists);
         ForceCalibrationBeanDao.createTable(db, ifNotExists);
         GroupBeanDao.createTable(db, ifNotExists);
         ParameterBeanDao.createTable(db, ifNotExists);
-        RememberPasswordBeanDao.createTable(db, ifNotExists);
         ResultBeanDao.createTable(db, ifNotExists);
         ResultDataDao.createTable(db, ifNotExists);
         SetupBeanDao.createTable(db, ifNotExists);
-        StepBeanDao.createTable(db, ifNotExists);
         StoreBeanDao.createTable(db, ifNotExists);
         UserDao.createTable(db, ifNotExists);
+        StepBeanDao.createTable(db, ifNotExists);
+        DeviceInfoBeanDao.createTable(db, ifNotExists);
+        RememberPasswordBeanDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
         CalibrationBeanDao.dropTable(db, ifExists);
         CodeBeanDao.dropTable(db, ifExists);
-        DeviceInfoBeanDao.dropTable(db, ifExists);
         ForceCalibrationBeanDao.dropTable(db, ifExists);
         GroupBeanDao.dropTable(db, ifExists);
         ParameterBeanDao.dropTable(db, ifExists);
-        RememberPasswordBeanDao.dropTable(db, ifExists);
         ResultBeanDao.dropTable(db, ifExists);
         ResultDataDao.dropTable(db, ifExists);
         SetupBeanDao.dropTable(db, ifExists);
-        StepBeanDao.dropTable(db, ifExists);
         StoreBeanDao.dropTable(db, ifExists);
         UserDao.dropTable(db, ifExists);
+        StepBeanDao.dropTable(db, ifExists);
+        DeviceInfoBeanDao.dropTable(db, ifExists);
+        RememberPasswordBeanDao.dropTable(db, ifExists);
     }
 
     /**
@@ -71,17 +71,17 @@ public class DaoMaster extends AbstractDaoMaster {
         super(db, SCHEMA_VERSION);
         registerDaoClass(CalibrationBeanDao.class);
         registerDaoClass(CodeBeanDao.class);
-        registerDaoClass(DeviceInfoBeanDao.class);
         registerDaoClass(ForceCalibrationBeanDao.class);
         registerDaoClass(GroupBeanDao.class);
         registerDaoClass(ParameterBeanDao.class);
-        registerDaoClass(RememberPasswordBeanDao.class);
         registerDaoClass(ResultBeanDao.class);
         registerDaoClass(ResultDataDao.class);
         registerDaoClass(SetupBeanDao.class);
-        registerDaoClass(StepBeanDao.class);
         registerDaoClass(StoreBeanDao.class);
         registerDaoClass(UserDao.class);
+        registerDaoClass(StepBeanDao.class);
+        registerDaoClass(DeviceInfoBeanDao.class);
+        registerDaoClass(RememberPasswordBeanDao.class);
     }
 
     public DaoSession newSession() {

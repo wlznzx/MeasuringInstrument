@@ -250,7 +250,43 @@ public class MainActivity extends BaseOActivity {
     }
 
 
+    private AlertDialog builder;
+
     private void exitDialog() {
-        new AlertDialog.Builder(this).setTitle("列表框").setItems(new String[]{"Item1", "Item2"}, null).show();
+        // new AlertDialog.Builder(this).setTitle("列表框").setItems(new String[]{"Item1", "Item2"}, null).show();
+        builder = new AlertDialog.Builder(MainActivity.this).create();
+        builder.show();
+        if (builder.getWindow() == null) return;
+        builder.getWindow().setContentView(R.layout.exit_dialog);//设置弹出框加载的布局
+        TextView cancellationTV = (TextView) builder.findViewById(R.id.cancellation_btn);
+        TextView exitTV = (TextView) builder.findViewById(R.id.exit_btn);
+        TextView quitTV = (TextView) builder.findViewById(R.id.quit_btn);
+        cancellationTV.setOnClickListener(this::onClick);
+        exitTV.setOnClickListener(this::onClick);
+        quitTV.setOnClickListener(this::onClick);
+    }
+
+    public void onClick(View v) {
+        builder.dismiss();
+        switch (v.getId()) {
+            case R.id.cancellation_btn:
+                finish();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                break;
+            case R.id.exit_btn:
+                finish();
+                break;
+            case R.id.quit_btn:
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                ComponentName cn = new ComponentName("com.android.launcher3", "com.android.launcher3.Launcher");
+                intent.setComponent(cn);
+                try {
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(MainActivity.this, "未找到主界面.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 }

@@ -167,7 +167,7 @@
     <string name="code_base_info">基本信息</string>
     <string name="code_force_cailbration">强制校准</string>
     <string name="code_workpiece_pic">工件图</string>
-    <string name="code_step">分布策略</string>
+    <string name="code_step">分步策略</string>
     <string name="code_discrimination">判异</string>
     <string name="machine_tool">机床</string>
     <string name="spare_parts">零件</string>
@@ -210,5 +210,8 @@
     <string name="no_more_version">当前已是最新版本</string>
     <string name="ip_address">服务端IP</string>
 
+    <string name="cancellation">注销</string>
+    <string name="exit">退出</string>
+    <string name="quit">返回</string>
 
 </resources>

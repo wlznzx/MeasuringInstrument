@@ -24,13 +24,13 @@
             android:id="@+id/force_calibration_sp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:entries="@array/force_calibration_item"></Spinner>
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"></View>
+            android:layout_weight="2"></View>
 
     </LinearLayout>
 
