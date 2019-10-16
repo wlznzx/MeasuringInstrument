@@ -223,10 +223,10 @@ public class App extends MultiDexApplication {
             StoreBean _bean = new StoreBean();
             _bean.setId(SETTING_ID);
             _bean.setStoreMode(2);
-            _bean.setUpLimitValue(10);
-            _bean.setLowLimitValue(-10);
+            _bean.setUpLimitValue(30.045);
+            _bean.setLowLimitValue(29.995);
             _bean.setMValue(0);
-            _bean.setDelayTime(3);
+            _bean.setDelayTime(1);
             getDaoSession().getStoreBeanDao().insert(_bean);
         }
 

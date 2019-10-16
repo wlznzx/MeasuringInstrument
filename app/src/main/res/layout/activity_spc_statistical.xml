@@ -18,7 +18,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TextStyle"
+            style="@style/BaseTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -26,14 +26,13 @@
 
         <Spinner
             android:id="@+id/code_sp"
-            style="@style/SPTextStyle"
             android:layout_width="0dp"
-            android:layout_height="14dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:entries="@array/code_array" />
 
         <TextView
-            style="@style/TextStyle"
+            style="@style/BaseTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -41,7 +40,6 @@
 
         <Spinner
             android:id="@+id/target_sp"
-            style="@style/SPTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -55,7 +53,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TextStyle"
+            style="@style/BaseTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -63,14 +61,13 @@
 
         <Spinner
             android:id="@+id/group_size_sp"
-            style="@style/SPTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:entries="@array/group_size_array" />
 
         <TextView
-            style="@style/TextStyle"
+            style="@style/BaseTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -78,7 +75,6 @@
 
         <Spinner
             android:id="@+id/group_num_sp"
-            style="@style/SPTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -92,7 +88,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TextStyle"
+            style="@style/BaseTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -130,7 +126,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TextStyle"
+            style="@style/BaseTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -145,11 +141,11 @@
             android:layout_weight="1" />
 
         <TextView
-            style="@style/TextStyle"
+            style="@style/BaseTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="结束时间" />
+            android:text="@string/end_time" />
 
         <Button
             android:id="@+id/stop_time_btn"
@@ -167,7 +163,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TextStyle"
+            style="@style/BaseTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -203,7 +199,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TextStyle"
+            style="@style/BaseTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -215,7 +211,7 @@
             android:layout_weight="3">
 
             <TextView
-                style="@style/TextStyle"
+                style="@style/BaseTextStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -230,7 +226,7 @@
                 android:text="0.0070" />
 
             <TextView
-                style="@style/TextStyle"
+                style="@style/BaseTextStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -254,7 +250,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TextStyle"
+            style="@style/BaseTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -266,7 +262,7 @@
             android:layout_weight="3">
 
             <TextView
-                style="@style/TextStyle"
+                style="@style/BaseTextStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -280,8 +276,13 @@
                 android:layout_weight="1"
                 android:text="0.0070" />
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
             <TextView
-                style="@style/TextStyle"
+                style="@style/BaseTextStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -294,6 +295,11 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="0.0070" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -331,7 +337,7 @@
             android:visibility="visible" />
 
         <TextView
-            style="@style/TextStyle"
+            style="@style/BaseTextStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

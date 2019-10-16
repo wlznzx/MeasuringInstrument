@@ -125,7 +125,7 @@
     <string name="btn_divide">÷</string>
     <string name="btn_equal">=</string>
     <string name="in_value">取值中.</string>
-    <string name="k_value">倍率</string>
+    <string name="k_value">倍\u3000\u3000率</string>
     <string name="event_id">事件号</string>
     <string name="is_auto_show">是否自动弹出</string>
     <string name="add_title">附加信息</string>
@@ -213,5 +213,7 @@
     <string name="cancellation">注销</string>
     <string name="exit">退出</string>
     <string name="quit">返回</string>
+    <string name="sure_clear">确认清除分步设置？</string>
+    <string name="set_as_current">设为当前</string>
 
 </resources>

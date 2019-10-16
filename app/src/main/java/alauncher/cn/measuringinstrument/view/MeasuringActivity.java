@@ -397,10 +397,10 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 
     private void updateChartDatas() {
         //set1.setValues(getDatas());
-//        chart.setData(new LineData(set1));
+//      chart.setData(new LineData(set1));
         set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
         List<Entry> values = getDatas();
-//        Log.d("wlDebug", values.toString());
+//      Log.d("wlDebug", values.toString());
         set1.setValues(values);
         chart.getData().notifyDataChanged();
         chart.notifyDataSetChanged();

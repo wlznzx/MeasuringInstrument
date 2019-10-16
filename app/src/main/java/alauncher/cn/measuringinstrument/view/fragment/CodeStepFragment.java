@@ -1,13 +1,16 @@
 package alauncher.cn.measuringinstrument.view.fragment;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,7 +48,6 @@ public class CodeStepFragment extends Fragment {
     @BindViews({R.id.step_4_m1_cb, R.id.step_4_m2_cb, R.id.step_4_m3_cb, R.id.step_4_m4_cb})
     CheckBox[] step4CheckBoxs;
 
-
     @BindViews({R.id.step_1_m1_cb, R.id.step_2_m1_cb, R.id.step_3_m1_cb, R.id.step_4_m1_cb})
     CheckBox[] m1CheckBoxs;
 
@@ -61,7 +63,7 @@ public class CodeStepFragment extends Fragment {
     @BindView(R.id.table1)
     public TableLayout table;
 
-    @BindViews({R.id.step_row_1,R.id.step_row_2,R.id.step_row_3,R.id.step_row_4})
+    @BindViews({R.id.step_row_1, R.id.step_row_2, R.id.step_row_3, R.id.step_row_4})
     TableRow[] rows;
 
     private int showRows = 4;
@@ -113,50 +115,97 @@ public class CodeStepFragment extends Fragment {
             }
         }
 
-        if(!mParameterBean.getM1_enable()){
-            table.setColumnCollapsed(1,true);
+        if (!mParameterBean.getM1_enable()) {
+            table.setColumnCollapsed(1, true);
             showRows--;
         }
-        if(!mParameterBean.getM2_enable()){
-            table.setColumnCollapsed(2,true);
+        if (!mParameterBean.getM2_enable()) {
+            table.setColumnCollapsed(2, true);
             showRows--;
         }
-        if(!mParameterBean.getM3_enable()){
-            table.setColumnCollapsed(3,true);
+        if (!mParameterBean.getM3_enable()) {
+            table.setColumnCollapsed(3, true);
             showRows--;
         }
-        if(!mParameterBean.getM4_enable()){
-            table.setColumnCollapsed(4,true);
+        if (!mParameterBean.getM4_enable()) {
+            table.setColumnCollapsed(4, true);
             showRows--;
         }
-        for(int i = 0; i < showRows; i++){
+        for (int i = 0; i < showRows; i++) {
             rows[i].setVisibility(View.VISIBLE);
         }
-
         return view;
     }
 
-    @OnClick(R.id.save_btn)
+    @OnClick({R.id.save_btn, R.id.clear_btn})
     public void onSave(View v) {
-        int[] step = new int[4];
-        step[0] = getMeasuredByCheckoutBoxs(step1CheckBoxs);
-        step[1] = getMeasuredByCheckoutBoxs(step2CheckBoxs);
-        step[2] = getMeasuredByCheckoutBoxs(step3CheckBoxs);
-        step[3] = getMeasuredByCheckoutBoxs(step4CheckBoxs);
+        switch (v.getId()) {
+            case R.id.save_btn:
+                int[] step = new int[4];
+                step[0] = getMeasuredByCheckoutBoxs(step1CheckBoxs);
+                step[1] = getMeasuredByCheckoutBoxs(step2CheckBoxs);
+                step[2] = getMeasuredByCheckoutBoxs(step3CheckBoxs);
+                step[3] = getMeasuredByCheckoutBoxs(step4CheckBoxs);
 
-        StepBeanDao dao = App.getDaoSession().getStepBeanDao();
-        List<StepBean> stepBeans = dao.queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
-        for(StepBean _bean : stepBeans){
-            dao.delete(_bean);
+                StepBeanDao dao = App.getDaoSession().getStepBeanDao();
+                List<StepBean> stepBeans = dao.queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
+                for (StepBean _bean : stepBeans) {
+                    dao.delete(_bean);
+                }
+                for (int i = 0; i < showRows; i++) {
+                    StepBean _bean = new StepBean();
+                    _bean.setCodeID(CodeID);
+                    _bean.setStepID(i + 1);
+                    _bean.setMeasured(step[i]);
+                    if (step[i] != 0) dao.insertOrReplace(_bean);
+                }
+                Toast.makeText(getContext(), "保存成功.", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.clear_btn:
+                clearDialog();
+                break;
         }
-        for(int i = 0;i < showRows;i++){
-            StepBean _bean = new StepBean();
-            _bean.setCodeID(CodeID);
-            _bean.setStepID(i + 1);
-            _bean.setMeasured(step[i]);
-            if(step[i] != 0)dao.insertOrReplace(_bean);
-        }
-        Toast.makeText(getContext(), "保存成功.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void clearDialog() {
+        final AlertDialog builder = new AlertDialog.Builder(getContext()).create();
+        builder.show();
+        if (builder.getWindow() == null) return;
+        builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
+        TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
+        Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
+        Button sure = (Button) builder.findViewById(R.id.btn_sure);
+        if (msg == null || cancle == null || sure == null) return;
+        msg.setText(R.string.sure_clear);
+        cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+            }
+        });
+        sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+                StepBeanDao dao = App.getDaoSession().getStepBeanDao();
+                List<StepBean> stepBeans = dao.queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
+                for (StepBean _bean : stepBeans) {
+                    dao.delete(_bean);
+                }
+                for (CheckBox _cb : step1CheckBoxs) {
+                    _cb.setChecked(false);
+                }
+                for (CheckBox _cb : step2CheckBoxs) {
+                    _cb.setChecked(false);
+                }
+                for (CheckBox _cb : step3CheckBoxs) {
+                    _cb.setChecked(false);
+                }
+                for (CheckBox _cb : step4CheckBoxs) {
+                    _cb.setChecked(false);
+                }
+            }
+        });
     }
 
     @Override
