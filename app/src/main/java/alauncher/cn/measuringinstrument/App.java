@@ -92,7 +92,7 @@ public class App extends MultiDexApplication {
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);
                 } else {
-                    Toast.makeText(App.this, R.string.no_more_version, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(App.this, R.string.no_more_version, Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -284,6 +284,31 @@ public class App extends MultiDexApplication {
                 getDaoSession().getCalibrationBeanDao().insert(_bean);
             }
 
+            // 初始化分组;
+            if (getDaoSession().getParameterBeanDao().load((long) i) == null) {
+                for (int j = 1; j <= 4; j++) {
+                    GroupBean _bean = new GroupBean();
+                    _bean.setCode_id(i);
+                    _bean.setM_index(j);
+                    _bean.setA_describe("恩");
+                    _bean.setA_upper_limit(30.04);
+                    _bean.setA_lower_limit(30.03);
+
+                    _bean.setB_describe("梯");
+                    _bean.setB_upper_limit(30.03);
+                    _bean.setB_lower_limit(30.02);
+
+                    _bean.setC_describe("科");
+                    _bean.setC_upper_limit(30.02);
+                    _bean.setC_lower_limit(30.01);
+
+                    _bean.setD_describe("技");
+                    _bean.setD_upper_limit(30.01);
+                    _bean.setD_lower_limit(30);
+                    getDaoSession().getGroupBeanDao().insert(_bean);
+                }
+            }
+
             // 初始化参数;
             if (getDaoSession().getParameterBeanDao().load((long) i) == null) {
                 ParameterBean _bean = new ParameterBean();
@@ -324,31 +349,6 @@ public class App extends MultiDexApplication {
                 _bean.setM4_offect(0.0);
                 _bean.setM4_code("ch4");
                 getDaoSession().getParameterBeanDao().insert(_bean);
-            }
-
-            // 初始化分组;
-            if (getDaoSession().getGroupBeanDao().load((long) i) == null) {
-                for (int j = 1; j <= 4; j++) {
-                    GroupBean _bean = new GroupBean();
-                    _bean.setCode_id(i);
-                    _bean.setM_index(j);
-                    _bean.setA_describe("恩");
-                    _bean.setA_upper_limit(30.04);
-                    _bean.setA_lower_limit(30.03);
-
-                    _bean.setB_describe("梯");
-                    _bean.setB_upper_limit(30.03);
-                    _bean.setB_lower_limit(30.02);
-
-                    _bean.setC_describe("科");
-                    _bean.setC_upper_limit(30.02);
-                    _bean.setC_lower_limit(30.01);
-
-                    _bean.setD_describe("技");
-                    _bean.setD_upper_limit(30.01);
-                    _bean.setD_lower_limit(30);
-                    getDaoSession().getGroupBeanDao().insert(_bean);
-                }
             }
 
             if (getDaoSession().getCodeBeanDao().load((long) (i)) == null) {

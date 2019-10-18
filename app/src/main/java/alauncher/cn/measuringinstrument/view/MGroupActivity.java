@@ -9,6 +9,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.greendao.DaoException;
+
+import java.util.List;
+
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.MainActivity;
 import alauncher.cn.measuringinstrument.R;
@@ -54,7 +58,12 @@ public class MGroupActivity extends BaseOActivity {
         mIndex = getIntent().getIntExtra("M_INDEX", 0);
 
         mDao = App.getDaoSession().getGroupBeanDao();
-        GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
+        GroupBean _bean;
+        try {
+            _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
+        } catch (DaoException e) {
+            _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).list().get(0);
+        }
         if (_bean != null) {
             android.util.Log.d("wlDebug", _bean.toString());
             upperLimits[0].setText(_bean.getA_upper_limit() + "");
@@ -74,7 +83,7 @@ public class MGroupActivity extends BaseOActivity {
 
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
-        GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
+        // GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
         GroupBean mGroupBean = view2Bean();
         if (mGroupBean.getA_upper_limit() < mGroupBean.getA_lower_limit()) {
             Toast.makeText(this, "分组A的上限必须大于下限，请检查输入.", Toast.LENGTH_SHORT).show();
@@ -92,13 +101,20 @@ public class MGroupActivity extends BaseOActivity {
             Toast.makeText(this, "分组D的上限必须大于下限，请检查输入.", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (_bean == null) {
-            App.getDaoSession().getGroupBeanDao().insert(view2Bean());
-        } else {
-            GroupBean saveBean = view2Bean();
-            saveBean.setId(_bean.getId());
-            App.getDaoSession().getGroupBeanDao().update(saveBean);
+        List<GroupBean> _beans = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).list();
+
+        if (_beans != null) {
+            for (GroupBean _bean : mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).list()) {
+                mDao.delete(_bean);
+            }
         }
+//        if (_bean == null) {
+        App.getDaoSession().getGroupBeanDao().insert(view2Bean());
+//        } else {
+//            GroupBean saveBean = view2Bean();
+//            saveBean.setId(_bean.getId());
+//            App.getDaoSession().getGroupBeanDao().update(saveBean);
+//        }
         Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
     }
 

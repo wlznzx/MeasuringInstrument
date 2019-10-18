@@ -50,6 +50,7 @@ public class CodeActivity extends BaseOActivity {
                 switch (checkedId) {
                     //男
                     case R.id.code_1:
+                        codeID = 1;
                         //男
                         break;
                     //女
@@ -161,7 +162,7 @@ public class CodeActivity extends BaseOActivity {
             case R.id.set_as_btn:
                 SetupBean _sbean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
                 _sbean.setCodeID(codeID);
-                App.getDaoSession().getSetupBeanDao().update(_sbean);
+                App.getDaoSession().getSetupBeanDao().insertOrReplace(_sbean);
                 CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
                 User user = App.getDaoSession().getUserDao().load(App.handlerAccout);
                 String _name = App.handlerAccout;

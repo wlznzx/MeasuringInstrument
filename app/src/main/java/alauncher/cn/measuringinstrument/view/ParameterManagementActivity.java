@@ -95,17 +95,11 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
         if (!view2Bean()) return;
-        if (session.getParameterBeanDao().load((long) App.getSetupBean().getCodeID()) == null) {
-            session.getParameterBeanDao().insert(mParameterBean);
-        } else {
-            session.getParameterBeanDao().update(mParameterBean);
-        }
+        App.getDaoSession().getParameterBeanDao().deleteByKey((long) App.getSetupBean().getCodeID());
+        App.getDaoSession().getParameterBeanDao().insertOrReplace(mParameterBean);
         // 清空分步信息；
-
         StepBeanDao _dao = App.getDaoSession().getStepBeanDao();
-
         List<StepBean> stepBeans = _dao.queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
-
         for (StepBean _bean : stepBeans) {
             _dao.delete(_bean);
         }
@@ -346,14 +340,14 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
             public void run() {
                 try {
 
-                    int ret = JdbcUtil.selectParamConfig(_dBean.getDeviceCode(),App.getSetupBean().getCodeID(),"M1");
+                    int ret = JdbcUtil.selectParamConfig(_dBean.getDeviceCode(), App.getSetupBean().getCodeID(), "M1");
                     android.util.Log.d("wlDebug", "" + ret);
-                    if(ret > 0){
+                    if (ret > 0) {
                         JdbcUtil.updateParamConfig(_dBean.getFactoryCode(), _dBean.getDeviceCode(), App.getSetupBean().getCodeID(),
                                 "程序" + App.getSetupBean().getCodeID(), "", "", "0", 0, 0, "rmk", _bean);
                     } else {
                         JdbcUtil.addParamConfig(_dBean.getFactoryCode(), _dBean.getDeviceCode(), App.getSetupBean().getCodeID(),
-                            "程序" + App.getSetupBean().getCodeID(), "", "", "0", 0, 0, "rmk", _bean);
+                                "程序" + App.getSetupBean().getCodeID(), "", "", "0", 0, 0, "rmk", _bean);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

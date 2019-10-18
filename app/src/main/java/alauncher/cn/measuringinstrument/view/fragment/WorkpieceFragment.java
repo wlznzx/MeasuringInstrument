@@ -70,7 +70,7 @@ public class WorkpieceFragment extends Fragment {
 
     private void initView() {
         CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
-        if(_bean.getWorkpiecePic() != null){
+        if (_bean != null && _bean.getWorkpiecePic() != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(_bean.getWorkpiecePic(), 0, _bean.getWorkpiecePic().length, null);
             wpIV.setImageBitmap(bitmap);
         }
@@ -139,7 +139,7 @@ public class WorkpieceFragment extends Fragment {
         }
     }
 
-    public byte[] getBitmapByte(Bitmap bitmap){
+    public byte[] getBitmapByte(Bitmap bitmap) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
         try {
