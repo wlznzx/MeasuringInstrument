@@ -6,6 +6,94 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/m_value_tv"
+            style="@style/BaseTabletTextStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="@string/parameter"/>
+
+        <TextView
+            android:id="@+id/scale_tv"
+            style="@style/BaseTabletTextStyle"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent"
+            android:inputType="numberSigned|numberDecimal"
+            android:text="@string/scale" />
+
+        <TextView
+            android:id="@+id/upper_limit_tv"
+            style="@style/BaseTabletTextStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:inputType="numberSigned|numberDecimal"
+            android:text="@string/upper_limit" />
+
+        <TextView
+            android:id="@+id/lower_limit_tv"
+            style="@style/BaseTabletTextStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:inputType="numberSigned|numberDecimal"
+            android:text="@string/lower_limit" />
+
+        <TextView
+            android:id="@+id/stable_time_tv"
+            style="@style/BaseTabletTextStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:inputType="numberSigned|numberDecimal"
+            android:layout_height="match_parent"
+            android:text="@string/stable_time" />
+
+        <TextView
+            android:id="@+id/name_tv"
+            style="@style/BaseTabletTextStyle"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:text="@string/condition_name" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        />
+
+    <ImageView
+        android:id="@+id/add_tg_btn"
+        android:layout_width="50px"
+        android:layout_height="50px"
+        android:visibility="gone"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/add_circle"
+        android:layout_marginBottom="12dp"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="20dp"
+        android:background="@color/pBaseColor"/>
+
     <!-- 系统导入 -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -121,7 +209,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"></View>
+        android:layout_weight="1"></View>
 
     <LinearLayout
         android:layout_width="match_parent"

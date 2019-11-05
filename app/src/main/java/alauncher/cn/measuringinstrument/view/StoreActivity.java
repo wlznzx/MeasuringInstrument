@@ -1,7 +1,9 @@
 package alauncher.cn.measuringinstrument.view;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
+import alauncher.cn.measuringinstrument.bean.CriticalBean;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StoreBeanDao;
 import butterknife.BindView;
@@ -53,37 +56,54 @@ public class StoreActivity extends BaseOActivity {
         mStoreBean = mStoreBeanDao.load(App.SETTING_ID);
 
         storeModeRG.check(getModeID(mStoreBean.storeMode));
-        storeUpperLimitEdt.setText("" + mStoreBean.getUpLimitValue());
-        storeLowerLimitEdt.setText("" + mStoreBean.getLowLimitValue());
+        storeUpperLimitEdt.setText("" + mStoreBean.getUpLimitValue().get(0));
+        storeLowerLimitEdt.setText("" + mStoreBean.getLowLimitValue().get(0));
         storeDelayTime.setText("" + mStoreBean.getDelayTime());
         storeValueSP.setSelection(mStoreBean.getMValue());
+
+        storeValueSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                storeUpperLimitEdt.setText(mStoreBean.getUpLimitValue().get(position));
+                storeLowerLimitEdt.setText(mStoreBean.getLowLimitValue().get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private StoreBean view2Bean() {
-        StoreBean _bean = new StoreBean();
-        _bean.setId(App.SETTING_ID);
-        _bean.setMValue(storeValueSP.getSelectedItemPosition());
-        _bean.setStoreMode(storeModeRG.getCheckedRadioButtonId() == R.id.store_auto ? 1 : 2);
-        try{
-            _bean.setUpLimitValue(Double.valueOf(storeUpperLimitEdt.getText().toString().trim()));
-            _bean.setLowLimitValue(Double.valueOf(storeLowerLimitEdt.getText().toString().trim()));
-        }catch (NumberFormatException e){
+        mStoreBean.setId(App.SETTING_ID);
+        mStoreBean.setMValue(storeValueSP.getSelectedItemPosition());
+        mStoreBean.setStoreMode(storeModeRG.getCheckedRadioButtonId() == R.id.store_auto ? 1 : 2);
+        try {
+//            _bean.setUpLimitValue(Double.valueOf(storeUpperLimitEdt.getText().toString().trim()));
+//            _bean.setLowLimitValue(Double.valueOf(storeLowerLimitEdt.getText().toString().trim()));
+
+            Double upLimitValue = Double.valueOf(storeUpperLimitEdt.getText().toString().trim());
+            Double lowLimitValue = Double.valueOf(storeLowerLimitEdt.getText().toString().trim());
+            mStoreBean.getUpLimitValue().set(storeValueSP.getSelectedItemPosition(), upLimitValue.toString());
+            mStoreBean.getLowLimitValue().set(storeValueSP.getSelectedItemPosition(), lowLimitValue.toString());
+
+            Log.d("wlDebug", mStoreBean.toString());
+        } catch (NumberFormatException e) {
             Toast.makeText(this, R.string.input_fail, Toast.LENGTH_SHORT).show();
             return null;
         }
-        _bean.setDelayTime(Integer.valueOf(storeDelayTime.getText().toString().trim()));
-        return _bean;
+
+        mStoreBean.setDelayTime(Integer.valueOf(storeDelayTime.getText().toString().trim()));
+        return mStoreBean;
     }
 
     @OnClick(R.id.save_btn)
     public void OnClick(View v) {
         switch (v.getId()) {
             case R.id.save_btn:
-                StoreBean _bean = view2Bean();
-                if(_bean != null){
-                    mStoreBeanDao.update(_bean);
-                    Toast.makeText(this, "保存成功.", Toast.LENGTH_SHORT).show();
-                }
+                mStoreBeanDao.insertOrReplace(view2Bean());
+                Toast.makeText(this, "保存成功.", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -97,5 +117,6 @@ public class StoreActivity extends BaseOActivity {
         }
         return R.id.store_auto;
     }
+
 
 }

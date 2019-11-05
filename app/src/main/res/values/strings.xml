@@ -215,5 +215,11 @@
     <string name="quit">返回</string>
     <string name="sure_clear">确认清除分步设置？</string>
     <string name="set_as_current">设为当前</string>
+    <string name="is">是</string>
+    <string name="not">否</string>
+    <string name="condition_name">条件名</string>
+    <string name="stable_time">持续时间</string>
+    <string name="scale">比例</string>
+    <string name="parameter">参数</string>
 
 </resources>

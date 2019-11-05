@@ -1,8 +1,13 @@
 package alauncher.cn.measuringinstrument.bean;
 
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+
+import java.util.List;
+
+import alauncher.cn.measuringinstrument.utils.StringConverter;
 
 /**
  * 日期：2019/4/25 0025 9:27
@@ -20,20 +25,35 @@ public class StoreBean {
 
     public int mValue;
 
-    public double upLimitValue;
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    private List<String> upLimitValue;
 
-    public double lowLimitValue;
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    private List<String> lowLimitValue;
+
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    private List<String> isScale;
+
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    private List<String> scale;
+
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    private List<String> stable;
 
     public int delayTime;
 
-    @Generated(hash = 1310177342)
-    public StoreBean(Long id, int storeMode, int mValue, double upLimitValue,
-                     double lowLimitValue, int delayTime) {
+    @Generated(hash = 14670207)
+    public StoreBean(Long id, int storeMode, int mValue, List<String> upLimitValue,
+            List<String> lowLimitValue, List<String> isScale, List<String> scale,
+            List<String> stable, int delayTime) {
         this.id = id;
         this.storeMode = storeMode;
         this.mValue = mValue;
         this.upLimitValue = upLimitValue;
         this.lowLimitValue = lowLimitValue;
+        this.isScale = isScale;
+        this.scale = scale;
+        this.stable = stable;
         this.delayTime = delayTime;
     }
 
@@ -65,19 +85,19 @@ public class StoreBean {
         this.mValue = mValue;
     }
 
-    public double getUpLimitValue() {
+    public List<String> getUpLimitValue() {
         return this.upLimitValue;
     }
 
-    public void setUpLimitValue(double upLimitValue) {
+    public void setUpLimitValue(List<String> upLimitValue) {
         this.upLimitValue = upLimitValue;
     }
 
-    public double getLowLimitValue() {
+    public List<String> getLowLimitValue() {
         return this.lowLimitValue;
     }
 
-    public void setLowLimitValue(double lowLimitValue) {
+    public void setLowLimitValue(List<String> lowLimitValue) {
         this.lowLimitValue = lowLimitValue;
     }
 
@@ -99,5 +119,29 @@ public class StoreBean {
                 ", lowLimitValue=" + lowLimitValue +
                 ", delayTime=" + delayTime +
                 '}';
+    }
+
+    public List<String> getIsScale() {
+        return this.isScale;
+    }
+
+    public void setIsScale(List<String> isScale) {
+        this.isScale = isScale;
+    }
+
+    public List<String> getScale() {
+        return this.scale;
+    }
+
+    public void setScale(List<String> scale) {
+        this.scale = scale;
+    }
+
+    public List<String> getStable() {
+        return this.stable;
+    }
+
+    public void setStable(List<String> stable) {
+        this.stable = stable;
     }
 }

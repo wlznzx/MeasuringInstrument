@@ -19,6 +19,7 @@ import alauncher.cn.measuringinstrument.bean.GroupBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.StepBean;
+import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StepBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
@@ -81,6 +82,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     public boolean[] mGeted = {false, false, false, false};
 
+    public StoreBean mStoreBean;
+
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
@@ -120,6 +123,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             currentStep = -1;
 
         _dBean = App.getDeviceInfo();
+
+        mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
     }
 
     public void initParameter() {
@@ -244,6 +249,15 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             StepBean _bean = stepBeans.get(getStep());
             for (int i = 0; i < ms.length; i++) {
                 if (StepUtils.getChannelByStep(i, _bean.getMeasured())) {
+
+
+                    if (mStoreBean.getStoreMode() == 1) {
+                        Double _upperLimit = Double.valueOf(mStoreBean.getUpLimitValue().get(i));
+                        Double _lowerLimit = Double.valueOf(mStoreBean.getLowLimitValue().get(i));
+                        if(ms[i] < _lowerLimit || ms[i] > _upperLimit){
+                            return "NoSave";
+                        }
+                    }
                     android.util.Log.d("wlDebug", "获取第" + i + "值:" + ms[i]);
                     tempMs[i] = ms[i];
                     mGeted[i] = true;

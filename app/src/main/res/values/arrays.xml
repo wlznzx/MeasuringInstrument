@@ -75,6 +75,11 @@
         <item>周期时间</item>
     </string-array>
 
+    <string-array name="scale_item" translatable="false">
+        <item>否</item>
+        <item>是</item>
+    </string-array>
+
     <string-array name="code_array" translatable="false">
         <item>01</item>
         <item>02</item>

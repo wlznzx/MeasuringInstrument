@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -250,9 +251,14 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
             showForceDialog();
             return false;
         }
-        mMeasuringPresenter.saveResult(curMValues, mAddInfoBean);
+
+        String _result = mMeasuringPresenter.saveResult(curMValues, mAddInfoBean);
         updateGetValueTips();
-        Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
+        if (!_result.equals("NoSave")) {
+            Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "测试结果不在自动保存区间内.", Toast.LENGTH_SHORT).show();
+        }
         updateChartDatas();
         _bean.setUsrNum(_bean.getUsrNum() - 1);
         _dao.update(_bean);
@@ -821,15 +827,29 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 
     private void doAutoStore() {
         double mValue = curMValues[mStoreBean.getMValue()];
-        if (mValue > mStoreBean.getLowLimitValue() && mValue < mStoreBean.getUpLimitValue()) {
-            // Do Save;
-            if (doAutoStoreEnable) {
-                doAutoStoreEnable = false;
-                doSave();
-            }
-        } else {
-            doAutoStoreEnable = true;
-        }
+
+        Double _upLimitValue = Double.valueOf(mStoreBean.getUpLimitValue().get(0));
+        Double _lowLimitValue = Double.valueOf(mStoreBean.getLowLimitValue().get(0));
+
+        _upLimitValue = Double.valueOf(200);
+        _lowLimitValue = Double.valueOf(-200);
+
+//        if (mValue > _lowLimitValue && mValue < _upLimitValue) {
+//            Log.d("wlDebug", "doAutoStore goDoSave 1.");
+//            // Do Save;
+//            if (doAutoStoreEnable) {
+//                doAutoStoreEnable = false;
+//                Log.d("wlDebug", "doAutoStore goDoSave.");
+//                doSave();
+//            }
+//        } else {
+//            doAutoStoreEnable = true;
+//        }
+
+        doSave();
+
+        Log.d("wlDebug", "doAutoStore.");
+
         handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime() * 1000);
     }
 

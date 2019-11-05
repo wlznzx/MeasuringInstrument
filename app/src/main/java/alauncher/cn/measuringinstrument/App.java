@@ -15,6 +15,8 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.greendao.database.Database;
 
+import java.util.ArrayList;
+
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
@@ -25,9 +27,11 @@ import alauncher.cn.measuringinstrument.bean.RememberPasswordBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
+import alauncher.cn.measuringinstrument.bean.TriggerConditionBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoMaster;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
+import alauncher.cn.measuringinstrument.database.greenDao.db.TriggerConditionBeanDao;
 import alauncher.cn.measuringinstrument.utils.Constants;
 import alauncher.cn.measuringinstrument.utils.DeviceUtils;
 import alauncher.cn.measuringinstrument.utils.JdbcUtil;
@@ -132,7 +136,7 @@ public class App extends MultiDexApplication {
 
     public void initDefaultDate() {
 
-        JdbcUtil.IP = String.valueOf(SPUtils.get(this, Constants.IP_KEY,"47.98.58.40"));
+        JdbcUtil.IP = String.valueOf(SPUtils.get(this, Constants.IP_KEY, "47.98.58.40"));
 
         if (getDaoSession().getSetupBeanDao().load(SETTING_ID) == null) {
             SetupBean _bean = new SetupBean();
@@ -203,10 +207,10 @@ public class App extends MultiDexApplication {
             _bean.setFactoryCode(getResources().getString(R.string.default_factory_code));
             _bean.setFactoryName(getResources().getString(R.string.default_factory_name));
             _bean.setManufacturer(getResources().getString(R.string.manufacturer));
-            _bean.setDeviceCode(SystemPropertiesProxy.getString(this,"ro.serialno"));
+            _bean.setDeviceCode(SystemPropertiesProxy.getString(this, "ro.serialno"));
             _bean.setDeviceName(getResources().getString(R.string.default_device_name));
             _bean.setRmk("rmk");
-            android.util.Log.d("wlDebug","info = " + _bean.toString());
+            android.util.Log.d("wlDebug", "info = " + _bean.toString());
             getDaoSession().getDeviceInfoBeanDao().insertOrReplace(_bean);
         }
 
@@ -223,8 +227,18 @@ public class App extends MultiDexApplication {
             StoreBean _bean = new StoreBean();
             _bean.setId(SETTING_ID);
             _bean.setStoreMode(2);
-            _bean.setUpLimitValue(30.045);
-            _bean.setLowLimitValue(29.995);
+            _bean.setUpLimitValue(new ArrayList<>());
+            _bean.setLowLimitValue(new ArrayList<>());
+            _bean.setStable(new ArrayList<>());
+            _bean.setIsScale(new ArrayList<>());
+            _bean.setScale(new ArrayList<>());
+            for (int i = 0; i < 4; i++) {
+                _bean.getUpLimitValue().add(String.valueOf(30.045 + i * 1));
+                _bean.getLowLimitValue().add(String.valueOf(29.995 + i * 1));
+                _bean.getStable().add(String.valueOf(0));
+                _bean.getIsScale().add(String.valueOf(0));
+                _bean.getScale().add(String.valueOf(0.9));
+            }
             _bean.setMValue(0);
             _bean.setDelayTime(1);
             getDaoSession().getStoreBeanDao().insert(_bean);
@@ -232,6 +246,8 @@ public class App extends MultiDexApplication {
 
         //
         for (int i = 1; i <= 10; i++) {
+            // 初始化自动保存上下限;
+
             if (getDaoSession().getCalibrationBeanDao().load((long) i) == null) {
                 CalibrationBean _bean = new CalibrationBean();
                 _bean.setCode_id(i);
@@ -283,6 +299,22 @@ public class App extends MultiDexApplication {
                 _bean.setCh4KValue(0.01);
                 getDaoSession().getCalibrationBeanDao().insert(_bean);
             }
+
+            /*
+            if (getDaoSession().getTriggerConditionBeanDao().queryBuilder().where(TriggerConditionBeanDao.Properties.CodeID.eq(i)).list().size() == 0) {
+                for (int j = 1; j <= 4; j++) {
+                    TriggerConditionBean _bean = new TriggerConditionBean();
+                    _bean.setMIndex(j);
+                    _bean.setCodeID(i);
+                    _bean.setConditionName("条件" + j);
+                    _bean.setIsScale(false);
+                    _bean.setScale(0.9);
+                    _bean.setUpperLimit(100);
+                    _bean.setLowerLimit(-100);
+                    getDaoSession().getTriggerConditionBeanDao().insert(_bean);
+                }
+            }
+            */
 
             // 初始化分组;
             if (getDaoSession().getParameterBeanDao().load((long) i) == null) {
