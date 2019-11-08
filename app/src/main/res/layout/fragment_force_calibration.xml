@@ -64,7 +64,7 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:visibility="gone"
+            android:visibility="visible"
             android:text="@string/condition_name" />
 
     </LinearLayout>
@@ -82,7 +82,6 @@
         android:id="@+id/add_tg_btn"
         android:layout_width="50px"
         android:layout_height="50px"
-        android:visibility="gone"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/add_circle"
         android:layout_marginBottom="12dp"

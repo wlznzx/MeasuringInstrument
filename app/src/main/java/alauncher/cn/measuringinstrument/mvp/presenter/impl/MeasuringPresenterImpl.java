@@ -20,6 +20,7 @@ import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.StepBean;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
+import alauncher.cn.measuringinstrument.bean.TriggerConditionBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StepBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
@@ -252,10 +253,26 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
 
                     if (mStoreBean.getStoreMode() == 1) {
+                        /*
                         Double _upperLimit = Double.valueOf(mStoreBean.getUpLimitValue().get(i));
                         Double _lowerLimit = Double.valueOf(mStoreBean.getLowLimitValue().get(i));
                         if(ms[i] < _lowerLimit || ms[i] > _upperLimit){
                             return "NoSave";
+                        }
+                        */
+                        // 获取
+                        TriggerConditionBean _TriggerConditionBean = App.getDaoSession().getTriggerConditionBeanDao().load(_bean.getConditionID());
+                        if(_TriggerConditionBean != null){
+                            android.util.Log.d("wlDebug",_TriggerConditionBean.toString());
+                            if(_TriggerConditionBean.getIsScale()){
+                                if(ms[i] < lowerValue[i] * _TriggerConditionBean.getScale() || ms[i] > upperValue[i] * _TriggerConditionBean.getScale()){
+                                    return "NoSave";
+                                }
+                            }else{
+                                if(ms[i] < _TriggerConditionBean.getLowerLimit() || ms[i] > _TriggerConditionBean.getUpperLimit()){
+                                    return "NoSave";
+                                }
+                            }
                         }
                     }
                     android.util.Log.d("wlDebug", "获取第" + i + "值:" + ms[i]);

@@ -16,6 +16,7 @@ import alauncher.cn.measuringinstrument.utils.StringConverter;
  * 描述：
  */
 
+@Entity
 public class TriggerConditionBean {
 
     @Id
@@ -126,5 +127,20 @@ public class TriggerConditionBean {
 
     public void setConditionName(String conditionName) {
         this.conditionName = conditionName;
+    }
+
+    @Override
+    public String toString() {
+        return "TriggerConditionBean{" +
+                "id=" + id +
+                ", codeID=" + codeID +
+                ", mIndex=" + mIndex +
+                ", scale=" + scale +
+                ", isScale=" + isScale +
+                ", upperLimit=" + upperLimit +
+                ", lowerLimit=" + lowerLimit +
+                ", stableTime=" + stableTime +
+                ", conditionName='" + conditionName + '\'' +
+                '}';
     }
 }

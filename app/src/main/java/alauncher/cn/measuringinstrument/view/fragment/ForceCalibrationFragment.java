@@ -1,14 +1,17 @@
 package alauncher.cn.measuringinstrument.view.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +33,8 @@ import alauncher.cn.measuringinstrument.database.greenDao.db.ForceCalibrationBea
 import alauncher.cn.measuringinstrument.database.greenDao.db.TriggerConditionBeanDao;
 import alauncher.cn.measuringinstrument.view.AccoutManagementActivity;
 import alauncher.cn.measuringinstrument.view.DataActivity;
+import alauncher.cn.measuringinstrument.widget.ConditionDialog;
+import alauncher.cn.measuringinstrument.widget.UserEditDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -58,7 +63,7 @@ public class ForceCalibrationFragment extends Fragment {
 
     private List<TriggerConditionBean> mDatas;
 
-    private StoreBean mStoreBean;
+    // private StoreBean mStoreBean;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,8 +72,8 @@ public class ForceCalibrationFragment extends Fragment {
         }
         super.onCreate(savedInstanceState);
 
-        // mDatas = App.getDaoSession().getTriggerConditionBeanDao().queryBuilder().where(TriggerConditionBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
-        mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
+        mDatas = App.getDaoSession().getTriggerConditionBeanDao().queryBuilder().where(TriggerConditionBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
+
     }
 
     @Nullable
@@ -95,12 +100,11 @@ public class ForceCalibrationFragment extends Fragment {
         switch (v.getId()) {
             case R.id.save_btn:
                 mForceCalibrationBeanDao.update(view2Bean());
-                android.util.Log.d("wlDebug", mStoreBean.toString());
-                App.getDaoSession().getStoreBeanDao().insertOrReplace(mStoreBean);
+                // android.util.Log.d("wlDebug", mStoreBean.toString());
+                // App.getDaoSession().getStoreBeanDao().insertOrReplace(mStoreBean);
                 Toast.makeText(getContext(), "校验保存成功.", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.add_tg_btn:
-
 
                 break;
         }
@@ -138,10 +142,14 @@ public class ForceCalibrationFragment extends Fragment {
         unbinder.unbind();
     }
 
+    public void conditionUpdate() {
+        mDatas = App.getDaoSession().getTriggerConditionBeanDao().queryBuilder().where(TriggerConditionBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
+        mAdapter.notifyDataSetChanged();
+    }
+
     @SuppressLint("DefaultLocale")
     private void upSelectCount() {
     }
-
 
     class TriggerConditionAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -149,6 +157,7 @@ public class ForceCalibrationFragment extends Fragment {
         }
 
         public void setDatas() {
+
         }
 
         @NonNull
@@ -159,15 +168,54 @@ public class ForceCalibrationFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.setText(R.id.m_value_tv, "M" + (position + 1));
-            Spinner isScale = holder.getConvertView().findViewById(R.id.is_scale_tv);
-            isScale.setSelection(mStoreBean.getIsScale().equals("0") ? 0 : 1);
-            holder.setText(R.id.scale_tv, String.valueOf(mStoreBean.getScale().get(position)));
-            holder.setText(R.id.upper_limit_tv, String.valueOf(mStoreBean.getUpLimitValue().get(position)));
-            holder.setText(R.id.lower_limit_tv, String.valueOf(mStoreBean.getLowLimitValue().get(position)));
-            holder.setText(R.id.stable_time_tv, String.valueOf(mStoreBean.getStable().get(position)));
+
+            TriggerConditionBean _bean = mDatas.get(position);
+
+//            holder.setText(R.id.m_value_tv, "M" + (position + 1));
+            holder.setText(R.id.m_value_tv, "M");
+//            Spinner isScale = holder.getConvertView().findViewById(R.id.is_scale_tv);
+//            isScale.setSelection(_bean.getIsScale() ? 0 : 1);
+            holder.setText(R.id.is_scale_tv,_bean.getIsScale() ? "是" : "否");
+            holder.setText(R.id.scale_tv, String.valueOf(_bean.getScale()));
+            holder.setText(R.id.upper_limit_tv, String.valueOf(_bean.getUpperLimit()));
+            holder.setText(R.id.lower_limit_tv, String.valueOf(_bean.getLowerLimit()));
+            holder.setText(R.id.stable_time_tv, String.valueOf(_bean.getStableTime()));
+            holder.setText(R.id.name_tv,_bean.getConditionName());
+
+            holder.setOnLongClickListener(R.id.data_layout, new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+
+                    final AlertDialog builder = new AlertDialog.Builder(getContext())
+                            .create();
+                    builder.show();
+                    if (builder.getWindow() == null) return false;
+                    builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
+                    TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
+                    Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
+                    Button sure = (Button) builder.findViewById(R.id.btn_sure);
+                    msg.setText("是否删除 " + _bean.getConditionName() + " ?");
+                    cancle.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            builder.dismiss();
+                        }
+                    });
+                    sure.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            App.getDaoSession().getTriggerConditionBeanDao().delete(_bean);
+                            conditionUpdate();
+                            builder.dismiss();
+                        }
+                    });
+                    return false;
+                }
+            });
             // holder.setText(R.id.name_tv, String.valueOf(datas.get(position).conditionName));
 
+            /*
             EditText scaleEdt = holder.getConvertView().findViewById(R.id.scale_tv);
             scaleEdt.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -237,11 +285,21 @@ public class ForceCalibrationFragment extends Fragment {
                     mStoreBean.getLowLimitValue().set(position, s.toString());
                 }
             });
+            */
+
         }
 
         @Override
         public int getItemCount() {
-            return mStoreBean.getScale().size();
+            return mDatas.size();
         }
+
     }
+
+    @OnClick(R.id.add_tg_btn)
+    public void addForceCF(View v){
+        ConditionDialog _dialog = new ConditionDialog(getContext(),this);
+        _dialog.show();
+    }
+
 }

@@ -221,5 +221,8 @@
     <string name="stable_time">持续时间</string>
     <string name="scale">比例</string>
     <string name="parameter">参数</string>
+    <string name="add_condition">添加条件</string>
+    <string name="is_scale">是否比例</string>
+    <string name="stable">比例</string>
 
 </resources>

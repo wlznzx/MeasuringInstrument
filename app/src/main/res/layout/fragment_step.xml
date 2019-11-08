@@ -10,15 +10,29 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="18dp"
+                android:text="@string/code_step_title"
+                android:textSize="18sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="18dp"
-            android:text="@string/code_step_title"
-            android:textSize="18sp" />
+            <Switch
+                android:id="@+id/isAudo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true">
+            </Switch>
+        </RelativeLayout>
+
 
         <TableLayout
             android:id="@+id/table1"
@@ -31,6 +45,8 @@
             <TableRow>
 
                 <Button android:text="步骤" />
+
+                <Button android:text="条件" />
 
                 <Button android:text="M1" />
 
@@ -50,6 +66,11 @@
                 <TextView
                     android:layout_gravity="center"
                     android:text="@string/step_1" />
+
+                <Spinner
+                    android:id="@+id/step_1_m1_sp"
+                    style="@style/CodeCheckBoxStyle"
+                    android:spinnerMode="dropdown" />
 
                 <CheckBox
                     android:id="@+id/step_1_m1_cb"
@@ -77,6 +98,11 @@
                     android:layout_gravity="center"
                     android:text="@string/step_2" />
 
+                <Spinner
+                    android:id="@+id/step_1_m2_sp"
+                    style="@style/CodeCheckBoxStyle"
+                    android:spinnerMode="dropdown" />
+
                 <CheckBox
                     android:id="@+id/step_2_m1_cb"
                     style="@style/CodeCheckBoxStyle" />
@@ -102,6 +128,11 @@
                     android:layout_gravity="center"
                     android:text="@string/step_3" />
 
+                <Spinner
+                    android:id="@+id/step_1_m3_sp"
+                    style="@style/CodeCheckBoxStyle"
+                    android:spinnerMode="dropdown" />
+
                 <CheckBox
                     android:id="@+id/step_3_m1_cb"
                     style="@style/CodeCheckBoxStyle" />
@@ -126,6 +157,11 @@
                 <TextView
                     android:layout_gravity="center"
                     android:text="@string/step_4" />
+
+                <Spinner
+                    android:id="@+id/step_1_m4_sp"
+                    style="@style/CodeCheckBoxStyle"
+                    android:spinnerMode="dropdown" />
 
                 <CheckBox
                     android:id="@+id/step_4_m1_cb"

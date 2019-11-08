@@ -9,4 +9,6 @@
 
 
     <dimen name="item_height">56dp</dimen>
+    <dimen name="dialog_width">200dp</dimen>
+    <dimen name="dialog_tv_width">70dp</dimen>
 </resources>
