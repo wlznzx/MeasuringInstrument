@@ -254,10 +254,11 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 
         String _result = mMeasuringPresenter.saveResult(curMValues, mAddInfoBean);
         updateGetValueTips();
-        if (!_result.equals("NoSave")) {
-            Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
-        } else {
+        if (_result.equals("NoSave")) {
             Toast.makeText(this, "测试结果不在自动保存区间内.", Toast.LENGTH_SHORT).show();
+
+        } else if (_result.equals("OK")) {
+            Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
         }
         updateChartDatas();
         _bean.setUsrNum(_bean.getUsrNum() - 1);

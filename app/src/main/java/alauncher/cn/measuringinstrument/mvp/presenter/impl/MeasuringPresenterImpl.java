@@ -85,6 +85,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     public StoreBean mStoreBean;
 
+    public long lastMeetConditionTime = 0;
+
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
@@ -248,34 +250,39 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     public String saveResult(double[] ms, AddInfoBean bean) {
         if (stepBeans.size() > 0) {
             StepBean _bean = stepBeans.get(getStep());
-            for (int i = 0; i < ms.length; i++) {
-                if (StepUtils.getChannelByStep(i, _bean.getMeasured())) {
 
-
-                    if (mStoreBean.getStoreMode() == 1) {
-                        /*
-                        Double _upperLimit = Double.valueOf(mStoreBean.getUpLimitValue().get(i));
-                        Double _lowerLimit = Double.valueOf(mStoreBean.getLowLimitValue().get(i));
-                        if(ms[i] < _lowerLimit || ms[i] > _upperLimit){
+            if (mStoreBean.getStoreMode() == 1) {
+                TriggerConditionBean _TriggerConditionBean = App.getDaoSession().getTriggerConditionBeanDao().load(_bean.getConditionID());
+                int mIndex = _TriggerConditionBean.getMIndex() - 1;
+                if (_TriggerConditionBean != null) {
+                    if (_TriggerConditionBean.getIsScale()) {
+                        if (ms[mIndex] < lowerValue[mIndex] * _TriggerConditionBean.getScale() || ms[mIndex] > upperValue[mIndex] * _TriggerConditionBean.getScale()) {
+                            lastMeetConditionTime = -1;
                             return "NoSave";
                         }
-                        */
-                        // 获取
-                        TriggerConditionBean _TriggerConditionBean = App.getDaoSession().getTriggerConditionBeanDao().load(_bean.getConditionID());
-                        if(_TriggerConditionBean != null){
-                            android.util.Log.d("wlDebug",_TriggerConditionBean.toString());
-                            if(_TriggerConditionBean.getIsScale()){
-                                if(ms[i] < lowerValue[i] * _TriggerConditionBean.getScale() || ms[i] > upperValue[i] * _TriggerConditionBean.getScale()){
-                                    return "NoSave";
-                                }
-                            }else{
-                                if(ms[i] < _TriggerConditionBean.getLowerLimit() || ms[i] > _TriggerConditionBean.getUpperLimit()){
-                                    return "NoSave";
-                                }
-                            }
+                    } else {
+                        if (ms[mIndex] < _TriggerConditionBean.getLowerLimit() || ms[mIndex] > _TriggerConditionBean.getUpperLimit()) {
+                            lastMeetConditionTime = -1;
+                            return "NoSave";
                         }
                     }
+
+                    if (lastMeetConditionTime == -1) {
+                        lastMeetConditionTime = System.currentTimeMillis();
+                    }
+                    long currentTime = System.currentTimeMillis();
+                    android.util.Log.d("wlDebug", "currentTime = " + currentTime + " lastMeetConditionTime = " + lastMeetConditionTime + " Stable = " + _TriggerConditionBean.getStableTime() * 1000);
+                    if (currentTime - lastMeetConditionTime > _TriggerConditionBean.getStableTime() * 1000) {
+                    } else {
+                        return "NoSave;";
+                    }
+                }
+            }
+
+            for (int i = 0; i < ms.length; i++) {
+                if (StepUtils.getChannelByStep(i, _bean.getMeasured())) {
                     android.util.Log.d("wlDebug", "获取第" + i + "值:" + ms[i]);
+                    lastMeetConditionTime = -1;
                     tempMs[i] = ms[i];
                     mGeted[i] = true;
                 }
@@ -287,7 +294,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         } else {
             doSave(ms, bean);
         }
-        return "";
+        return "OK";
     }
 
     private void doSave(double[] ms, AddInfoBean bean) {

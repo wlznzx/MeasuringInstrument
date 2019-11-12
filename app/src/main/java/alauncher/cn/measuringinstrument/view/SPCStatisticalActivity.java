@@ -784,7 +784,6 @@ public class SPCStatisticalActivity extends BaseOActivity {
             double[] rGroup = new double[mFilterBean.getGroupSize()];
             for (int j = 0; j < mFilterBean.getGroupSize(); j++) {
                 int index = i * mFilterBean.getGroupSize() + j;
-//                android.util.Log.d("wlDebug", "index = " + index);
                 rGroup[j] = values[index];
             }
             _r = max.evaluate(rGroup) - min.evaluate(rGroup);

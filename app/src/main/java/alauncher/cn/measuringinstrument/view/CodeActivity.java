@@ -6,12 +6,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
+import java.util.List;
+
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
+import alauncher.cn.measuringinstrument.bean.TriggerConditionBean;
 import alauncher.cn.measuringinstrument.bean.User;
+import alauncher.cn.measuringinstrument.database.greenDao.db.TriggerConditionBeanDao;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
@@ -42,8 +46,8 @@ public class CodeActivity extends BaseOActivity {
         for (EditText edt : codeEdts) {
             edt.setEnabled(false);
         }
-        codeID = getCodeID(App.getSetupBean().getCodeID());
-        mCodeRadioGroup.check(codeID);
+        codeID = App.getSetupBean().getCodeID();
+        mCodeRadioGroup.check(getCodeID(codeID));
         mCodeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -64,7 +68,7 @@ public class CodeActivity extends BaseOActivity {
                         break;
                     case R.id.code_4:
                         codeID = 4;
-                        //女r
+                        //女
                         break;
                     case R.id.code_5:
                         codeID = 5;
@@ -104,6 +108,7 @@ public class CodeActivity extends BaseOActivity {
                 codeEdts[i].setText(_bean.getName());
             }
         }
+
     }
 
     private int getCodeID(int code) {

@@ -47,7 +47,7 @@ public class JdbcUtil {
         return null;
     }
 
-    public static String getIP(){
+    public static String getIP() {
         return IP;
     }
 

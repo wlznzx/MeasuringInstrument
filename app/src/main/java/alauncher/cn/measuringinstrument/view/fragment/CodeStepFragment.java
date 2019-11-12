@@ -165,7 +165,7 @@ public class CodeStepFragment extends Fragment {
                 }
                 for(int j = 0; j < mDatas.size();j++){
                     if(mDatas.get(j).getId() == _bean.getConditionID()){
-                        mSpinners[4].setSelection(j + 1);
+                        mSpinners[3].setSelection(j + 1);
                         break;
                     }
                 }

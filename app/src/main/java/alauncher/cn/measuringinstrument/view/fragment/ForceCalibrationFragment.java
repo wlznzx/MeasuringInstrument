@@ -172,15 +172,23 @@ public class ForceCalibrationFragment extends Fragment {
             TriggerConditionBean _bean = mDatas.get(position);
 
 //            holder.setText(R.id.m_value_tv, "M" + (position + 1));
-            holder.setText(R.id.m_value_tv, "M");
+            holder.setText(R.id.m_value_tv, "M" + _bean.getMIndex());
 //            Spinner isScale = holder.getConvertView().findViewById(R.id.is_scale_tv);
 //            isScale.setSelection(_bean.getIsScale() ? 0 : 1);
-            holder.setText(R.id.is_scale_tv,_bean.getIsScale() ? "是" : "否");
+            holder.setText(R.id.is_scale_tv, _bean.getIsScale() ? "是" : "否");
             holder.setText(R.id.scale_tv, String.valueOf(_bean.getScale()));
             holder.setText(R.id.upper_limit_tv, String.valueOf(_bean.getUpperLimit()));
             holder.setText(R.id.lower_limit_tv, String.valueOf(_bean.getLowerLimit()));
             holder.setText(R.id.stable_time_tv, String.valueOf(_bean.getStableTime()));
-            holder.setText(R.id.name_tv,_bean.getConditionName());
+            holder.setText(R.id.name_tv, _bean.getConditionName());
+
+            holder.setOnClickListener(R.id.data_layout, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ConditionDialog _dialog = new ConditionDialog(getContext(), ForceCalibrationFragment.this, _bean);
+                    _dialog.show();
+                }
+            });
 
             holder.setOnLongClickListener(R.id.data_layout, new View.OnLongClickListener() {
                 @Override
@@ -213,80 +221,6 @@ public class ForceCalibrationFragment extends Fragment {
                     return false;
                 }
             });
-            // holder.setText(R.id.name_tv, String.valueOf(datas.get(position).conditionName));
-
-            /*
-            EditText scaleEdt = holder.getConvertView().findViewById(R.id.scale_tv);
-            scaleEdt.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    mStoreBean.getScale().set(position, s.toString());
-                }
-            });
-            EditText stableTimeEdt = holder.getConvertView().findViewById(R.id.stable_time_tv);
-            stableTimeEdt.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    mStoreBean.getStable().set(position, s.toString());
-                }
-            });
-
-            EditText upperLimitEdt = holder.getConvertView().findViewById(R.id.upper_limit_tv);
-            upperLimitEdt.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    mStoreBean.getUpLimitValue().set(position, s.toString());
-                }
-            });
-            EditText lowLimitEdt = holder.getConvertView().findViewById(R.id.lower_limit_tv);
-            lowLimitEdt.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    mStoreBean.getLowLimitValue().set(position, s.toString());
-                }
-            });
-            */
-
         }
 
         @Override
@@ -297,8 +231,8 @@ public class ForceCalibrationFragment extends Fragment {
     }
 
     @OnClick(R.id.add_tg_btn)
-    public void addForceCF(View v){
-        ConditionDialog _dialog = new ConditionDialog(getContext(),this);
+    public void addForceCF(View v) {
+        ConditionDialog _dialog = new ConditionDialog(getContext(), this);
         _dialog.show();
     }
 

@@ -12,7 +12,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/user_dialog_title_tv"
+            android:id="@+id/condition_dialog_title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -55,6 +55,26 @@
                     />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="@dimen/dialog_tv_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/parameter" />
+
+                <Spinner
+                    android:id="@+id/m_index_sp"
+                    android:layout_marginLeft="30dp"
+                    android:entries="@array/m_values"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -163,7 +183,7 @@
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:text="1"/>
-                
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

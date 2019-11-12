@@ -224,5 +224,6 @@
     <string name="add_condition">添加条件</string>
     <string name="is_scale">是否比例</string>
     <string name="stable">比例</string>
+    <string name="edit_condition">编辑条件</string>
 
 </resources>
