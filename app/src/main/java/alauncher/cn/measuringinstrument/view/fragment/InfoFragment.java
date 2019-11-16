@@ -16,7 +16,6 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.utils.BuildUtils;
 import alauncher.cn.measuringinstrument.utils.Constants;
-import alauncher.cn.measuringinstrument.utils.DeviceUtils;
 import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.utils.SPUtils;
 import alauncher.cn.measuringinstrument.utils.SystemPropertiesProxy;
@@ -91,7 +90,7 @@ public class InfoFragment extends Fragment {
 
         SPUtils.put(getContext(), Constants.IP_KEY, ipEdt.getText().toString().trim());
         android.util.Log.d("wlDebug", "info = " + _bean.toString());
-        JdbcUtil.IP = String.valueOf(SPUtils.get(getContext(), Constants.IP_KEY,"47.98.58.40"));
+        JdbcUtil.IP = String.valueOf(SPUtils.get(getContext(), Constants.IP_KEY, "47.98.58.40"));
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -134,9 +133,10 @@ public class InfoFragment extends Fragment {
         }
         ipEdt.setText(String.valueOf(SPUtils.get(getContext(), Constants.IP_KEY, "47.98.58.40")));
         softwareVersionEdt.setText(BuildUtils.packageName(getContext()));
-        kernelVersionEdt.setText(BuildUtils.getLinuxCore_Ver());
+        kernelVersionEdt.setText(SystemPropertiesProxy.getString(getContext(), "ro.build.version.release"));
         deviceCodeEdt.setText(SystemPropertiesProxy.getString(getContext(), "ro.serialno"));
-        baseVersionEdt.setText(BuildUtils.getInner_Ver());
+        baseVersionEdt.setText(SystemPropertiesProxy.getString(getContext(), "ro.build.board.verno", "ZT611"));
+
     }
 
 }
