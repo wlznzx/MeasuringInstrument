@@ -620,7 +620,6 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
             items.add(item);
         }
         return items;
-
     }
 
     private class ButtonOnClick implements DialogInterface.OnClickListener {

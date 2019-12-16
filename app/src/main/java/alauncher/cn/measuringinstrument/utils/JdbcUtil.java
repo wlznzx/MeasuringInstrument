@@ -32,7 +32,7 @@ public class JdbcUtil {
             // Connection conn = DriverManager.getConnection(url, user, password);
             Class.forName("org.postgresql.Driver");
             Connection c = DriverManager
-                    .getConnection("jdbc:postgresql://" + getIP() + ":5432/NT_CLOUD",
+                    .getConnection("jdbc:postgresql://" + getIP() + ":5432/NT_CLOUD02",
                             "dfqtech", "dfqtech2016");
             return c;
         } catch (SQLException e) {

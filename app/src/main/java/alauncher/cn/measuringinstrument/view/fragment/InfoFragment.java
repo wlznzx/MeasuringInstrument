@@ -17,7 +17,6 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.utils.BuildUtils;
 import alauncher.cn.measuringinstrument.utils.Constants;
-import alauncher.cn.measuringinstrument.utils.DeviceUtils;
 import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.utils.SPUtils;
 import alauncher.cn.measuringinstrument.utils.SystemPropertiesProxy;
