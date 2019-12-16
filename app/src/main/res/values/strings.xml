@@ -165,7 +165,7 @@
     <string name="num">序号</string>
 
     <string name="code_base_info">基本信息</string>
-    <string name="code_force_cailbration">强制校准</string>
+    <string name="code_force_cailbration">触发条件</string>
     <string name="code_workpiece_pic">工件图</string>
     <string name="code_step">分步策略</string>
     <string name="code_discrimination">判异</string>
@@ -190,6 +190,7 @@
     <string name="default_device_code">02</string>
     <string name="software_version">软件版本</string>
     <string name="kernel_version">内核版本</string>
+    <string name="android_version">Android版本</string>
     <string name="default_kernel_version">v1.0</string>
     <string name="base_version">内部版本</string>
     <string name="wifi_str">Wifi</string>
@@ -225,5 +226,15 @@
     <string name="is_scale">是否比例</string>
     <string name="stable">比例</string>
     <string name="edit_condition">编辑条件</string>
+    <string name="max">Max</string>
+    <string name="min">Min</string>
+    <string name="comma">,</string>
+    <string name="dif">Dif</string>
+    <string name="export_excel">编辑/导出</string>
+    <string name="Avg">AVG</string>
+    <string name="left_brackets">(</string>
+    <string name="right_brackets">)</string>
+    <string name="back_space">退格</string>
+    <string name="press_save">按键保存</string>
 
 </resources>

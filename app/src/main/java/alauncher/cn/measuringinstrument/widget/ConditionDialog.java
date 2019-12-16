@@ -152,19 +152,25 @@ public class ConditionDialog extends Dialog {
         }
 
         if (_bean == null) _bean = new TriggerConditionBean();
-        _bean.setConditionName(conditionNameEdt.getText().toString().trim());
-        _bean.setIsScale(isScaleSwitch.isChecked());
-        if (!isScaleSwitch.isChecked())
-            _bean.setUpperLimit(Double.valueOf(upperlimitEdt.getText().toString().trim()));
-        if (!isScaleSwitch.isChecked())
-            _bean.setLowerLimit(Double.valueOf(lowerlimitEdt.getText().toString().trim()));
-        _bean.setStableTime(Integer.valueOf(scaleTimeEdt.getText().toString().trim()));
-        _bean.setCodeID(App.getSetupBean().getCodeID());
-        _bean.setMIndex(mIndexSP.getSelectedItemPosition() + 1);
-        if (isScaleSwitch.isChecked())
-            _bean.setScale(Double.valueOf(scaleEdt.getText().toString().trim()));
-        App.getDaoSession().getTriggerConditionBeanDao().insertOrReplace(_bean);
-        return true;
+        try {
+            _bean.setConditionName(conditionNameEdt.getText().toString().trim());
+            _bean.setIsScale(isScaleSwitch.isChecked());
+            if (!isScaleSwitch.isChecked())
+                _bean.setUpperLimit(Double.valueOf(upperlimitEdt.getText().toString().trim()));
+            if (!isScaleSwitch.isChecked())
+                _bean.setLowerLimit(Double.valueOf(lowerlimitEdt.getText().toString().trim()));
+
+            _bean.setStableTime(Integer.valueOf(scaleTimeEdt.getText().toString().trim()));
+            _bean.setCodeID(App.getSetupBean().getCodeID());
+            _bean.setMIndex(mIndexSP.getSelectedItemPosition() + 1);
+            if (isScaleSwitch.isChecked())
+                _bean.setScale(Double.valueOf(scaleEdt.getText().toString().trim()));
+            App.getDaoSession().getTriggerConditionBeanDao().insertOrReplace(_bean);
+            return true;
+        } catch (NumberFormatException e) {
+            Toast.makeText(mContext, "输入条件有误，请检查。", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
     public interface UIInterface {

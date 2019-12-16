@@ -403,39 +403,10 @@ public class ParameterBean {
     @Override
     public String toString() {
         return "ParameterBean{" +
-                "code_id=" + code_id +
-                ", m1_describe='" + m1_describe + '\'' +
-                ", m2_describe='" + m2_describe + '\'' +
-                ", m3_describe='" + m3_describe + '\'' +
-                ", m4_describe='" + m4_describe + '\'' +
-                ", m1_nominal_value=" + m1_nominal_value +
-                ", m2_nominal_value=" + m2_nominal_value +
-                ", m3_nominal_value=" + m3_nominal_value +
-                ", m4_nominal_value=" + m4_nominal_value +
-                ", m1_upper_tolerance_value=" + m1_upper_tolerance_value +
-                ", m2_upper_tolerance_value=" + m2_upper_tolerance_value +
-                ", m3_upper_tolerance_value=" + m3_upper_tolerance_value +
-                ", m4_upper_tolerance_value=" + m4_upper_tolerance_value +
-                ", m1_lower_tolerance_value=" + m1_lower_tolerance_value +
-                ", m2_lower_tolerance_value=" + m2_lower_tolerance_value +
-                ", m3_lower_tolerance_value=" + m3_lower_tolerance_value +
-                ", m4_lower_tolerance_value=" + m4_lower_tolerance_value +
-                ", m1_offect=" + m1_offect +
-                ", m2_offect=" + m2_offect +
-                ", m3_offect=" + m3_offect +
-                ", m4_offect=" + m4_offect +
-                ", m1_resolution=" + m1_resolution +
-                ", m2_resolution=" + m2_resolution +
-                ", m3_resolution=" + m3_resolution +
-                ", m4_resolution=" + m4_resolution +
-                ", m1_scale=" + m1_scale +
-                ", m2_scale=" + m2_scale +
-                ", m3_scale=" + m3_scale +
-                ", m4_scale=" + m4_scale +
-                ", m1_code='" + m1_code + '\'' +
-                ", m2_code='" + m2_code + '\'' +
-                ", m3_code='" + m3_code + '\'' +
-                ", m4_code='" + m4_code + '\'' +
+                "m1_enable=" + m1_enable +
+                ", m2_enable=" + m2_enable +
+                ", m3_enable=" + m3_enable +
+                ", m4_enable=" + m4_enable +
                 '}';
     }
 

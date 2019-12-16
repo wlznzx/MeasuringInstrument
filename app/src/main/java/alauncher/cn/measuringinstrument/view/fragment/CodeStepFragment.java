@@ -68,7 +68,6 @@ public class CodeStepFragment extends Fragment {
     CheckBox[] m4CheckBoxs;
 
 
-
     @BindView(R.id.table1)
     public TableLayout table;
 
@@ -78,12 +77,13 @@ public class CodeStepFragment extends Fragment {
     @BindViews({R.id.step_row_1, R.id.step_row_2, R.id.step_row_3, R.id.step_row_4})
     TableRow[] rows;
 
-    @BindViews({R.id.step_1_m1_sp,R.id.step_1_m2_sp,R.id.step_1_m3_sp,R.id.step_1_m4_sp})
+    @BindViews({R.id.step_1_m1_sp, R.id.step_1_m2_sp, R.id.step_1_m3_sp, R.id.step_1_m4_sp})
     public Spinner[] mSpinners;
 
     private int showRows = 4;
 
-    int CodeID;
+    private int CodeID;
+
     private StepBeanDao dao;
 
     private ParameterBean mParameterBean;
@@ -100,11 +100,7 @@ public class CodeStepFragment extends Fragment {
         CodeID = App.getSetupBean().getCodeID();
         dao = App.getDaoSession().getStepBeanDao();
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
-        mDatas = App.getDaoSession().getTriggerConditionBeanDao().queryBuilder().where(TriggerConditionBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
-        condications.add("无");
-        for(TriggerConditionBean _bean : mDatas){
-            condications.add(_bean.getConditionName());
-        }
+
         mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
     }
 
@@ -113,10 +109,20 @@ public class CodeStepFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_step, container, false);
         unbinder = ButterKnife.bind(this, view);
+        initView();
+        return view;
+    }
 
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,condications);
+    private void initView() {
+        condications.clear();
+        mDatas = App.getDaoSession().getTriggerConditionBeanDao().queryBuilder().where(TriggerConditionBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
+        condications.add(getResources().getString(R.string.press_save));
+        for (TriggerConditionBean _bean : mDatas) {
+            condications.add(_bean.getConditionName());
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, condications);
 
-        for(int i=0;i<mSpinners.length;i++){
+        for (int i = 0; i < mSpinners.length; i++) {
             mSpinners[i].setAdapter(adapter);
         }
         isAutoSwitch.setChecked(mStoreBean.getStoreMode() == 1);
@@ -127,8 +133,8 @@ public class CodeStepFragment extends Fragment {
                     if (StepUtils.getChannelByStep(i, _bean.measured))
                         step1CheckBoxs[i].setChecked(true);
                 }
-                for(int j = 0; j < mDatas.size();j++){
-                    if(mDatas.get(j).getId() == _bean.getConditionID()){
+                for (int j = 0; j < mDatas.size(); j++) {
+                    if (mDatas.get(j).getId() == _bean.getConditionID()) {
                         mSpinners[0].setSelection(j + 1);
                         break;
                     }
@@ -139,8 +145,8 @@ public class CodeStepFragment extends Fragment {
                     if (StepUtils.getChannelByStep(i, _bean.measured))
                         step2CheckBoxs[i].setChecked(true);
                 }
-                for(int j = 0; j < mDatas.size();j++){
-                    if(mDatas.get(j).getId() == _bean.getConditionID()){
+                for (int j = 0; j < mDatas.size(); j++) {
+                    if (mDatas.get(j).getId() == _bean.getConditionID()) {
                         mSpinners[1].setSelection(j + 1);
                         break;
                     }
@@ -151,8 +157,8 @@ public class CodeStepFragment extends Fragment {
                     if (StepUtils.getChannelByStep(i, _bean.measured))
                         step3CheckBoxs[i].setChecked(true);
                 }
-                for(int j = 0; j < mDatas.size();j++){
-                    if(mDatas.get(j).getId() == _bean.getConditionID()){
+                for (int j = 0; j < mDatas.size(); j++) {
+                    if (mDatas.get(j).getId() == _bean.getConditionID()) {
                         mSpinners[2].setSelection(j + 1);
                         break;
                     }
@@ -163,8 +169,8 @@ public class CodeStepFragment extends Fragment {
                     if (StepUtils.getChannelByStep(i, _bean.measured))
                         step4CheckBoxs[i].setChecked(true);
                 }
-                for(int j = 0; j < mDatas.size();j++){
-                    if(mDatas.get(j).getId() == _bean.getConditionID()){
+                for (int j = 0; j < mDatas.size(); j++) {
+                    if (mDatas.get(j).getId() == _bean.getConditionID()) {
                         mSpinners[3].setSelection(j + 1);
                         break;
                     }
@@ -173,25 +179,29 @@ public class CodeStepFragment extends Fragment {
         }
 
         if (!mParameterBean.getM1_enable()) {
-            table.setColumnCollapsed(1, true);
+            table.setColumnCollapsed(2, true);
+            android.util.Log.d("wlDebug", "m1 disable.");
             showRows--;
         }
         if (!mParameterBean.getM2_enable()) {
-            table.setColumnCollapsed(2, true);
+            table.setColumnCollapsed(3, true);
+            android.util.Log.d("wlDebug", "m2 disable.");
             showRows--;
         }
         if (!mParameterBean.getM3_enable()) {
-            table.setColumnCollapsed(3, true);
+            table.setColumnCollapsed(4, true);
+            android.util.Log.d("wlDebug", "m3 disable.");
             showRows--;
         }
         if (!mParameterBean.getM4_enable()) {
-            table.setColumnCollapsed(4, true);
+            table.setColumnCollapsed(5, true);
+            android.util.Log.d("wlDebug", "m4 disable.");
             showRows--;
         }
+
         for (int i = 0; i < showRows; i++) {
             rows[i].setVisibility(View.VISIBLE);
         }
-        return view;
     }
 
     @OnClick({R.id.save_btn, R.id.clear_btn})
@@ -216,9 +226,9 @@ public class CodeStepFragment extends Fragment {
                     _bean.setMeasured(step[i]);
 
                     int index = mSpinners[i].getSelectedItemPosition();
-                    if(index > 0){
+                    if (index > 0) {
                         _bean.setConditionID(mDatas.get(index - 1).getId());
-                    }else{
+                    } else {
                         _bean.setConditionID(-1);
                     }
                     if (step[i] != 0) dao.insertOrReplace(_bean);
@@ -258,6 +268,9 @@ public class CodeStepFragment extends Fragment {
                 for (StepBean _bean : stepBeans) {
                     dao.delete(_bean);
                 }
+                mStoreBean.setStoreMode(0);
+                App.getDaoSession().getStoreBeanDao().insertOrReplace(mStoreBean);
+                isAutoSwitch.setChecked(false);
                 for (CheckBox _cb : step1CheckBoxs) {
                     _cb.setChecked(false);
                 }
@@ -270,7 +283,7 @@ public class CodeStepFragment extends Fragment {
                 for (CheckBox _cb : step4CheckBoxs) {
                     _cb.setChecked(false);
                 }
-                for(Spinner _sp : mSpinners){
+                for (Spinner _sp : mSpinners) {
                     _sp.setSelection(0);
                 }
             }
@@ -283,20 +296,23 @@ public class CodeStepFragment extends Fragment {
         if (hidden) {
 
         } else {
-            android.util.Log.d("wlDebug","do hidden.");
+            android.util.Log.d("wlDebug", "do hidden.");
             mDatas = App.getDaoSession().getTriggerConditionBeanDao().queryBuilder().where(TriggerConditionBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
             condications.add("无");
-            for(TriggerConditionBean _bean : mDatas){
+            for (TriggerConditionBean _bean : mDatas) {
                 condications.add(_bean.getConditionName());
             }
         }
-
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    public void onTriggerConditionChanged() {
+        initView();
     }
 
     @OnCheckedChanged({R.id.step_1_m1_cb, R.id.step_2_m1_cb, R.id.step_3_m1_cb, R.id.step_4_m1_cb})

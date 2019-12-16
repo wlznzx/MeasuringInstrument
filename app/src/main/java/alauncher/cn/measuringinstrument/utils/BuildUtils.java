@@ -126,6 +126,5 @@ public class BuildUtils {
             ver = android.os.Build.VERSION.INCREMENTAL;
         }
         return ver;
-
     }
 }

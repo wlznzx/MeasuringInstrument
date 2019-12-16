@@ -13,7 +13,7 @@ public interface MeasuringPresenter {
 
     ParameterBean getParameterBean();
 
-    String saveResult(double[] ms, AddInfoBean bean);
+    String saveResult(double[] ms, AddInfoBean bean,boolean isManual);
 
     String[] getMGroupValues(double[] ms);
 

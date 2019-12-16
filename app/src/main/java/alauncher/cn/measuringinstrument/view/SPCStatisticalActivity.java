@@ -592,7 +592,6 @@ public class SPCStatisticalActivity extends BaseOActivity {
             rlcl = (float) mFilterBean.getRlcl();
         }
 
-
         maxX = (float) (xucl + Math.abs(xucl - xbar) * 0.2);
         minX = (float) (xlcl - Math.abs(xbar - xlcl) * 0.2);
 
@@ -995,7 +994,6 @@ public class SPCStatisticalActivity extends BaseOActivity {
             // yAxis.enableGridDashedLine(10f, 10f, 0f);
         }
         //
-
 
     }
 

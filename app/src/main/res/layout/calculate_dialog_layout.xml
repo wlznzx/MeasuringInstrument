@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="550dp"
     android:layout_height="match_parent"
     android:background="@drawable/dialog_corner_bg"
     android:orientation="vertical">
@@ -11,12 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="170dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:background="#ffffff"
         android:gravity="right|bottom"
         android:hint=""
-        android:paddingRight="5dp"
         android:textColor="#000000"
         android:textSize="40sp" />
 
@@ -24,10 +23,38 @@
         android:id="@+id/relative"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
         android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/max_btn"
+                style="@style/ButtonStyle"
+                android:text="@string/max" />
+
+            <Button
+                android:id="@+id/min_btn"
+                style="@style/ButtonStyle"
+                android:text="@string/min" />
+
+            <Button
+                android:id="@+id/avg_btn"
+                style="@style/ButtonStyle"
+                android:text="@string/Avg" />
+
+            <Button
+                android:id="@+id/dif_btn"
+                style="@style/ButtonStyle"
+                android:text="@string/dif" />
+
+            <Button
+                android:id="@+id/btn_clear"
+                style="@style/ButtonStyle"
+                android:text="@string/btn_clear" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,9 +81,9 @@
                 android:text="@string/btn_9" />
 
             <Button
-                android:id="@+id/btn_clear"
+                android:id="@+id/back_space_btn"
                 style="@style/ButtonStyle"
-                android:text="@string/btn_clear" />
+                android:text="@string/back_space" />
         </LinearLayout>
 
         <LinearLayout
@@ -138,12 +165,42 @@
                 style="@style/ButtonStyle"
                 android:text="@string/btn_multiply" />
 
-
-
             <Button
                 android:id="@+id/btn_divide"
                 style="@style/ButtonStyle"
                 android:text="@string/btn_divide" />
+
+            <Button
+                android:id="@+id/comma_btn"
+                style="@style/ButtonStyle"
+                android:text="@string/comma" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/left_brackets_btn"
+                style="@style/ButtonStyle"
+                android:text="@string/left_brackets" />
+
+            <Button
+                android:id="@+id/right_brackets_btn"
+                style="@style/ButtonStyle"
+                android:text="@string/right_brackets" />
+
+            <Button
+                android:id="@+id/radix_point_btn"
+                style="@style/ButtonStyle"
+                android:text="." />
+
+            <Button
+                style="@style/ButtonStyle"
+                android:text="" />
 
             <Button
                 android:id="@+id/btn_ok"
@@ -151,4 +208,5 @@
                 android:text="ok" />
         </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>

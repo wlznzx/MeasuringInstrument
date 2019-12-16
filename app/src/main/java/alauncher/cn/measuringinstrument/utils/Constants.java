@@ -1,5 +1,9 @@
 package alauncher.cn.measuringinstrument.utils;
 
+import java.util.ArrayList;
+
+import alauncher.cn.measuringinstrument.bean.ResultBean;
+
 /**
  * 日期：2019/5/9 0009 15:29
  * 包名：alauncher.cn.measuringinstrument.utils
@@ -17,5 +21,12 @@ public class Constants {
     public static final double[] d2 = {1.13, 1.69, 2.06, 2.33, 2.53, 2.70, 2.85, 2.97, 3.08};
 
     public static final String IP_KEY = "IP_KEY";
+
+
+    public static ArrayList<ResultBean> _bean = new ArrayList<ResultBean>();
+
+    static {
+        _bean.add(new ResultBean());
+    }
 
 }

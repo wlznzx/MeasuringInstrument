@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
 import butterknife.BindViews;
+import butterknife.OnClick;
 
 import static alauncher.cn.measuringinstrument.view.adapter.DataAdapter.MYLIVE_MODE_CHECK;
 import static alauncher.cn.measuringinstrument.view.adapter.DataAdapter.MYLIVE_MODE_EDIT;
@@ -58,6 +60,8 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
     TextView excelBtn;
     @BindView(R.id.btn_filter)
     TextView filterBtn;
+    @BindView(R.id.bottom_layout)
+    ViewGroup bottomLayout;
     @BindView(R.id.ll_mycollection_bottom_dialog)
     LinearLayout mLlMycollectionBottomDialog;
 
@@ -122,6 +126,17 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
             mTitleViews[3].setVisibility(mParameterBean.getM4_enable() ? View.VISIBLE : View.GONE);
             mTitleGroupViews[3].setVisibility(mParameterBean.getM4_enable() ? View.VISIBLE : View.GONE);
         }
+
+        actionIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mEditMode == MYLIVE_MODE_EDIT) {
+                    updataEditMode();
+                    return;
+                }
+                finish();
+            }
+        });
     }
 
     /**
@@ -247,12 +262,12 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
         if (mEditMode == MYLIVE_MODE_EDIT) {
             // mBtnEditor.setText("取消");
             mLlMycollectionBottomDialog.setVisibility(View.VISIBLE);
-            filterBtn.setVisibility(View.GONE);
+            bottomLayout.setVisibility(View.GONE);
             editorStatus = true;
         } else {
             // mBtnEditor.setText("编辑");
             mLlMycollectionBottomDialog.setVisibility(View.GONE);
-            filterBtn.setVisibility(View.VISIBLE);
+            bottomLayout.setVisibility(View.VISIBLE);
             editorStatus = false;
             clearAll();
         }
@@ -320,6 +335,11 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
 
     @Override
     public void onItemLongClickListener(int pos, List<ResultBean> myLiveList) {
+        updataEditMode();
+    }
+
+    @OnClick(R.id.export_excel_btn)
+    public void inEditMode(View v) {
         updataEditMode();
     }
 

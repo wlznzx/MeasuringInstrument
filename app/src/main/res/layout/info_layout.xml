@@ -234,7 +234,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/kernel_version" />
+                android:text="@string/android_version" />
 
             <View
                 android:layout_width="1px"
@@ -242,7 +242,7 @@
                 android:background="#E4E4E4" />
 
             <EditText
-                android:id="@+id/kernel_version_edt"
+                android:id="@+id/android_version_edt"
                 style="@style/CodeTextStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -370,12 +370,12 @@
                 android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/additional_btn"
+                    android:id="@+id/export_excel_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:drawableTop="@drawable/assignment_24px"
-                    android:text="@string/additional"
+                    android:text="@string/export_excel"
                     android:textColor="@android:color/white"
                     android:textSize="18sp" />
             </FrameLayout>

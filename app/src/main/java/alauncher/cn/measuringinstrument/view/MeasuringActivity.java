@@ -150,7 +150,10 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
             showAddDialog();
         }
         mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
+
         startValue();
+        // 测试数据 5s 发送一次;
+        /**/
     }
 
     private void initParameters() {
@@ -216,7 +219,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
                 showAddDialog();
                 break;
             case R.id.measure_save_btn:
-                if (doSave()) {
+                if (doSave(true)) {
                     if (App.getSetupBean().getIsAutoPopUp()) {
                         showAddDialog();
                     }
@@ -243,7 +246,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         stopAutoStore();
     }
 
-    private boolean doSave() {
+    private boolean doSave(boolean isManual) {
         // 判断是否时间校验模式，如果超时，不保存并且提示;
         ForceCalibrationBeanDao _dao = App.getDaoSession().getForceCalibrationBeanDao();
         ForceCalibrationBean _bean = _dao.load(App.SETTING_ID);
@@ -252,12 +255,13 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
             return false;
         }
 
-        String _result = mMeasuringPresenter.saveResult(curMValues, mAddInfoBean);
+        String _result = mMeasuringPresenter.saveResult(curMValues, mAddInfoBean, isManual);
         updateGetValueTips();
         if (_result.equals("NoSave")) {
-            Toast.makeText(this, "测试结果不在自动保存区间内.", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "测试结果不在自动保存区间内.", Toast.LENGTH_SHORT).show();
 
         } else if (_result.equals("OK")) {
+//            updateMValues(curMValues);
             Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
         }
         updateChartDatas();
@@ -563,7 +567,6 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 
     private ButtonOnClick buttonOnClick = new ButtonOnClick(1);
 
-
     private void showSingleChoiceButton() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("请选择程序");
@@ -590,6 +593,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
                 SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
                 _bean.setCodeID(arg2 + 1);
                 App.getDaoSession().getSetupBeanDao().update(_bean);
+                ((MeasuringPresenterImpl) mMeasuringPresenter).initParameter();
                 ((MeasuringPresenterImpl) mMeasuringPresenter).initParameter();
                 initParameters();
                 CodeBean _CodeBean = App.getDaoSession().getCodeBeanDao().load((long) (arg2 + 1));
@@ -680,14 +684,22 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 //        for (int i = 0; i < mTValues.length; i++) {
 //            mTValues[i].setText("");
 //        }
+
+        long startTime = System.currentTimeMillis(); // 获取开始时间
         String result = ((MeasuringPresenterImpl) mMeasuringPresenter).getMResults(mValues);
-        if (!((MeasuringPresenterImpl) mMeasuringPresenter).mGeted[0]) {
-            mGroupMs[0].setText("结果: " + result);
-            if (result.equals("NG")) {
-                mGroupMs[0].setBackgroundResource(R.drawable.red_shape);
-            } else {
-                mGroupMs[0].setBackgroundResource(R.drawable.green_shape);
+        int maxStep = ((MeasuringPresenterImpl) mMeasuringPresenter).maxStep;
+        // android.util.Log.d("wlDebug", "update result = " + result);
+        if (mMeasuringPresenter.getStep() == -1) {
+            if (!((MeasuringPresenterImpl) mMeasuringPresenter).mGeted[0]) {
+                mGroupMs[0].setText("结果: " + result);
+                if (result.equals("NG")) {
+                    mGroupMs[0].setBackgroundResource(R.drawable.red_shape);
+                } else {
+                    mGroupMs[0].setBackgroundResource(R.drawable.green_shape);
+                }
             }
+        } else {
+            mGroupMs[0].setText("- -");
         }
         String[] group = mMeasuringPresenter.getMGroupValues(mValues);
         switch (curMode) {
@@ -723,6 +735,8 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
                 mGroupMs[1].setText("M4分组: " + group[3]);
                 break;
         }
+        long endTime = System.currentTimeMillis(); // 获取结束时间
+        Log.d("wlDebug","UI绘制耗时： " + (endTime - startTime) + "ms");
     }
 
 
@@ -847,9 +861,9 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 //            doAutoStoreEnable = true;
 //        }
 
-        doSave();
+        doSave(false);
 
-        Log.d("wlDebug", "doAutoStore.");
+        // Log.d("wlDebug", "doAutoStore.");
 
         handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime() * 1000);
     }

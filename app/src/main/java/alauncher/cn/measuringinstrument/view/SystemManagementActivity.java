@@ -1,6 +1,5 @@
 package alauncher.cn.measuringinstrument.view;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -9,10 +8,8 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 

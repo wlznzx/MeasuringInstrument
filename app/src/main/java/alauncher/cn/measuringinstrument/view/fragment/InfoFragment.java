@@ -1,5 +1,6 @@
 package alauncher.cn.measuringinstrument.view.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,8 +34,8 @@ public class InfoFragment extends Fragment {
     @BindView(R.id.software_version_edt)
     public EditText softwareVersionEdt;
 
-    @BindView(R.id.kernel_version_edt)
-    public EditText kernelVersionEdt;
+    @BindView(R.id.android_version_edt)
+    public EditText androidVersionEdt;
 
     @BindView(R.id.device_code_edt)
     public EditText deviceCodeEdt;
@@ -91,7 +92,7 @@ public class InfoFragment extends Fragment {
 
         SPUtils.put(getContext(), Constants.IP_KEY, ipEdt.getText().toString().trim());
         android.util.Log.d("wlDebug", "info = " + _bean.toString());
-        JdbcUtil.IP = String.valueOf(SPUtils.get(getContext(), Constants.IP_KEY,"47.98.58.40"));
+        JdbcUtil.IP = String.valueOf(SPUtils.get(getContext(), Constants.IP_KEY, "47.98.58.40"));
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -134,9 +135,9 @@ public class InfoFragment extends Fragment {
         }
         ipEdt.setText(String.valueOf(SPUtils.get(getContext(), Constants.IP_KEY, "47.98.58.40")));
         softwareVersionEdt.setText(BuildUtils.packageName(getContext()));
-        kernelVersionEdt.setText(BuildUtils.getLinuxCore_Ver());
+        androidVersionEdt.setText(Build.VERSION.RELEASE);
         deviceCodeEdt.setText(SystemPropertiesProxy.getString(getContext(), "ro.serialno"));
-        baseVersionEdt.setText(BuildUtils.getInner_Ver());
+        baseVersionEdt.setText(SystemPropertiesProxy.getString(getContext(), "ro.build.description"));
     }
 
 }

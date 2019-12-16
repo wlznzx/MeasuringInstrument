@@ -23,6 +23,7 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void createAllTables(Database db, boolean ifNotExists) {
         CalibrationBeanDao.createTable(db, ifNotExists);
         CodeBeanDao.createTable(db, ifNotExists);
+        CriticalBeanDao.createTable(db, ifNotExists);
         DeviceInfoBeanDao.createTable(db, ifNotExists);
         ForceCalibrationBeanDao.createTable(db, ifNotExists);
         GroupBeanDao.createTable(db, ifNotExists);
@@ -33,15 +34,15 @@ public class DaoMaster extends AbstractDaoMaster {
         SetupBeanDao.createTable(db, ifNotExists);
         StepBeanDao.createTable(db, ifNotExists);
         StoreBeanDao.createTable(db, ifNotExists);
-        UserDao.createTable(db, ifNotExists);
-        CriticalBeanDao.createTable(db, ifNotExists);
         TriggerConditionBeanDao.createTable(db, ifNotExists);
+        UserDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
         CalibrationBeanDao.dropTable(db, ifExists);
         CodeBeanDao.dropTable(db, ifExists);
+        CriticalBeanDao.dropTable(db, ifExists);
         DeviceInfoBeanDao.dropTable(db, ifExists);
         ForceCalibrationBeanDao.dropTable(db, ifExists);
         GroupBeanDao.dropTable(db, ifExists);
@@ -52,9 +53,8 @@ public class DaoMaster extends AbstractDaoMaster {
         SetupBeanDao.dropTable(db, ifExists);
         StepBeanDao.dropTable(db, ifExists);
         StoreBeanDao.dropTable(db, ifExists);
-        UserDao.dropTable(db, ifExists);
-        CriticalBeanDao.dropTable(db, ifExists);
         TriggerConditionBeanDao.dropTable(db, ifExists);
+        UserDao.dropTable(db, ifExists);
     }
 
     /**
@@ -75,6 +75,7 @@ public class DaoMaster extends AbstractDaoMaster {
         super(db, SCHEMA_VERSION);
         registerDaoClass(CalibrationBeanDao.class);
         registerDaoClass(CodeBeanDao.class);
+        registerDaoClass(CriticalBeanDao.class);
         registerDaoClass(DeviceInfoBeanDao.class);
         registerDaoClass(ForceCalibrationBeanDao.class);
         registerDaoClass(GroupBeanDao.class);
@@ -85,9 +86,8 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(SetupBeanDao.class);
         registerDaoClass(StepBeanDao.class);
         registerDaoClass(StoreBeanDao.class);
-        registerDaoClass(UserDao.class);
-        registerDaoClass(CriticalBeanDao.class);
         registerDaoClass(TriggerConditionBeanDao.class);
+        registerDaoClass(UserDao.class);
     }
 
     public DaoSession newSession() {

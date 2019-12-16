@@ -394,6 +394,7 @@ public class App extends MultiDexApplication {
         }
 
         // initTestDatas();
+        // initTestDatas2();
     }
 
     public void initTestDatas() {
@@ -559,5 +560,89 @@ public class App extends MultiDexApplication {
         App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
                 "合格", 23.9912, 24, 24, 24, "m1", "m2", "m3", "m4"));
+    }
+
+
+    public void initTestDatas2() {
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0088005065918, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0117988586426, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0066986083984, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0082015991211, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0122985839844, 24, 24, 24, "m1", "m2", "m3", "m4"));
+        // 6
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0084991455078, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0127983093262, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0089988708496, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0083999633789, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0088996887207, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        // 11
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0099983215332, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0084991455078, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0099983215332, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0124015808105, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0102996826172, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0136985778809, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.013801574707, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.013801574707, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0139007568359, 24, 24, 24, "m1", "m2", "m3", "m4"));
+
+        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+                System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
+                "合格", 36.0139007568359, 24, 24, 24, "m1", "m2", "m3", "m4"));
     }
 }

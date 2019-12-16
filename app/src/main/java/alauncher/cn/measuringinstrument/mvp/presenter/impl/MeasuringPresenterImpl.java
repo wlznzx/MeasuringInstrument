@@ -25,7 +25,11 @@ import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StepBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.utils.Arith;
+import alauncher.cn.measuringinstrument.utils.Avg;
+import alauncher.cn.measuringinstrument.utils.Dif;
 import alauncher.cn.measuringinstrument.utils.JdbcUtil;
+import alauncher.cn.measuringinstrument.utils.Max;
+import alauncher.cn.measuringinstrument.utils.Min;
 import alauncher.cn.measuringinstrument.utils.StepUtils;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import tp.xmaihh.serialport.SerialHelper;
@@ -68,11 +72,17 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     // 下公差值;
     private double[] lowerValue = new double[4];
 
+    //
+    private double[] upperToleranceValue = new double[4];
+    private double[] lowerToleranceValue = new double[4];
+    //
+    private double[] nominalValue = new double[4];
+
     // 附加信息;
     private List<StepBean> stepBeans;
 
     // 总共有的测量步骤
-    private int maxStep;
+    public int maxStep;
 
     // 缓存测量值;
     private double[] tempMs = new double[4];
@@ -83,12 +93,20 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     public boolean[] mGeted = {false, false, false, false};
 
+    //
+    public boolean[] inLimited = {true, true, true, true};
+
     public StoreBean mStoreBean;
 
     public long lastMeetConditionTime = 0;
 
+
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
+        jep.addFunction("Max", new Max());
+        jep.addFunction("Min", new Min());
+        jep.addFunction("Avg", new Avg());
+        jep.addFunction("Dif", new Dif());
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
         if (mParameterBean != null) {
             android.util.Log.d(TAG, mParameterBean.toString());
@@ -102,6 +120,21 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             lowerValue[1] = mParameterBean.getM2_nominal_value() + (mParameterBean.getM2_lower_tolerance_value());
             lowerValue[2] = mParameterBean.getM3_nominal_value() + (mParameterBean.getM3_lower_tolerance_value());
             lowerValue[3] = mParameterBean.getM4_nominal_value() + (mParameterBean.getM4_lower_tolerance_value());
+
+            nominalValue[0] = mParameterBean.getM1_nominal_value();
+            nominalValue[1] = mParameterBean.getM2_nominal_value();
+            nominalValue[2] = mParameterBean.getM3_nominal_value();
+            nominalValue[3] = mParameterBean.getM4_nominal_value();
+
+            upperToleranceValue[0] = mParameterBean.getM1_upper_tolerance_value();
+            upperToleranceValue[1] = mParameterBean.getM2_upper_tolerance_value();
+            upperToleranceValue[2] = mParameterBean.getM3_upper_tolerance_value();
+            upperToleranceValue[3] = mParameterBean.getM4_upper_tolerance_value();
+
+            lowerToleranceValue[0] = mParameterBean.getM1_lower_tolerance_value();
+            lowerToleranceValue[1] = mParameterBean.getM2_lower_tolerance_value();
+            lowerToleranceValue[2] = mParameterBean.getM3_lower_tolerance_value();
+            lowerToleranceValue[3] = mParameterBean.getM4_lower_tolerance_value();
         }
         mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) App.getSetupBean().getCodeID());
         if (mCalibrationBean != null) Log.d(TAG, mCalibrationBean.toString());
@@ -144,6 +177,21 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             lowerValue[1] = mParameterBean.getM2_nominal_value() + (mParameterBean.getM2_lower_tolerance_value());
             lowerValue[2] = mParameterBean.getM3_nominal_value() + (mParameterBean.getM3_lower_tolerance_value());
             lowerValue[3] = mParameterBean.getM4_nominal_value() + (mParameterBean.getM4_lower_tolerance_value());
+
+            nominalValue[0] = mParameterBean.getM1_nominal_value();
+            nominalValue[1] = mParameterBean.getM2_nominal_value();
+            nominalValue[2] = mParameterBean.getM3_nominal_value();
+            nominalValue[3] = mParameterBean.getM4_nominal_value();
+
+            upperToleranceValue[0] = mParameterBean.getM1_upper_tolerance_value();
+            upperToleranceValue[1] = mParameterBean.getM2_upper_tolerance_value();
+            upperToleranceValue[2] = mParameterBean.getM3_upper_tolerance_value();
+            upperToleranceValue[3] = mParameterBean.getM4_upper_tolerance_value();
+
+            lowerToleranceValue[0] = mParameterBean.getM1_lower_tolerance_value();
+            lowerToleranceValue[1] = mParameterBean.getM2_lower_tolerance_value();
+            lowerToleranceValue[2] = mParameterBean.getM3_lower_tolerance_value();
+            lowerToleranceValue[3] = mParameterBean.getM4_lower_tolerance_value();
         }
 
         mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) App.getSetupBean().getCodeID());
@@ -218,7 +266,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 }
             };
         }
-
         try {
             serialHelper.open();
         } catch (Exception e) {
@@ -228,8 +275,42 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
         // 测试用;
         String[] _values = {"1086", "2031", "3036", "38C9"};
+        String[] _values2 = {"3036", "38C9", "3036", "38C9"};
         if (mView != null)
             mView.onMeasuringDataUpdate(doCH2P(_values));
+        /*
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (true) {
+                        Thread.sleep(5);
+                        mView.onMeasuringDataUpdate(doCH2P(_values));
+                        Thread.sleep(5);
+                        mView.onMeasuringDataUpdate(doCH2P(_values2));
+                        Thread.sleep(5);
+                        mView.onMeasuringDataUpdate(doCH2P(_values));
+                        Thread.sleep(5);
+                        mView.onMeasuringDataUpdate(doCH2P(_values2));
+                        Thread.sleep(5);
+                        mView.onMeasuringDataUpdate(doCH2P(_values));
+                        Thread.sleep(5);
+                        mView.onMeasuringDataUpdate(doCH2P(_values2));
+                        Thread.sleep(5);
+                        mView.onMeasuringDataUpdate(doCH2P(_values));
+                        Thread.sleep(5);
+                        mView.onMeasuringDataUpdate(doCH2P(_values2));
+                        Thread.sleep(5);
+                        mView.onMeasuringDataUpdate(doCH2P(_values));
+                        Thread.sleep(5);
+                        mView.onMeasuringDataUpdate(doCH2P(_values2));
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+         */
     }
 
     // 5301 1086 2031 3036 38C9 4E54
@@ -247,35 +328,61 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     }
 
     @Override
-    public String saveResult(double[] ms, AddInfoBean bean) {
+    public String saveResult(double[] ms, AddInfoBean bean, boolean isManual) {
         if (stepBeans.size() > 0) {
             StepBean _bean = stepBeans.get(getStep());
 
             if (mStoreBean.getStoreMode() == 1) {
                 TriggerConditionBean _TriggerConditionBean = App.getDaoSession().getTriggerConditionBeanDao().load(_bean.getConditionID());
-                int mIndex = _TriggerConditionBean.getMIndex() - 1;
                 if (_TriggerConditionBean != null) {
+                    int mIndex = _TriggerConditionBean.getMIndex() - 1;
                     if (_TriggerConditionBean.getIsScale()) {
-                        if (ms[mIndex] < lowerValue[mIndex] * _TriggerConditionBean.getScale() || ms[mIndex] > upperValue[mIndex] * _TriggerConditionBean.getScale()) {
+                        // 增加的部分，公差带 * scale / 2
+                        double m = (Math.abs(upperToleranceValue[mIndex] - lowerToleranceValue[mIndex]) * _TriggerConditionBean.getScale()) / 2;
+
+                        // 计算公差中值;
+                        double midValue = (upperValue[mIndex] + lowerValue[mIndex]) / 2;
+                        double scaleUpperLimit = midValue + m;
+                        double scaleLowerLimit = midValue - m;
+
+                        android.util.Log.d("wlDebug", "scaleUpperLimit = " + scaleUpperLimit + " scaleLowerLimit = " + scaleLowerLimit + " M = " + ms[mIndex]);
+                        if (ms[mIndex] < scaleLowerLimit || ms[mIndex] > scaleUpperLimit) {
                             lastMeetConditionTime = -1;
+                            inLimited[mIndex] = false;
+                            android.util.Log.d("wlDebug", "不在范围内.");
                             return "NoSave";
                         }
                     } else {
                         if (ms[mIndex] < _TriggerConditionBean.getLowerLimit() || ms[mIndex] > _TriggerConditionBean.getUpperLimit()) {
                             lastMeetConditionTime = -1;
+                            inLimited[mIndex] = false;
                             return "NoSave";
                         }
                     }
 
+                    // 如果在限制内，退出;
+                    if (inLimited[mIndex]) {
+                        // android.util.Log.d("wlDebug", "一直在区域内.");
+                        return "NoSave";
+                    }
+
+                    long currentTime = System.currentTimeMillis();
+                    // android.util.Log.d("wlDebug", "currentTime = " + currentTime + " lastMeetConditionTime = " + lastMeetConditionTime + " Stable = " + _TriggerConditionBean.getStableTime() * 1000);
+
+                    if (currentTime - lastMeetConditionTime > _TriggerConditionBean.getStableTime() * 1000) {
+
+                    } else {
+                        // android.util.Log.d("wlDebug", "持续时间未到.");
+                        return "NoSave;";
+                    }
+                    inLimited[mIndex] = true;
                     if (lastMeetConditionTime == -1) {
                         lastMeetConditionTime = System.currentTimeMillis();
                     }
-                    long currentTime = System.currentTimeMillis();
-                    android.util.Log.d("wlDebug", "currentTime = " + currentTime + " lastMeetConditionTime = " + lastMeetConditionTime + " Stable = " + _TriggerConditionBean.getStableTime() * 1000);
-                    if (currentTime - lastMeetConditionTime > _TriggerConditionBean.getStableTime() * 1000) {
-                    } else {
-                        return "NoSave;";
-                    }
+                } else if (isManual == false) {
+                    return "NoSave;";
+                } else {
+
                 }
             }
 
@@ -287,6 +394,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                     mGeted[i] = true;
                 }
             }
+
             if (getStep() == maxStep - 1) {
                 doSave(tempMs, bean);
             }
@@ -434,6 +542,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
      *
      * */
     private double[] doCH2P(String[] inputValue) {
+        long startTime = System.currentTimeMillis(); // 获取开始时间
         double[] _values = new double[4];
         // 计算测量值，ch1~ch4;
         double ch1, ch2, ch3, ch4;
@@ -470,7 +579,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 jep.addVariable("ch2", ch2);
                 jep.addVariable("ch3", ch3);
                 jep.addVariable("ch4", ch4);
-
+                android.util.Log.d("wlDebug", "m1_code = " + mParameterBean.getM1_code());
                 if (mParameterBean.getM1_code() != null && !mParameterBean.getM1_code().equals("")) {
                     Node node = jep.parse(mParameterBean.getM1_code());
                     m1 = (double) jep.evaluate(node) + mParameterBean.getM1_offect();
@@ -490,7 +599,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 if (mView != null)
                     mView.onMeasuringDataUpdate(new double[]{m1, m2, m3, m4});
                 // Toast.makeText(mContext, "result = " + result, Toast.LENGTH_SHORT).show();
-            } catch (ParseException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -498,6 +607,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         _values[1] = Arith.round(m2, 4);
         _values[2] = Arith.round(m3, 4);
         _values[3] = Arith.round(m4, 4);
+        long endTime = System.currentTimeMillis(); // 获取结束时间
+        // Log.d("wlDebug", "公式计算耗时： " + (endTime - startTime) + "ms");
         return _values;
     }
 

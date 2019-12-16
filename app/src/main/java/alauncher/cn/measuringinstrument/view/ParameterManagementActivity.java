@@ -18,6 +18,7 @@ import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.StepBean;
+import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StepBeanDao;
 import alauncher.cn.measuringinstrument.utils.JdbcUtil;
@@ -68,6 +69,8 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
 
     public ParameterBean mParameterBean;
 
+    public ParameterBean oldParameterBean;
+
     private DeviceInfoBean _dBean;
 
     @Override
@@ -88,6 +91,11 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
             mParameterBean = new ParameterBean();
             mParameterBean.setCode_id(App.getSetupBean().getCodeID());
         }
+        oldParameterBean = new ParameterBean();
+        oldParameterBean.setM1_enable(mParameterBean.getM1_enable());
+        oldParameterBean.setM2_enable(mParameterBean.getM2_enable());
+        oldParameterBean.setM3_enable(mParameterBean.getM3_enable());
+        oldParameterBean.setM4_enable(mParameterBean.getM4_enable());
         updateUI();
         _dBean = App.getDeviceInfo();
     }
@@ -95,13 +103,27 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
         if (!view2Bean()) return;
-        App.getDaoSession().getParameterBeanDao().deleteByKey((long) App.getSetupBean().getCodeID());
+        // ParameterBean oldParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
+        android.util.Log.d("wlDebug","old = " + oldParameterBean.toString());
+        // app.getDaoSession().getParameterBeanDao().deleteByKey((long) App.getSetupBean().getCodeID());
         App.getDaoSession().getParameterBeanDao().insertOrReplace(mParameterBean);
+
+        android.util.Log.d("wlDebug","new = " + mParameterBean.toString());
         // 清空分步信息；
-        StepBeanDao _dao = App.getDaoSession().getStepBeanDao();
-        List<StepBean> stepBeans = _dao.queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
-        for (StepBean _bean : stepBeans) {
-            _dao.delete(_bean);
+        if ((oldParameterBean.getM1_enable() == mParameterBean.getM1_enable()) &&
+                (oldParameterBean.getM2_enable() == mParameterBean.getM2_enable()) &&
+                (oldParameterBean.getM3_enable() == mParameterBean.getM3_enable()) &&
+                (oldParameterBean.getM4_enable() == mParameterBean.getM4_enable())) {
+            // do nothing;
+        } else {
+            StepBeanDao _dao = App.getDaoSession().getStepBeanDao();
+            List<StepBean> stepBeans = _dao.queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
+            for (StepBean _bean : stepBeans) {
+                _dao.delete(_bean);
+            }
+            StoreBean _StoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
+            _StoreBean.setStoreMode(0);
+            App.getDaoSession().getStoreBeanDao().insertOrReplace(_StoreBean);
         }
         syncToServer(mParameterBean);
         Toast.makeText(this, "保存成功.", Toast.LENGTH_SHORT).show();
@@ -132,6 +154,22 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
         // mCalculateDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mCalculateDialog.setTitle("M" + m_num + "程序设置");
         mCalculateDialog.setM(m_num);
+
+        switch (m_num) {
+            case 1:
+                mCalculateDialog.setCode(mParameterBean.getM1_code());
+                break;
+            case 2:
+                mCalculateDialog.setCode(mParameterBean.getM2_code());
+                break;
+            case 3:
+                mCalculateDialog.setCode(mParameterBean.getM3_code());
+                break;
+            case 4:
+                mCalculateDialog.setCode(mParameterBean.getM4_code());
+                break;
+        }
+
         mCalculateDialog.setCodeInterface(this);
         mCalculateDialog.show();
     }

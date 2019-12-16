@@ -179,6 +179,8 @@
                 <EditText
                     android:id="@+id/stable_time_edt"
                     style="@style/EdNumOnlyStyleSPC"
+                    android:inputType="number"
+                    android:digits="0123456789"
                     android:layout_marginLeft="30dp"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"

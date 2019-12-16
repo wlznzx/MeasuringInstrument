@@ -3,8 +3,6 @@ package alauncher.cn.measuringinstrument.view.fragment;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,15 +24,10 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
-import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.bean.TriggerConditionBean;
-import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ForceCalibrationBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.TriggerConditionBeanDao;
-import alauncher.cn.measuringinstrument.view.AccoutManagementActivity;
-import alauncher.cn.measuringinstrument.view.DataActivity;
 import alauncher.cn.measuringinstrument.widget.ConditionDialog;
-import alauncher.cn.measuringinstrument.widget.UserEditDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -63,6 +56,8 @@ public class ForceCalibrationFragment extends Fragment {
 
     private List<TriggerConditionBean> mDatas;
 
+    private RefreshInterface mRefreshInterface;
+
     // private StoreBean mStoreBean;
 
     @Override
@@ -73,7 +68,6 @@ public class ForceCalibrationFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mDatas = App.getDaoSession().getTriggerConditionBeanDao().queryBuilder().where(TriggerConditionBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
-
     }
 
     @Nullable
@@ -93,6 +87,10 @@ public class ForceCalibrationFragment extends Fragment {
         mAdapter = new TriggerConditionAdapter();
         rv.setAdapter(mAdapter);
         return view;
+    }
+
+    public void setRefreshInterface(RefreshInterface refreshInterface) {
+        mRefreshInterface = refreshInterface;
     }
 
     @OnClick({R.id.save_btn, R.id.add_tg_btn})
@@ -145,6 +143,7 @@ public class ForceCalibrationFragment extends Fragment {
     public void conditionUpdate() {
         mDatas = App.getDaoSession().getTriggerConditionBeanDao().queryBuilder().where(TriggerConditionBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).list();
         mAdapter.notifyDataSetChanged();
+        if (mRefreshInterface != null) mRefreshInterface.onTriggerConditionChanged();
     }
 
     @SuppressLint("DefaultLocale")
@@ -234,6 +233,11 @@ public class ForceCalibrationFragment extends Fragment {
     public void addForceCF(View v) {
         ConditionDialog _dialog = new ConditionDialog(getContext(), this);
         _dialog.show();
+    }
+
+
+    public interface RefreshInterface {
+        public void onTriggerConditionChanged();
     }
 
 }

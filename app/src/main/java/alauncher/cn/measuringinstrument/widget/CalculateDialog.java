@@ -5,12 +5,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 
 import alauncher.cn.measuringinstrument.R;
+import alauncher.cn.measuringinstrument.utils.Avg;
+import alauncher.cn.measuringinstrument.utils.Dif;
+import alauncher.cn.measuringinstrument.utils.Max;
+import alauncher.cn.measuringinstrument.utils.Min;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -42,12 +47,19 @@ public class CalculateDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calculate_dialog_layout);
         ButterKnife.bind(this);
+        codeTV.setText(code);
+    }
+
+    public void setCode(String pCode) {
+        code = pCode;
     }
 
     @OnClick({R.id.ch1_btn, R.id.btn_7, R.id.btn_8, R.id.btn_9, R.id.btn_clear,
             R.id.ch2_btn, R.id.btn_4, R.id.btn_5, R.id.btn_6, R.id.btn_plus,
             R.id.ch3_btn, R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_minus,
             R.id.ch4_btn, R.id.btn_0, R.id.btn_multiply, R.id.btn_divide, R.id.btn_ok,
+            R.id.max_btn, R.id.min_btn, R.id.avg_btn, R.id.dif_btn, R.id.comma_btn,
+            R.id.left_brackets_btn, R.id.right_brackets_btn, R.id.back_space_btn, R.id.radix_point_btn
     })
     public void onBtnClick(View v) {
         switch (v.getId()) {
@@ -111,8 +123,44 @@ public class CalculateDialog extends Dialog {
             case R.id.btn_divide:
                 onOperateDown("/");
                 break;
+            case R.id.max_btn:
+                onFunDown("Max");
+                break;
+            case R.id.min_btn:
+                onFunDown("Min");
+                break;
+            case R.id.avg_btn:
+                onFunDown("Avg");
+                break;
+            case R.id.dif_btn:
+                onFunDown("Dif");
+                break;
+            case R.id.comma_btn:
+                onOperateDown(",");
+                break;
+            case R.id.left_brackets_btn:
+                onOperateDown("(");
+                break;
+            case R.id.right_brackets_btn:
+                onOperateDown(")");
+                break;
+            case R.id.back_space_btn:
+                try {
+                    code = code.substring(0, code.length() - 1);
+                    codeTV.setText(code);
+                } catch (Exception e) {
+
+                }
+                break;
+            case R.id.radix_point_btn:
+                onOperateDown(".");
+                break;
             case R.id.btn_ok:
                 JEP jep = new JEP();
+                jep.addFunction("Max", new Max());
+                jep.addFunction("Min", new Min());
+                jep.addFunction("Avg", new Avg());
+                jep.addFunction("Dif", new Dif());
                 try {
                     jep.addVariable("ch1", 1);
                     jep.addVariable("ch2", 2);
@@ -121,9 +169,10 @@ public class CalculateDialog extends Dialog {
 
                     Node node = jep.parse(code);
                     Object result = jep.evaluate(node);
-                    // Toast.makeText(mContext, "result = " + result, Toast.LENGTH_SHORT).show();
                 } catch (ParseException e) {
                     e.printStackTrace();
+                    Toast.makeText(mContext, "公式有误，请检查.", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 dismiss();
                 mCodeInterface.onCodeSet(m, code);
@@ -133,8 +182,14 @@ public class CalculateDialog extends Dialog {
         }
     }
 
+    private void onFunDown(String fun) {
+//        code = fun + "(" + code + ")";
+        code = code + fun + "(";
+        codeTV.setText(code);
+    }
+
     private void onOperateDown(String operate) {
-        if (isOperateDown) return;
+//        if (isOperateDown) return;
         isOperateDown = true;
         isNumDown = false;
         code = code + operate;
@@ -142,7 +197,7 @@ public class CalculateDialog extends Dialog {
     }
 
     private void onNumDown(String num) {
-        if (isNumDown) return;
+//        if (isNumDown) return;
         isNumDown = true;
         isOperateDown = false;
         code = code + num;
