@@ -32,7 +32,7 @@ public class JdbcUtil {
             // Connection conn = DriverManager.getConnection(url, user, password);
             Class.forName("org.postgresql.Driver");
             Connection c = DriverManager
-                    .getConnection("jdbc:postgresql://" + getIP() + ":5432/NT_CLOUD02",
+                    .getConnection("jdbc:postgresql://" + getIP() + ":5432/NT_CLOUD",
                             "dfqtech", "dfqtech2016");
             return c;
         } catch (SQLException e) {
@@ -148,17 +148,17 @@ public class JdbcUtil {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 1;
+        return -1;
     }
 
 
     public static int insertOrReplace(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) {
         if (selectDevice(machine_code) > 0) {
-            updateDevice(factory_code, factory_name, machine_code, machine_name, manufacturer, rmk, operator);
+            return updateDevice(factory_code, factory_name, machine_code, machine_name, manufacturer, rmk, operator);
         } else {
-            addDevice(factory_code, factory_name, machine_code, machine_name, manufacturer, rmk, operator);
+            return addDevice(factory_code, factory_name, machine_code, machine_name, manufacturer, rmk, operator);
         }
-        return 1;
+        // return 1;
     }
 
 

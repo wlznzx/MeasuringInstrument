@@ -92,14 +92,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     private DeviceInfoBean _dBean;
 
     public boolean[] mGeted = {false, false, false, false};
-
     //
     public boolean[] inLimited = {true, true, true, true};
 
     public StoreBean mStoreBean;
 
     public long lastMeetConditionTime = 0;
-
 
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
@@ -259,8 +257,10 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             // int x4 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
                             // Double ch4 = Double.valueOf(x4);
 //                            android.util.Log.d("wlDebug", "ch4 = " + ch4);
-                            if (mView != null)
-                                mView.onMeasuringDataUpdate(doCH2P(new String[]{_value1, _value2, _value3, _value4}));
+                            if (mView != null) {
+                                doCH2P(new String[]{_value1, _value2, _value3, _value4});
+                            }
+                            // mView.onMeasuringDataUpdate();
                         }
                     }
                 }
@@ -276,8 +276,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         // 测试用;
         String[] _values = {"1086", "2031", "3036", "38C9"};
         String[] _values2 = {"3036", "38C9", "3036", "38C9"};
-        if (mView != null)
-            mView.onMeasuringDataUpdate(doCH2P(_values));
+
         /*
         new Thread(new Runnable() {
             @Override
@@ -310,7 +309,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 }
             }
         }).start();
-         */
+        */
     }
 
     // 5301 1086 2031 3036 38C9 4E54
@@ -487,7 +486,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         }
     }
 
-
     /*
      *
      * 获取当前测量步骤;
@@ -579,7 +577,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 jep.addVariable("ch2", ch2);
                 jep.addVariable("ch3", ch3);
                 jep.addVariable("ch4", ch4);
-                android.util.Log.d("wlDebug", "m1_code = " + mParameterBean.getM1_code());
                 if (mParameterBean.getM1_code() != null && !mParameterBean.getM1_code().equals("")) {
                     Node node = jep.parse(mParameterBean.getM1_code());
                     m1 = (double) jep.evaluate(node) + mParameterBean.getM1_offect();

@@ -38,6 +38,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
@@ -102,6 +106,10 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 
     private ParameterBean mParameterBean;
 
+    // 锁
+    // private Lock lock = new Lock();
+    private volatile boolean isUIDraw = false;
+
     // 测量界面加入逻辑;
     private StoreBean mStoreBean;
 
@@ -144,7 +152,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         mMeasuringPresenter = new MeasuringPresenterImpl(this);
         updateGetValueTips();
         initChart();
-        onMeasuringDataUpdate(curMValues);
+        // onMeasuringDataUpdate(curMValues);
         initParameters();
         if (App.getSetupBean().getIsAutoPopUp()) {
             showAddDialog();
@@ -425,13 +433,20 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 
     @Override
     public void onMeasuringDataUpdate(double[] values) {
-        curMValues = values;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                updateMValues(curMValues);
-            }
-        });
+        if (!isUIDraw) {
+            isUIDraw = true;
+            // android.util.Log.d("wlDebug", "write MValues.");
+            curMValues = values;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateMValues(curMValues);
+                    isUIDraw = false;
+                }
+            });
+        } else {
+            // android.util.Log.d("wlDebug", "ignore this values.");
+        }
     }
 
 
@@ -735,7 +750,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
                 break;
         }
         long endTime = System.currentTimeMillis(); // 获取结束时间
-        Log.d("wlDebug","UI绘制耗时： " + (endTime - startTime) + "ms");
+        Log.d("wlDebug", "UI绘制耗时： " + (endTime - startTime) + "ms threadName = ");
     }
 
 

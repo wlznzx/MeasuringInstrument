@@ -95,8 +95,9 @@ public class InfoFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                JdbcUtil.insertOrReplace(_bean.getFactoryCode(), _bean.getFactoryName(), _bean.getDeviceCode(), _bean.getDeviceName(), _bean.getManufacturer(),
+                int result = JdbcUtil.insertOrReplace(_bean.getFactoryCode(), _bean.getFactoryName(), _bean.getDeviceCode(), _bean.getDeviceName(), _bean.getManufacturer(),
                         "rmk3", App.handlerAccout);
+                android.util.Log.d("wlDebug", "re result = " + result);
             }
         }).start();
     }
