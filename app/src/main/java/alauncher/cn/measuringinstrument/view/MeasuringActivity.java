@@ -750,7 +750,10 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
                 break;
         }
         long endTime = System.currentTimeMillis(); // 获取结束时间
-        Log.d("wlDebug", "UI绘制耗时： " + (endTime - startTime) + "ms threadName = ");
+        long stepTime = (endTime - startTime);
+        if (stepTime > 10) {
+            Log.d("wlDebug", "UI绘制耗时： " + (endTime - startTime) + "ms");
+        }
     }
 
 

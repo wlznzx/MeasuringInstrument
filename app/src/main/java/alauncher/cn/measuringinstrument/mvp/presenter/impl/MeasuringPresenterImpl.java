@@ -211,6 +211,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             currentStep = -1;
     }
 
+    private long lastValueTime = 0;
+
     @Override
     public void startMeasuing() {
         android.util.Log.d("wlDebug", "startMeasuing.");
@@ -232,7 +234,13 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             isCommandStart = false;
                             String _value = ByteUtil.ByteArrToHex(command);
 
-                            android.util.Log.d("wlDebug", "_value = " + _value);
+                            long currentTime = System.currentTimeMillis();
+                            if (lastValueTime != 0) {
+                                long stepTime = (currentTime - lastValueTime);
+                                android.util.Log.d("wlDebug", "_value = " + _value + " last time:" + stepTime + "ms");
+                            }
+                            lastValueTime = currentTime;
+                            // android.util.Log.d("wlDebug", "_value = " + _value);
                             _chValue[0] = command[2];
                             _chValue[1] = command[3];
                             // int x1 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
