@@ -71,8 +71,8 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     @BindViews({R.id.m1_value, R.id.m2_value, R.id.m3_value, R.id.m4_value})
     public MValueView[] mMValueViews;
 
-    @BindView(R.id.m_chart)
-    public LineChart chart;
+//    @BindView(R.id.m_chart)
+//    public LineChart chart;
 
     @BindView(R.id.value_btn)
     public TextView valueBtn;
@@ -152,7 +152,6 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         mMeasuringPresenter = new MeasuringPresenterImpl(this);
         updateGetValueTips();
         initChart();
-        // onMeasuringDataUpdate(curMValues);
         initParameters();
         if (App.getSetupBean().getIsAutoPopUp()) {
             showAddDialog();
@@ -330,6 +329,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 
 
     private void setDatas(int count, double range) {
+        /*
         ArrayList<Entry> values = new ArrayList<Entry>();
 
         for (int i = 0; i < count; i++) {
@@ -391,6 +391,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         // create a data object with the data sets
         LineData data = new LineData(dataSets);
         chart.setData(data);
+         */
     }
 
     private List<Entry> getDatas() {
@@ -415,15 +416,14 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     }
 
     private void updateChartDatas() {
-        //set1.setValues(getDatas());
-//      chart.setData(new LineData(set1));
+        /*
         set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
         List<Entry> values = getDatas();
-//      Log.d("wlDebug", values.toString());
         set1.setValues(values);
         chart.getData().notifyDataChanged();
         chart.notifyDataSetChanged();
         chart.invalidate();
+        */
     }
 
     @Override
@@ -515,6 +515,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     }
 
     private void setChartShow(boolean show) {
+        /*
         if (show) {
             mMValueViews[0].setVisibility(View.GONE);
             mMValueViews[1].setVisibility(View.GONE);
@@ -526,6 +527,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
             mMValueViews[2].setVisibility(View.VISIBLE);
             chart.setVisibility(View.GONE);
         }
+         */
     }
 
     private void setMode(int mode) {
@@ -695,14 +697,10 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     }
 
     private void updateMValues(double[] mValues) {
-//        for (int i = 0; i < mTValues.length; i++) {
-//            mTValues[i].setText("");
-//        }
 
         long startTime = System.currentTimeMillis(); // 获取开始时间
+
         String result = ((MeasuringPresenterImpl) mMeasuringPresenter).getMResults(mValues);
-        int maxStep = ((MeasuringPresenterImpl) mMeasuringPresenter).maxStep;
-        // android.util.Log.d("wlDebug", "update result = " + result);
         if (mMeasuringPresenter.getStep() == -1) {
             if (!((MeasuringPresenterImpl) mMeasuringPresenter).mGeted[0]) {
                 mGroupMs[0].setText("结果: " + result);
@@ -751,13 +749,14 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         }
         long endTime = System.currentTimeMillis(); // 获取结束时间
         long stepTime = (endTime - startTime);
-        if (stepTime > 10) {
+        if (stepTime > 0) {
             Log.d("wlDebug", "UI绘制耗时： " + (endTime - startTime) + "ms");
         }
     }
 
 
     private void initChart() {
+        /*
         {   // // Chart Style // //
 
             // background color
@@ -839,6 +838,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
             }
         }
         setDatas(10, 100);
+         */
     }
 
     @Override

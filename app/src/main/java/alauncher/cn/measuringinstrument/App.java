@@ -7,7 +7,6 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
-import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
@@ -103,12 +102,9 @@ public class App extends MultiDexApplication {
         };
         Bugly.init(getApplicationContext(), "e4d9621d74", true);
 
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
-        LeakCanary.install(this);
+        Runtime rt = Runtime.getRuntime();
+        long maxMemory = rt.maxMemory();
+        android.util.Log.i("wlDebug", Long.toString(maxMemory / (1024 * 1024)));
     }
 
     public static DaoSession getDaoSession() {

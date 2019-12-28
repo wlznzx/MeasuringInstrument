@@ -9,7 +9,6 @@ import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.graphics.SweepGradient;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -127,19 +126,34 @@ public class MValueView extends View {
         // android.util.Log.d("wlDebug", "stepHeight = " + stepHeight);
     }
 
+    // 变量;
+    private double _upper_step;
+    private float _HLLineHeight;
+    private double _lower_step;
+    private float _LLLineHeight;
+    private float _LWLineHeight;
+    private Path HLPath = new Path();
+    private Path LLPath = new Path();
+    private Path HWPath = new Path();
+    private Path LWPath = new Path();
+    private Path NPath = new Path();
+    private PaintFlagsDrawFilter mPaintFlagsDrawFilter = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         // HL刻度线 , 上公差线;
 
-        double _upper_step = nominal_value + upper_tolerance_value - baseValue;
-        float _HLLineHeight = (float) ((3 * offectHeight) - ((_upper_step / resolution) * stepHeight));
+        _upper_step = nominal_value + upper_tolerance_value - baseValue;
+        _HLLineHeight = (float) ((3 * offectHeight) - ((_upper_step / resolution) * stepHeight));
 
         paint.setShader(null);
         paint.setColor(Color.RED);
         // canvas.drawLine(stepWidth + border, _HLLineHeight + border, stepWidth * 3 + border, _HLLineHeight + border, paint);
         // canvas.drawText("HL " + upper_tolerance_value, stepWidth * 3 + border + textMargin, _HLLineHeight + border + textMargin, paint);
-        Path HLPath = new Path();
+
+        HLPath.reset();
         HLPath.moveTo(stepWidth * 3 + border + textMargin, _HLLineHeight + border);
         HLPath.lineTo(stepWidth * 3 + border + textMargin + 10, _HLLineHeight + border - 6);
         HLPath.lineTo(stepWidth * 3 + border + textMargin + 10, _HLLineHeight + border + 6);
@@ -147,12 +161,13 @@ public class MValueView extends View {
         canvas.drawPath(HLPath, paint);
 
         // LL刻度线 , 下公差线;
-        double _lower_step = nominal_value + lower_tolerance_value - baseValue;
-        float _LLLineHeight = (float) ((getMeasuredHeight() / 2) + Math.abs((_lower_step / resolution) * stepHeight));
+        _lower_step = nominal_value + lower_tolerance_value - baseValue;
+        _LLLineHeight = (float) ((getMeasuredHeight() / 2) + Math.abs((_lower_step / resolution) * stepHeight));
         // canvas.drawLine(stepWidth + border, _LLLineHeight + border, stepWidth * 3 + border, _LLLineHeight + border, paint);
         // canvas.drawText("LL " + lower_tolerance_value, stepWidth * 3 + border + textMargin, _LLLineHeight + border + textMargin, paint);
         // 不画上刻度线，画三角形;
-        Path LLPath = new Path();
+
+        LLPath.reset();
         LLPath.moveTo(stepWidth * 3 + border + textMargin, _LLLineHeight + border);
         LLPath.lineTo(stepWidth * 3 + border + textMargin + 10, _LLLineHeight + border - 6);
         LLPath.lineTo(stepWidth * 3 + border + textMargin + 10, _LLLineHeight + border + 6);
@@ -166,17 +181,19 @@ public class MValueView extends View {
         float _HWLineHeight = (float) ((getMeasuredHeight() / 2) - ((hw / resolution) * stepHeight));
         // canvas.drawLine(stepWidth + border, _HWLineHeight + border, stepWidth * 3 + border, _HWLineHeight + border, paint);
         // canvas.drawText("HW " + hw, stepWidth * 3 + border + textMargin, _HWLineHeight + border + textMargin, paint);
-        Path HWPath = new Path();
+
+        HWPath.reset();
         HWPath.moveTo(stepWidth * 3 + border + textMargin, _HWLineHeight + border);
         HWPath.lineTo(stepWidth * 3 + border + textMargin + 10, _HWLineHeight + border - 6);
         HWPath.lineTo(stepWidth * 3 + border + textMargin + 10, _HWLineHeight + border + 6);
         HWPath.close();
         canvas.drawPath(HWPath, paint);
 
-        float _LWLineHeight = (float) ((getMeasuredHeight() / 2) + Math.abs((lw / resolution) * stepHeight));
+        _LWLineHeight = (float) ((getMeasuredHeight() / 2) + Math.abs((lw / resolution) * stepHeight));
         //canvas.drawLine(stepWidth + border, _LWLineHeight + border, stepWidth * 3 + border, _LWLineHeight + border, paint);
         //canvas.drawText("LW " + lw, stepWidth * 3 + border + textMargin, _LWLineHeight + border + textMargin, paint);
-        Path LWPath = new Path();
+
+        LWPath.reset();
         LWPath.moveTo(stepWidth * 3 + border + textMargin, _LWLineHeight + border);
         LWPath.lineTo(stepWidth * 3 + border + textMargin + 10, _LWLineHeight + border - 6);
         LWPath.lineTo(stepWidth * 3 + border + textMargin + 10, _LWLineHeight + border + 6);
@@ -186,7 +203,7 @@ public class MValueView extends View {
         // N 名义值
         paint.setColor(Color.GREEN);
         // canvas.drawText("N " + baseValue, stepWidth * 3 + border + textMargin, offectHeight * 3 + border + textMargin, paint);
-        Path NPath = new Path();
+        NPath.reset();
         NPath.moveTo(stepWidth * 3 + border + textMargin, offectHeight * 3 + border);
         NPath.lineTo(stepWidth * 3 + border + textMargin + 10, offectHeight * 3 + border - 6);
         NPath.lineTo(stepWidth * 3 + border + textMargin + 10, offectHeight * 3 + border + 6);
@@ -198,7 +215,7 @@ public class MValueView extends View {
         paint.setColor(Color.GRAY);
         paint.setStrokeWidth(border * 2);
         rect = new RectF(stepWidth, 2, stepWidth * 3, getBottom() - 14);
-        canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+        canvas.setDrawFilter(mPaintFlagsDrawFilter);
         // canvas.drawRoundRect(rect, 4, 4, paint); // 不画线了.
 
         double _value = mValue - baseValue;

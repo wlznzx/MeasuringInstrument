@@ -7,7 +7,6 @@ import android.widget.Toast;
 import org.greenrobot.greendao.DaoException;
 import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
-import org.nfunk.jep.ParseException;
 
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     private boolean isCommandStart = false;
 
     private int command_index = 0;
-    private byte[] command = new byte[12];
+    // private byte[] command = new byte[12];
     private byte[] _chValue = new byte[2];
     public ParameterBean mParameterBean;
     private JEP jep = new JEP();
@@ -212,7 +211,11 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     }
 
     private long lastValueTime = 0;
+    // 记录上一次的value值，不刷新界面;
+    private String lastValue = "";
 
+    //
+    private String[] values = new String[4];
     @Override
     public void startMeasuing() {
         android.util.Log.d("wlDebug", "startMeasuing.");
@@ -220,7 +223,53 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             serialHelper = new SerialHelper(sPort, iBaudRate) {
                 @Override
                 protected void onDataReceived(ComBean paramComBean) {
-                    /**/
+
+                    // android.util.Log.d("wlDebug", "onDataReceived = " + ByteUtil.ByteArrToHex(paramComBean.bRec));
+//                    long _currentTime = System.currentTimeMillis();
+//                    if (lastValueTime != 0) {
+//                        long stepTime = (_currentTime - lastValueTime);
+//                        android.util.Log.d("wlDebug", " last time:" + stepTime + "ms");
+//                    }
+//                    lastValueTime = _currentTime;
+//                    if(true)return;
+
+
+                    // 重新解析Byte;
+                    if (paramComBean.bRec[0] == 0x53 && paramComBean.bRec[11] == 0x54) {
+
+                        if (lastValue.equals(ByteUtil.ByteArrToHex(paramComBean.bRec))) {
+                            return;
+                        }
+                        lastValue = ByteUtil.ByteArrToHex(paramComBean.bRec);
+
+                        long currentTime = System.currentTimeMillis();
+                        if (lastValueTime != 0) {
+                            long stepTime = (currentTime - lastValueTime);
+                            android.util.Log.d("wlDebug", "_value = " + lastValue + " last time:" + stepTime + "ms");
+                        }
+                        lastValueTime = currentTime;
+
+                        _chValue[0] = paramComBean.bRec[2];
+                        _chValue[1] = paramComBean.bRec[3];
+                        values[0] = ByteUtil.ByteArrToHex(_chValue);
+
+                        _chValue[0] = paramComBean.bRec[4];
+                        _chValue[1] = paramComBean.bRec[5];
+                        values[1] = ByteUtil.ByteArrToHex(_chValue);
+
+                        _chValue[0] = paramComBean.bRec[6];
+                        _chValue[1] = paramComBean.bRec[7];
+                        values[2] = ByteUtil.ByteArrToHex(_chValue);
+
+                        _chValue[0] = paramComBean.bRec[8];
+                        _chValue[1] = paramComBean.bRec[9];
+                        values[3] = ByteUtil.ByteArrToHex(_chValue);
+                        if (mView != null) {
+                            doCH2P(values);
+                        }
+                    }
+
+                    /*
                     for (byte _byte : paramComBean.bRec) {
                         if (_byte == 0x53 && !isCommandStart) {
                             isCommandStart = true;
@@ -233,12 +282,17 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                         if (_byte == 0x54 && command_index == 12) {
                             isCommandStart = false;
                             String _value = ByteUtil.ByteArrToHex(command);
-
+                            if (_value.equals(lastValue)) {
+                                // 记录上一次的value值，不刷新界面;
+                                return;
+                            }
+                            lastValue = _value;
                             long currentTime = System.currentTimeMillis();
                             if (lastValueTime != 0) {
                                 long stepTime = (currentTime - lastValueTime);
                                 android.util.Log.d("wlDebug", "_value = " + _value + " last time:" + stepTime + "ms");
                             }
+
                             lastValueTime = currentTime;
                             // android.util.Log.d("wlDebug", "_value = " + _value);
                             _chValue[0] = command[2];
@@ -268,9 +322,9 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             if (mView != null) {
                                 doCH2P(new String[]{_value1, _value2, _value3, _value4});
                             }
-                            // mView.onMeasuringDataUpdate();
                         }
                     }
+                    */
                 }
             };
         }
@@ -293,24 +347,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                     while (true) {
                         Thread.sleep(5);
                         mView.onMeasuringDataUpdate(doCH2P(_values));
-                        Thread.sleep(5);
-                        mView.onMeasuringDataUpdate(doCH2P(_values2));
-                        Thread.sleep(5);
-                        mView.onMeasuringDataUpdate(doCH2P(_values));
-                        Thread.sleep(5);
-                        mView.onMeasuringDataUpdate(doCH2P(_values2));
-                        Thread.sleep(5);
-                        mView.onMeasuringDataUpdate(doCH2P(_values));
-                        Thread.sleep(5);
-                        mView.onMeasuringDataUpdate(doCH2P(_values2));
-                        Thread.sleep(5);
-                        mView.onMeasuringDataUpdate(doCH2P(_values));
-                        Thread.sleep(5);
-                        mView.onMeasuringDataUpdate(doCH2P(_values2));
-                        Thread.sleep(5);
-                        mView.onMeasuringDataUpdate(doCH2P(_values));
-                        Thread.sleep(5);
-                        mView.onMeasuringDataUpdate(doCH2P(_values2));
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -547,12 +583,16 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
      *   将读出来的AD字，通过校准，转化为校准后的测量值;
      *
      * */
+    private double[] chValues = new double[4];
+    private double[] mValues = new double[4];
+    private Node[] nodes = new Node[4];
+
     private double[] doCH2P(String[] inputValue) {
         long startTime = System.currentTimeMillis(); // 获取开始时间
-        double[] _values = new double[4];
+        // double[] _values = new double[4];
         // 计算测量值，ch1~ch4;
-        double ch1, ch2, ch3, ch4;
         if (mCalibrationBean != null) {
+            /*
             int x1 = Integer.parseInt(inputValue[0], 16);
             double y1 = Arith.add(Arith.mul(mCalibrationBean.getCh1KValue(), x1), mCalibrationBean.getCh1CompensationValue());
 
@@ -568,53 +608,63 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             ch2 = y2;
             ch3 = y3;
             ch4 = y4;
+            */
+            chValues[0] = Arith.add(Arith.mul(mCalibrationBean.getCh1KValue(), Integer.parseInt(inputValue[0], 16)), mCalibrationBean.getCh1CompensationValue());
+            chValues[1] = Arith.add(Arith.mul(mCalibrationBean.getCh2KValue(), Integer.parseInt(inputValue[1], 16)), mCalibrationBean.getCh2CompensationValue());
+            chValues[2] = Arith.add(Arith.mul(mCalibrationBean.getCh3KValue(), Integer.parseInt(inputValue[2], 16)), mCalibrationBean.getCh3CompensationValue());
+            chValues[3] = Arith.add(Arith.mul(mCalibrationBean.getCh4KValue(), Integer.parseInt(inputValue[3], 16)), mCalibrationBean.getCh4CompensationValue());
         } else {
-            ch1 = 1;
-            ch2 = 2;
-            ch3 = 3;
-            ch4 = 4;
+            chValues[0] = 1;
+            chValues[1] = 2;
+            chValues[2] = 3;
+            chValues[3] = 4;
         }
         // 如果参数管理不为空的话，那么需要进行公式的校验;
-        double m1 = ch1;
-        double m2 = ch2;
-        double m3 = ch3;
-        double m4 = ch4;
+//        double m1 = ch1;
+//        double m2 = ch2;
+//        double m3 = ch3;
+//        double m4 = ch4;
         if (mParameterBean != null) {
             try {
-                jep.addVariable("ch1", ch1);
-                jep.addVariable("ch2", ch2);
-                jep.addVariable("ch3", ch3);
-                jep.addVariable("ch4", ch4);
+                jep.addVariable("ch1", chValues[0]);
+                jep.addVariable("ch2", chValues[1]);
+                jep.addVariable("ch3", chValues[2]);
+                jep.addVariable("ch4", chValues[3]);
                 if (mParameterBean.getM1_code() != null && !mParameterBean.getM1_code().equals("")) {
-                    Node node = jep.parse(mParameterBean.getM1_code());
-                    m1 = (double) jep.evaluate(node) + mParameterBean.getM1_offect();
+                    // Node node = jep.parse(mParameterBean.getM1_code());
+                    if (nodes[0] == null) nodes[0] = jep.parse(mParameterBean.getM1_code());
+                    mValues[0] = (double) jep.evaluate(nodes[0]) + mParameterBean.getM1_offect();
                 }
                 if (mParameterBean.getM2_code() != null && mParameterBean.getM2_code() != null) {
-                    Node node = jep.parse(mParameterBean.getM2_code());
-                    m2 = (double) jep.evaluate(node) + mParameterBean.getM2_offect();
+//                    Node node = jep.parse(mParameterBean.getM2_code());
+                    if (nodes[1] == null) nodes[1] = jep.parse(mParameterBean.getM2_code());
+                    mValues[1] = (double) jep.evaluate(nodes[1]) + mParameterBean.getM2_offect();
                 }
                 if (mParameterBean.getM3_code() != null && mParameterBean.getM3_code() != null) {
-                    Node node = jep.parse(mParameterBean.getM3_code());
-                    m3 = (double) jep.evaluate(node) + mParameterBean.getM3_offect();
+//                    Node node = jep.parse(mParameterBean.getM3_code());
+                    if (nodes[2] == null) nodes[2] = jep.parse(mParameterBean.getM3_code());
+                    mValues[2] = (double) jep.evaluate(nodes[2]) + mParameterBean.getM3_offect();
                 }
                 if (mParameterBean.getM4_code() != null && mParameterBean.getM4_code() != null) {
-                    Node node = jep.parse(mParameterBean.getM4_code());
-                    m4 = (double) jep.evaluate(node) + mParameterBean.getM4_offect();
-                }/**/
+                    // Node node = jep.parse(mParameterBean.getM4_code());
+                    if (nodes[3] == null) nodes[3] = jep.parse(mParameterBean.getM4_code());
+                    mValues[3] = (double) jep.evaluate(nodes[3]) + mParameterBean.getM4_offect();
+                }
                 if (mView != null)
-                    mView.onMeasuringDataUpdate(new double[]{m1, m2, m3, m4});
-                // Toast.makeText(mContext, "result = " + result, Toast.LENGTH_SHORT).show();
+                    // mView.onMeasuringDataUpdate(new double[]{m1, m2, m3, m4});
+                    mView.onMeasuringDataUpdate(mValues);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        _values[0] = Arith.round(m1, 4);
-        _values[1] = Arith.round(m2, 4);
-        _values[2] = Arith.round(m3, 4);
-        _values[3] = Arith.round(m4, 4);
+//        _values[0] = Arith.round(m1, 4);
+//        _values[1] = Arith.round(m2, 4);
+//        _values[2] = Arith.round(m3, 4);
+//        _values[3] = Arith.round(m4, 4);
         long endTime = System.currentTimeMillis(); // 获取结束时间
-        // Log.d("wlDebug", "公式计算耗时： " + (endTime - startTime) + "ms");
-        return _values;
+        long stepTime = (endTime - startTime);
+        Log.d("wlDebug", "公式计算耗时： " + (endTime - startTime) + "ms");
+        return null;
     }
 
 
