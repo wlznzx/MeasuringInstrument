@@ -216,6 +216,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     //
     private String[] values = new String[4];
+
     @Override
     public void startMeasuing() {
         android.util.Log.d("wlDebug", "startMeasuing.");
@@ -237,10 +238,10 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                     // 重新解析Byte;
                     if (paramComBean.bRec[0] == 0x53 && paramComBean.bRec[11] == 0x54) {
 
-                        if (lastValue.equals(ByteUtil.ByteArrToHex(paramComBean.bRec))) {
-                            return;
-                        }
-                        lastValue = ByteUtil.ByteArrToHex(paramComBean.bRec);
+//                        if (lastValue.equals(ByteUtil.ByteArrToHex(paramComBean.bRec))) {
+//                            return;
+//                        }
+//                        lastValue = ByteUtil.ByteArrToHex(paramComBean.bRec);
 
                         long currentTime = System.currentTimeMillis();
                         if (lastValueTime != 0) {
@@ -334,6 +335,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             Toast.makeText((Context) mView, "串口打开失败.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
+        lastMeetConditionTime = System.currentTimeMillis();
 
         // 测试用;
         String[] _values = {"1086", "2031", "3036", "38C9"};
@@ -344,16 +346,18 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             @Override
             public void run() {
                 try {
-                    while (true) {
-                        Thread.sleep(5);
-                        mView.onMeasuringDataUpdate(doCH2P(_values));
-                    }
+//                    while (true) {
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2P(_values2));
+                    Thread.sleep(1500);
+                    mView.onMeasuringDataUpdate(doCH2P(_values));
+//                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
-        */
+*/
     }
 
     // 5301 1086 2031 3036 38C9 4E54
@@ -402,7 +406,10 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             return "NoSave";
                         }
                     }
-
+                    // 要满足两个条件；1、从范围外面进来一次。2、持续一定的时间；
+                    if (lastMeetConditionTime == -1) {
+                        lastMeetConditionTime = System.currentTimeMillis();
+                    }
                     // 如果在限制内，退出;
                     if (inLimited[mIndex]) {
                         // android.util.Log.d("wlDebug", "一直在区域内.");
@@ -410,18 +417,16 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                     }
 
                     long currentTime = System.currentTimeMillis();
-                    // android.util.Log.d("wlDebug", "currentTime = " + currentTime + " lastMeetConditionTime = " + lastMeetConditionTime + " Stable = " + _TriggerConditionBean.getStableTime() * 1000);
+                    android.util.Log.d("wlDebug", "currentTime = " + currentTime + " lastMeetConditionTime = " + lastMeetConditionTime + " Stable = " + _TriggerConditionBean.getStableTime() * 1000);
 
                     if (currentTime - lastMeetConditionTime > _TriggerConditionBean.getStableTime() * 1000) {
 
                     } else {
-                        // android.util.Log.d("wlDebug", "持续时间未到.");
+                        android.util.Log.d("wlDebug", "持续时间未到.");
                         return "NoSave;";
                     }
                     inLimited[mIndex] = true;
-                    if (lastMeetConditionTime == -1) {
-                        lastMeetConditionTime = System.currentTimeMillis();
-                    }
+
                 } else if (isManual == false) {
                     return "NoSave;";
                 } else {

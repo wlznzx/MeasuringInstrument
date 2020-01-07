@@ -1,7 +1,6 @@
 package alauncher.cn.measuringinstrument.view;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,9 +13,7 @@ import org.greenrobot.greendao.DaoException;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
-import alauncher.cn.measuringinstrument.MainActivity;
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.GroupBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;

@@ -104,7 +104,6 @@ public class App extends MultiDexApplication {
 
         Runtime rt = Runtime.getRuntime();
         long maxMemory = rt.maxMemory();
-        android.util.Log.i("wlDebug", Long.toString(maxMemory / (1024 * 1024)));
     }
 
     public static DaoSession getDaoSession() {

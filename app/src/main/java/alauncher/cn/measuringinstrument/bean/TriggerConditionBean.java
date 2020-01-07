@@ -34,14 +34,14 @@ public class TriggerConditionBean {
 
     public double lowerLimit;
 
-    public int stableTime;
+    public double stableTime;
 
     public String conditionName;
 
-    @Generated(hash = 832673265)
+    @Generated(hash = 152069947)
     public TriggerConditionBean(Long id, long codeID, int mIndex, double scale,
-            boolean isScale, double upperLimit, double lowerLimit, int stableTime,
-            String conditionName) {
+            boolean isScale, double upperLimit, double lowerLimit,
+            double stableTime, String conditionName) {
         this.id = id;
         this.codeID = codeID;
         this.mIndex = mIndex;
@@ -113,11 +113,11 @@ public class TriggerConditionBean {
         this.lowerLimit = lowerLimit;
     }
 
-    public int getStableTime() {
+    public double getStableTime() {
         return this.stableTime;
     }
 
-    public void setStableTime(int stableTime) {
+    public void setStableTime(double stableTime) {
         this.stableTime = stableTime;
     }
 
@@ -128,19 +128,5 @@ public class TriggerConditionBean {
     public void setConditionName(String conditionName) {
         this.conditionName = conditionName;
     }
-
-    @Override
-    public String toString() {
-        return "TriggerConditionBean{" +
-                "id=" + id +
-                ", codeID=" + codeID +
-                ", mIndex=" + mIndex +
-                ", scale=" + scale +
-                ", isScale=" + isScale +
-                ", upperLimit=" + upperLimit +
-                ", lowerLimit=" + lowerLimit +
-                ", stableTime=" + stableTime +
-                ", conditionName='" + conditionName + '\'' +
-                '}';
-    }
+    
 }

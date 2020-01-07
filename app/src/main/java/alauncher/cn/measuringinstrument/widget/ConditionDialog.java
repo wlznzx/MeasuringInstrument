@@ -160,7 +160,7 @@ public class ConditionDialog extends Dialog {
             if (!isScaleSwitch.isChecked())
                 _bean.setLowerLimit(Double.valueOf(lowerlimitEdt.getText().toString().trim()));
 
-            _bean.setStableTime(Integer.valueOf(scaleTimeEdt.getText().toString().trim()));
+            _bean.setStableTime(Double.valueOf(scaleTimeEdt.getText().toString().trim()));
             _bean.setCodeID(App.getSetupBean().getCodeID());
             _bean.setMIndex(mIndexSP.getSelectedItemPosition() + 1);
             if (isScaleSwitch.isChecked())
@@ -169,6 +169,7 @@ public class ConditionDialog extends Dialog {
             return true;
         } catch (NumberFormatException e) {
             Toast.makeText(mContext, "输入条件有误，请检查。", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
         return false;
     }

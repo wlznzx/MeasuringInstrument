@@ -20,13 +20,12 @@ public class MValueView extends View {
 
     private Paint paint = new Paint();
     ;
-    private RectF rect;
+    private RectF rect = new RectF(0, 0, 0, 0);
 
-    private Canvas canvas;
+//    private Canvas canvas;
 
     private double baseValue;
     private double mValue;
-    private double offect;
 
     private float offectHeight;
 
@@ -78,7 +77,6 @@ public class MValueView extends View {
     public void init(double nominal, double upper, double lower, double pResolution) {
         baseValue = nominal;
         nominal_value = nominal;
-        offect = 1;
         mValue = 1.5;
         // 公差的单位是毫米，所以需要 * 1000;
         upper_tolerance_value = upper;
@@ -138,7 +136,14 @@ public class MValueView extends View {
     private Path LWPath = new Path();
     private Path NPath = new Path();
     private PaintFlagsDrawFilter mPaintFlagsDrawFilter = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+    private double _value;
 
+    // LinearGradient;
+    LinearGradient redLinearGradient = new LinearGradient(0, 0, 200, 0, 0xF0FF0000, Color.RED, Shader.TileMode.MIRROR);
+    LinearGradient yellowLinearGradient = new LinearGradient(0, 0, 200, 0, 0xF0FFFF00, Color.YELLOW, Shader.TileMode.MIRROR);
+    LinearGradient greenLinearGradient = new LinearGradient(0, 0, 200, 0, 0xF000FF00, Color.GREEN, Shader.TileMode.MIRROR);
+
+    float _top, _bottom;
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -214,49 +219,44 @@ public class MValueView extends View {
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.GRAY);
         paint.setStrokeWidth(border * 2);
-        rect = new RectF(stepWidth, 2, stepWidth * 3, getBottom() - 14);
+        // rect = new RectF(stepWidth, 2, stepWidth * 3, getBottom() - 14);
+        rect.set(stepWidth, 2, stepWidth * 3, getBottom() - 14);
         canvas.setDrawFilter(mPaintFlagsDrawFilter);
         // canvas.drawRoundRect(rect, 4, 4, paint); // 不画线了.
 
-        double _value = mValue - baseValue;
+        _value = mValue - baseValue;
         if (_value > 0) {
-            float _top = (float) ((3 * offectHeight) - _value / resolution * stepHeight);
+            _top = (float) ((3 * offectHeight) - _value / resolution * stepHeight);
             if (_top < 0) _top = 0;
-            float _bottom = getMeasuredHeight() / 2;
-            rect = new RectF(stepWidth + border, _top, stepWidth * 3 - border, _bottom);
+            _bottom = getMeasuredHeight() / 2;
+            // rect = new RectF(stepWidth + border, _top, stepWidth * 3 - border, _bottom);
+            rect.set(stepWidth + border, _top, stepWidth * 3 - border, _bottom);
         } else {
             _value = Math.abs(_value);
-            float _top = getMeasuredHeight() / 2;
+            _top = getMeasuredHeight() / 2;
             if (_top < 0) _top = 0;
-            float _bottom = (float) (_top + _value / resolution * stepHeight);
-            rect = new RectF(stepWidth + border, _top, stepWidth * 3 - border, _bottom);
+            _bottom = (float) (_top + _value / resolution * stepHeight);
+//            rect = new RectF(stepWidth + border, _top, stepWidth * 3 - border, _bottom);
+            rect.set(stepWidth + border, _top, stepWidth * 3 - border, _bottom);
         }
 
-        LinearGradient linearGradient = null;
         if (_value > 0) {
             if (_value > _upper_step) {
-                // paint.setColor(Color.RED);
-                linearGradient = new LinearGradient(0, 0, 200, 0, 0xF0FF0000, Color.RED, Shader.TileMode.MIRROR);
+                paint.setShader(redLinearGradient);
             } else if (_value > hw) {
-                // paint.setColor(Color.YELLOW);
-                linearGradient = new LinearGradient(0, 0, 200, 0, 0xF0FFFF00, Color.YELLOW, Shader.TileMode.MIRROR);
+                paint.setShader(yellowLinearGradient);
             } else {
-                // paint.setColor(Color.GREEN);
-                linearGradient = new LinearGradient(0, 0, 200, 0, 0xF000FF00, Color.GREEN, Shader.TileMode.MIRROR);
+                paint.setShader(greenLinearGradient);
             }
         } else {
             if (_value < _lower_step) {
-                // `paint.setColor(Color.RED);
-                linearGradient = new LinearGradient(0, 0, 200, 0, 0xF0FF0000, Color.RED, Shader.TileMode.MIRROR);
+                paint.setShader(redLinearGradient);
             } else if (_value < lw) {
-                // paint.setColor(Color.YELLOW);
-                linearGradient = new LinearGradient(0, 0, 200, 0, 0xF0FFFF00, Color.YELLOW, Shader.TileMode.MIRROR);
+                paint.setShader(yellowLinearGradient);
             } else {
-                // paint.setColor(Color.GREEN);
-                linearGradient = new LinearGradient(0, 0, 200, 0, 0xF000FF00, Color.GREEN, Shader.TileMode.MIRROR);
+                paint.setShader(greenLinearGradient);
             }
         }
-        paint.setShader(linearGradient);
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRoundRect(rect, 4, 4, paint);
     }
