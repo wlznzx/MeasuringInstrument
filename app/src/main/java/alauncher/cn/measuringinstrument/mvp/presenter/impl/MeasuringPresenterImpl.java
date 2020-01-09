@@ -7,8 +7,12 @@ import android.widget.Toast;
 import org.greenrobot.greendao.DaoException;
 import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
+import org.nfunk.jep.function.Str;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
@@ -16,6 +20,7 @@ import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
+import alauncher.cn.measuringinstrument.bean.ProcessBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.StepBean;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
@@ -52,9 +57,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     MeasuringActivityView mView;
 
-    private boolean isCommandStart = false;
-
-    private int command_index = 0;
     // private byte[] command = new byte[12];
     private byte[] _chValue = new byte[2];
     public ParameterBean mParameterBean;
@@ -87,8 +89,11 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     private double[] tempMs = new double[4];
 
     // 过程ch值;
-    
-    private double[] ch1 = new double[1000];
+    private List<ProcessBean> m1ProcessBeans = new ArrayList<>();
+    private List<ProcessBean> m2ProcessBeans = new ArrayList<>();
+    private List<ProcessBean> m3ProcessBeans = new ArrayList<>();
+    private List<ProcessBean> m4ProcessBeans = new ArrayList<>();
+    private String[] reCodes = new String[4];
 
     private int currentStep = -1;
 
@@ -108,56 +113,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         jep.addFunction("Min", new Min());
         jep.addFunction("Avg", new Avg());
         jep.addFunction("Dif", new Dif());
-        mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
-        if (mParameterBean != null) {
-            android.util.Log.d(TAG, mParameterBean.toString());
-            // 计算上下公差值;
-            upperValue[0] = mParameterBean.getM1_nominal_value() + (mParameterBean.getM1_upper_tolerance_value());
-            upperValue[1] = mParameterBean.getM2_nominal_value() + (mParameterBean.getM2_upper_tolerance_value());
-            upperValue[2] = mParameterBean.getM3_nominal_value() + (mParameterBean.getM3_upper_tolerance_value());
-            upperValue[3] = mParameterBean.getM4_nominal_value() + (mParameterBean.getM4_upper_tolerance_value());
-
-            lowerValue[0] = mParameterBean.getM1_nominal_value() + (mParameterBean.getM1_lower_tolerance_value());
-            lowerValue[1] = mParameterBean.getM2_nominal_value() + (mParameterBean.getM2_lower_tolerance_value());
-            lowerValue[2] = mParameterBean.getM3_nominal_value() + (mParameterBean.getM3_lower_tolerance_value());
-            lowerValue[3] = mParameterBean.getM4_nominal_value() + (mParameterBean.getM4_lower_tolerance_value());
-
-            nominalValue[0] = mParameterBean.getM1_nominal_value();
-            nominalValue[1] = mParameterBean.getM2_nominal_value();
-            nominalValue[2] = mParameterBean.getM3_nominal_value();
-            nominalValue[3] = mParameterBean.getM4_nominal_value();
-
-            upperToleranceValue[0] = mParameterBean.getM1_upper_tolerance_value();
-            upperToleranceValue[1] = mParameterBean.getM2_upper_tolerance_value();
-            upperToleranceValue[2] = mParameterBean.getM3_upper_tolerance_value();
-            upperToleranceValue[3] = mParameterBean.getM4_upper_tolerance_value();
-
-            lowerToleranceValue[0] = mParameterBean.getM1_lower_tolerance_value();
-            lowerToleranceValue[1] = mParameterBean.getM2_lower_tolerance_value();
-            lowerToleranceValue[2] = mParameterBean.getM3_lower_tolerance_value();
-            lowerToleranceValue[3] = mParameterBean.getM4_lower_tolerance_value();
-        }
-        mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) App.getSetupBean().getCodeID());
-        if (mCalibrationBean != null) Log.d(TAG, mCalibrationBean.toString());
-
-        GroupBeanDao _dao = App.getDaoSession().getGroupBeanDao();
-        if (_dao != null) {
-            for (int i = 0; i < 4; i++) {
-                try {
-                    mGroupBeans[i] = _dao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(i + 1)).unique();
-                } catch (DaoException e) {
-                    mGroupBeans[i] = _dao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(i + 1)).list().get(0);
-                }
-            }
-        }
-
-        stepBeans = App.getDaoSession().
-                getStepBeanDao().queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderAsc(StepBeanDao.Properties.StepID).list();
-        maxStep = stepBeans.size();
-        if (maxStep > 0)
-            currentStep = 0;
-        else
-            currentStep = -1;
+        initParameter();
 
         _dBean = App.getDeviceInfo();
 
@@ -193,15 +149,61 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             lowerToleranceValue[1] = mParameterBean.getM2_lower_tolerance_value();
             lowerToleranceValue[2] = mParameterBean.getM3_lower_tolerance_value();
             lowerToleranceValue[3] = mParameterBean.getM4_lower_tolerance_value();
-        }
 
+            // 解析公式，提取过程值;
+            String _regx = "L.*?\\)";
+            Pattern p = Pattern.compile(_regx);
+            if (mParameterBean.getM1_code() != null) {
+                reCodes[0] = mParameterBean.getM1_code();
+                Matcher matcher = p.matcher(mParameterBean.getM1_code());
+                while (matcher.find()) {
+                    ProcessBean _process = new ProcessBean("x" + m1ProcessBeans.size(), mParameterBean.getM1_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM1_code().substring(matcher.start(), matcher.start() + 4));
+                    m1ProcessBeans.add(_process);
+                    reCodes[0] = reCodes[0].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+                }
+            }
+
+            if (mParameterBean.getM2_code() != null) {
+                reCodes[1] = mParameterBean.getM2_code();
+                Matcher matcher = p.matcher(mParameterBean.getM2_code());
+                while (matcher.find()) {
+                    ProcessBean _process = new ProcessBean("x" + m2ProcessBeans.size(), mParameterBean.getM2_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM2_code().substring(matcher.start(), matcher.start() + 4));
+                    m2ProcessBeans.add(_process);
+                    reCodes[1] = reCodes[1].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+                }
+            }
+
+            if (mParameterBean.getM3_code() != null) {
+                reCodes[2] = mParameterBean.getM3_code();
+                Matcher matcher = p.matcher(mParameterBean.getM3_code());
+                while (matcher.find()) {
+                    ProcessBean _process = new ProcessBean("x" + m3ProcessBeans.size(), mParameterBean.getM3_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM3_code().substring(matcher.start(), matcher.start() + 4));
+                    m3ProcessBeans.add(_process);
+                    reCodes[2] = reCodes[2].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+                }
+            }
+
+            if (mParameterBean.getM4_code() != null) {
+                reCodes[3] = mParameterBean.getM4_code();
+                Matcher matcher = p.matcher(mParameterBean.getM4_code());
+                while (matcher.find()) {
+                    ProcessBean _process = new ProcessBean("x" + m4ProcessBeans.size(), mParameterBean.getM4_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM4_code().substring(matcher.start(), matcher.start() + 4));
+                    m4ProcessBeans.add(_process);
+                    reCodes[3] = reCodes[3].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+                }
+            }
+        }
         mCalibrationBean = App.getDaoSession().getCalibrationBeanDao().load((long) App.getSetupBean().getCodeID());
         if (mCalibrationBean != null) Log.d(TAG, mCalibrationBean.toString());
 
         GroupBeanDao _dao = App.getDaoSession().getGroupBeanDao();
         if (_dao != null) {
             for (int i = 0; i < 4; i++) {
-                mGroupBeans[i] = _dao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(i + 1)).unique();
+                try {
+                    mGroupBeans[i] = _dao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(i + 1)).unique();
+                } catch (DaoException e) {
+                    mGroupBeans[i] = _dao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(i + 1)).list().get(0);
+                }
             }
         }
 
@@ -598,7 +600,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     private double[] doCH2P(String[] inputValue) {
         long startTime = System.currentTimeMillis(); // 获取开始时间
-        // double[] _values = new double[4];
         // 计算测量值，ch1~ch4;
         if (mCalibrationBean != null) {
             chValues[0] = Arith.add(Arith.mul(mCalibrationBean.getCh1KValue(), Integer.parseInt(inputValue[0], 16)), mCalibrationBean.getCh1CompensationValue());
@@ -611,53 +612,71 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             chValues[2] = 3;
             chValues[3] = 4;
         }
-        // 如果参数管理不为空的话，那么需要进行公式的校验;
-//        double m1 = ch1;
-//        double m2 = ch2;
-//        double m3 = ch3;
-//        double m4 = ch4;
         if (mParameterBean != null) {
             try {
                 jep.addVariable("ch1", chValues[0]);
                 jep.addVariable("ch2", chValues[1]);
                 jep.addVariable("ch3", chValues[2]);
                 jep.addVariable("ch4", chValues[3]);
-                if (mParameterBean.getM1_code() != null && !mParameterBean.getM1_code().equals("")) {
-                    // Node node = jep.parse(mParameterBean.getM1_code());
-                    if (nodes[0] == null) nodes[0] = jep.parse(mParameterBean.getM1_code());
+                if (reCodes[0] != null && !reCodes[0].equals("")) {
+                    // 如果过程值不为空；
+                    if (m1ProcessBeans.size() > 0) {
+                        for (ProcessBean _process : m1ProcessBeans) {
+                            // 添加过程值变量;
+                            Node node = jep.parse(_process.getExpression());
+                            jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
+                        }
+                    }
+                    if (nodes[0] == null) nodes[0] = jep.parse(reCodes[0]);
                     mValues[0] = (double) jep.evaluate(nodes[0]) + mParameterBean.getM1_offect();
                 }
                 if (mParameterBean.getM2_code() != null && mParameterBean.getM2_code() != null) {
-//                    Node node = jep.parse(mParameterBean.getM2_code());
                     if (nodes[1] == null) nodes[1] = jep.parse(mParameterBean.getM2_code());
                     mValues[1] = (double) jep.evaluate(nodes[1]) + mParameterBean.getM2_offect();
                 }
                 if (mParameterBean.getM3_code() != null && mParameterBean.getM3_code() != null) {
-//                    Node node = jep.parse(mParameterBean.getM3_code());
                     if (nodes[2] == null) nodes[2] = jep.parse(mParameterBean.getM3_code());
                     mValues[2] = (double) jep.evaluate(nodes[2]) + mParameterBean.getM3_offect();
                 }
                 if (mParameterBean.getM4_code() != null && mParameterBean.getM4_code() != null) {
-                    // Node node = jep.parse(mParameterBean.getM4_code());
                     if (nodes[3] == null) nodes[3] = jep.parse(mParameterBean.getM4_code());
                     mValues[3] = (double) jep.evaluate(nodes[3]) + mParameterBean.getM4_offect();
                 }
                 if (mView != null)
-                    // mView.onMeasuringDataUpdate(new double[]{m1, m2, m3, m4});
                     mView.onMeasuringDataUpdate(mValues);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-//        _values[0] = Arith.round(m1, 4);
-//        _values[1] = Arith.round(m2, 4);
-//        _values[2] = Arith.round(m3, 4);
-//        _values[3] = Arith.round(m4, 4);
         long endTime = System.currentTimeMillis(); // 获取结束时间
         long stepTime = (endTime - startTime);
         Log.d("wlDebug", "公式计算耗时： " + (endTime - startTime) + "ms");
         return null;
     }
 
-
+    private double handlerProcessValues(ProcessBean bean, double value) {
+        switch (bean.getExpressionType()) {
+            case "LMax":
+                if (value > bean.getVar1()) {
+                    bean.setVar1(value);
+                }
+                return bean.getVar1();
+            case "LMin":
+                if (value < bean.getVar1()) {
+                    bean.setVar1(value);
+                }
+                return bean.getVar1();
+            case "LAvg":
+                if (bean.getVar2() == 0) {
+                    bean.setVar2(-1);
+                    bean.setVar1(value);
+                } else {
+                    bean.setVar1((bean.getVar1() + value) / 2);
+                }
+                return bean.getVar1();
+            case "LDif":
+                return 2;
+        }
+        return 0;
+    }
 }
