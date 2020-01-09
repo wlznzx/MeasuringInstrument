@@ -176,6 +176,34 @@
                 android:text="@string/comma" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/lmax_btn"
+                style="@style/ButtonStyle"
+                android:text="@string/lmax" />
+
+            <Button
+                android:id="@+id/lmin_btn"
+                style="@style/ButtonStyle"
+                android:text="@string/lmin" />
+
+            <Button
+                android:id="@+id/lavg_btn"
+                style="@style/ButtonStyle"
+                android:text="@string/lAvg" />
+
+            <Button
+                android:id="@+id/ldif_btn"
+                style="@style/ButtonStyle"
+                android:text="@string/ldif" />
+            <!--
+            <Button style="@style/ButtonStyle" />
+            -->
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

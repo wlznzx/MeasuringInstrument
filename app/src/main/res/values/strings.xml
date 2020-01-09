@@ -231,10 +231,14 @@
     <string name="comma">,</string>
     <string name="dif">Dif</string>
     <string name="export_excel">编辑/导出</string>
-    <string name="Avg">AVG</string>
+    <string name="Avg">Avg</string>
     <string name="left_brackets">(</string>
     <string name="right_brackets">)</string>
     <string name="back_space">退格</string>
     <string name="press_save">按键保存</string>
+    <string name="lmax">LMax</string>
+    <string name="lmin">LMin</string>
+    <string name="lAvg">LAvg</string>
+    <string name="ldif">LDif</string>
 
 </resources>

@@ -1,13 +1,18 @@
 package alauncher.cn.measuringinstrument;
 
+import android.widget.Toast;
+
 import org.junit.Test;
 import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import alauncher.cn.measuringinstrument.bean.ProcessBean;
 import alauncher.cn.measuringinstrument.utils.Avg;
 import alauncher.cn.measuringinstrument.utils.Dif;
 import alauncher.cn.measuringinstrument.utils.Max;
@@ -49,8 +54,7 @@ public class ExampleUnitTest {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-         */
-
+        */
         String str1 = "123";
         // 字符串替换;
         String str2 = "2342803423jfasdf0132041a0a1231";
@@ -64,26 +68,46 @@ public class ExampleUnitTest {
 
     }
 
+
     @Test
-    public void test05() {
-        String code = "Max(LMax(ch1),LMin(3,4))";
+    public void test05() throws ParseException {
+        List<ProcessBean> process = new ArrayList<>();
+        String code = "LMax(Max(ch1,ch2))";
+        String reCode = code;
         // G开头，G结尾;
-        String _regx = "LMax.*?\\)";
+        String _regx = "L.*?\\)";
         Pattern p = Pattern.compile(_regx);
         Matcher matcher = p.matcher(code);
         while (matcher.find()) {
-            System.out.println(matcher.start());//14000
-            System.out.println(matcher.end());//14000
-            System.out.println(matcher.group());//14000
+            ProcessBean _process = new ProcessBean("x" + process.size(), code.substring(matcher.start() + 5, matcher.end() - 1), code.substring(matcher.start(), matcher.start() + 4));
+            process.add(_process);
+            reCode = reCode.replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
         }
+
+        // 判断括号内的表达式合乎规则;
+        JEP jep = new JEP();
+        jep.addFunction("Max", new Max());
+        jep.addFunction("Min", new Min());
+        jep.addFunction("Avg", new Avg());
+        jep.addFunction("Dif", new Dif());
+        jep.addVariable("ch1", 1);
+        jep.addVariable("ch2", 2);
+        jep.addVariable("ch3", 3);
+        jep.addVariable("ch4", 4);
+
+        for (ProcessBean _process : process) {
+            // 添加过程值变量;
+            System.out.println(_process.toString());
+            jep.addVariable(_process.getReplaceName(), 1);
+            Node node = jep.parse(_process.getExpression());
+            Object result = jep.evaluate(node);
+        }
+
+        Node node = jep.parse(reCode);
+        Object result = jep.evaluate(node);
+
+        System.out.println("reCode = " + result.toString());
     }
 
-    class Process {
-        // 过程值替代符号;
-        String replaceName;
-        // 过程运算表达式;
-        String expression;
-        // 过程运算表达式类型，LMax、LMin、LDif、LAvg；
-        String expressionType;
-    }
+
 }

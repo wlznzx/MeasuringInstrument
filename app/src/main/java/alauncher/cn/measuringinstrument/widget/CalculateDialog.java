@@ -11,7 +11,13 @@ import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import alauncher.cn.measuringinstrument.R;
+import alauncher.cn.measuringinstrument.bean.ProcessBean;
 import alauncher.cn.measuringinstrument.utils.Avg;
 import alauncher.cn.measuringinstrument.utils.Dif;
 import alauncher.cn.measuringinstrument.utils.Max;
@@ -59,7 +65,8 @@ public class CalculateDialog extends Dialog {
             R.id.ch3_btn, R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_minus,
             R.id.ch4_btn, R.id.btn_0, R.id.btn_multiply, R.id.btn_divide, R.id.btn_ok,
             R.id.max_btn, R.id.min_btn, R.id.avg_btn, R.id.dif_btn, R.id.comma_btn,
-            R.id.left_brackets_btn, R.id.right_brackets_btn, R.id.back_space_btn, R.id.radix_point_btn
+            R.id.left_brackets_btn, R.id.right_brackets_btn, R.id.back_space_btn, R.id.radix_point_btn,
+            R.id.lmax_btn, R.id.lmin_btn, R.id.lavg_btn, R.id.ldif_btn
     })
     public void onBtnClick(View v) {
         switch (v.getId()) {
@@ -135,6 +142,18 @@ public class CalculateDialog extends Dialog {
             case R.id.dif_btn:
                 onFunDown("Dif");
                 break;
+            case R.id.lmax_btn:
+                onFunDown("LMax");
+                break;
+            case R.id.lmin_btn:
+                onFunDown("LMin");
+                break;
+            case R.id.lavg_btn:
+                onFunDown("LAvg");
+                break;
+            case R.id.ldif_btn:
+                onFunDown("LDif");
+                break;
             case R.id.comma_btn:
                 onOperateDown(",");
                 break;
@@ -156,18 +175,36 @@ public class CalculateDialog extends Dialog {
                 onOperateDown(".");
                 break;
             case R.id.btn_ok:
+                // 先把过程值提取出来;
+                List<ProcessBean> process = new ArrayList<>();
+                String reCode = code;
+                // G开头，G结尾;
+                String _regx = "L.*?\\)";
+                Pattern p = Pattern.compile(_regx);
+                Matcher matcher = p.matcher(code);
+                while (matcher.find()) {
+                    ProcessBean _process = new ProcessBean("x" + process.size(), code.substring(matcher.start() + 5, matcher.end() - 1), code.substring(matcher.start(), matcher.start() + 4));
+                    process.add(_process);
+                    reCode = reCode.replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+                }
                 JEP jep = new JEP();
                 jep.addFunction("Max", new Max());
                 jep.addFunction("Min", new Min());
                 jep.addFunction("Avg", new Avg());
                 jep.addFunction("Dif", new Dif());
+                jep.addVariable("ch1", 1);
+                jep.addVariable("ch2", 2);
+                jep.addVariable("ch3", 3);
+                jep.addVariable("ch4", 4);
                 try {
-                    jep.addVariable("ch1", 1);
-                    jep.addVariable("ch2", 2);
-                    jep.addVariable("ch3", 3);
-                    jep.addVariable("ch4", 4);
-
-                    Node node = jep.parse(code);
+                    for (ProcessBean _process : process) {
+                        // 添加过程值变量;
+                        jep.addVariable(_process.getReplaceName(), 1);
+                        Node node = jep.parse(_process.getExpression());
+                        Object result = jep.evaluate(node);
+                        System.out.println(_process.toString());
+                    }
+                    Node node = jep.parse(reCode);
                     Object result = jep.evaluate(node);
                 } catch (ParseException e) {
                     e.printStackTrace();

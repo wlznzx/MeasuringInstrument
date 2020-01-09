@@ -86,6 +86,10 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     // 缓存测量值;
     private double[] tempMs = new double[4];
 
+    // 过程ch值;
+    
+    private double[] ch1 = new double[1000];
+
     private int currentStep = -1;
 
     private DeviceInfoBean _dBean;
@@ -597,23 +601,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         // double[] _values = new double[4];
         // 计算测量值，ch1~ch4;
         if (mCalibrationBean != null) {
-            /*
-            int x1 = Integer.parseInt(inputValue[0], 16);
-            double y1 = Arith.add(Arith.mul(mCalibrationBean.getCh1KValue(), x1), mCalibrationBean.getCh1CompensationValue());
-
-            int x2 = Integer.parseInt(inputValue[1], 16);
-            double y2 = Arith.add(Arith.mul(mCalibrationBean.getCh2KValue(), x2), mCalibrationBean.getCh2CompensationValue());
-
-            int x3 = Integer.parseInt(inputValue[2], 16);
-            double y3 = Arith.add(Arith.mul(mCalibrationBean.getCh3KValue(), x3), mCalibrationBean.getCh3CompensationValue());
-
-            int x4 = Integer.parseInt(inputValue[3], 16);
-            double y4 = Arith.add(Arith.mul(mCalibrationBean.getCh4KValue(), x4), mCalibrationBean.getCh4CompensationValue());
-            ch1 = y1;
-            ch2 = y2;
-            ch3 = y3;
-            ch4 = y4;
-            */
             chValues[0] = Arith.add(Arith.mul(mCalibrationBean.getCh1KValue(), Integer.parseInt(inputValue[0], 16)), mCalibrationBean.getCh1CompensationValue());
             chValues[1] = Arith.add(Arith.mul(mCalibrationBean.getCh2KValue(), Integer.parseInt(inputValue[1], 16)), mCalibrationBean.getCh2CompensationValue());
             chValues[2] = Arith.add(Arith.mul(mCalibrationBean.getCh3KValue(), Integer.parseInt(inputValue[2], 16)), mCalibrationBean.getCh3CompensationValue());
