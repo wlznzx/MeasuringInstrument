@@ -344,10 +344,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         lastMeetConditionTime = System.currentTimeMillis();
 
         // 测试用;
-        String[] _values = {"1086", "2031", "3036", "38C9"};
-        String[] _values2 = {"3036", "38C9", "3036", "38C9"};
+        String[] _values = {"1086", "1086", "1086", "1086"};
+        String[] _values2 = {"3036", "3036", "3036", "3036"};
+        String[] _values3 = {"13036", "13036", "13036", "13036"};
+        String[] _values4 = {"2036", "2036", "2036", "2036"};
 
-        /*
+        /**/
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -357,13 +359,17 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                     mView.onMeasuringDataUpdate(doCH2P(_values2));
                     Thread.sleep(1500);
                     mView.onMeasuringDataUpdate(doCH2P(_values));
+                    Thread.sleep(1500);
+                    mView.onMeasuringDataUpdate(doCH2P(_values3));
+                    Thread.sleep(1500);
+                    mView.onMeasuringDataUpdate(doCH2P(_values4));
 //                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
-*/
+
     }
 
     // 5301 1086 2031 3036 38C9 4E54
@@ -619,6 +625,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 jep.addVariable("ch3", chValues[2]);
                 jep.addVariable("ch4", chValues[3]);
                 if (reCodes[0] != null && !reCodes[0].equals("")) {
+                    android.util.Log.d("wlDebug", "reCodes[0] = " + reCodes[0]);
                     // 如果过程值不为空；
                     if (m1ProcessBeans.size() > 0) {
                         for (ProcessBean _process : m1ProcessBeans) {
@@ -630,16 +637,37 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                     if (nodes[0] == null) nodes[0] = jep.parse(reCodes[0]);
                     mValues[0] = (double) jep.evaluate(nodes[0]) + mParameterBean.getM1_offect();
                 }
-                if (mParameterBean.getM2_code() != null && mParameterBean.getM2_code() != null) {
-                    if (nodes[1] == null) nodes[1] = jep.parse(mParameterBean.getM2_code());
+                if (reCodes[1] != null && reCodes[1] != null) {
+                    if (m2ProcessBeans.size() > 0) {
+                        for (ProcessBean _process : m2ProcessBeans) {
+                            // 添加过程值变量;
+                            Node node = jep.parse(_process.getExpression());
+                            jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
+                        }
+                    }
+                    if (nodes[1] == null) nodes[1] = jep.parse(reCodes[1]);
                     mValues[1] = (double) jep.evaluate(nodes[1]) + mParameterBean.getM2_offect();
                 }
-                if (mParameterBean.getM3_code() != null && mParameterBean.getM3_code() != null) {
-                    if (nodes[2] == null) nodes[2] = jep.parse(mParameterBean.getM3_code());
+                if (reCodes[2] != null && reCodes[2] != null) {
+                    if (m3ProcessBeans.size() > 0) {
+                        for (ProcessBean _process : m3ProcessBeans) {
+                            // 添加过程值变量;
+                            Node node = jep.parse(_process.getExpression());
+                            jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
+                        }
+                    }
+                    if (nodes[2] == null) nodes[2] = jep.parse(reCodes[2]);
                     mValues[2] = (double) jep.evaluate(nodes[2]) + mParameterBean.getM3_offect();
                 }
-                if (mParameterBean.getM4_code() != null && mParameterBean.getM4_code() != null) {
-                    if (nodes[3] == null) nodes[3] = jep.parse(mParameterBean.getM4_code());
+                if (reCodes[3] != null && reCodes[3] != null) {
+                    if (m4ProcessBeans.size() > 0) {
+                        for (ProcessBean _process : m4ProcessBeans) {
+                            // 添加过程值变量;
+                            Node node = jep.parse(_process.getExpression());
+                            jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
+                        }
+                    }
+                    if (nodes[3] == null) nodes[3] = jep.parse(reCodes[3]);
                     mValues[3] = (double) jep.evaluate(nodes[3]) + mParameterBean.getM4_offect();
                 }
                 if (mView != null)
@@ -662,6 +690,11 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 }
                 return bean.getVar1();
             case "LMin":
+                if (bean.getVar2() == 0) {
+                    bean.setVar2(-1);
+                    bean.setVar1(value);
+                    return bean.getVar1();
+                }
                 if (value < bean.getVar1()) {
                     bean.setVar1(value);
                 }
@@ -675,7 +708,17 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 }
                 return bean.getVar1();
             case "LDif":
-                return 2;
+                if (bean.getVar1() == 0 && bean.getVar2() == 0) {
+                    bean.setVar1(value);
+                    bean.setVar2(value);
+                }
+                if (value > bean.getVar1()) {
+                    bean.setVar1(value);
+                }
+                if (value < bean.getVar2()) {
+                    bean.setVar2(value);
+                }
+                return Math.abs(bean.getVar1() - bean.getVar2());
         }
         return 0;
     }
