@@ -7,7 +7,6 @@ import android.widget.Toast;
 import org.greenrobot.greendao.DaoException;
 import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
-import org.nfunk.jep.function.Str;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,6 +105,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     public StoreBean mStoreBean;
 
     public long lastMeetConditionTime = 0;
+
+    // Double
+    private List<Double> ch1Values = new ArrayList<>();
+    private List<Double> ch2Values = new ArrayList<>();
+    private List<Double> ch3Values = new ArrayList<>();
+    private List<Double> ch4Values = new ArrayList<>();
 
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
@@ -633,6 +638,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             Node node = jep.parse(_process.getExpression());
                             jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
                         }
+                        ch1Values.add(chValues[0]);
                     }
                     if (nodes[0] == null) nodes[0] = jep.parse(reCodes[0]);
                     mValues[0] = (double) jep.evaluate(nodes[0]) + mParameterBean.getM1_offect();
@@ -644,6 +650,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             Node node = jep.parse(_process.getExpression());
                             jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
                         }
+                        ch2Values.add(chValues[1]);
                     }
                     if (nodes[1] == null) nodes[1] = jep.parse(reCodes[1]);
                     mValues[1] = (double) jep.evaluate(nodes[1]) + mParameterBean.getM2_offect();
@@ -656,6 +663,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
                         }
                     }
+                    ch3Values.add(chValues[2]);
                     if (nodes[2] == null) nodes[2] = jep.parse(reCodes[2]);
                     mValues[2] = (double) jep.evaluate(nodes[2]) + mParameterBean.getM3_offect();
                 }
@@ -667,6 +675,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
                         }
                     }
+                    ch4Values.add(chValues[3]);
                     if (nodes[3] == null) nodes[3] = jep.parse(reCodes[3]);
                     mValues[3] = (double) jep.evaluate(nodes[3]) + mParameterBean.getM4_offect();
                 }

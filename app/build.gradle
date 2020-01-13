@@ -7,8 +7,8 @@ android {
         applicationId "alauncher.cn.measuringinstrument"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 22
-        versionName "v3.9.4_Bate"
+        versionCode 23
+        versionName "v3.9.5_Bate"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

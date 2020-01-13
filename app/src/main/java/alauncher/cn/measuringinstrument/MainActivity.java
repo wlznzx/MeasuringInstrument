@@ -266,6 +266,8 @@ public class MainActivity extends BaseOActivity {
         quitTV.setOnClickListener(this::onClick);
     }
 
+
+
     public void onClick(View v) {
         builder.dismiss();
         switch (v.getId()) {
