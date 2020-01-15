@@ -56,7 +56,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     MeasuringActivityView mView;
 
-    // private byte[] command = new byte[12];
     private byte[] _chValue = new byte[2];
     public ParameterBean mParameterBean;
     private JEP jep = new JEP();
@@ -111,6 +110,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     private List<Double> ch2Values = new ArrayList<>();
     private List<Double> ch3Values = new ArrayList<>();
     private List<Double> ch4Values = new ArrayList<>();
+
+    private List<Double> tempValues = new ArrayList<>();
 
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
@@ -393,9 +394,13 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     @Override
     public String saveResult(double[] ms, AddInfoBean bean, boolean isManual) {
+        // 如果是手动点击的保存，需要计算;
+        if (isManual) {
+
+        }
+
         if (stepBeans.size() > 0) {
             StepBean _bean = stepBeans.get(getStep());
-
             if (mStoreBean.getStoreMode() == 1) {
                 TriggerConditionBean _TriggerConditionBean = App.getDaoSession().getTriggerConditionBeanDao().load(_bean.getConditionID());
                 if (_TriggerConditionBean != null) {
@@ -444,7 +449,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                     }
                     inLimited[mIndex] = true;
 
-                } else if (isManual == false) {
+                } else if (isManual == false) { // 如果不是手动点击保存，不保存；
                     return "NoSave;";
                 } else {
 
@@ -730,5 +735,11 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 return Math.abs(bean.getVar1() - bean.getVar2());
         }
         return 0;
+    }
+
+    // 计算出过程值，写入List;
+    private double handlerProcessValues2(ProcessBean bean, double value) {
+        
+        return 1;
     }
 }

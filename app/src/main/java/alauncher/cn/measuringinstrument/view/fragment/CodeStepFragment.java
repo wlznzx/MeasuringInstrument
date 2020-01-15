@@ -321,7 +321,6 @@ public class CodeStepFragment extends Fragment {
             for (int i = 0; i < m1CheckBoxs.length; i++) {
                 if (m1CheckBoxs[i].isChecked()) {
                     if (m1CheckBoxs[i].getId() != buttonView.getId()) {
-                        // m1CheckBoxs[i].setChecked(false);
                         buttonView.setChecked(false);
                     }
                 }
@@ -363,7 +362,6 @@ public class CodeStepFragment extends Fragment {
             for (int i = 0; i < m4CheckBoxs.length; i++) {
                 if (m4CheckBoxs[i].isChecked()) {
                     if (m4CheckBoxs[i].getId() != buttonView.getId()) {
-//                        m4CheckBoxs[i].setChecked(false);
                         buttonView.setChecked(false);
                     }
                 }

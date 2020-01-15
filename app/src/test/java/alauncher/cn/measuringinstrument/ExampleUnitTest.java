@@ -7,6 +7,7 @@ import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -109,5 +110,26 @@ public class ExampleUnitTest {
         System.out.println("reCode = " + result.toString());
     }
 
+    @Test
+    public void DateUtil(){
+        //查询开始日期
+        String beginTime="";
+        //查询结束日期
+        String endTime="";
+        SimpleDateFormat longSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+        String timeStr = "07:45:00";
+        if(DatesUtil.isBiggerNow(timeStr)){
+            System.out.println("this 1 ?");
+            beginTime = longSdf.format(DatesUtil.DateAddTimeStr(DatesUtil.getDayBegin(),timeStr,true));
+            endTime = longSdf.format(DatesUtil.DateAddTimeStr(DatesUtil.getBeginDayOfTomorrow(),timeStr,true));
+        }else{
+            System.out.println("this 2 ?");
+            beginTime = longSdf.format(DatesUtil.DateAddTimeStr(DatesUtil.getBeginDayOfYesterday(),timeStr,true));
+            endTime = longSdf.format(DatesUtil.DateAddTimeStr(DatesUtil.getDayBegin(),timeStr,true));
+        }
+
+        System.out.println("beginTime = " + beginTime);
+        System.out.println("endTime = " + endTime);
+    }
 }

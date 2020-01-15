@@ -3,10 +3,7 @@ package alauncher.cn.measuringinstrument.view;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,29 +17,13 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IFillFormatter;
-import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
@@ -858,30 +839,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     private boolean doAutoStoreEnable = true;
 
     private void doAutoStore() {
-        double mValue = curMValues[mStoreBean.getMValue()];
-
-        Double _upLimitValue = Double.valueOf(mStoreBean.getUpLimitValue().get(0));
-        Double _lowLimitValue = Double.valueOf(mStoreBean.getLowLimitValue().get(0));
-
-        _upLimitValue = Double.valueOf(200);
-        _lowLimitValue = Double.valueOf(-200);
-
-//        if (mValue > _lowLimitValue && mValue < _upLimitValue) {
-//            Log.d("wlDebug", "doAutoStore goDoSave 1.");
-//            // Do Save;
-//            if (doAutoStoreEnable) {
-//                doAutoStoreEnable = false;
-//                Log.d("wlDebug", "doAutoStore goDoSave.");
-//                doSave();
-//            }
-//        } else {
-//            doAutoStoreEnable = true;
-//        }
-
         doSave(false);
-
-        // Log.d("wlDebug", "doAutoStore.");
-
         handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime() * 1000);
     }
 
