@@ -86,12 +86,15 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     // 缓存测量值;
     private double[] tempMs = new double[4];
 
-    // 过程ch值;
-    private List<ProcessBean> m1ProcessBeans = new ArrayList<>();
-    private List<ProcessBean> m2ProcessBeans = new ArrayList<>();
-    private List<ProcessBean> m3ProcessBeans = new ArrayList<>();
-    private List<ProcessBean> m4ProcessBeans = new ArrayList<>();
+    // 重新解析公式;
     private String[] reCodes = new String[4];
+
+//    private List<ProcessBean> m1processBeanLists = new ArrayList<>();
+//    private List<ProcessBean> m2processBeanLists = new ArrayList<>();
+//    private List<ProcessBean> m3processBeanLists = new ArrayList<>();
+//    private List<ProcessBean> m4processBeanLists = new ArrayList<>();
+
+    private List<List<ProcessBean>> processBeanLists = new ArrayList<>();
 
     private int currentStep = -1;
 
@@ -105,13 +108,10 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     public long lastMeetConditionTime = 0;
 
-    // Double
-    private List<Double> ch1Values = new ArrayList<>();
-    private List<Double> ch2Values = new ArrayList<>();
-    private List<Double> ch3Values = new ArrayList<>();
-    private List<Double> ch4Values = new ArrayList<>();
+    private boolean haveProcessCalculate = false;
 
-    private List<Double> tempValues = new ArrayList<>();
+    // 存储过程中的测量值;
+    private List<List<Double>> tempValues = new ArrayList<List<Double>>();
 
     public MeasuringPresenterImpl(MeasuringActivityView view) {
         mView = view;
@@ -127,6 +127,13 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     }
 
     public void initParameter() {
+        // 初始化过程值的List;
+        tempValues.clear();
+        processBeanLists.clear();
+        for (int i = 0; i < 4; i++) {
+            tempValues.add(new ArrayList<>());
+            processBeanLists.add(new ArrayList<>());
+        }
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
         if (mParameterBean != null) {
             android.util.Log.d(TAG, mParameterBean.toString());
@@ -163,8 +170,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 reCodes[0] = mParameterBean.getM1_code();
                 Matcher matcher = p.matcher(mParameterBean.getM1_code());
                 while (matcher.find()) {
-                    ProcessBean _process = new ProcessBean("x" + m1ProcessBeans.size(), mParameterBean.getM1_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM1_code().substring(matcher.start(), matcher.start() + 4));
-                    m1ProcessBeans.add(_process);
+                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(0).size(), mParameterBean.getM1_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM1_code().substring(matcher.start(), matcher.start() + 4));
+                    processBeanLists.get(0).add(_process);
                     reCodes[0] = reCodes[0].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
                 }
             }
@@ -173,8 +180,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 reCodes[1] = mParameterBean.getM2_code();
                 Matcher matcher = p.matcher(mParameterBean.getM2_code());
                 while (matcher.find()) {
-                    ProcessBean _process = new ProcessBean("x" + m2ProcessBeans.size(), mParameterBean.getM2_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM2_code().substring(matcher.start(), matcher.start() + 4));
-                    m2ProcessBeans.add(_process);
+                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(1).size(), mParameterBean.getM2_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM2_code().substring(matcher.start(), matcher.start() + 4));
+                    processBeanLists.get(1).add(_process);
                     reCodes[1] = reCodes[1].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
                 }
             }
@@ -183,8 +190,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 reCodes[2] = mParameterBean.getM3_code();
                 Matcher matcher = p.matcher(mParameterBean.getM3_code());
                 while (matcher.find()) {
-                    ProcessBean _process = new ProcessBean("x" + m3ProcessBeans.size(), mParameterBean.getM3_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM3_code().substring(matcher.start(), matcher.start() + 4));
-                    m3ProcessBeans.add(_process);
+                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(2).size(), mParameterBean.getM3_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM3_code().substring(matcher.start(), matcher.start() + 4));
+                    processBeanLists.get(2).add(_process);
                     reCodes[2] = reCodes[2].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
                 }
             }
@@ -193,8 +200,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 reCodes[3] = mParameterBean.getM4_code();
                 Matcher matcher = p.matcher(mParameterBean.getM4_code());
                 while (matcher.find()) {
-                    ProcessBean _process = new ProcessBean("x" + m4ProcessBeans.size(), mParameterBean.getM4_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM4_code().substring(matcher.start(), matcher.start() + 4));
-                    m4ProcessBeans.add(_process);
+                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(3).size(), mParameterBean.getM4_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM4_code().substring(matcher.start(), matcher.start() + 4));
+                    processBeanLists.get(3).add(_process);
                     reCodes[3] = reCodes[3].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
                 }
             }
@@ -220,6 +227,14 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             currentStep = 0;
         else
             currentStep = -1;
+
+        for (List<ProcessBean> list : processBeanLists) {
+            if (list.size() > 0) {
+                haveProcessCalculate = true;
+                return;
+            }
+        }
+        haveProcessCalculate = false;
     }
 
     private long lastValueTime = 0;
@@ -236,24 +251,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             serialHelper = new SerialHelper(sPort, iBaudRate) {
                 @Override
                 protected void onDataReceived(ComBean paramComBean) {
-
-                    // android.util.Log.d("wlDebug", "onDataReceived = " + ByteUtil.ByteArrToHex(paramComBean.bRec));
-//                    long _currentTime = System.currentTimeMillis();
-//                    if (lastValueTime != 0) {
-//                        long stepTime = (_currentTime - lastValueTime);
-//                        android.util.Log.d("wlDebug", " last time:" + stepTime + "ms");
-//                    }
-//                    lastValueTime = _currentTime;
-//                    if(true)return;
-
-
                     // 重新解析Byte;
                     if (paramComBean.bRec[0] == 0x53 && paramComBean.bRec[11] == 0x54) {
-
-//                        if (lastValue.equals(ByteUtil.ByteArrToHex(paramComBean.bRec))) {
-//                            return;
-//                        }
-//                        lastValue = ByteUtil.ByteArrToHex(paramComBean.bRec);
 
                         long currentTime = System.currentTimeMillis();
                         if (lastValueTime != 0) {
@@ -281,63 +280,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             doCH2P(values);
                         }
                     }
-
-                    /*
-                    for (byte _byte : paramComBean.bRec) {
-                        if (_byte == 0x53 && !isCommandStart) {
-                            isCommandStart = true;
-                            command_index = 0;
-                        }
-                        if (isCommandStart) {
-                            command[command_index] = _byte;
-                            command_index++;
-                        }
-                        if (_byte == 0x54 && command_index == 12) {
-                            isCommandStart = false;
-                            String _value = ByteUtil.ByteArrToHex(command);
-                            if (_value.equals(lastValue)) {
-                                // 记录上一次的value值，不刷新界面;
-                                return;
-                            }
-                            lastValue = _value;
-                            long currentTime = System.currentTimeMillis();
-                            if (lastValueTime != 0) {
-                                long stepTime = (currentTime - lastValueTime);
-                                android.util.Log.d("wlDebug", "_value = " + _value + " last time:" + stepTime + "ms");
-                            }
-
-                            lastValueTime = currentTime;
-                            // android.util.Log.d("wlDebug", "_value = " + _value);
-                            _chValue[0] = command[2];
-                            _chValue[1] = command[3];
-                            // int x1 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
-                            // Double ch1 = Double.valueOf(x1);
-                            String _value1 = ByteUtil.ByteArrToHex(_chValue);
-//                            android.util.Log.d("wlDebug", "ch1 = " + ch1);
-                            _chValue[0] = command[4];
-                            _chValue[1] = command[5];
-                            String _value2 = ByteUtil.ByteArrToHex(_chValue);
-                            // int x2 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
-                            // Double ch2 = Double.valueOf(x2);
-//                            android.util.Log.d("wlDebug", "ch2 = " + ch2);
-                            _chValue[0] = command[6];
-                            _chValue[1] = command[7];
-                            String _value3 = ByteUtil.ByteArrToHex(_chValue);
-                            // int x3 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
-                            // Double ch3 = Double.valueOf(x3);
-//                            android.util.Log.d("wlDebug", "ch3 = " + ch3);
-                            _chValue[0] = command[8];
-                            _chValue[1] = command[9];
-                            String _value4 = ByteUtil.ByteArrToHex(_chValue);
-                            // int x4 = Integer.parseInt(ByteUtil.ByteArrToHex(_chValue), 16);
-                            // Double ch4 = Double.valueOf(x4);
-//                            android.util.Log.d("wlDebug", "ch4 = " + ch4);
-                            if (mView != null) {
-                                doCH2P(new String[]{_value1, _value2, _value3, _value4});
-                            }
-                        }
-                    }
-                    */
                 }
             };
         }
@@ -398,7 +340,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         if (isManual) {
 
         }
-
         if (stepBeans.size() > 0) {
             StepBean _bean = stepBeans.get(getStep());
             if (mStoreBean.getStoreMode() == 1) {
@@ -616,6 +557,11 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     private double[] doCH2P(String[] inputValue) {
         long startTime = System.currentTimeMillis(); // 获取开始时间
+        if (haveProcessCalculate) {
+            for (int i = 0; i < 4; i++) {
+                
+            }
+        }
         // 计算测量值，ch1~ch4;
         if (mCalibrationBean != null) {
             chValues[0] = Arith.add(Arith.mul(mCalibrationBean.getCh1KValue(), Integer.parseInt(inputValue[0], 16)), mCalibrationBean.getCh1CompensationValue());
@@ -634,53 +580,62 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 jep.addVariable("ch2", chValues[1]);
                 jep.addVariable("ch3", chValues[2]);
                 jep.addVariable("ch4", chValues[3]);
+
                 if (reCodes[0] != null && !reCodes[0].equals("")) {
                     android.util.Log.d("wlDebug", "reCodes[0] = " + reCodes[0]);
                     // 如果过程值不为空；
-                    if (m1ProcessBeans.size() > 0) {
-                        for (ProcessBean _process : m1ProcessBeans) {
+                    if (m1processBeanLists.size() > 0) {
+                        /*
+                        for (ProcessBean _process : m1processBeanLists) {
                             // 添加过程值变量;
                             Node node = jep.parse(_process.getExpression());
                             jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
                         }
-                        ch1Values.add(chValues[0]);
+                         */
+                        tempValues.get(0).add(chValues[0]);
                     }
                     if (nodes[0] == null) nodes[0] = jep.parse(reCodes[0]);
                     mValues[0] = (double) jep.evaluate(nodes[0]) + mParameterBean.getM1_offect();
                 }
                 if (reCodes[1] != null && reCodes[1] != null) {
-                    if (m2ProcessBeans.size() > 0) {
-                        for (ProcessBean _process : m2ProcessBeans) {
+                    if (m2processBeanLists.size() > 0) {
+                        /*
+                        for (ProcessBean _process : m2processBeanLists) {
                             // 添加过程值变量;
                             Node node = jep.parse(_process.getExpression());
                             jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
                         }
-                        ch2Values.add(chValues[1]);
+                         */
+                        tempValues.get(1).add(chValues[1]);
                     }
                     if (nodes[1] == null) nodes[1] = jep.parse(reCodes[1]);
                     mValues[1] = (double) jep.evaluate(nodes[1]) + mParameterBean.getM2_offect();
                 }
                 if (reCodes[2] != null && reCodes[2] != null) {
-                    if (m3ProcessBeans.size() > 0) {
-                        for (ProcessBean _process : m3ProcessBeans) {
+                    if (m3processBeanLists.size() > 0) {
+                        /*
+                        for (ProcessBean _process : m3processBeanLists) {
                             // 添加过程值变量;
                             Node node = jep.parse(_process.getExpression());
                             jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
                         }
+                         */
                     }
-                    ch3Values.add(chValues[2]);
+                    tempValues.get(2).add(chValues[2]);
                     if (nodes[2] == null) nodes[2] = jep.parse(reCodes[2]);
                     mValues[2] = (double) jep.evaluate(nodes[2]) + mParameterBean.getM3_offect();
                 }
                 if (reCodes[3] != null && reCodes[3] != null) {
-                    if (m4ProcessBeans.size() > 0) {
-                        for (ProcessBean _process : m4ProcessBeans) {
+                    if (m4processBeanLists.size() > 0) {
+                        /*
+                        for (ProcessBean _process : m4processBeanLists) {
                             // 添加过程值变量;
                             Node node = jep.parse(_process.getExpression());
                             jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
                         }
+                         */
+                        tempValues.get(3).add(chValues[3]);
                     }
-                    ch4Values.add(chValues[3]);
                     if (nodes[3] == null) nodes[3] = jep.parse(reCodes[3]);
                     mValues[3] = (double) jep.evaluate(nodes[3]) + mParameterBean.getM4_offect();
                 }
@@ -739,7 +694,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     // 计算出过程值，写入List;
     private double handlerProcessValues2(ProcessBean bean, double value) {
-        
+
         return 1;
     }
 }
