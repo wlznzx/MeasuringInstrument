@@ -240,5 +240,6 @@
     <string name="lmin">LMin</string>
     <string name="lAvg">LAvg</string>
     <string name="ldif">LDif</string>
+    <string name="ok">确定</string>
 
 </resources>

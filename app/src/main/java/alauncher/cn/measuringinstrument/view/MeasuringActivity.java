@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import alauncher.cn.measuringinstrument.App;
+import alauncher.cn.measuringinstrument.MainActivity;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
@@ -111,6 +113,8 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        showNormalDialog();
     }
 
     @Override
@@ -845,5 +849,39 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 
     private void stopAutoStore() {
         handler.removeMessages(MSG_AUTO_STORE);
+    }
+
+
+    private void showNormalDialog(String title,String Message) {
+        /* @setIcon 设置对话框图标
+         * @setTitle 设置对话框标题
+         * @setMessage 设置对话框消息提示
+         * setXXX方法返回Dialog对象，因此可以链式设置属性
+         */
+        final AlertDialog.Builder normalDialog =
+                new AlertDialog.Builder(MeasuringActivity.this);
+        normalDialog.setTitle(R.string.);
+        normalDialog.setMessage("你要点击哪一个按钮呢?");
+        normalDialog.setPositiveButton(R.string.ok,
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                });
+        /*
+        normalDialog.setNegativeButton("关闭",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+
+                });
+
+         */
+        normalDialog.setCancelable(false);
+        normalDialog.show();
     }
 }

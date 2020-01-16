@@ -7,8 +7,12 @@ import android.widget.Toast;
 import org.greenrobot.greendao.DaoException;
 import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
+import org.nfunk.jep.ParseException;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,6 +63,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     private byte[] _chValue = new byte[2];
     public ParameterBean mParameterBean;
     private JEP jep = new JEP();
+    private JEP calculationJEP = new JEP();
 
     public CalibrationBean mCalibrationBean;
 
@@ -119,6 +124,10 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         jep.addFunction("Min", new Min());
         jep.addFunction("Avg", new Avg());
         jep.addFunction("Dif", new Dif());
+        calculationJEP.addFunction("Max", new Max());
+        calculationJEP.addFunction("Min", new Min());
+        calculationJEP.addFunction("Avg", new Avg());
+        calculationJEP.addFunction("Dif", new Dif());
         initParameter();
 
         _dBean = App.getDeviceInfo();
@@ -228,13 +237,23 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         else
             currentStep = -1;
 
+        haveProcessCalculate = false;
         for (List<ProcessBean> list : processBeanLists) {
             if (list.size() > 0) {
                 haveProcessCalculate = true;
-                return;
             }
         }
-        haveProcessCalculate = false;
+
+        if (currentStep == -1) {
+            // 没有分步,判断是否有过程值与单点值同时存在的情况；
+            if (haveProcessCalculate) {
+                for (List<ProcessBean> list : processBeanLists) {
+                    if (list.size() > 0) {
+                        haveProcessCalculate = true;
+                    }
+                }
+            }
+        }
     }
 
     private long lastValueTime = 0;
@@ -305,12 +324,24 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 //                    while (true) {
                     Thread.sleep(500);
                     mView.onMeasuringDataUpdate(doCH2P(_values2));
-                    Thread.sleep(1500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2P(_values));
-                    Thread.sleep(1500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2P(_values3));
-                    Thread.sleep(1500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2P(_values4));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2P(_values2));
+                    Thread.sleep(1000);
+                    mView.onMeasuringDataUpdate(doCH2P(_values));
+                    Thread.sleep(1000);
+                    mView.onMeasuringDataUpdate(doCH2P(_values3));
+                    Thread.sleep(1000);
+                    mView.onMeasuringDataUpdate(doCH2P(_values4));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2P(_values2));
+                    Thread.sleep(1000);
+                    mView.onMeasuringDataUpdate(doCH2P(_values));
 //                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -338,7 +369,18 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     public String saveResult(double[] ms, AddInfoBean bean, boolean isManual) {
         // 如果是手动点击的保存，需要计算;
         if (isManual) {
-
+            for (int i = 0; i < 4; i++) {
+                if (processBeanLists.get(i).size() > 0) {
+                    try {
+                        ms[i] = handlerProcessValues2(processBeanLists.get(i), i);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        for (List<Double> list : tempValues) {
+            list.clear();
         }
         if (stepBeans.size() > 0) {
             StepBean _bean = stepBeans.get(getStep());
@@ -427,6 +469,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         _bean.setM2(ms[1]);
         _bean.setM3(ms[2]);
         _bean.setM4(ms[3]);
+
+        android.util.Log.d("wlDebug", "save bean = " + _bean.toString());
 
         if (mParameterBean != null) {
             _bean.setResult(getMResults(ms));
@@ -557,11 +601,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     private double[] doCH2P(String[] inputValue) {
         long startTime = System.currentTimeMillis(); // 获取开始时间
-        if (haveProcessCalculate) {
-            for (int i = 0; i < 4; i++) {
-                
-            }
-        }
         // 计算测量值，ch1~ch4;
         if (mCalibrationBean != null) {
             chValues[0] = Arith.add(Arith.mul(mCalibrationBean.getCh1KValue(), Integer.parseInt(inputValue[0], 16)), mCalibrationBean.getCh1CompensationValue());
@@ -574,6 +613,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             chValues[2] = 3;
             chValues[3] = 4;
         }
+        if (haveProcessCalculate && tempValues.get(0).size() <= 5000) {
+            for (int i = 0; i < 4; i++) {
+                tempValues.get(i).add(chValues[i]);
+            }
+        }
+
         if (mParameterBean != null) {
             try {
                 jep.addVariable("ch1", chValues[0]);
@@ -581,10 +626,9 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 jep.addVariable("ch3", chValues[2]);
                 jep.addVariable("ch4", chValues[3]);
 
-                if (reCodes[0] != null && !reCodes[0].equals("")) {
-                    android.util.Log.d("wlDebug", "reCodes[0] = " + reCodes[0]);
-                    // 如果过程值不为空；
-                    if (m1processBeanLists.size() > 0) {
+                for (int i = 0; i < 4; i++) {
+                    if (reCodes[i] != null && !reCodes[i].equals("")) {
+                        if (processBeanLists.get(i).size() > 0) {
                         /*
                         for (ProcessBean _process : m1processBeanLists) {
                             // 添加过程值变量;
@@ -592,52 +636,24 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
                         }
                          */
-                        tempValues.get(0).add(chValues[0]);
-                    }
-                    if (nodes[0] == null) nodes[0] = jep.parse(reCodes[0]);
-                    mValues[0] = (double) jep.evaluate(nodes[0]) + mParameterBean.getM1_offect();
-                }
-                if (reCodes[1] != null && reCodes[1] != null) {
-                    if (m2processBeanLists.size() > 0) {
-                        /*
-                        for (ProcessBean _process : m2processBeanLists) {
-                            // 添加过程值变量;
-                            Node node = jep.parse(_process.getExpression());
-                            jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
+                        } else {
+                            if (nodes[i] == null) nodes[i] = jep.parse(reCodes[i]);
+                            switch (i) {
+                                case 0:
+                                    mValues[i] = (double) jep.evaluate(nodes[i]) + mParameterBean.getM1_offect();
+                                    break;
+                                case 1:
+                                    mValues[i] = (double) jep.evaluate(nodes[i]) + mParameterBean.getM2_offect();
+                                    break;
+                                case 2:
+                                    mValues[i] = (double) jep.evaluate(nodes[i]) + mParameterBean.getM3_offect();
+                                    break;
+                                case 3:
+                                    mValues[i] = (double) jep.evaluate(nodes[i]) + mParameterBean.getM4_offect();
+                                    break;
+                            }
                         }
-                         */
-                        tempValues.get(1).add(chValues[1]);
                     }
-                    if (nodes[1] == null) nodes[1] = jep.parse(reCodes[1]);
-                    mValues[1] = (double) jep.evaluate(nodes[1]) + mParameterBean.getM2_offect();
-                }
-                if (reCodes[2] != null && reCodes[2] != null) {
-                    if (m3processBeanLists.size() > 0) {
-                        /*
-                        for (ProcessBean _process : m3processBeanLists) {
-                            // 添加过程值变量;
-                            Node node = jep.parse(_process.getExpression());
-                            jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
-                        }
-                         */
-                    }
-                    tempValues.get(2).add(chValues[2]);
-                    if (nodes[2] == null) nodes[2] = jep.parse(reCodes[2]);
-                    mValues[2] = (double) jep.evaluate(nodes[2]) + mParameterBean.getM3_offect();
-                }
-                if (reCodes[3] != null && reCodes[3] != null) {
-                    if (m4processBeanLists.size() > 0) {
-                        /*
-                        for (ProcessBean _process : m4processBeanLists) {
-                            // 添加过程值变量;
-                            Node node = jep.parse(_process.getExpression());
-                            jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
-                        }
-                         */
-                        tempValues.get(3).add(chValues[3]);
-                    }
-                    if (nodes[3] == null) nodes[3] = jep.parse(reCodes[3]);
-                    mValues[3] = (double) jep.evaluate(nodes[3]) + mParameterBean.getM4_offect();
                 }
                 if (mView != null)
                     mView.onMeasuringDataUpdate(mValues);
@@ -647,7 +663,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         }
         long endTime = System.currentTimeMillis(); // 获取结束时间
         long stepTime = (endTime - startTime);
-        Log.d("wlDebug", "公式计算耗时： " + (endTime - startTime) + "ms");
+        Log.d("wlDebug", "公式计算耗时： " + stepTime + "ms");
         return null;
     }
 
@@ -693,8 +709,80 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     }
 
     // 计算出过程值，写入List;
-    private double handlerProcessValues2(ProcessBean bean, double value) {
+    private List<Double> calculationValuesList = new ArrayList<>();
 
-        return 1;
+    private double handlerProcessValues2(List<ProcessBean> list, int index) throws ParseException {
+        for (ProcessBean _process : list) {
+            calculationValuesList.clear();
+            // 添加过程值变量;
+            Node node = null;
+            for (int i = 0; i < tempValues.get(0).size(); i++) {
+                calculationJEP.addVariable("ch1", tempValues.get(0).get(i));
+                calculationJEP.addVariable("ch2", tempValues.get(1).get(i));
+                calculationJEP.addVariable("ch3", tempValues.get(2).get(i));
+                calculationJEP.addVariable("ch4", tempValues.get(3).get(i));
+                node = calculationJEP.parse(_process.getExpression());
+                calculationValuesList.add((Double) calculationJEP.evaluate(node));
+            }
+            Collections.sort(calculationValuesList);
+            android.util.Log.d("wlDebug", "reList = " + calculationValuesList.toString());
+            jep.addVariable(_process.getReplaceName(), calculationProcess(_process, calculationValuesList));
+        }
+        if (nodes[index] == null) nodes[index] = jep.parse(reCodes[index]);
+        return (double) jep.evaluate(nodes[index]) + mParameterBean.getM1_offect();
+    }
+
+    private double calculationProcess(ProcessBean bean, List<Double> values) {
+        double sum = 0D;
+        int num = 1;
+        int percent_10, percent_20, percent_80, percent_90;
+        switch (bean.getExpressionType()) {
+            case "LMax":
+                percent_80 = (int) Math.round(values.size() * 0.8) - 1;
+                percent_90 = (int) Math.round(values.size() * 0.9) - 1;
+
+                if (percent_80 < 0) percent_80 = 0;
+                for (int i = percent_80; i <= percent_90; i++, num++) {
+                    sum += values.get(i);
+                }
+                return BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            case "LMin":
+                percent_10 = (int) Math.round(values.size() * 0.1) - 1;
+                percent_20 = (int) Math.round(values.size() * 0.2) - 1;
+
+                if (percent_10 < 0) percent_10 = 0;
+                if (percent_20 < 0) percent_20 = 0;
+                for (int i = percent_10; i <= percent_20; i++, num++) {
+                    sum += values.get(i);
+                }
+                return BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            case "LAvg":
+                percent_10 = (int) Math.round(values.size() * 0.1) - 1;
+                percent_90 = (int) Math.round(values.size() * 0.9) - 1;
+                if (percent_10 < 0) percent_10 = 0;
+                for (int i = percent_10; i <= percent_90; i++, num++) {
+                    sum += values.get(i);
+                }
+                return BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            case "LDif":
+                percent_10 = (int) Math.round(values.size() * 0.1) - 1;
+                percent_20 = (int) Math.round(values.size() * 0.2) - 1;
+                percent_80 = (int) Math.round(values.size() * 0.8) - 1;
+                percent_90 = (int) Math.round(values.size() * 0.9) - 1;
+                if (percent_10 < 0) percent_10 = 0;
+                if (percent_20 < 0) percent_20 = 0;
+                if (percent_80 < 0) percent_80 = 0;
+                if (percent_90 < 0) percent_90 = 0;
+                for (int i = percent_80; i <= percent_90; i++, num++) {
+                    sum += values.get(i);
+                }
+                double sum2 = 0;
+                int num2 = 1;
+                for (int i = percent_10; i <= percent_20; i++, num2++) {
+                    sum2 += values.get(i);
+                }
+                return BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() - BigDecimal.valueOf(sum2 / num2).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        }
+        return 0;
     }
 }
