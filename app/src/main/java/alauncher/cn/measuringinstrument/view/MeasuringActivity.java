@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -75,6 +77,9 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     @BindView(R.id.measure_save_btn)
     public TextView saveTv;
 
+    @BindView(R.id.value_btn_layout)
+    public View valueBtnLayout;
+
     protected Typeface tfRegular;
 
     private double[] curMValues = {1.8, -2.8, 0.8, -0.4};
@@ -113,8 +118,6 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        showNormalDialog();
     }
 
     @Override
@@ -193,18 +196,15 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.value_btn:
-                if (!inValue) {
+                /**/
+                if (!mMeasuringPresenter.getIsStartProcessValue()) {
                     // start 取值;
-                    inValue = true;
-                    mMeasuringPresenter.startMeasuing();
-                    valueBtn.setText(R.string.in_value);
-                    startAutoStore();
+                    mMeasuringPresenter.startGetProcessValue();
+                    valueBtn.setText(R.string.stop_get_value);
                 } else {
                     // stop 取值;
-                    inValue = false;
-                    mMeasuringPresenter.stopMeasuing();
-                    valueBtn.setText(R.string.get_value);
-                    stopAutoStore();
+                    mMeasuringPresenter.stopGetProcessValue();
+                    valueBtn.setText(R.string.start_get_value);
                 }
                 break;
             case R.id.additional_btn:
@@ -225,7 +225,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         if (inValue) return;
         inValue = true;
         mMeasuringPresenter.startMeasuing();
-        valueBtn.setText(R.string.in_value);
+        // valueBtn.setText(R.string.in_value);
         startAutoStore();
     }
 
@@ -234,7 +234,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         if (!inValue) return;
         inValue = false;
         mMeasuringPresenter.stopMeasuing();
-        valueBtn.setText(R.string.get_value);
+        // valueBtn.setText(R.string.get_value);
         stopAutoStore();
     }
 
@@ -432,6 +432,16 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         } else {
             // android.util.Log.d("wlDebug", "ignore this values.");
         }
+    }
+
+    @Override
+    public void showUnSupportDialog() {
+        showNormalDialog("", "");
+    }
+
+    @Override
+    public void setValueBtnVisible(boolean isVisible) {
+        valueBtnLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
 
@@ -852,7 +862,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     }
 
 
-    private void showNormalDialog(String title,String Message) {
+    private void showNormalDialog(String title, String Message) {
         /* @setIcon 设置对话框图标
          * @setTitle 设置对话框标题
          * @setMessage 设置对话框消息提示
@@ -860,8 +870,8 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
          */
         final AlertDialog.Builder normalDialog =
                 new AlertDialog.Builder(MeasuringActivity.this);
-        normalDialog.setTitle(R.string.);
-        normalDialog.setMessage("你要点击哪一个按钮呢?");
+        normalDialog.setTitle(R.string.not_supported_same);
+        normalDialog.setMessage(R.string.not_supported_same_msg);
         normalDialog.setPositiveButton(R.string.ok,
                 new DialogInterface.OnClickListener() {
 
@@ -883,5 +893,17 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
          */
         normalDialog.setCancelable(false);
         normalDialog.show();
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_F1) {
+            if (doSave(true)) {
+                if (App.getSetupBean().getIsAutoPopUp()) {
+                    showAddDialog();
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event);
     }
 }

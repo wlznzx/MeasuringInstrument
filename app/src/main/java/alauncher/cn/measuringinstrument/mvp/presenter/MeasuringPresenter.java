@@ -13,9 +13,15 @@ public interface MeasuringPresenter {
 
     ParameterBean getParameterBean();
 
-    String saveResult(double[] ms, AddInfoBean bean,boolean isManual);
+    String saveResult(double[] ms, AddInfoBean bean, boolean isManual);
 
     String[] getMGroupValues(double[] ms);
 
     int getStep();
+
+    void startGetProcessValue();
+
+    void stopGetProcessValue();
+
+    boolean getIsStartProcessValue();
 }

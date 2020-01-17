@@ -23,8 +23,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textStyle="bold"
-            android:text="" />
+            android:text=""
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/group_m2"
@@ -32,8 +32,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textStyle="bold"
-            android:text="" />
+            android:text=""
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/group_m3"
@@ -314,10 +314,11 @@
         android:orientation="horizontal">
 
         <FrameLayout
+            android:id="@+id/value_btn_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/value_btn"
@@ -325,7 +326,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/eq_24px"
-                android:text="@string/get_value"
+                android:text="@string/start_get_value"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
         </FrameLayout>

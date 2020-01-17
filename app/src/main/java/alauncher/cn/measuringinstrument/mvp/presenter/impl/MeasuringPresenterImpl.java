@@ -115,6 +115,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     private boolean haveProcessCalculate = false;
 
+    private boolean isGetProcessValue = false;
+
     // 存储过程中的测量值;
     private List<List<Double>> tempValues = new ArrayList<List<Double>>();
 
@@ -247,11 +249,31 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         if (currentStep == -1) {
             // 没有分步,判断是否有过程值与单点值同时存在的情况；
             if (haveProcessCalculate) {
-                for (List<ProcessBean> list : processBeanLists) {
-                    if (list.size() > 0) {
-                        haveProcessCalculate = true;
+                boolean _isEnable = true;
+                for (int i = 0; i < 4; i++) {
+                    switch (i) {
+                        case 0:
+                            _isEnable = mParameterBean.getM1_enable();
+                            break;
+                        case 1:
+                            _isEnable = mParameterBean.getM2_enable();
+                            break;
+                        case 2:
+                            _isEnable = mParameterBean.getM3_enable();
+                            break;
+                        case 3:
+                            _isEnable = mParameterBean.getM4_enable();
+                            break;
+                    }
+                    if (processBeanLists.get(i).size() == 0 && _isEnable) {
+                        // haveProcessCalculate = true;
+                        mView.showUnSupportDialog();
+                        return;
                     }
                 }
+                mView.setValueBtnVisible(true);
+            } else {
+                mView.setValueBtnVisible(false);
             }
         }
     }
@@ -316,12 +338,11 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         String[] _values3 = {"13036", "13036", "13036", "13036"};
         String[] _values4 = {"2036", "2036", "2036", "2036"};
 
-        /**/
+        /*
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-//                    while (true) {
                     Thread.sleep(500);
                     mView.onMeasuringDataUpdate(doCH2P(_values2));
                     Thread.sleep(1000);
@@ -342,13 +363,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                     mView.onMeasuringDataUpdate(doCH2P(_values2));
                     Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2P(_values));
-//                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
-
+        */
     }
 
     // 5301 1086 2031 3036 38C9 4E54
@@ -552,6 +572,25 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         return currentStep;
     }
 
+    @Override
+    public void startGetProcessValue() {
+        isGetProcessValue = true;
+        // 清空当前取值;
+        for (List<Double> list : tempValues) {
+            list.clear();
+        }
+    }
+
+    @Override
+    public void stopGetProcessValue() {
+        isGetProcessValue = false;
+    }
+
+    @Override
+    public boolean getIsStartProcessValue() {
+        return isGetProcessValue;
+    }
+
     public StepBean getStepBean() {
         if (stepBeans.size() > 0) {
             StepBean _bean = stepBeans.get(currentStep);
@@ -613,7 +652,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             chValues[2] = 3;
             chValues[3] = 4;
         }
-        if (haveProcessCalculate && tempValues.get(0).size() <= 5000) {
+        if (haveProcessCalculate && tempValues.get(0).size() <= 5000 && isGetProcessValue) {
             for (int i = 0; i < 4; i++) {
                 tempValues.get(i).add(chValues[i]);
             }
@@ -733,6 +772,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     }
 
     private double calculationProcess(ProcessBean bean, List<Double> values) {
+        if (values.size() == 0) return 0;
         double sum = 0D;
         int num = 1;
         int percent_10, percent_20, percent_80, percent_90;
