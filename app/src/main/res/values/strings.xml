@@ -245,5 +245,6 @@
     <string name="not_supported_same_msg">不支持过程值与单点值同时测量，请确认。</string>
     <string name="start_get_value">开始取过程值</string>
     <string name="stop_get_value">结束取过程值</string>
+    <string name="not_supported_same_msg_by_step">不支持过程值与单点值同时测量，在分步第%1$d，请确认。</string>
 
 </resources>

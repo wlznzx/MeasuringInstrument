@@ -1,6 +1,8 @@
 package alauncher.cn.measuringinstrument.mvp.presenter.impl;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -12,12 +14,12 @@ import org.nfunk.jep.ParseException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import alauncher.cn.measuringinstrument.App;
+import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
@@ -94,6 +96,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     // 重新解析公式;
     private String[] reCodes = new String[4];
 
+    // 重新解析公式，为了个过程值之间的时候，也可以运算;
+    private String[] reCodesForCaluations = new String[4];
+
+    //
+    private int measure_state = 3;
+
 //    private List<ProcessBean> m1processBeanLists = new ArrayList<>();
 //    private List<ProcessBean> m2processBeanLists = new ArrayList<>();
 //    private List<ProcessBean> m3processBeanLists = new ArrayList<>();
@@ -117,6 +125,23 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
     private boolean isGetProcessValue = false;
 
+    // 是单步还是分步取值;
+    private boolean isSingleStep = true;
+
+    private final int MSG_AUTO_STORE = 1;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_AUTO_STORE:
+                    handler.removeMessages(MSG_AUTO_STORE);
+                    doAutoStore();
+                    break;
+            }
+        }
+    };
+
     // 存储过程中的测量值;
     private List<List<Double>> tempValues = new ArrayList<List<Double>>();
 
@@ -133,11 +158,10 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         initParameter();
 
         _dBean = App.getDeviceInfo();
-
-        mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
     }
 
     public void initParameter() {
+        stopAutoStore();
         // 初始化过程值的List;
         tempValues.clear();
         processBeanLists.clear();
@@ -145,6 +169,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             tempValues.add(new ArrayList<>());
             processBeanLists.add(new ArrayList<>());
         }
+        mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
+
         mParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
         if (mParameterBean != null) {
             android.util.Log.d(TAG, mParameterBean.toString());
@@ -177,6 +203,9 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             // 解析公式，提取过程值;
             String _regx = "L.*?\\)";
             Pattern p = Pattern.compile(_regx);
+
+            String _reCgx = "L.*?\\(";
+            Pattern _reCPattern = Pattern.compile(_reCgx);
             if (mParameterBean.getM1_code() != null) {
                 reCodes[0] = mParameterBean.getM1_code();
                 Matcher matcher = p.matcher(mParameterBean.getM1_code());
@@ -184,6 +213,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                     ProcessBean _process = new ProcessBean("x" + processBeanLists.get(0).size(), mParameterBean.getM1_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM1_code().substring(matcher.start(), matcher.start() + 4));
                     processBeanLists.get(0).add(_process);
                     reCodes[0] = reCodes[0].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+                }
+
+                reCodesForCaluations[0] = mParameterBean.getM1_code();
+                matcher = _reCPattern.matcher(mParameterBean.getM1_code());
+                while (matcher.find()) {
+                    reCodesForCaluations[0] = reCodesForCaluations[0].replace(mParameterBean.getM1_code().substring(matcher.start(), matcher.end() - 1), "");
                 }
             }
 
@@ -195,6 +230,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                     processBeanLists.get(1).add(_process);
                     reCodes[1] = reCodes[1].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
                 }
+
+                reCodesForCaluations[1] = mParameterBean.getM2_code();
+                matcher = _reCPattern.matcher(mParameterBean.getM2_code());
+                while (matcher.find()) {
+                    reCodesForCaluations[1] = reCodesForCaluations[1].replace(mParameterBean.getM2_code().substring(matcher.start(), matcher.end() - 1), "");
+                }
             }
 
             if (mParameterBean.getM3_code() != null) {
@@ -205,6 +246,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                     processBeanLists.get(2).add(_process);
                     reCodes[2] = reCodes[2].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
                 }
+
+                reCodesForCaluations[2] = mParameterBean.getM3_code();
+                matcher = _reCPattern.matcher(mParameterBean.getM3_code());
+                while (matcher.find()) {
+                    reCodesForCaluations[2] = reCodesForCaluations[2].replace(mParameterBean.getM3_code().substring(matcher.start(), matcher.end() - 1), "");
+                }
             }
 
             if (mParameterBean.getM4_code() != null) {
@@ -214,6 +261,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                     ProcessBean _process = new ProcessBean("x" + processBeanLists.get(3).size(), mParameterBean.getM4_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM4_code().substring(matcher.start(), matcher.start() + 4));
                     processBeanLists.get(3).add(_process);
                     reCodes[3] = reCodes[3].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+                }
+
+                reCodesForCaluations[3] = mParameterBean.getM4_code();
+                matcher = _reCPattern.matcher(mParameterBean.getM4_code());
+                while (matcher.find()) {
+                    reCodesForCaluations[3] = reCodesForCaluations[3].replace(mParameterBean.getM4_code().substring(matcher.start(), matcher.end() - 1), "");
                 }
             }
         }
@@ -233,11 +286,17 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
 
         stepBeans = App.getDaoSession().
                 getStepBeanDao().queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderAsc(StepBeanDao.Properties.StepID).list();
+
         maxStep = stepBeans.size();
         if (maxStep > 0)
             currentStep = 0;
         else
             currentStep = -1;
+
+        isSingleStep = true;
+        if (maxStep > 0 && mStoreBean.getStoreMode() == 1) {
+            isSingleStep = false;
+        }
 
         haveProcessCalculate = false;
         for (List<ProcessBean> list : processBeanLists) {
@@ -266,16 +325,40 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                             break;
                     }
                     if (processBeanLists.get(i).size() == 0 && _isEnable) {
-                        // haveProcessCalculate = true;
-                        mView.showUnSupportDialog();
+                        mView.showUnSupportDialog(-1);
                         return;
                     }
                 }
-                mView.setValueBtnVisible(true);
+                measure_state = 1;
+                mView.setValueBtnVisible(false);
             } else {
                 mView.setValueBtnVisible(false);
             }
+        } else {
+            // 有分步，要判断出具体哪一步有过程值和单点值同时存在;
+            for (int i = 0; i < stepBeans.size(); i++) {
+                StepBean _bean = stepBeans.get(i);
+                boolean flag = false, temp = true;
+                for (int j = 0; j < 4; j++) {
+                    if (StepUtils.getChannelByStep(j, _bean.getMeasured())) {
+                        if (!flag) {
+                            flag = true;
+                            temp = processBeanLists.get(j).size() > 0;
+                        } else {
+                            if (temp ^ (processBeanLists.get(j).size() > 0)) {
+                                // 异或，存在单点与过程同在的情况;
+                                android.util.Log.d("wlDebug", "i = " + i);
+                                mView.showUnSupportDialog(i);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+            measure_state = 1;
         }
+        // mView.updateSaveBtnMsg();
+        startAutoStore();
     }
 
     private long lastValueTime = 0;
@@ -344,24 +427,6 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             public void run() {
                 try {
                     Thread.sleep(500);
-                    mView.onMeasuringDataUpdate(doCH2P(_values2));
-                    Thread.sleep(1000);
-                    mView.onMeasuringDataUpdate(doCH2P(_values));
-                    Thread.sleep(1000);
-                    mView.onMeasuringDataUpdate(doCH2P(_values3));
-                    Thread.sleep(1000);
-                    mView.onMeasuringDataUpdate(doCH2P(_values4));
-                    Thread.sleep(500);
-                    mView.onMeasuringDataUpdate(doCH2P(_values2));
-                    Thread.sleep(1000);
-                    mView.onMeasuringDataUpdate(doCH2P(_values));
-                    Thread.sleep(1000);
-                    mView.onMeasuringDataUpdate(doCH2P(_values3));
-                    Thread.sleep(1000);
-                    mView.onMeasuringDataUpdate(doCH2P(_values4));
-                    Thread.sleep(500);
-                    mView.onMeasuringDataUpdate(doCH2P(_values2));
-                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2P(_values));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -369,12 +434,15 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             }
         }).start();
         */
+
+        // forValueTest();
     }
 
     // 5301 1086 2031 3036 38C9 4E54
     @Override
     public void stopMeasuing() {
         android.util.Log.d("wlDebug", "stopMeasuing.");
+        stopAutoStore();
         if (serialHelper != null && serialHelper.isOpen()) {
             serialHelper.close();
         }
@@ -402,61 +470,59 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         for (List<Double> list : tempValues) {
             list.clear();
         }
-        if (stepBeans.size() > 0) {
+        if (!isSingleStep) {
             StepBean _bean = stepBeans.get(getStep());
-            if (mStoreBean.getStoreMode() == 1) {
-                TriggerConditionBean _TriggerConditionBean = App.getDaoSession().getTriggerConditionBeanDao().load(_bean.getConditionID());
-                if (_TriggerConditionBean != null) {
-                    int mIndex = _TriggerConditionBean.getMIndex() - 1;
-                    if (_TriggerConditionBean.getIsScale()) {
-                        // 增加的部分，公差带 * scale / 2
-                        double m = (Math.abs(upperToleranceValue[mIndex] - lowerToleranceValue[mIndex]) * _TriggerConditionBean.getScale()) / 2;
+            TriggerConditionBean _TriggerConditionBean = App.getDaoSession().getTriggerConditionBeanDao().load(_bean.getConditionID());
+            if (_TriggerConditionBean != null) {
+                int mIndex = _TriggerConditionBean.getMIndex() - 1;
+                if (_TriggerConditionBean.getIsScale()) {
+                    // 增加的部分，公差带 * scale / 2
+                    double m = (Math.abs(upperToleranceValue[mIndex] - lowerToleranceValue[mIndex]) * _TriggerConditionBean.getScale()) / 2;
 
-                        // 计算公差中值;
-                        double midValue = (upperValue[mIndex] + lowerValue[mIndex]) / 2;
-                        double scaleUpperLimit = midValue + m;
-                        double scaleLowerLimit = midValue - m;
+                    // 计算公差中值;
+                    double midValue = (upperValue[mIndex] + lowerValue[mIndex]) / 2;
+                    double scaleUpperLimit = midValue + m;
+                    double scaleLowerLimit = midValue - m;
 
-                        android.util.Log.d("wlDebug", "scaleUpperLimit = " + scaleUpperLimit + " scaleLowerLimit = " + scaleLowerLimit + " M = " + ms[mIndex]);
-                        if (ms[mIndex] < scaleLowerLimit || ms[mIndex] > scaleUpperLimit) {
-                            lastMeetConditionTime = -1;
-                            inLimited[mIndex] = false;
-                            android.util.Log.d("wlDebug", "不在范围内.");
-                            return "NoSave";
-                        }
-                    } else {
-                        if (ms[mIndex] < _TriggerConditionBean.getLowerLimit() || ms[mIndex] > _TriggerConditionBean.getUpperLimit()) {
-                            lastMeetConditionTime = -1;
-                            inLimited[mIndex] = false;
-                            return "NoSave";
-                        }
-                    }
-                    // 要满足两个条件；1、从范围外面进来一次。2、持续一定的时间；
-                    if (lastMeetConditionTime == -1) {
-                        lastMeetConditionTime = System.currentTimeMillis();
-                    }
-                    // 如果在限制内，退出;
-                    if (inLimited[mIndex]) {
-                        // android.util.Log.d("wlDebug", "一直在区域内.");
+                    android.util.Log.d("wlDebug", "scaleUpperLimit = " + scaleUpperLimit + " scaleLowerLimit = " + scaleLowerLimit + " M = " + ms[mIndex]);
+                    if (ms[mIndex] < scaleLowerLimit || ms[mIndex] > scaleUpperLimit) {
+                        lastMeetConditionTime = -1;
+                        inLimited[mIndex] = false;
+                        android.util.Log.d("wlDebug", "不在范围内.");
                         return "NoSave";
                     }
-
-                    long currentTime = System.currentTimeMillis();
-                    android.util.Log.d("wlDebug", "currentTime = " + currentTime + " lastMeetConditionTime = " + lastMeetConditionTime + " Stable = " + _TriggerConditionBean.getStableTime() * 1000);
-
-                    if (currentTime - lastMeetConditionTime > _TriggerConditionBean.getStableTime() * 1000) {
-
-                    } else {
-                        android.util.Log.d("wlDebug", "持续时间未到.");
-                        return "NoSave;";
-                    }
-                    inLimited[mIndex] = true;
-
-                } else if (isManual == false) { // 如果不是手动点击保存，不保存；
-                    return "NoSave;";
                 } else {
-
+                    if (ms[mIndex] < _TriggerConditionBean.getLowerLimit() || ms[mIndex] > _TriggerConditionBean.getUpperLimit()) {
+                        lastMeetConditionTime = -1;
+                        inLimited[mIndex] = false;
+                        return "NoSave";
+                    }
                 }
+                // 要满足两个条件；1、从范围外面进来一次。2、持续一定的时间；
+                if (lastMeetConditionTime == -1) {
+                    lastMeetConditionTime = System.currentTimeMillis();
+                }
+                // 如果在限制内，退出;
+                if (inLimited[mIndex]) {
+                    // android.util.Log.d("wlDebug", "一直在区域内.");
+                    return "NoSave";
+                }
+
+                long currentTime = System.currentTimeMillis();
+                android.util.Log.d("wlDebug", "currentTime = " + currentTime + " lastMeetConditionTime = " + lastMeetConditionTime + " Stable = " + _TriggerConditionBean.getStableTime() * 1000);
+
+                if (currentTime - lastMeetConditionTime > _TriggerConditionBean.getStableTime() * 1000) {
+
+                } else {
+                    android.util.Log.d("wlDebug", "持续时间未到.");
+                    return "NoSave;";
+                }
+                inLimited[mIndex] = true;
+
+            } else if (isManual == false) { // 如果不是手动点击保存，不保存；
+                return "NoSave;";
+            } else {
+
             }
 
             for (int i = 0; i < ms.length; i++) {
@@ -475,6 +541,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         } else {
             doSave(ms, bean);
         }
+        measure_state = 1;
+        mView.updateSaveBtnMsg();
         return "OK";
     }
 
@@ -560,6 +628,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         } else {
             currentStep = 0;
         }
+        measure_state = 1;
+        android.util.Log.d("wlDebug", "Measured = " + Integer.toBinaryString(stepBeans.get(getStep()).getMeasured()));
     }
 
     /*
@@ -579,16 +649,25 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         for (List<Double> list : tempValues) {
             list.clear();
         }
+        measure_state = 2;
+        mView.updateSaveBtnMsg();
     }
 
     @Override
     public void stopGetProcessValue() {
         isGetProcessValue = false;
+        measure_state = 3;
+        mView.updateSaveBtnMsg();
     }
 
     @Override
     public boolean getIsStartProcessValue() {
         return isGetProcessValue;
+    }
+
+    @Override
+    public int getMeasureState() {
+        return measure_state;
     }
 
     public StepBean getStepBean() {
@@ -668,13 +747,27 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 for (int i = 0; i < 4; i++) {
                     if (reCodes[i] != null && !reCodes[i].equals("")) {
                         if (processBeanLists.get(i).size() > 0) {
-                        /*
-                        for (ProcessBean _process : m1processBeanLists) {
+                            /**/
+                            // for (ProcessBean _process : processBeanLists.get(i)) {
                             // 添加过程值变量;
-                            Node node = jep.parse(_process.getExpression());
-                            jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
-                        }
-                         */
+                            Node node = jep.parse(reCodesForCaluations[i]);
+                            // jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
+                            // }
+                            switch (i) {
+                                case 0:
+                                    mValues[i] = (double) jep.evaluate(node) + mParameterBean.getM1_offect();
+                                    break;
+                                case 1:
+                                    mValues[i] = (double) jep.evaluate(node) + mParameterBean.getM2_offect();
+                                    break;
+                                case 2:
+                                    mValues[i] = (double) jep.evaluate(node) + mParameterBean.getM3_offect();
+                                    break;
+                                case 3:
+                                    mValues[i] = (double) jep.evaluate(node) + mParameterBean.getM4_offect();
+                                    break;
+                            }
+
                         } else {
                             if (nodes[i] == null) nodes[i] = jep.parse(reCodes[i]);
                             switch (i) {
@@ -705,6 +798,83 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         Log.d("wlDebug", "公式计算耗时： " + stepTime + "ms");
         return null;
     }
+
+    private double[] doCH2PTest(double[] inputValue) {
+        long startTime = System.currentTimeMillis(); // 获取开始时间
+
+        chValues[0] = inputValue[0];
+        chValues[1] = inputValue[1];
+        chValues[2] = inputValue[2];
+        chValues[3] = inputValue[3];
+
+        if (haveProcessCalculate && tempValues.get(0).size() <= 5000) {
+            for (int i = 0; i < 4; i++) {
+                tempValues.get(i).add(chValues[i]);
+            }
+        }
+
+        if (mParameterBean != null) {
+            try {
+                jep.addVariable("ch1", chValues[0]);
+                jep.addVariable("ch2", chValues[1]);
+                jep.addVariable("ch3", chValues[2]);
+                jep.addVariable("ch4", chValues[3]);
+
+                for (int i = 0; i < 4; i++) {
+                    if (reCodes[i] != null && !reCodes[i].equals("")) {
+                        if (processBeanLists.get(i).size() > 0) {
+                            /**/
+                            // for (ProcessBean _process : processBeanLists.get(i)) {
+                            // 添加过程值变量;
+                            Node node = jep.parse(reCodesForCaluations[i]);
+                            // jep.addVariable(_process.getReplaceName(), handlerProcessValues(_process, (Double) jep.evaluate(node)));
+                            // }
+                            switch (i) {
+                                case 0:
+                                    mValues[i] = (double) jep.evaluate(node) + mParameterBean.getM1_offect();
+                                    break;
+                                case 1:
+                                    mValues[i] = (double) jep.evaluate(node) + mParameterBean.getM2_offect();
+                                    break;
+                                case 2:
+                                    mValues[i] = (double) jep.evaluate(node) + mParameterBean.getM3_offect();
+                                    break;
+                                case 3:
+                                    mValues[i] = (double) jep.evaluate(node) + mParameterBean.getM4_offect();
+                                    break;
+                            }
+
+                        } else {
+                            if (nodes[i] == null) nodes[i] = jep.parse(reCodes[i]);
+                            switch (i) {
+                                case 0:
+                                    mValues[i] = (double) jep.evaluate(nodes[i]) + mParameterBean.getM1_offect();
+                                    break;
+                                case 1:
+                                    mValues[i] = (double) jep.evaluate(nodes[i]) + mParameterBean.getM2_offect();
+                                    break;
+                                case 2:
+                                    mValues[i] = (double) jep.evaluate(nodes[i]) + mParameterBean.getM3_offect();
+                                    break;
+                                case 3:
+                                    mValues[i] = (double) jep.evaluate(nodes[i]) + mParameterBean.getM4_offect();
+                                    break;
+                            }
+                        }
+                    }
+                }
+                if (mView != null)
+                    mView.onMeasuringDataUpdate(mValues);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        long endTime = System.currentTimeMillis(); // 获取结束时间
+        long stepTime = (endTime - startTime);
+        Log.d("wlDebug", "公式计算耗时： " + stepTime + "ms");
+        return null;
+    }
+
 
     private double handlerProcessValues(ProcessBean bean, double value) {
         switch (bean.getExpressionType()) {
@@ -764,6 +934,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 calculationValuesList.add((Double) calculationJEP.evaluate(node));
             }
             Collections.sort(calculationValuesList);
+            android.util.Log.d("wlDebug", "reList.size() = " + calculationValuesList.size());
             android.util.Log.d("wlDebug", "reList = " + calculationValuesList.toString());
             jep.addVariable(_process.getReplaceName(), calculationProcess(_process, calculationValuesList));
         }
@@ -774,8 +945,9 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     private double calculationProcess(ProcessBean bean, List<Double> values) {
         if (values.size() == 0) return 0;
         double sum = 0D;
-        int num = 1;
+        int num = 0;
         int percent_10, percent_20, percent_80, percent_90;
+        double result = 0;
         switch (bean.getExpressionType()) {
             case "LMax":
                 percent_80 = (int) Math.round(values.size() * 0.8) - 1;
@@ -785,7 +957,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 for (int i = percent_80; i <= percent_90; i++, num++) {
                     sum += values.get(i);
                 }
-                return BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                result = BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                break;
             case "LMin":
                 percent_10 = (int) Math.round(values.size() * 0.1) - 1;
                 percent_20 = (int) Math.round(values.size() * 0.2) - 1;
@@ -795,7 +968,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 for (int i = percent_10; i <= percent_20; i++, num++) {
                     sum += values.get(i);
                 }
-                return BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                result = BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                break;
             case "LAvg":
                 percent_10 = (int) Math.round(values.size() * 0.1) - 1;
                 percent_90 = (int) Math.round(values.size() * 0.9) - 1;
@@ -803,7 +977,8 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 for (int i = percent_10; i <= percent_90; i++, num++) {
                     sum += values.get(i);
                 }
-                return BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                result = BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                break;
             case "LDif":
                 percent_10 = (int) Math.round(values.size() * 0.1) - 1;
                 percent_20 = (int) Math.round(values.size() * 0.2) - 1;
@@ -813,16 +988,276 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 if (percent_20 < 0) percent_20 = 0;
                 if (percent_80 < 0) percent_80 = 0;
                 if (percent_90 < 0) percent_90 = 0;
+                android.util.Log.d("wlDebug", "percent_10 = " + percent_10);
+                android.util.Log.d("wlDebug", "percent_20 = " + percent_20);
+                android.util.Log.d("wlDebug", "percent_80 = " + percent_80);
+                android.util.Log.d("wlDebug", "percent_90 = " + percent_90);
                 for (int i = percent_80; i <= percent_90; i++, num++) {
                     sum += values.get(i);
                 }
                 double sum2 = 0;
-                int num2 = 1;
+                int num2 = 0;
                 for (int i = percent_10; i <= percent_20; i++, num2++) {
                     sum2 += values.get(i);
                 }
-                return BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() - BigDecimal.valueOf(sum2 / num2).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                result = BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() - BigDecimal.valueOf(sum2 / num2).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                break;
         }
-        return 0;
+        android.util.Log.d("wlDebug", bean.getExpressionType() + " = " + result);
+        return result;
+    }
+
+    // 判断当前步骤是否有过程值运算;
+    @Override
+    public boolean isCurStepHaveProcess() {
+        if (isSingleStep) {
+            return haveProcessCalculate ? true : false;
+        } else {
+            StepBean _bean = stepBeans.get(getStep());
+            for (int j = 0; j < 4; j++) {
+                if (StepUtils.getChannelByStep(j, _bean.getMeasured())) {
+                    if (processBeanLists.get(j).size() > 0) return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isSingleStep() {
+        return isSingleStep;
+    }
+
+    private void startAutoStore() {
+        if (!isSingleStep) {
+            handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime() * 1000);
+        }
+    }
+
+    private void doAutoStore() {
+        mView.toDoSave(false);
+        handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime() * 1000);
+    }
+
+    private void stopAutoStore() {
+        handler.removeMessages(MSG_AUTO_STORE);
+    }
+
+
+    private void forValueTest() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.734849534, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.806335611, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.880121264, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.201054649, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.825012437, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.604557736, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.064053735, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.416952491, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.616241929, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.832199558, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.40698447, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.765952038, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.346109684, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.603089989, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.500988845, 0, 0, 0}));
+
+                    /*
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.656299797, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.953417387, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.165816817, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.605159724, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.050628206, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.006994375, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.180025257, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.645229498, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.425027884, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.714960729, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.984675362, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.654539063, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.955927876, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.597868463, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.991571408, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.415365111, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.374348733, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.244692062, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.906543499, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.178921159, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.618551724, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.985959156, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.215174786, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.991140984, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.36320991, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.689347815, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.225909375, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.287353287, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.877595188, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.834286711, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.945547674, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.975807496, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.682299605, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.39210939, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.256959184, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.478149349, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.381442711, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.372155953, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.919182417, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.058968223, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.962137847, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.029177731, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.663634554, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.240549306, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.5055132, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.62698706, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.640639968, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.090672382, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.999842973, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.335588265, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.539818693, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.720223602, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.204356308, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.049248495, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.694983999, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.193313175, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.448805881, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.424030721, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.051402117, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.912083829, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.604937179, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.392475696, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.597292437, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.380083226, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.482228458, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.721135073, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.374207954, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.9674419, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.239817203, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.292485183, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.557573488, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.747028289, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.292472482, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.138040343, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.382994008, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.846572733, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.809970508, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.154207636, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.655632294, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.854803317, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.706066737, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.282731565, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.694444735, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.989753622, 0, 0, 0}));
+                    Thread.sleep(500);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.883354002, 0, 0, 0}));
+                    Thread.sleep(500);
+                     */
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

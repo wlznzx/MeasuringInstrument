@@ -24,4 +24,10 @@ public interface MeasuringPresenter {
     void stopGetProcessValue();
 
     boolean getIsStartProcessValue();
+
+    int getMeasureState();
+
+    boolean isCurStepHaveProcess();
+
+    boolean isSingleStep();
 }

@@ -111,25 +111,44 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void DateUtil(){
+    public void TestRege() {
+        String code = "LMax(Max(ch1,ch2))";
+        String reCode = code;
+        String _regx = "L.*?\\(";
+        Pattern p = Pattern.compile(_regx);
+        Matcher matcher = p.matcher(code);
+        while (matcher.find()) {
+            reCode = reCode.replace(code.substring(matcher.start(), matcher.end() - 1), "");
+        }
+        System.out.println("reCode = " + reCode);
+    }
+
+    @Test
+    public void DateUtil() {
         //查询开始日期
-        String beginTime="";
+        String beginTime = "";
         //查询结束日期
-        String endTime="";
+        String endTime = "";
         SimpleDateFormat longSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         String timeStr = "07:45:00";
-        if(DatesUtil.isBiggerNow(timeStr)){
+        if (DatesUtil.isBiggerNow(timeStr)) {
             System.out.println("this 1 ?");
-            beginTime = longSdf.format(DatesUtil.DateAddTimeStr(DatesUtil.getDayBegin(),timeStr,true));
-            endTime = longSdf.format(DatesUtil.DateAddTimeStr(DatesUtil.getBeginDayOfTomorrow(),timeStr,true));
-        }else{
+            beginTime = longSdf.format(DatesUtil.DateAddTimeStr(DatesUtil.getDayBegin(), timeStr, true));
+            endTime = longSdf.format(DatesUtil.DateAddTimeStr(DatesUtil.getBeginDayOfTomorrow(), timeStr, true));
+        } else {
             System.out.println("this 2 ?");
-            beginTime = longSdf.format(DatesUtil.DateAddTimeStr(DatesUtil.getBeginDayOfYesterday(),timeStr,true));
-            endTime = longSdf.format(DatesUtil.DateAddTimeStr(DatesUtil.getDayBegin(),timeStr,true));
+            beginTime = longSdf.format(DatesUtil.DateAddTimeStr(DatesUtil.getBeginDayOfYesterday(), timeStr, true));
+            endTime = longSdf.format(DatesUtil.DateAddTimeStr(DatesUtil.getDayBegin(), timeStr, true));
         }
 
         System.out.println("beginTime = " + beginTime);
         System.out.println("endTime = " + endTime);
     }
+
+    @Test
+    public void testOperator() {
+        assertTrue(true ^ true ^ true);
+    }
+
 }
