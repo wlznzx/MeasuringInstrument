@@ -1,6 +1,5 @@
 package alauncher.cn.measuringinstrument.base;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -13,7 +12,6 @@ import alauncher.cn.measuringinstrument.bean.CodeBean;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;

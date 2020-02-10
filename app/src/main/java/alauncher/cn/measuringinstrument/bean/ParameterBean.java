@@ -83,16 +83,16 @@ public class ParameterBean {
 
     @Generated(hash = 1353469702)
     public ParameterBean(long code_id, String m1_describe, String m2_describe, String m3_describe,
-            String m4_describe, double m1_nominal_value, double m2_nominal_value,
-            double m3_nominal_value, double m4_nominal_value, double m1_upper_tolerance_value,
-            double m2_upper_tolerance_value, double m3_upper_tolerance_value,
-            double m4_upper_tolerance_value, double m1_lower_tolerance_value,
-            double m2_lower_tolerance_value, double m3_lower_tolerance_value,
-            double m4_lower_tolerance_value, double m1_offect, double m2_offect, double m3_offect,
-            double m4_offect, int m1_resolution, int m2_resolution, int m3_resolution,
-            int m4_resolution, double m1_scale, double m2_scale, double m3_scale, double m4_scale,
-            String m1_code, String m2_code, String m3_code, String m4_code, boolean m1_enable,
-            boolean m2_enable, boolean m3_enable, boolean m4_enable) {
+                         String m4_describe, double m1_nominal_value, double m2_nominal_value,
+                         double m3_nominal_value, double m4_nominal_value, double m1_upper_tolerance_value,
+                         double m2_upper_tolerance_value, double m3_upper_tolerance_value,
+                         double m4_upper_tolerance_value, double m1_lower_tolerance_value,
+                         double m2_lower_tolerance_value, double m3_lower_tolerance_value,
+                         double m4_lower_tolerance_value, double m1_offect, double m2_offect, double m3_offect,
+                         double m4_offect, int m1_resolution, int m2_resolution, int m3_resolution,
+                         int m4_resolution, double m1_scale, double m2_scale, double m3_scale, double m4_scale,
+                         String m1_code, String m2_code, String m3_code, String m4_code, boolean m1_enable,
+                         boolean m2_enable, boolean m3_enable, boolean m4_enable) {
         this.code_id = code_id;
         this.m1_describe = m1_describe;
         this.m2_describe = m2_describe;

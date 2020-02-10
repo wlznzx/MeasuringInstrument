@@ -23,7 +23,9 @@ import alauncher.cn.measuringinstrument.view.CalibrationActivity;
 import alauncher.cn.measuringinstrument.view.CodeActivity;
 import alauncher.cn.measuringinstrument.view.DataActivity;
 import alauncher.cn.measuringinstrument.view.LoginActivity;
+import alauncher.cn.measuringinstrument.view.Measuring2Activity;
 import alauncher.cn.measuringinstrument.view.MeasuringActivity;
+import alauncher.cn.measuringinstrument.view.ParameterManagement2Activity;
 import alauncher.cn.measuringinstrument.view.ParameterManagementActivity;
 import alauncher.cn.measuringinstrument.view.SPCStatisticalActivity;
 import alauncher.cn.measuringinstrument.view.StatisticalActivity;
@@ -173,13 +175,13 @@ public class MainActivity extends BaseOActivity {
                 public void onClick(View v) {
                     switch (position) {
                         case 0:
-                            openActivty(MeasuringActivity.class, datas.get(position).strID);
+                            openActivty(Measuring2Activity.class, datas.get(position).strID);
                             break;
                         case 1:
                             openActivty(DataActivity.class, datas.get(position).strID);
                             break;
                         case 2:
-                            openActivty(ParameterManagementActivity.class, datas.get(position).strID);
+                            openActivty(ParameterManagement2Activity.class, datas.get(position).strID);
                             break;
                         case 3:
                             openActivty(CalibrationActivity.class, datas.get(position).strID);

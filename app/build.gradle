@@ -7,8 +7,8 @@ android {
         applicationId "alauncher.cn.measuringinstrument"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 24
-        versionName "v3.9.6_Bate"
+        versionCode 25
+        versionName "v3.9.8_Bate"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -69,7 +69,7 @@ android {
 }
 
 greendao {
-    schemaVersion 27 //数据库版本号
+    schemaVersion 30 //数据库版本号
     daoPackage 'alauncher.cn.measuringinstrument.database.greenDao.db'
 // 设置DaoMaster、DaoSession、Dao 包名
     targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用.不要用/
@@ -111,7 +111,7 @@ dependencies {
     //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
 //    implementation 'com.android.support:support-v4:+'
 
-
+    implementation 'com.github.LidongWen:DataBaseUpdate:1.0.2'
     // debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
     // releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
     // Optional, if you use support library fragments:

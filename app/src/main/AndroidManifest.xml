@@ -54,12 +54,29 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".view.ParameterManagement2Activity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".view.MGroupActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".view.MGroup2Activity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".view.CalibrationActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
@@ -128,6 +145,14 @@
         </activity>
         <activity
             android:name=".view.MeasuringActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".view.Measuring2Activity"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />

@@ -91,7 +91,6 @@ public class DataAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                // setEditMode(MYLIVE_MODE_EDIT);
                 mOnItemClickListener.onItemLongClickListener(holder.getAdapterPosition(), datas);
                 return false;
             }

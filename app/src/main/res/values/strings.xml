@@ -246,5 +246,13 @@
     <string name="start_get_value">开始取过程值</string>
     <string name="stop_get_value">结束取过程值</string>
     <string name="not_supported_same_msg_by_step">不支持过程值与单点值同时测量，在分步第%1$d，请确认。</string>
+    <string name="is_enable">是否启用</string>
+    <string name="add_parameter">添加参数</string>
+    <string name="edit_parameter">编辑参数</string>
+    <string name="pic">图例</string>
+    <string name="add_group">添加分组</string>
+    <string name="group_name">分组名称</string>
+    <string name="upper_limit_not_space">上限</string>
+    <string name="lower_limit_not_space">下限</string>
 
 </resources>

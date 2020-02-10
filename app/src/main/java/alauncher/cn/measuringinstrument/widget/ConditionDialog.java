@@ -6,13 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.nfunk.jep.function.Str;
 
 import java.util.List;
 
@@ -20,7 +17,6 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.TriggerConditionBean;
-import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.TriggerConditionBeanDao;
 import alauncher.cn.measuringinstrument.view.fragment.ForceCalibrationFragment;
 import butterknife.BindView;

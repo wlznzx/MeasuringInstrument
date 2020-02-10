@@ -10,18 +10,31 @@
         <item>Auto</item>
     </string-array>
 
+    <string-array name="m_values" translatable="false">
+        <item>M1</item>
+        <item>M2</item>
+        <item>M3</item>
+        <item>M4</item>
+        <item>M5</item>
+        <item>M6</item>
+        <item>M7</item>
+        <item>M8</item>
+    </string-array>
+
     <string-array name="calibration_method_values" translatable="false">
         <item>单件校准</item>
         <item>双件校准</item>
     </string-array>
 
+    <!--
     <string-array name="m_values" translatable="false">
         <item>M1</item>
         <item>M2</item>
         <item>M3</item>
         <item>M4</item>
     </string-array>
-
+    -->
+    
     <string-array name="workids" translatable="false">
         <item>10</item>
         <item>11</item>

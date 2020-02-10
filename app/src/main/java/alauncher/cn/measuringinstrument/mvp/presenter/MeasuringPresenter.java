@@ -7,9 +7,9 @@ public interface MeasuringPresenter {
     /**
      * 開啓數據獲取計算.
      */
-    void startMeasuing();
+    void startMeasuring();
 
-    void stopMeasuing();
+    void stopMeasuring();
 
     ParameterBean getParameterBean();
 
@@ -30,4 +30,6 @@ public interface MeasuringPresenter {
     boolean isCurStepHaveProcess();
 
     boolean isSingleStep();
+
+    String getMResults(double[] ms);
 }

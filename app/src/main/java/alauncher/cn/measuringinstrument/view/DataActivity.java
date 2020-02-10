@@ -82,7 +82,8 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
 
     private ParameterBean mParameterBean;
 
-    private String[] title = {"操作员", "时间", "工件号", "事件", "结果", "M1", "M1分组", "M2", "M2分组", "M3", "M3分组", "M4", "M4分组"};
+    private String[] title = {"操作员", "时间", "工件号", "事件",
+            "结果", "M1", "M1分组", "M2", "M2分组", "M3", "M3分组", "M4", "M4分组"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

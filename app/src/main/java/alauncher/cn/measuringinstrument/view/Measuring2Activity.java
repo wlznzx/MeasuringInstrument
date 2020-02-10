@@ -4,16 +4,20 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,28 +27,26 @@ import java.util.Map;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
+import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
-import alauncher.cn.measuringinstrument.bean.ParameterBean;
+import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
 import alauncher.cn.measuringinstrument.bean.StepBean;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ForceCalibrationBeanDao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
-import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImpl;
-import alauncher.cn.measuringinstrument.utils.NumberUtils;
+import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImpl2;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import alauncher.cn.measuringinstrument.widget.AdditionalDialog;
-import alauncher.cn.measuringinstrument.widget.MValueView;
+import alauncher.cn.measuringinstrument.widget.MValueViewLandscape;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
 
-public class MeasuringActivity extends BaseOActivity implements MeasuringActivityView, AdditionalDialog.AdditionDialogInterface {
-
-    @BindViews({R.id.m1_value, R.id.m2_value, R.id.m3_value, R.id.m4_value})
-    public MValueView[] mMValueViews;
+public class Measuring2Activity extends BaseOActivity implements MeasuringActivityView, AdditionalDialog.AdditionDialogInterface {
 
     @BindView(R.id.value_btn)
     public TextView valueBtn;
@@ -52,20 +54,14 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     @BindViews({R.id.group_m1, R.id.group_m2, R.id.group_m3, R.id.group_m4})
     public TextView mGroupMs[];
 
-    @BindViews({R.id.m1_text_value, R.id.m2_text_value, R.id.m3_text_value, R.id.m4_text_value})
-    public TextView mTValues[];
-
-    @BindViews({R.id.m1_title, R.id.m2_title, R.id.m3_title, R.id.m4_title})
-    public TextView mTitle[];
-
-    @BindViews({R.id.m1_describe, R.id.m2_describe, R.id.m3_describe, R.id.m4_describe})
-    public TextView mDescribes[];
-
     @BindView(R.id.measure_save_btn)
     public TextView saveTv;
 
     @BindView(R.id.value_btn_layout)
     public View valueBtnLayout;
+
+    @BindView(R.id.measure_rv)
+    public RecyclerView measureRV;
 
     private double[] curMValues = {1.8, -2.8, 0.8, -0.4};
 
@@ -75,14 +71,16 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 
     private AddInfoBean mAddInfoBean;
 
-    private ParameterBean mParameterBean;
-
-    // 锁
-    // private Lock lock = new Lock();
     private volatile boolean isUIDraw = false;
 
     // 测量界面加入逻辑;
     private StoreBean mStoreBean;
+
+    private List<ParameterBean2> mDates;
+
+    private MValueViewLandscape[] mMValueViewLandscapes;
+
+    private MeasuringAdapter mMeasuringAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,61 +95,32 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 
     @Override
     protected void initLayout() {
-        setContentView(R.layout.activity_measuring);
+        setContentView(R.layout.activity_measuring2);
     }
 
     @Override
     protected void initView() {
-        mMeasuringPresenter = new MeasuringPresenterImpl(this);
+        mMeasuringPresenter = new MeasuringPresenterImpl2(this);
+        mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        measureRV.setLayoutManager(layoutManager);
+        mMeasuringAdapter = new MeasuringAdapter();
+        measureRV.setAdapter(mMeasuringAdapter);
         initParameters();
         if (App.getSetupBean().getIsAutoPopUp()) {
             showAddDialog();
         }
-        mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
         // 开始取值;
         startValue();
         updateSaveBtnMsg();
     }
 
     private void initParameters() {
-        mParameterBean = mMeasuringPresenter.getParameterBean();
-        if (mParameterBean != null) {
-            mMValueViews[0].init(mParameterBean.getM1_nominal_value(), mParameterBean.getM1_upper_tolerance_value(), mParameterBean.getM1_lower_tolerance_value(), mParameterBean.getM1_scale());
-            mMValueViews[1].init(mParameterBean.getM2_nominal_value(), mParameterBean.getM2_upper_tolerance_value(), mParameterBean.getM2_lower_tolerance_value(), mParameterBean.getM2_scale());
-            mMValueViews[2].init(mParameterBean.getM3_nominal_value(), mParameterBean.getM3_upper_tolerance_value(), mParameterBean.getM3_lower_tolerance_value(), mParameterBean.getM3_scale());
-            mMValueViews[3].init(mParameterBean.getM4_nominal_value(), mParameterBean.getM4_upper_tolerance_value(), mParameterBean.getM4_lower_tolerance_value(), mParameterBean.getM4_scale());
-
-            mDescribes[0].setText(mParameterBean.getM1_describe());
-            mDescribes[1].setText(mParameterBean.getM2_describe());
-            mDescribes[2].setText(mParameterBean.getM3_describe());
-            mDescribes[3].setText(mParameterBean.getM4_describe());
-
-            for (int i = 0; i < 4; i++) {
-                boolean isEnable = true;
-                if (0 == i) {
-                    isEnable = mParameterBean.getM1_enable();
-                } else if (1 == i) {
-                    isEnable = mParameterBean.getM2_enable();
-                } else if (2 == i) {
-                    isEnable = mParameterBean.getM3_enable();
-                } else if (3 == i) {
-                    isEnable = mParameterBean.getM4_enable();
-                }
-                mTValues[i].setVisibility(isEnable ? View.VISIBLE : View.INVISIBLE);
-                mMValueViews[i].setVisibility(isEnable ? View.VISIBLE : View.INVISIBLE);
-                mTitle[i].setVisibility(isEnable ? View.VISIBLE : View.INVISIBLE);
-                mDescribes[i].setVisibility(isEnable ? View.VISIBLE : View.INVISIBLE);
-            }
-        } else {
-            for (int i = 0; i < 4; i++) {
-                mMValueViews[i].init(0, 7, -7, 6);
-                mTValues[i].setVisibility(true ? View.VISIBLE : View.INVISIBLE);
-                mMValueViews[i].setVisibility(true ? View.VISIBLE : View.INVISIBLE);
-                mTitle[i].setVisibility(true ? View.VISIBLE : View.INVISIBLE);
-                mDescribes[i].setVisibility(true ? View.VISIBLE : View.INVISIBLE);
-            }
-        }
-        // updateGetValueTips();
+        mDates = App.getDaoSession().getParameterBean2Dao().queryBuilder()
+                .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()), ParameterBean2Dao.Properties.Enable.eq(true))
+                .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
+        mMValueViewLandscapes = new MValueViewLandscape[mDates.size()];
+        mMeasuringAdapter.notifyDataSetChanged();
     }
 
     @OnClick({R.id.value_btn, R.id.additional_btn, R.id.measure_save_btn})
@@ -212,21 +181,6 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         return true;
     }
 
-    /*
-    private void updateGetValueTips() {
-        if (mMeasuringPresenter.getStep() == -1) {
-            // saveTv.setText(R.string.save);
-        } else {
-            StepBean _bean = ((MeasuringPresenterImpl) mMeasuringPresenter).getStepBean();
-            if (_bean != null && !mMeasuringPresenter.isCurStepHaveProcess()) {
-                saveTv.setText(String.format(getResources().getString(R.string.step_tips), _bean.getStepID()));
-            } else {
-                updateSaveBtnMsg(mMeasuringPresenter.getMeasureState());
-            }
-        }
-    }
-    */
-
     private void showForceDialog() {
         final AlertDialog builder = new AlertDialog.Builder(this)
                 .create();
@@ -267,7 +221,6 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     public void onMeasuringDataUpdate(double[] values) {
         if (!isUIDraw) {
             isUIDraw = true;
-            // android.util.Log.d("wlDebug", "write MValues.");
             curMValues = values;
             runOnUiThread(new Runnable() {
                 @Override
@@ -277,8 +230,22 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
                 }
             });
         } else {
-            // android.util.Log.d("wlDebug", "ignore this values.");
         }
+    }
+
+    public void updateMValues(double[] values) {
+        if (values == null) return;
+        // 刷新柱状图;
+        for (int i = 0; i < values.length; i++) {
+            if (mMValueViewLandscapes[i] != null) {
+                mMValueViewLandscapes[i].setMValue(values[i]);
+            }
+        }
+        // 显示测量结果;
+        mGroupMs[0].setText("结果: " + mMeasuringPresenter.getMResults(values));
+        // 显示测量分组情况;
+        String[] group = mMeasuringPresenter.getMGroupValues(values);
+        mGroupMs[1].setText("M" + (mDates.get(0).getSequenceNumber() + 1) + "分组: " + group[0]);
     }
 
     @Override
@@ -295,18 +262,10 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         valueBtnLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
-    private int curMode = 0;
-
     @OnClick({R.id.swap_btn})
     public void btnClick(View view) {
         switch (view.getId()) {
             case R.id.swap_btn:
-                /*
-                if (curMode < 4) curMode++;
-                else curMode = 0;
-                setMode(curMode);
-                */
-                // new ChooseCodeDialog(this).show();
                 for (int i = 0; i < 10; i++) {
                     CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) (i + 1));
                     if (_bean != null) {
@@ -315,7 +274,6 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
                         province[i] = "程序 " + (i + 1);
                     }
                 }
-                // showSingleChoiceButton();
                 showGridDialog();
                 break;
         }
@@ -340,7 +298,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
                 SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
                 _bean.setCodeID(arg2 + 1);
                 App.getDaoSession().getSetupBeanDao().update(_bean);
-                ((MeasuringPresenterImpl) mMeasuringPresenter).initParameter();
+                ((MeasuringPresenterImpl2) mMeasuringPresenter).initParameter();
                 initParameters();
                 CodeBean _CodeBean = App.getDaoSession().getCodeBeanDao().load((long) (arg2 + 1));
                 if (_CodeBean != null) {
@@ -369,66 +327,6 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         return items;
     }
 
-
-    private void updateMValues(double[] mValues) {
-
-        long startTime = System.currentTimeMillis(); // 获取开始时间
-
-        String result = ((MeasuringPresenterImpl) mMeasuringPresenter).getMResults(mValues);
-        if (mMeasuringPresenter.getStep() == -1) {
-            if (!((MeasuringPresenterImpl) mMeasuringPresenter).mGeted[0]) {
-                mGroupMs[0].setText("结果: " + result);
-                if (result.equals("NG")) {
-                    mGroupMs[0].setBackgroundResource(R.drawable.red_shape);
-                } else {
-                    mGroupMs[0].setBackgroundResource(R.drawable.green_shape);
-                }
-            }
-        } else {
-            mGroupMs[0].setText("- -");
-        }
-        String[] group = mMeasuringPresenter.getMGroupValues(mValues);
-        switch (curMode) {
-            case 0:
-                for (int i = 0; i < mTValues.length; i++) {
-                    if (!((MeasuringPresenterImpl) mMeasuringPresenter).mGeted[i]) {
-                        mTValues[i].setText(NumberUtils.get4bits(mValues[i]));
-                        mMValueViews[i].setMValue(mValues[i]);
-                    }
-                    // mGroupMs[i].setText(group[i]);
-                }
-                if (!((MeasuringPresenterImpl) mMeasuringPresenter).mGeted[0])
-                    mGroupMs[1].setText("M1分组: " + group[0]); // 显示M1分组;
-                break;
-            case 1:
-                mTValues[3].setText(NumberUtils.get4bits(mValues[0]));
-                mMValueViews[3].setMValue(mValues[0]);
-                mGroupMs[1].setText("M1分组: " + group[0]);
-                break;
-            case 2:
-                mTValues[3].setText(NumberUtils.get4bits(mValues[1]));
-                mMValueViews[3].setMValue(mValues[1]);
-                mGroupMs[1].setText("M2分组: " + group[1]);
-                break;
-            case 3:
-                mTValues[3].setText(NumberUtils.get4bits(mValues[2]));
-                mMValueViews[3].setMValue(mValues[2]);
-                mGroupMs[1].setText("M3分组: " + group[2]);
-                break;
-            case 4:
-                mTValues[3].setText("" + mValues[3]);
-                mMValueViews[3].setMValue(mValues[3]);
-                mGroupMs[1].setText("M4分组: " + group[3]);
-                break;
-        }
-        long endTime = System.currentTimeMillis(); // 获取结束时间
-        long stepTime = (endTime - startTime);
-
-        if (stepTime > 0) {
-            Log.d("wlDebug", "UI绘制耗时： " + (endTime - startTime) + "ms");
-        }
-    }
-
     @Override
     public void onAdditionSet(AddInfoBean pBean) {
         mAddInfoBean = pBean;
@@ -437,23 +335,16 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     }
 
     private void showNormalDialog(String title, String Message) {
-        /* @setIcon 设置对话框图标
-         * @setTitle 设置对话框标题
-         * @setMessage 设置对话框消息提示
-         * setXXX方法返回Dialog对象，因此可以链式设置属性
-         */
         final AlertDialog.Builder normalDialog =
-                new AlertDialog.Builder(MeasuringActivity.this);
+                new AlertDialog.Builder(Measuring2Activity.this);
         normalDialog.setTitle(R.string.not_supported_same);
         normalDialog.setMessage(R.string.not_supported_same_msg);
-        normalDialog.setPositiveButton(R.string.ok,
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                });
+        normalDialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
         /*
         normalDialog.setNegativeButton("关闭",
                 new DialogInterface.OnClickListener() {
@@ -532,7 +423,7 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
                 saveTv.setText(R.string.save);
             }
         } else {
-            StepBean _bean = ((MeasuringPresenterImpl) mMeasuringPresenter).getStepBean();
+            StepBean _bean = ((MeasuringPresenterImpl2) mMeasuringPresenter).getStepBean();
             if (mMeasuringPresenter.isCurStepHaveProcess()) {
                 switch (mMeasuringPresenter.getMeasureState()) {
                     case 3:
@@ -558,5 +449,36 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
     @Override
     public void toDoSave(boolean isManual) {
         doSave(isManual);
+    }
+
+
+    class MeasuringAdapter extends RecyclerView.Adapter<ViewHolder> {
+
+        public MeasuringAdapter() {
+
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return ViewHolder.createViewHolder(Measuring2Activity.this, parent, R.layout.measure_item);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            ParameterBean2 _bean = mDates.get(position);
+            holder.setText(R.id.show_item_tv, "M" + (_bean.getSequenceNumber() + 1));
+            holder.setText(R.id.describe_tv, _bean.getDescribe());
+            if (mMValueViewLandscapes[position] == null) {
+                mMValueViewLandscapes[position] = holder.getView(R.id.m_value_view);
+                mMValueViewLandscapes[position].init(_bean.getNominalValue(), _bean.getUpperToleranceValue()
+                        , _bean.getLowerToleranceValue(), _bean.getResolution());
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return mDates.size();
+        }
     }
 }

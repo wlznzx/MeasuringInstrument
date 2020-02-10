@@ -22,24 +22,22 @@ import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean;
+import alauncher.cn.measuringinstrument.bean.GroupBean2;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
+import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.RememberPasswordBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
-import alauncher.cn.measuringinstrument.bean.TriggerConditionBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoMaster;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
-import alauncher.cn.measuringinstrument.database.greenDao.db.TriggerConditionBeanDao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.utils.Constants;
-import alauncher.cn.measuringinstrument.utils.DeviceUtils;
+import alauncher.cn.measuringinstrument.utils.DBOpenHelper;
 import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.utils.SPUtils;
 import alauncher.cn.measuringinstrument.utils.SystemPropertiesProxy;
-import alauncher.cn.measuringinstrument.view.CodeActivity;
-import alauncher.cn.measuringinstrument.view.SystemManagementActivity;
-import alauncher.cn.measuringinstrument.view.TActivity;
 import alauncher.cn.measuringinstrument.view.UpgradeActivity;
 
 /**
@@ -72,7 +70,8 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(this, "mi.db", null);
+        DaoMaster.DevOpenHelper openHelper = new DBOpenHelper(this, "mi.db");
+
         Database db = openHelper.getWritableDb();
         DaoMaster daoMaster = new DaoMaster(db);
         mDaoSession = daoMaster.newSession();
@@ -211,7 +210,6 @@ public class App extends MultiDexApplication {
             _bean.setDeviceCode(SystemPropertiesProxy.getString(this, "ro.serialno"));
             _bean.setDeviceName(getResources().getString(R.string.default_device_name));
             _bean.setRmk("rmk");
-            android.util.Log.d("wlDebug", "info = " + _bean.toString());
             getDaoSession().getDeviceInfoBeanDao().insertOrReplace(_bean);
         }
 
@@ -245,10 +243,9 @@ public class App extends MultiDexApplication {
             getDaoSession().getStoreBeanDao().insert(_bean);
         }
 
-        //
+        // 默认10个程序;
         for (int i = 1; i <= 10; i++) {
             // 初始化自动保存上下限;
-
             if (getDaoSession().getCalibrationBeanDao().load((long) i) == null) {
                 CalibrationBean _bean = new CalibrationBean();
                 _bean.setCode_id(i);
@@ -342,48 +339,6 @@ public class App extends MultiDexApplication {
                 }
             }
 
-            // 初始化参数;
-            if (getDaoSession().getParameterBeanDao().load((long) i) == null) {
-                ParameterBean _bean = new ParameterBean();
-                _bean.setCode_id(i);
-                _bean.setM1_enable(true);
-                _bean.setM1_describe("内径1");
-                _bean.setM1_nominal_value(30.0);
-                _bean.setM1_upper_tolerance_value(0.04);
-                _bean.setM1_lower_tolerance_value(0.0);
-                _bean.setM1_scale(0.1);
-                _bean.setM1_offect(0.0);
-                _bean.setM1_code("ch1");
-
-                _bean.setM2_enable(true);
-                _bean.setM2_describe("内径2");
-                _bean.setM2_nominal_value(30.0);
-                _bean.setM2_upper_tolerance_value(0.04);
-                _bean.setM2_lower_tolerance_value(0.0);
-                _bean.setM2_scale(0.1);
-                _bean.setM2_offect(0.0);
-                _bean.setM2_code("ch2");
-
-                _bean.setM3_enable(true);
-                _bean.setM3_describe("内径3");
-                _bean.setM3_nominal_value(30.0);
-                _bean.setM3_upper_tolerance_value(0.04);
-                _bean.setM3_lower_tolerance_value(0.0);
-                _bean.setM3_scale(0.1);
-                _bean.setM3_offect(0.0);
-                _bean.setM3_code("ch3");
-
-                _bean.setM4_enable(true);
-                _bean.setM4_describe("内径4");
-                _bean.setM4_nominal_value(30.0);
-                _bean.setM4_upper_tolerance_value(0.04);
-                _bean.setM4_lower_tolerance_value(0.0);
-                _bean.setM4_scale(0.1);
-                _bean.setM4_offect(0.0);
-                _bean.setM4_code("ch4");
-                getDaoSession().getParameterBeanDao().insert(_bean);
-            }
-
             if (getDaoSession().getCodeBeanDao().load((long) (i)) == null) {
                 CodeBean _bean = new CodeBean();
                 _bean.setCodeID(i);
@@ -392,7 +347,38 @@ public class App extends MultiDexApplication {
                 _bean.setParts(getResources().getString(R.string.spare_parts) + i);
                 getDaoSession().getCodeBeanDao().insert(_bean);
             }
+
+            // 判断该程序内是否有参数设置，如没有，设置4个初始的M值;
+            if (getDaoSession().getParameterBean2Dao().queryBuilder()
+                    .where(ParameterBean2Dao.Properties.CodeID.eq((long) i)).list().size() <= 0) {
+                for (int j = 0; j < 4; j++) {
+                    ParameterBean2 _bean = new ParameterBean2();
+                    _bean.setCodeID(i);
+                    _bean.setSequenceNumber(j);
+                    _bean.setCode("ch1");
+                    _bean.setDescribe("内径" + (j + 1));
+                    _bean.setNominalValue(30);
+                    _bean.setUpperToleranceValue(0.04);
+                    _bean.setLowerToleranceValue(0.0);
+                    _bean.setResolution(6);
+                    _bean.setDeviation(0);
+                    _bean.setEnable(true);
+                    Long pID = getDaoSession().getParameterBean2Dao().insertOrReplace(_bean);
+                    for (int z = 0; z < 4; z++) {
+                        GroupBean2 groupBean2 = new GroupBean2();
+                        groupBean2.setName(String.valueOf(z + 1));
+                        groupBean2.setDescribe(String.valueOf(z));
+                        groupBean2.setUpperLimit(30 + (z + 1) * 0.01);
+                        groupBean2.setLowerLimit(30 + z * 0.01);
+                        groupBean2.setPID(pID);
+                        getDaoSession().getGroupBean2Dao().insertOrReplace(groupBean2);
+                    }
+                }
+            }
+
+
         }
+        // 初始化
 
         // initTestDatas();
         // initTestDatas2();
