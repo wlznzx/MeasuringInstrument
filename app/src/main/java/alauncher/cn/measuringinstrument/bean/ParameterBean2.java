@@ -12,7 +12,6 @@ public class ParameterBean2 {
 
     public long codeID;
 
-    // 名称
     public int sequenceNumber;
 
     // 描述
@@ -161,4 +160,21 @@ public class ParameterBean2 {
         this.enable = enable;
     }
 
+    @Override
+    public String toString() {
+        return "ParameterBean2{" +
+                "id=" + id +
+                ", codeID=" + codeID +
+                ", sequenceNumber=" + sequenceNumber +
+                ", describe='" + describe + '\'' +
+                ", nominalValue=" + nominalValue +
+                ", upperToleranceValue=" + upperToleranceValue +
+                ", lowerToleranceValue=" + lowerToleranceValue +
+                ", deviation=" + deviation +
+                ", resolution=" + resolution +
+                ", scale=" + scale +
+                ", code='" + code + '\'' +
+                ", enable=" + enable +
+                '}';
+    }
 }

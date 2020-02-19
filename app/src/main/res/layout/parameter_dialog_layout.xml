@@ -42,8 +42,10 @@
                 android:gravity="center_vertical">
 
                 <TextView
+                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
+
                     android:text="@string/show_item" />
 
                 <Spinner
@@ -61,6 +63,7 @@
                 android:gravity="center_vertical">
 
                 <TextView
+                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
                     android:text="@string/describe" />
@@ -82,6 +85,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
                     android:text="@string/nominal_value" />
@@ -104,6 +108,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
                     android:text="@string/upper_tolerance_value" />
@@ -126,6 +131,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
                     android:text="@string/lower_tolerance_value" />
@@ -148,6 +154,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
                     android:text="@string/resolution" />
@@ -169,6 +176,7 @@
                 android:visibility="visible">
 
                 <TextView
+                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
                     android:text="@string/deviation" />
@@ -191,6 +199,7 @@
                 android:visibility="visible">
 
                 <TextView
+                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
                     android:text="@string/formula" />
@@ -212,6 +221,7 @@
                 android:visibility="visible">
 
                 <TextView
+                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
                     android:text="@string/grouping" />
@@ -233,6 +243,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
                     android:text="@string/is_enable" />

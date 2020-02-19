@@ -5,10 +5,12 @@
     android:background="#00FFFFFF">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="430dp"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_margin="15dp"
         android:background="@drawable/bg_white_cornor_10"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <TextView
@@ -35,8 +37,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:text="@string/workpiece_id" />
+                android:text="@string/workpiece_id"
+                android:textColor="@android:color/black" />
 
             <EditText
                 android:id="@+id/workpieceid_edt"
@@ -61,8 +63,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:text="@string/event_id" />
+                android:text="@string/event_id"
+                android:textColor="@android:color/black" />
 
             <EditText
                 android:id="@+id/eventid_edt"

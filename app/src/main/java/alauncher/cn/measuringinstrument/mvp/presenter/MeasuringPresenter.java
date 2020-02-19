@@ -4,6 +4,13 @@ import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 
 public interface MeasuringPresenter {
+
+    public static int NORMAL_NODE = 1;
+
+    public static int IN_PROCESS_VALUE_MODE = 2;
+
+    public static int IN_PROCESS_VALUE_BEEN_TAKEN_MODE = 3;
+
     /**
      * 開啓數據獲取計算.
      */
@@ -32,4 +39,6 @@ public interface MeasuringPresenter {
     boolean isSingleStep();
 
     String getMResults(double[] ms);
+
+    String[] getResults(double[] ms);
 }

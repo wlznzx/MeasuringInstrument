@@ -7,6 +7,16 @@ import java.util.List;
 
 public class StringConverter implements PropertyConverter<List<String>, String> {
 
+    public static List<String> convertToEntityPropertyG(String databaseValue) {
+        if (databaseValue == null) {
+            return null;
+        }
+        else {
+            List<String> list = Arrays.asList(databaseValue.split(","));
+            return list;
+        }
+    }
+
     @Override
     public List<String> convertToEntityProperty(String databaseValue) {
         if (databaseValue == null) {

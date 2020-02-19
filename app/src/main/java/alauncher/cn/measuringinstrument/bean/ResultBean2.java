@@ -4,7 +4,6 @@ import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Transient;
 
 import java.util.List;
 
@@ -32,6 +31,8 @@ public class ResultBean2 {
 
     public String result;
 
+    public boolean isSelect;
+
     @Convert(columnType = String.class, converter = StringConverter.class)
     private List<String> measurementValues;
 
@@ -41,14 +42,26 @@ public class ResultBean2 {
     @Convert(columnType = String.class, converter = StringConverter.class)
     private List<String> mItems;
 
-    @Transient
-    public boolean isSelect;
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    private List<String> mDescribe;
 
-    @Generated(hash = 292594885)
-    public ResultBean2(Long id, long codeID, String handlerAccount, long timeStamp,
-            String workID, String workIDExtra, String eventID, String event, String result,
-            List<String> measurementValues, List<String> measurementGroup,
-            List<String> mItems) {
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    private List<String> rValues;
+
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    private List<String> gValues;
+
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    private List<String> eValues;
+
+    private boolean isUploaded;
+
+    @Generated(hash = 1383205740)
+    public ResultBean2(Long id, long codeID, String handlerAccount, long timeStamp, String workID,
+            String workIDExtra, String eventID, String event, String result, boolean isSelect,
+            List<String> measurementValues, List<String> measurementGroup, List<String> mItems,
+            List<String> mDescribe, List<String> rValues, List<String> gValues, List<String> eValues,
+            boolean isUploaded) {
         this.id = id;
         this.codeID = codeID;
         this.handlerAccount = handlerAccount;
@@ -58,9 +71,15 @@ public class ResultBean2 {
         this.eventID = eventID;
         this.event = event;
         this.result = result;
+        this.isSelect = isSelect;
         this.measurementValues = measurementValues;
         this.measurementGroup = measurementGroup;
         this.mItems = mItems;
+        this.mDescribe = mDescribe;
+        this.rValues = rValues;
+        this.gValues = gValues;
+        this.eValues = eValues;
+        this.isUploaded = isUploaded;
     }
 
     @Generated(hash = 1498620417)
@@ -164,4 +183,70 @@ public class ResultBean2 {
         this.mItems = mItems;
     }
 
+    @Override
+    public String toString() {
+        return "ResultBean2{" +
+                "id=" + id +
+                ", codeID=" + codeID +
+                ", handlerAccount='" + handlerAccount + '\'' +
+                ", timeStamp=" + timeStamp +
+                ", workID='" + workID + '\'' +
+                ", workIDExtra='" + workIDExtra + '\'' +
+                ", eventID='" + eventID + '\'' +
+                ", event='" + event + '\'' +
+                ", result='" + result + '\'' +
+                ", measurementValues=" + measurementValues +
+                ", measurementGroup=" + measurementGroup +
+                ", mItems=" + mItems +
+                ", isSelect=" + isSelect +
+                '}';
+    }
+
+    public boolean getIsSelect() {
+        return this.isSelect;
+    }
+
+    public void setIsSelect(boolean isSelect) {
+        this.isSelect = isSelect;
+    }
+
+    public List<String> getMDescribe() {
+        return this.mDescribe;
+    }
+
+    public void setMDescribe(List<String> mDescribe) {
+        this.mDescribe = mDescribe;
+    }
+
+    public List<String> getRValues() {
+        return this.rValues;
+    }
+
+    public void setRValues(List<String> rValues) {
+        this.rValues = rValues;
+    }
+
+    public List<String> getGValues() {
+        return this.gValues;
+    }
+
+    public void setGValues(List<String> gValues) {
+        this.gValues = gValues;
+    }
+
+    public List<String> getEValues() {
+        return this.eValues;
+    }
+
+    public void setEValues(List<String> eValues) {
+        this.eValues = eValues;
+    }
+
+    public boolean getIsUploaded() {
+        return this.isUploaded;
+    }
+
+    public void setIsUploaded(boolean isUploaded) {
+        this.isUploaded = isUploaded;
+    }
 }

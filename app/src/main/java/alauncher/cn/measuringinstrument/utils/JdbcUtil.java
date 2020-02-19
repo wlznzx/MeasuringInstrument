@@ -10,7 +10,7 @@ import java.sql.Statement;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
-import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.bean.ResultBean2;
 
 public class JdbcUtil {
     //url
@@ -161,7 +161,7 @@ public class JdbcUtil {
         // return 1;
     }
 
-
+    /*
     public static int addResult2(String factory_code, String machine_code, int prog_id, String serial_number,
                                  final ResultBean _bean) throws Exception {
         Connection conn = getConnection();
@@ -226,6 +226,46 @@ public class JdbcUtil {
         m2pstmt.close();
         m3pstmt.close();
         m4pstmt.close();
+        close(pstmt, conn);
+        return 1;
+    }
+    */
+
+    public static int addResult2(String factory_code, String machine_code, int prog_id, String serial_number,
+                                 final ResultBean2 _bean) throws Exception {
+        Connection conn = getConnection();
+        if (conn == null) return -1;
+        String sql = "insert into ntqc_result (factory_code,machine_code,prog_id,serial_number,result,ng_reason,operator,operate_time) VALUES (?,?,?,?,?,?,?,?);";
+        PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
+        pstmt.setString(1, factory_code);
+        pstmt.setString(2, machine_code);
+        pstmt.setInt(3, prog_id);
+        pstmt.setString(4, serial_number);
+        pstmt.setString(5, _bean.getResult());
+        pstmt.setString(6, "");
+        pstmt.setString(7, _bean.getHandlerAccount());
+        pstmt.setTimestamp(8, new java.sql.Timestamp(System.currentTimeMillis()));
+        pstmt.executeUpdate();//执行sql                                                                             int autoInckey = -1;
+        ResultSet rs = pstmt.getGeneratedKeys(); //获取结果
+        int autoIncKey = 0;
+        if (rs.next()) {
+            autoIncKey = rs.getInt(1);//取得ID
+            android.util.Log.d("wlDebug", "result = " + autoIncKey);
+        } else {
+            // throw an exception from here
+        }
+        String result_detail_sql = "insert into ntqc_result_detail (result_id,name,m_value,r_value,g_value,e_value) VALUES (?,?,?,?,?,?);";
+        for (int i = 0; i < _bean.getMeasurementValues().size(); i++) {
+            PreparedStatement mpstmt = conn.prepareStatement(result_detail_sql, Statement.RETURN_GENERATED_KEYS);
+            mpstmt.setInt(1, autoIncKey);
+            mpstmt.setString(2, _bean.getMItems().get(i));
+            mpstmt.setFloat(3, Float.valueOf(_bean.getMeasurementValues().get(i)));
+            mpstmt.setFloat(4, 0);
+            mpstmt.setString(5, _bean.getMeasurementGroup().get(i));
+            mpstmt.setString(6, _bean.getEvent());
+            mpstmt.executeUpdate();
+            mpstmt.close();
+        }
         close(pstmt, conn);
         return 1;
     }

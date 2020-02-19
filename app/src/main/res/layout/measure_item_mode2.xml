@@ -36,10 +36,30 @@
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"></View>
 
-    <alauncher.cn.measuringinstrument.widget.MValueViewLandscape
-        android:id="@+id/m_value_view"
+    <TextView
+        android:id="@+id/value_tv"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2" />
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="- -"
+        android:textColor="@android:color/white"
+        android:textSize="22sp" />
+
+    <View
+        android:layout_width="4dp"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"></View>
+
+    <TextView
+        android:id="@+id/value_group_tv"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/measure_item_ok"
+        android:gravity="center"
+        android:text="- -"
+        android:textColor="@android:color/white"
+        android:textSize="22sp" />
 
 </LinearLayout>

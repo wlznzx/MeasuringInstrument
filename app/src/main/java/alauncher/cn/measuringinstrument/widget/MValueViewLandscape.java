@@ -97,10 +97,11 @@ public class MValueViewLandscape extends View {
         hw = 0.9 * upper_tolerance_value + 0.1 * lower_tolerance_value;
         lw = 0.1 * upper_tolerance_value + 0.9 * lower_tolerance_value;
         baseValue = Arith.div(((nominal + upper_tolerance_value) + (nominal + lower_tolerance_value)), 2);
-
+        /*
         android.util.Log.d("wlDebug", "nominal_value = " + nominal_value + " upper_tolerance_value = " +
                 upper_tolerance_value + " lower_tolerance_value = " + lower_tolerance_value + " resolution = " + resolution +
                 "baseValue = " + baseValue);
+         */
         invalidate();
     }
 

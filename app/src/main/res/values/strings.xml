@@ -254,5 +254,23 @@
     <string name="group_name">分组名称</string>
     <string name="upper_limit_not_space">上限</string>
     <string name="lower_limit_not_space">下限</string>
+    <string name="data_title">M(描述)(分组)测量值</string>
+    <string name="measure_configration_str">测量配置</string>
+    <string name="measure_show_mode">测量显示模式</string>
+    <string name="value">数值</string>
+    <string name="set_not_space">设置</string>
+    <string name="step_sequence">步序</string>
+    <string name="measure_parameter">测量参数</string>
+    <string name="add_step">添加步序</string>
+    <string name="edit_step">编辑步序</string>
+    <string name="measure_item">测量项</string>
+    <string name="step">步序</string>
+    <string name="click_to_choose">点击选择</string>
+    <string name="step_enough">步骤序已达上线</string>
+    <string name="tips">提示</string>
+    <string name="choose_measure_item">选择测量参数</string>
+    <string name="without_measured_str">需测量项不能为空</string>
+    <string name="error">错误</string>
+    <string name="must_measured_all_items">所有测量项必须被测量</string>
 
 </resources>

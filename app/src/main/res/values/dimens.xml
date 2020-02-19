@@ -14,4 +14,5 @@
     <dimen name="measure_item_width">100dp</dimen>
     <dimen name="measure_item_height">70dp</dimen>
     <dimen name="measure_item_value_width">120dp</dimen>
+    <dimen name="data_m_width">140dp</dimen>
 </resources>

@@ -16,6 +16,8 @@ import com.tencent.bugly.crashreport.CrashReport;
 import org.greenrobot.greendao.database.Database;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
@@ -23,10 +25,12 @@ import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean2;
+import alauncher.cn.measuringinstrument.bean.MeasureConfigurationBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.RememberPasswordBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.bean.ResultBean2;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.bean.User;
@@ -131,7 +135,7 @@ public class App extends MultiDexApplication {
     }
 
     public static DeviceInfoBean getDeviceInfo() {
-        return getDaoSession().getDeviceInfoBeanDao().load(SETTING_ID);
+        return getDaoSession().getDeviceInfoBeanDao().load((long) App.getSetupBean().getCodeID());
     }
 
     public void initDefaultDate() {
@@ -298,6 +302,13 @@ public class App extends MultiDexApplication {
                 getDaoSession().getCalibrationBeanDao().insert(_bean);
             }
 
+            if (getDaoSession().getMeasureConfigurationBeanDao().load((long) i) == null) {
+                MeasureConfigurationBean _bean = new MeasureConfigurationBean();
+                _bean.setCode_id(i);
+                _bean.setMeasureMode(0);
+                getDaoSession().getMeasureConfigurationBeanDao().insert(_bean);
+            }
+
             /*
             if (getDaoSession().getTriggerConditionBeanDao().queryBuilder().where(TriggerConditionBeanDao.Properties.CodeID.eq(i)).list().size() == 0) {
                 for (int j = 1; j <= 4; j++) {
@@ -375,8 +386,6 @@ public class App extends MultiDexApplication {
                     }
                 }
             }
-
-
         }
         // 初始化
 
@@ -385,251 +394,312 @@ public class App extends MultiDexApplication {
     }
 
     public void initTestDatas() {
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        Arrays.asList("23.9896", "24", "24", "24");
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9914", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9914, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.992", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.992, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.992", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.99, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
         // 6
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9914, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9914", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9906, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9906", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
         // 11
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9902, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9912, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9912", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9922, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9922", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9912, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9912", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
         // 21
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.99, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9912, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9912", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9914, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9914", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.99, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.99, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.991, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.991", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9902, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9902, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
         // 31
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.99, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.99, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9894, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9894", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9902, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9896, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9902, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9898, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9902, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 23.9912, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("23.9912", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
     }
 
 
     public void initTestDatas2() {
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0088005065918, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0088005065918", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0117988586426, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0117988586426", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0066986083984, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0066986083984", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0082015991211, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0082015991211", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0122985839844, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0122985839844", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
         // 6
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0084991455078, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0084991455078", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0127983093262, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0127983093262", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0089988708496, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0089988708496", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0083999633789, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0083999633789", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0088996887207, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0088996887207", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
         // 11
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0099983215332, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0099983215332", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0084991455078, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0084991455078", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0099983215332, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0099983215332", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0124015808105, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0124015808105", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0102996826172, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0102996826172", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0136985778809, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0136985778809", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.013801574707, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.013801574707", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.013801574707, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.013801574707", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0139007568359, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0139007568359", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
 
-        App.getDaoSession().getResultBeanDao().insert(new ResultBean(null, 1, "吴工",
+        App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "合格", 36.0139007568359, 24, 24, 24, "m1", "m2", "m3", "m4"));
+                "OK", false, Arrays.asList("36.0139007568359", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                null, null, null, null, true));
     }
 }

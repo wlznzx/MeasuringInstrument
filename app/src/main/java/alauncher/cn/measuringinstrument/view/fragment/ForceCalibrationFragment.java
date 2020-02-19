@@ -24,6 +24,7 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
+import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.TriggerConditionBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ForceCalibrationBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.TriggerConditionBeanDao;
@@ -57,6 +58,8 @@ public class ForceCalibrationFragment extends Fragment {
     private List<TriggerConditionBean> mDatas;
 
     private RefreshInterface mRefreshInterface;
+
+    private List<ParameterBean2> mParameterBean2s;
 
     // private StoreBean mStoreBean;
 
@@ -171,7 +174,7 @@ public class ForceCalibrationFragment extends Fragment {
             TriggerConditionBean _bean = mDatas.get(position);
 
 //            holder.setText(R.id.m_value_tv, "M" + (position + 1));
-            holder.setText(R.id.m_value_tv, "M" + _bean.getMIndex());
+            holder.setText(R.id.m_value_tv, "M" + (_bean.getMIndex() + 1));
 //            Spinner isScale = holder.getConvertView().findViewById(R.id.is_scale_tv);
 //            isScale.setSelection(_bean.getIsScale() ? 0 : 1);
             holder.setText(R.id.is_scale_tv, _bean.getIsScale() ? "是" : "否");

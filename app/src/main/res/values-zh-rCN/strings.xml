@@ -107,4 +107,11 @@
     <string name="machine_tool">机床</string>
     <string name="spare_parts">零件</string>
     <string name="code_step_title">分步测量</string>
+    <string name="step">步序</string>
+    <string name="click_to_choose">点击选择</string>
+    <string name="tips">提示</string>
+    <string name="choose_measure_item">选择测量参数</string>
+    <string name="without_measured_str">需测量项不能为空</string>
+    <string name="error">错误</string>
+    <string name="must_measured_all_items">所有测量项必须被测量</string>
 </resources>

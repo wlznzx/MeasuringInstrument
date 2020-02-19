@@ -71,6 +71,11 @@
         <item>离职</item>
     </string-array>
 
+    <string-array name="measure_show_mode" translatable="false">
+        <item>横显1</item>
+        <item>横显2</item>
+    </string-array>
+
     <string-array name="limit_array">
         <item code="0">管理员</item>
         <item code="4">操作员</item>
@@ -78,8 +83,8 @@
 
     <string-array name="result" translatable="false">
         <item></item>
-        <item>合格</item>
-        <item>不合格</item>
+        <item>OK</item>
+        <item>NG</item>
     </string-array>
 
     <string-array name="force_calibration_item" translatable="false">

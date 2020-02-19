@@ -25,8 +25,5 @@ public class Constants {
 
     public static ArrayList<ResultBean> _bean = new ArrayList<ResultBean>();
 
-    static {
-        _bean.add(new ResultBean());
-    }
 
 }

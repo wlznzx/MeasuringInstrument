@@ -589,7 +589,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             @Override
             public void run() {
                 try {
-                    JdbcUtil.addResult2(_dBean.getFactoryCode(), _dBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _bean);
+                    // JdbcUtil.addResult2(_dBean.getFactoryCode(), _dBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _bean);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -707,6 +707,11 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
             }
         }
         return "OK";
+    }
+
+    @Override
+    public String[] getResults(double[] ms) {
+        return new String[0];
     }
 
     /*

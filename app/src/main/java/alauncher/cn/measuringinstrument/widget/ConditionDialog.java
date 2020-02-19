@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -11,12 +12,15 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
+import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.TriggerConditionBean;
+import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.TriggerConditionBeanDao;
 import alauncher.cn.measuringinstrument.view.fragment.ForceCalibrationFragment;
 import butterknife.BindView;
@@ -61,9 +65,13 @@ public class ConditionDialog extends Dialog {
     @BindView(R.id.condition_dialog_title_tv)
     public TextView titleTv;
 
-    ForceCalibrationFragment mFragment;
+    private ForceCalibrationFragment mFragment;
 
-    TriggerConditionBean _bean;
+    private TriggerConditionBean _bean;
+
+    private List<ParameterBean2> mParameterBean2s;
+
+    public List<String> steps = new ArrayList();
 
     public ConditionDialog(Context context, ForceCalibrationFragment pFragment) {
         super(context, R.style.Dialog);
@@ -101,6 +109,17 @@ public class ConditionDialog extends Dialog {
         setContentView(R.layout.condition_dialog_layout);
         ButterKnife.bind(this);
 
+        mParameterBean2s = App.getDaoSession().getParameterBean2Dao().queryBuilder()
+                .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()), ParameterBean2Dao.Properties.Enable.eq(true))
+                .list();
+
+        for (int i = 0; i < mParameterBean2s.size(); i++) {
+            steps.add("M" + String.valueOf(mParameterBean2s.get(i).getSequenceNumber() + 1));
+        }
+
+        ArrayAdapter<String> stepAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, steps);
+        mIndexSP.setAdapter(stepAdapter);
+
         isScaleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -130,7 +149,7 @@ public class ConditionDialog extends Dialog {
             scaleEdt.setText(String.valueOf(_bean.getScale()));
             scaleTimeEdt.setText(String.valueOf(_bean.getStableTime()));
             isScaleSwitch.setChecked(_bean.getIsScale());
-            mIndexSP.setSelection(_bean.getMIndex() - 1);
+            // mIndexSP.setSelection(_bean.getMIndex() - 1);
             titleTv.setText(R.string.edit_condition);
         }
     }
@@ -158,7 +177,7 @@ public class ConditionDialog extends Dialog {
 
             _bean.setStableTime(Double.valueOf(scaleTimeEdt.getText().toString().trim()));
             _bean.setCodeID(App.getSetupBean().getCodeID());
-            _bean.setMIndex(mIndexSP.getSelectedItemPosition() + 1);
+            _bean.setMIndex(mParameterBean2s.get(mIndexSP.getSelectedItemPosition()).getSequenceNumber());
             if (isScaleSwitch.isChecked())
                 _bean.setScale(Double.valueOf(scaleEdt.getText().toString().trim()));
             App.getDaoSession().getTriggerConditionBeanDao().insertOrReplace(_bean);

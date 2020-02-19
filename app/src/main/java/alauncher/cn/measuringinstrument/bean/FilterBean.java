@@ -70,4 +70,16 @@ public class FilterBean {
     public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
+
+    @Override
+    public String toString() {
+        return "FilterBean{" +
+                "handler='" + handler + '\'' +
+                ", workid='" + workid + '\'' +
+                ", event='" + event + '\'' +
+                ", result='" + result + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
+    }
 }

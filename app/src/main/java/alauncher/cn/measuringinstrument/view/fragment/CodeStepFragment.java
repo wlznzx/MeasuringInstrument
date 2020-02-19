@@ -109,7 +109,7 @@ public class CodeStepFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_step, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initView();
+        // initView();
         return view;
     }
 

@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import alauncher.cn.measuringinstrument.bean.ResultBean;
+import alauncher.cn.measuringinstrument.bean.ResultBean2;
 import alauncher.cn.measuringinstrument.view.StatisticalActivity;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
@@ -135,21 +135,22 @@ public class ExcelUtil {
                 WritableSheet sheet = writebook.getSheet(0);
 
                 for (int j = 0; j < objList.size(); j++) {
-                    ResultBean demoBean = (ResultBean) objList.get(j);
+                    ResultBean2 demoBean = (ResultBean2) objList.get(j);
                     List<String> list = new ArrayList<>();
-                    list.add(demoBean.getHandlerAccout());
+                    list.add(demoBean.getHandlerAccount());
                     list.add(DateUtils.getDate(demoBean.getTimeStamp()));
-                    list.add("" + demoBean.getWorkid());
+                    list.add("" + demoBean.getWorkID());
                     list.add("" + demoBean.getEvent());
                     list.add("" + demoBean.getResult());
-                    list.add("" + demoBean.getM1());
-                    list.add("" + demoBean.getM1_group());
-                    list.add("" + demoBean.getM2());
-                    list.add("" + demoBean.getM2_group());
-                    list.add("" + demoBean.getM3());
-                    list.add("" + demoBean.getM3_group());
-                    list.add("" + demoBean.getM4());
-                    list.add("" + demoBean.getM4_group());
+                    String _data = "";
+                    for (int i = 0; i < demoBean.getMeasurementValues().size(); i++) {
+                        _data = _data + demoBean.getMItems().get(i)
+                                + "(" + demoBean.getMDescribe().get(i) + ")"
+                                + "(" + demoBean.getMeasurementGroup().get(i) + ")"
+                                + demoBean.getMeasurementValues().get(i)
+                                + "\n";
+                    }
+                    list.add("" + _data);
                     for (int i = 0; i < list.size(); i++) {
                         sheet.addCell(new Label(i, j + 1, list.get(i), arial12format));
                         if (list.get(i).length() <= 4) {
@@ -166,7 +167,7 @@ public class ExcelUtil {
 
                 writebook.write();
                 workbook.close();
-                Toast.makeText(c, "导出Excel成功", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(c, "导出Excel成功", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

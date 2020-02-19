@@ -22,8 +22,9 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.view.fragment.CodeBaseInfoFragment;
-import alauncher.cn.measuringinstrument.view.fragment.CodeStepFragment;
+import alauncher.cn.measuringinstrument.view.fragment.CodeStepFragment2;
 import alauncher.cn.measuringinstrument.view.fragment.ForceCalibrationFragment;
+import alauncher.cn.measuringinstrument.view.fragment.MeasureConfigurationFragment;
 import alauncher.cn.measuringinstrument.view.fragment.WorkpieceFragment;
 import butterknife.BindView;
 
@@ -35,13 +36,13 @@ public class CodeDetailActivity extends BaseActivity implements ForceCalibration
 
     @BindView(R.id.tab_vp)
     protected ViewPager mVp;
-    /**************Adapter***************/
+    /************** Adapter ***************/
     protected TabFragmentPageAdapter tabFragmentPageAdapter;
-    /************Params*******************/
+    /************ Params *******************/
     protected List<Fragment> mFragmentList;
     private List<String> mTitleList;
 
-    private CodeStepFragment mCodeStepFragment;
+    private CodeStepFragment2 mCodeStepFragment2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,17 +58,19 @@ public class CodeDetailActivity extends BaseActivity implements ForceCalibration
     protected void initView() {
         CodeBaseInfoFragment codeBaseInfoFragment = null;
         ForceCalibrationFragment forceCalibrationFragment = null;
-        // CodeStepFragment launcherFragment = null;
+        MeasureConfigurationFragment measureConfigurationFragment = null;
         WorkpieceFragment mWorkpieceFragment = null;
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment instanceof CodeBaseInfoFragment) {
                 codeBaseInfoFragment = (CodeBaseInfoFragment) fragment;
             } else if (fragment instanceof alauncher.cn.measuringinstrument.view.fragment.CodeBaseInfoFragment) {
                 forceCalibrationFragment = (ForceCalibrationFragment) fragment;
-            } else if (fragment instanceof CodeStepFragment) {
-                mCodeStepFragment = (CodeStepFragment) fragment;
+            } else if (fragment instanceof CodeStepFragment2) {
+                mCodeStepFragment2 = (CodeStepFragment2) fragment;
             } else if (fragment instanceof WorkpieceFragment) {
                 mWorkpieceFragment = (WorkpieceFragment) fragment;
+            } else if (fragment instanceof MeasureConfigurationFragment) {
+                measureConfigurationFragment = (MeasureConfigurationFragment) fragment;
             }
         }
         if (codeBaseInfoFragment == null)
@@ -76,20 +79,24 @@ public class CodeDetailActivity extends BaseActivity implements ForceCalibration
             forceCalibrationFragment = new ForceCalibrationFragment();
             forceCalibrationFragment.setRefreshInterface(this);
         }
-        if (mCodeStepFragment == null)
-            mCodeStepFragment = new CodeStepFragment();
+        if (mCodeStepFragment2 == null)
+            mCodeStepFragment2 = new CodeStepFragment2();
         if (mWorkpieceFragment == null) {
             mWorkpieceFragment = new WorkpieceFragment();
         }
+        if (measureConfigurationFragment == null) {
+            measureConfigurationFragment = new MeasureConfigurationFragment();
+        }
 
         String[] mTitles = new String[]{getString(R.string.code_base_info),
+                getString(R.string.measure_configration_str),
                 getString(R.string.workpiece_pic),
                 getString(R.string.code_force_cailbration),
                 getString(R.string.code_step)};
         mTitleList = Arrays.asList(mTitles);
 
 
-        mFragmentList = Arrays.asList(codeBaseInfoFragment, mWorkpieceFragment, forceCalibrationFragment, mCodeStepFragment);
+        mFragmentList = Arrays.asList(codeBaseInfoFragment, measureConfigurationFragment, mWorkpieceFragment, forceCalibrationFragment, mCodeStepFragment2);
 
         tabFragmentPageAdapter = new TabFragmentPageAdapter(getSupportFragmentManager());
         mVp.setAdapter(tabFragmentPageAdapter);
@@ -107,7 +114,7 @@ public class CodeDetailActivity extends BaseActivity implements ForceCalibration
 
     @Override
     public void onTriggerConditionChanged() {
-        if(mCodeStepFragment != null)mCodeStepFragment.onTriggerConditionChanged();
+        // if (mCodeStepFragment2 != null) mCodeStepFragment2.onTriggerConditionChanged();
     }
 
     public class TabFragmentPageAdapter extends FragmentPagerAdapter {

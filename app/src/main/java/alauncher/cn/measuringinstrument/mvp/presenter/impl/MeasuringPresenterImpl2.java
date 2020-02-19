@@ -13,8 +13,11 @@ import org.nfunk.jep.ParseException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,11 +32,13 @@ import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.ProcessBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean2;
 import alauncher.cn.measuringinstrument.bean.StepBean;
+import alauncher.cn.measuringinstrument.bean.StepBean2;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
 import alauncher.cn.measuringinstrument.bean.TriggerConditionBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.StepBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StepBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.utils.Arith;
@@ -75,9 +80,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
     private int[] currentCHADValue = {4230, 8241, 12342, 14537};
 
-    private GroupBean[] mGroupBeans = new GroupBean[4];
-
-    // 参数s
+    // 参数
     private List<ParameterBean2> mParameterBean2Lists;
 
     // 上公差值;
@@ -85,37 +88,39 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     // 下公差值;
     private double[] lowerValue = new double[4];
 
-    //
-    private double[] upperToleranceValue = new double[4];
-    private double[] lowerToleranceValue = new double[4];
-    //
-
     // 附加信息;
-    private List<StepBean> stepBeans;
+    private List<StepBean2> stepBeans;
 
     // 总共有的测量步骤
     public int maxStep;
 
     // 缓存测量值;
-    private double[] tempMs = new double[4];
+    private double[] tempMs;
 
     // 重新解析公式;
     private List<String> reCodeList = new ArrayList<>();
 
     // 重新解析公式，为了个过程值之间的时候，也可以运算;
     private List<String> reCodesForCaluationList = new ArrayList<>();
-    //
+
+    // 存储过程中的测量值;
+    private List<List<Double>> tempValues = new ArrayList<List<Double>>();
+
+    // 测量状态;
     private int measure_state = 3;
 
-    private List<List<ProcessBean>> processBeanLists = new ArrayList<>();
 
     private int currentStep = -1;
 
-    private DeviceInfoBean _dBean;
+    private List<List<ProcessBean>> processBeanLists = new ArrayList<>();
 
-    public boolean[] mGeted = {false, false, false, false};
+    private DeviceInfoBean mDeviceInfoBean;
+
+    public boolean[] mGeted;
     //
-    public boolean[] inLimited = {true, true, true, true};
+    public boolean[] inLimited;
+
+    public double[] midValue;
 
     public StoreBean mStoreBean;
 
@@ -124,7 +129,6 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     private boolean haveProcessCalculate = false;
 
     private boolean isGetProcessValue = false;
-
     // 是单步还是分步取值;
     private boolean isSingleStep = true;
 
@@ -136,6 +140,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     private Node[] nodes;
     // 分组信息;
     private List<List<GroupBean2>> groupBean2Lists = new ArrayList<>();
+    // M值与测量值的键值对;
+    private Map<String, Integer> mKeyMap = new HashMap<String, Integer>();
 
     private final int MSG_AUTO_STORE = 1;
 
@@ -151,9 +157,6 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         }
     };
 
-    // 存储过程中的测量值;
-    private List<List<Double>> tempValues = new ArrayList<List<Double>>();
-
     public MeasuringPresenterImpl2(MeasuringActivityView view) {
         mView = view;
         jep.addFunction("Max", new Max());
@@ -164,9 +167,11 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         calculationJEP.addFunction("Min", new Min());
         calculationJEP.addFunction("Avg", new Avg());
         calculationJEP.addFunction("Dif", new Dif());
+        for (int i = 0; i < 4; i++) {
+            tempValues.add(new ArrayList<>());
+        }
+        mDeviceInfoBean = App.getDeviceInfo();
         initParameter();
-
-        _dBean = App.getDeviceInfo();
     }
 
     public void initParameter() {
@@ -174,52 +179,36 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         // 初始化过程值的List;
         reCodeList.clear();
         reCodesForCaluationList.clear();
-        tempValues.clear();
         processBeanLists.clear();
         groupBean2Lists.clear();
+        mKeyMap.clear();
         // 获取参数列表;
         mParameterBean2Lists = App.getDaoSession().getParameterBean2Dao().queryBuilder()
                 .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()), ParameterBean2Dao.Properties.Enable.eq(true))
                 .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
 
-        for (ParameterBean2 _bean2 : mParameterBean2Lists) {
-            groupBean2Lists.add(App.getDaoSession().getGroupBean2Dao().queryBuilder().where(GroupBean2Dao.Properties.PID.eq(_bean2.getId())).list());
+        for (int i = 0; i < mParameterBean2Lists.size(); i++) {
+            groupBean2Lists.add(App.getDaoSession().getGroupBean2Dao().queryBuilder().where(GroupBean2Dao.Properties.PID.eq(mParameterBean2Lists.get(i).getId())).list());
+            mKeyMap.put(String.valueOf(mParameterBean2Lists.get(i).getSequenceNumber()), i);
         }
 
         mValues = new double[mParameterBean2Lists.size()];
         nodes = new Node[mParameterBean2Lists.size()];
+        mGeted = new boolean[mParameterBean2Lists.size()];
+        inLimited = new boolean[mParameterBean2Lists.size()];
+        tempMs = new double[mParameterBean2Lists.size()];
+        midValue = new double[mParameterBean2Lists.size()];
 
         for (int i = 0; i < mParameterBean2Lists.size(); i++) {
-            tempValues.add(new ArrayList<>());
             processBeanLists.add(new ArrayList<>());
+            midValue[i] = (mParameterBean2Lists.get(i).getLowerToleranceValue() + mParameterBean2Lists.get(i).getNominalValue()
+                    + mParameterBean2Lists.get(i).getUpperToleranceValue() + mParameterBean2Lists.get(i).getNominalValue()) / 2;
         }
 
         mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
 
         if (mParameterBean2Lists.size() > 0) {
             // 计算上下公差值;
-
-            /*
-            upperValue[0] = mParameterBean.getM1_nominal_value() + (mParameterBean.getM1_upper_tolerance_value());
-            upperValue[1] = mParameterBean.getM2_nominal_value() + (mParameterBean.getM2_upper_tolerance_value());
-            upperValue[2] = mParameterBean.getM3_nominal_value() + (mParameterBean.getM3_upper_tolerance_value());
-            upperValue[3] = mParameterBean.getM4_nominal_value() + (mParameterBean.getM4_upper_tolerance_value());
-
-            lowerValue[0] = mParameterBean.getM1_nominal_value() + (mParameterBean.getM1_lower_tolerance_value());
-            lowerValue[1] = mParameterBean.getM2_nominal_value() + (mParameterBean.getM2_lower_tolerance_value());
-            lowerValue[2] = mParameterBean.getM3_nominal_value() + (mParameterBean.getM3_lower_tolerance_value());
-            lowerValue[3] = mParameterBean.getM4_nominal_value() + (mParameterBean.getM4_lower_tolerance_value());
-
-            upperToleranceValue[0] = mParameterBean.getM1_upper_tolerance_value();
-            upperToleranceValue[1] = mParameterBean.getM2_upper_tolerance_value();
-            upperToleranceValue[2] = mParameterBean.getM3_upper_tolerance_value();
-            upperToleranceValue[3] = mParameterBean.getM4_upper_tolerance_value();
-
-            lowerToleranceValue[0] = mParameterBean.getM1_lower_tolerance_value();
-            lowerToleranceValue[1] = mParameterBean.getM2_lower_tolerance_value();
-            lowerToleranceValue[2] = mParameterBean.getM3_lower_tolerance_value();
-            lowerToleranceValue[3] = mParameterBean.getM4_lower_tolerance_value();
-            */
 
             // 解析公式，提取过程值;
             String _regx = "L.*?\\)";
@@ -254,19 +243,10 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             Log.d(TAG, mCalibrationBean.toString());
         }
 
-        GroupBeanDao _dao = App.getDaoSession().getGroupBeanDao();
-        if (_dao != null) {
-            for (int i = 0; i < 4; i++) {
-                try {
-                    mGroupBeans[i] = _dao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(i + 1)).unique();
-                } catch (DaoException e) {
-                    mGroupBeans[i] = _dao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(i + 1)).list().get(0);
-                }
-            }
-        }
-
         stepBeans = App.getDaoSession().
-                getStepBeanDao().queryBuilder().where(StepBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderAsc(StepBeanDao.Properties.StepID).list();
+                getStepBean2Dao().queryBuilder().where(StepBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderAsc(StepBean2Dao.Properties.SequenceNumber).list();
+
+        android.util.Log.d("wlDebug", "" + stepBeans.toString());
 
         maxStep = stepBeans.size();
         if (maxStep > 0)
@@ -292,39 +272,35 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             // 没有分步,判断是否有过程值与单点值同时存在的情况；
             if (haveProcessCalculate) {
                 for (List<ProcessBean> _processBeanList : processBeanLists) {
-                    if (_processBeanList.size() > 0) {
+                    if (_processBeanList.size() == 0) {
                         mView.showUnSupportDialog(-1);
                         return;
                     }
                 }
-                measure_state = 1;
-                mView.setValueBtnVisible(false);
-            } else {
-                mView.setValueBtnVisible(false);
             }
+            mView.setValueBtnVisible(false);
         } else {
             // 有分步，要判断出具体哪一步有过程值和单点值同时存在;
             for (int i = 0; i < stepBeans.size(); i++) {
-                StepBean _bean = stepBeans.get(i);
-                boolean flag = false, temp = true;
-                for (int j = 0; j < 4; j++) {
-                    if (StepUtils.getChannelByStep(j, _bean.getMeasured())) {
-                        if (!flag) {
-                            flag = true;
-                            temp = processBeanLists.get(j).size() > 0;
-                        } else {
-                            if (temp ^ (processBeanLists.get(j).size() > 0)) {
-                                // 异或，存在单点与过程同在的情况;
-                                Log.d("wlDebug", "i = " + i);
-                                mView.showUnSupportDialog(i);
-                                return;
-                            }
+                StepBean2 _bean = stepBeans.get(i);
+                boolean isFirst = true, temp = true;
+                for (int j = 0; j < _bean.getMeasureItems().size(); j++) {
+                    String index = _bean.getMeasureItems().get(j);
+                    if (isFirst) {
+                        isFirst = false;
+                        temp = processBeanLists.get(mKeyMap.get(index)).size() > 0;
+                    } else {
+                        if (temp ^ (processBeanLists.get(mKeyMap.get(index)).size() > 0)) {
+                            // 异或，存在单点与过程同在的情况;
+                            mView.showUnSupportDialog(i);
+                            return;
                         }
                     }
                 }
             }
-            measure_state = 1;
         }
+        measure_state = MeasuringPresenter.NORMAL_NODE;
+        mView.updateSaveBtnMsg();
         startAutoStore();
     }
 
@@ -406,14 +382,13 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             }
         }).start();
         */
-
-        forValueTest();
+        // forValueTest();
     }
 
     // 5301 1086 2031 3036 38C9 4E54
     @Override
     public void stopMeasuring() {
-        Log.d("wlDebug", "stopMeasuring.");
+        // Log.d("wlDebug", "stopMeasuring.");
         stopAutoStore();
         if (serialHelper != null && serialHelper.isOpen()) {
             serialHelper.close();
@@ -427,13 +402,15 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
     @Override
     public String saveResult(double[] ms, AddInfoBean bean, boolean isManual) {
-        // 如果是手动点击的保存，需要计算;
 
-        android.util.Log.d("wlDebug", "saveResult = " + ms);
+        android.util.Log.d("wlDebug", Arrays.toString(ms));
+        if (ms == null) {
+            return "- -";
+        }
 
+        // 如果是手动点击的保存，需要计算，具体第几个测量参数是过程值，就取过程值;
         if (isManual) {
-            /*
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < processBeanLists.size(); i++) {
                 if (processBeanLists.get(i).size() > 0) {
                     try {
                         ms[i] = handlerProcessValues2(processBeanLists.get(i), i);
@@ -442,27 +419,25 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                     }
                 }
             }
-            */
         }
 
         for (List<Double> list : tempValues) {
             list.clear();
         }
 
-        /*
         if (!isSingleStep) {
-            StepBean _bean = stepBeans.get(getStep());
+            StepBean2 _bean = stepBeans.get(getStep());
             TriggerConditionBean _TriggerConditionBean = App.getDaoSession().getTriggerConditionBeanDao().load(_bean.getConditionID());
             if (_TriggerConditionBean != null) {
-                int mIndex = _TriggerConditionBean.getMIndex() - 1;
+                int mIndex = mKeyMap.get(String.valueOf(_TriggerConditionBean.getMIndex()));
                 if (_TriggerConditionBean.getIsScale()) {
                     // 增加的部分，公差带 * scale / 2
-                    double m = (Math.abs(upperToleranceValue[mIndex] - lowerToleranceValue[mIndex]) * _TriggerConditionBean.getScale()) / 2;
+                    double m = (Math.abs(mParameterBean2Lists.get(mIndex)
+                            .getUpperToleranceValue() - mParameterBean2Lists.get(mIndex).getLowerToleranceValue()) * _TriggerConditionBean.getScale()) / 2;
 
                     // 计算公差中值;
-                    double midValue = (upperValue[mIndex] + lowerValue[mIndex]) / 2;
-                    double scaleUpperLimit = midValue + m;
-                    double scaleLowerLimit = midValue - m;
+                    double scaleUpperLimit = midValue[mIndex] + m;
+                    double scaleLowerLimit = midValue[mIndex] - m;
 
                     Log.d("wlDebug", "scaleUpperLimit = " + scaleUpperLimit + " scaleLowerLimit = " + scaleLowerLimit + " M = " + ms[mIndex]);
                     if (ms[mIndex] < scaleLowerLimit || ms[mIndex] > scaleUpperLimit) {
@@ -505,6 +480,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
             }
 
+            // 当前步序测量所得值;
+            /*
             for (int i = 0; i < ms.length; i++) {
                 if (StepUtils.getChannelByStep(i, _bean.getMeasured())) {
                     Log.d("wlDebug", "获取第" + i + "值:" + ms[i]);
@@ -513,7 +490,12 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                     mGeted[i] = true;
                 }
             }
-
+            */
+            for (int i = 0; i < _bean.getMeasureItems().size(); i++) {
+                tempMs[mKeyMap.get(_bean.getMeasureItems().get(i))] = ms[mKeyMap.get(_bean.getMeasureItems().get(i))];
+                mGeted[mKeyMap.get(_bean.getMeasureItems().get(i))] = true;
+            }
+            android.util.Log.d("wlDebug", "tempMs = " + Arrays.toString(tempMs));
             if (getStep() == maxStep - 1) {
                 doSave(tempMs, bean);
             }
@@ -521,13 +503,12 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         } else {
             doSave(ms, bean);
         }
-        */
-        doSave(ms, bean);
 
         measure_state = 1;
         mView.updateSaveBtnMsg();
         return "OK";
     }
+
 
     private void doSave(double[] ms, AddInfoBean bean) {
         for (int i = 0; i < mGeted.length; i++) {
@@ -537,28 +518,29 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         _bean.setHandlerAccount(App.handlerAccout);
         _bean.setCodeID(App.getSetupBean().getCodeID());
         _bean.setMeasurementValues(new ArrayList<>());
+        _bean.setMItems(new ArrayList<>());
+        _bean.setMDescribe(new ArrayList<>());
+
         for (int i = 0; i < ms.length; i++) {
             _bean.getMeasurementValues().add(String.valueOf(ms[i]));
+            _bean.getMItems().add("" + (mParameterBean2Lists.get(i).getSequenceNumber() + 1));
+            _bean.getMDescribe().add(mParameterBean2Lists.get(i).getDescribe());
         }
+        _bean.setMeasurementGroup(Arrays.asList(getMGroupValues(ms)));
+
         if (mParameterBean2Lists.size() > 0) {
             _bean.setResult(getMResults(ms));
         } else {
             _bean.setResult("- -");
         }
-        /*
-        String[] _group = getMGroupValues(ms);
-        _bean.setM1_group(_group[0]);
-        _bean.setM2_group(_group[1]);
-        _bean.setM3_group(_group[2]);
-        _bean.setM4_group(_group[3]);
-         */
+
         _bean.setTimeStamp(System.currentTimeMillis());
         if (bean != null) {
             _bean.setEvent(bean.getEvent());
             _bean.setWorkID(bean.getWorkid());
         } else {
-            _bean.setEvent("");
-            _bean.setWorkID("");
+            _bean.setEvent("- -");
+            _bean.setWorkID("- -");
         }
         Log.d("wlDebug", "save bean = " + _bean.toString());
         App.getDaoSession().getResultBean2Dao().insert(_bean);
@@ -570,7 +552,12 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             @Override
             public void run() {
                 try {
-                    // JdbcUtil.addResult2(_dBean.getFactoryCode(), _dBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _bean);
+                    int r = JdbcUtil.addResult2(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID(), "", _bean);
+                    // 上传成功;
+                    if (r > 0) {
+                        _bean.setIsUploaded(true);
+                        App.getDaoSession().getResultBean2Dao().insertOrReplace(_bean);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -605,8 +592,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         } else {
             currentStep = 0;
         }
-        measure_state = 1;
-        Log.d("wlDebug", "Measured = " + Integer.toBinaryString(stepBeans.get(getStep()).getMeasured()));
+        measure_state = MeasuringPresenter.NORMAL_NODE;
+        // Log.d("wlDebug", "Measured = " + Integer.toBinaryString(stepBeans.get(getStep()).getMeasured()));
     }
 
     /*
@@ -626,14 +613,14 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         for (List<Double> list : tempValues) {
             list.clear();
         }
-        measure_state = 2;
+        measure_state = MeasuringPresenter.IN_PROCESS_VALUE_MODE;
         mView.updateSaveBtnMsg();
     }
 
     @Override
     public void stopGetProcessValue() {
         isGetProcessValue = false;
-        measure_state = 3;
+        measure_state = MeasuringPresenter.IN_PROCESS_VALUE_BEEN_TAKEN_MODE;
         mView.updateSaveBtnMsg();
     }
 
@@ -647,9 +634,9 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         return measure_state;
     }
 
-    public StepBean getStepBean() {
+    public StepBean2 getStepBean() {
         if (stepBeans.size() > 0) {
-            StepBean _bean = stepBeans.get(currentStep);
+            StepBean2 _bean = stepBeans.get(currentStep);
             return _bean;
         } else {
             return null;
@@ -674,6 +661,25 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             }
         }
         return "OK";
+    }
+
+    /*
+     *
+     *
+     *
+     * */
+    @Override
+    public String[] getResults(double[] ms) {
+        String[] result = new String[ms.length];
+        for (int i = 0; i < ms.length; i++) {
+            ParameterBean2 _bean = mParameterBean2Lists.get(i);
+            if ((ms[i] > (_bean.getNominalValue() + _bean.getUpperToleranceValue()) || ms[i] < (_bean.getNominalValue() + _bean.getLowerToleranceValue()))) {
+                result[i] = "NG";
+            } else {
+                result[i] = "OK";
+            }
+        }
+        return result;
     }
 
     /*
@@ -712,15 +718,18 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 for (int i = 0; i < mParameterBean2Lists.size(); i++) {
                     if (reCodeList.get(i) != null && !reCodeList.get(i).equals("")) {
                         if (processBeanLists.get(i).size() > 0) {
-
+                            Node node = jep.parse(reCodesForCaluationList.get(i));
+                            mValues[i] = Arith.round((double) jep.evaluate(node) + mParameterBean2Lists.get(i).getDeviation(), 4);
                         } else {
                             if (nodes[i] == null) nodes[i] = jep.parse(reCodeList.get(i));
-                            mValues[i] = (double) jep.evaluate(nodes[i]) + mParameterBean2Lists.get(i).getDeviation();
+                            mValues[i] = Arith.round((double) jep.evaluate(nodes[i]) + mParameterBean2Lists.get(i).getDeviation(), 4);
                         }
                     }
                 }
-                if (mView != null)
+
+                if (mView != null) {
                     mView.onMeasuringDataUpdate(mValues);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -739,11 +748,12 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         chValues[2] = inputValue[2];
         chValues[3] = inputValue[3];
 
-        if (haveProcessCalculate && tempValues.get(0).size() <= 5000) {
+        if (isGetProcessValue && haveProcessCalculate && tempValues.get(0).size() <= 5000) {
             for (int i = 0; i < 4; i++) {
                 tempValues.get(i).add(chValues[i]);
             }
         }
+
         if (mParameterBean2Lists.size() > 0) {
             try {
                 jep.addVariable("ch1", chValues[0]);
@@ -753,15 +763,19 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 for (int i = 0; i < mParameterBean2Lists.size(); i++) {
                     if (reCodeList.get(i) != null && !reCodeList.get(i).equals("")) {
                         if (processBeanLists.get(i).size() > 0) {
-
+                            Node node = jep.parse(reCodesForCaluationList.get(i));
+                            mValues[i] = Arith.round((double) jep.evaluate(node) + mParameterBean2Lists.get(i).getDeviation(), 4);
                         } else {
                             if (nodes[i] == null) nodes[i] = jep.parse(reCodeList.get(i));
-                            mValues[i] = (double) jep.evaluate(nodes[i]) + mParameterBean2Lists.get(i).getDeviation();
+                            mValues[i] = Arith.round((double) jep.evaluate(nodes[i]) + mParameterBean2Lists.get(i).getDeviation(), 4);
                         }
                     }
                 }
-                if (mView != null)
+                // android.util.Log.d("wlDebug", "mValues = " + Arrays.toString(mValues));
+                if (mView != null) {
                     mView.onMeasuringDataUpdate(mValues);
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -831,7 +845,6 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 calculationValuesList.add((Double) calculationJEP.evaluate(node));
             }
             Collections.sort(calculationValuesList);
-            Log.d("wlDebug", "reList.size() = " + calculationValuesList.size());
             Log.d("wlDebug", "reList = " + calculationValuesList.toString());
             jep.addVariable(_process.getReplaceName(), calculationProcess(_process, calculationValuesList));
         }
@@ -910,9 +923,9 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         if (isSingleStep) {
             return haveProcessCalculate ? true : false;
         } else {
-            StepBean _bean = stepBeans.get(getStep());
-            for (int j = 0; j < 4; j++) {
-                if (StepUtils.getChannelByStep(j, _bean.getMeasured())) {
+            StepBean2 _bean = stepBeans.get(getStep());
+            for (int j = 0; j < mParameterBean2Lists.size(); j++) {
+                if (_bean.getMeasureItems().contains(String.valueOf(mParameterBean2Lists.get(j).getSequenceNumber()))) {
                     if (processBeanLists.get(j).size() > 0) return true;
                 }
             }
@@ -951,35 +964,35 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                     Thread.sleep(2000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.806335611, 0, 0, 0}));
 
-                    /*
-                    Thread.sleep(500);
+
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.880121264, 0, 0, 0}));
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.201054649, 0, 0, 0}));
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.825012437, 0, 0, 0}));
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.604557736, 0, 0, 0}));
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.064053735, 0, 0, 0}));
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.416952491, 0, 0, 0}));
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.616241929, 0, 0, 0}));
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.832199558, 0, 0, 0}));
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.40698447, 0, 0, 0}));
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.765952038, 0, 0, 0}));
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.346109684, 0, 0, 0}));
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.603089989, 0, 0, 0}));
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.500988845, 0, 0, 0}));
 
-
+                    /*
                     Thread.sleep(500);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.656299797, 0, 0, 0}));
                     Thread.sleep(500);

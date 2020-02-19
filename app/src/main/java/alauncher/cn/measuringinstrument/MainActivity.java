@@ -21,14 +21,12 @@ import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.view.AccoutManagementActivity;
 import alauncher.cn.measuringinstrument.view.CalibrationActivity;
 import alauncher.cn.measuringinstrument.view.CodeActivity;
-import alauncher.cn.measuringinstrument.view.DataActivity;
+import alauncher.cn.measuringinstrument.view.Data2Activity;
 import alauncher.cn.measuringinstrument.view.LoginActivity;
 import alauncher.cn.measuringinstrument.view.Measuring2Activity;
-import alauncher.cn.measuringinstrument.view.MeasuringActivity;
 import alauncher.cn.measuringinstrument.view.ParameterManagement2Activity;
-import alauncher.cn.measuringinstrument.view.ParameterManagementActivity;
-import alauncher.cn.measuringinstrument.view.SPCStatisticalActivity;
-import alauncher.cn.measuringinstrument.view.StatisticalActivity;
+import alauncher.cn.measuringinstrument.view.SPCStatistical2Activity;
+import alauncher.cn.measuringinstrument.view.Statistical2Activity;
 import alauncher.cn.measuringinstrument.view.StoreActivity;
 import alauncher.cn.measuringinstrument.view.SystemManagementActivity;
 
@@ -65,7 +63,7 @@ public class MainActivity extends BaseOActivity {
                 _datas.add(new MainInfo(R.string.user_management, R.drawable.account_box));
                 _datas.add(new MainInfo(R.string.program_management, R.drawable.code));
                 _datas.add(new MainInfo(R.string.system_management, R.drawable.phonelink_setup));
-                _datas.add(new MainInfo(R.string.store, R.drawable.archive));
+                // _datas.add(new MainInfo(R.string.store, R.drawable.archive));
                 _datas.add(new MainInfo(R.string.spc_analysis, R.drawable.show_chart));
                 _datas.add(new MainInfo(R.string.statistical_report, R.drawable.assignment));
                 _datas.add(new MainInfo(R.string.logout, R.drawable.logout_96));
@@ -121,12 +119,12 @@ public class MainActivity extends BaseOActivity {
         builder.show();
         if (builder.getWindow() == null) return;
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
-        TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
-        Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
-        Button sure = (Button) builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancle == null || sure == null) return;
+        TextView msg = builder.findViewById(R.id.tv_msg);
+        Button cancel = builder.findViewById(R.id.btn_cancle);
+        Button sure = builder.findViewById(R.id.btn_sure);
+        if (msg == null || cancel == null || sure == null) return;
         msg.setText("确认注销当前账号？");
-        cancle.setOnClickListener(new View.OnClickListener() {
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 builder.dismiss();
@@ -178,7 +176,7 @@ public class MainActivity extends BaseOActivity {
                             openActivty(Measuring2Activity.class, datas.get(position).strID);
                             break;
                         case 1:
-                            openActivty(DataActivity.class, datas.get(position).strID);
+                            openActivty(Data2Activity.class, datas.get(position).strID);
                             break;
                         case 2:
                             openActivty(ParameterManagement2Activity.class, datas.get(position).strID);
@@ -196,17 +194,17 @@ public class MainActivity extends BaseOActivity {
                             openActivty(SystemManagementActivity.class, datas.get(position).strID);
                             break;
                         case 7:
-                            openActivty(StoreActivity.class, datas.get(position).strID);
+                            openActivty(SPCStatistical2Activity.class, datas.get(position).strID);
                             break;
                         case 8:
-                            openActivty(SPCStatisticalActivity.class, datas.get(position).strID);
+                            openActivty(Statistical2Activity.class, datas.get(position).strID);
                             break;
                         case 9:
-                            openActivty(StatisticalActivity.class, datas.get(position).strID);
+                            // openActivty(Statistical2Activity.class, datas.get(position).strID);
+                            exitDialog();
                             break;
                         case 10:
 //                            logout();
-                            exitDialog();
                         default:
                             break;
                     }
@@ -267,7 +265,6 @@ public class MainActivity extends BaseOActivity {
         exitTV.setOnClickListener(this::onClick);
         quitTV.setOnClickListener(this::onClick);
     }
-
 
 
     public void onClick(View v) {
