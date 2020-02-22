@@ -13,13 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
-import alauncher.cn.measuringinstrument.bean.StepBean;
 import alauncher.cn.measuringinstrument.bean.StepBean2;
 import alauncher.cn.measuringinstrument.bean.TriggerConditionBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
@@ -77,6 +75,7 @@ public class StepEditDialog extends Dialog {
         mContext = context;
         if (pStepBean2 != null) {
             isAdd = false;
+            _bean = pStepBean2;
         }
         if (_bean == null) {
             _bean = new StepBean2();
@@ -128,7 +127,7 @@ public class StepEditDialog extends Dialog {
                         .setPositiveButton(R.string.ok, new OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int index) {
-                                _bean.getMeasureItems().clear();
+                                _bean.setMeasureItems(new ArrayList<>());
                                 String _str = "";
                                 for (int i = 0; i < checked.length; i++) {
                                     if (checked[i]) {
@@ -148,8 +147,9 @@ public class StepEditDialog extends Dialog {
     }
 
     private void initUnCheck() {
-        for (StepBean2 _bean : mStepBean2s) {
-            if (_bean.getMeasureItems() != null) measuredItems.addAll(_bean.getMeasureItems());
+        for (StepBean2 _bean2 : mStepBean2s) {
+            if (!isAdd && _bean2.getId().equals(_bean.getId())) continue;
+            if (_bean2.getMeasureItems() != null) measuredItems.addAll(_bean2.getMeasureItems());
         }
 
         for (int i = 0; i < mParameterBean2s.size(); i++) {
@@ -174,18 +174,29 @@ public class StepEditDialog extends Dialog {
         // if (!isAdd) parameterDialogTitleTV.setText(R.string.edit_step);
 
         // 初始化
-        ArrayAdapter<String> stepAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, steps);
+        ArrayAdapter<String> stepAdapter = new ArrayAdapter<>(getContext(), R.layout.step_spinner_item, steps);
         showItemSP.setAdapter(stepAdapter);
-        showItemSP.setSelection(mStepBean2s.size());
+        showItemSP.setSelection(isAdd ? mStepBean2s.size() : _bean.getSequenceNumber());
 
         // 初始化条件;
+        int conditionIndex = 0;
         condications.add(getContext().getResources().getString(R.string.press_save));
-        for (TriggerConditionBean _bean : mTriggerConditionBeans) {
-            condications.add(_bean.getConditionName());
+        for (int i = 0; i < mTriggerConditionBeans.size(); i++) {
+            condications.add(mTriggerConditionBeans.get(i).getConditionName());
+            if (!isAdd && _bean.getConditionID() == mTriggerConditionBeans.get(i).getId())
+                conditionIndex = i + 1;
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, condications);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.step_spinner_item, condications);
         conditionSP.setAdapter(adapter);
-        // conditionSP.setSelection(0);
+        conditionSP.setSelection(conditionIndex);
+
+        if (!isAdd) {
+            String _str = "";
+            for (String item : _bean.getMeasureItems()) {
+                _str += "M" + (Integer.parseInt(item) + 1) + ".";
+            }
+            measureItemBtn.setText(_str);
+        }
     }
 
     public boolean doConditionAdd() {

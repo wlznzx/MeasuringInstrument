@@ -32,13 +32,12 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.StepBean2;
-import alauncher.cn.measuringinstrument.bean.StoreBean;
+import alauncher.cn.measuringinstrument.bean.StoreBean2;
 import alauncher.cn.measuringinstrument.bean.TriggerConditionBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StepBean2Dao;
-import alauncher.cn.measuringinstrument.database.greenDao.db.TriggerConditionBeanDao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.StoreBean2Dao;
 import alauncher.cn.measuringinstrument.utils.DialogUtils;
-import alauncher.cn.measuringinstrument.view.MeasuringActivity;
 import alauncher.cn.measuringinstrument.view.activity_view.DataUpdateInterface;
 import alauncher.cn.measuringinstrument.widget.StepEditDialog;
 import butterknife.BindView;
@@ -62,7 +61,7 @@ public class CodeStepFragment2 extends Fragment implements DataUpdateInterface {
 
     private StepAdapter mStepAdapter;
 
-    public StoreBean mStoreBean;
+    public StoreBean2 mStoreBean;
 
     // 已被测量参数列表;
     private List<String> measuredItems = new ArrayList<>();
@@ -70,7 +69,8 @@ public class CodeStepFragment2 extends Fragment implements DataUpdateInterface {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
+        mStoreBean = App.getDaoSession().getStoreBean2Dao()
+                .queryBuilder().where(StoreBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).unique();
         mStepBean2s = App.getDaoSession().getStepBean2Dao().queryBuilder()
                 .where(StepBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderAsc(StepBean2Dao.Properties.SequenceNumber).list();
         mParameterBean2s = App.getDaoSession().getParameterBean2Dao().queryBuilder()
@@ -109,7 +109,7 @@ public class CodeStepFragment2 extends Fragment implements DataUpdateInterface {
                     if (measuredItems.size() == mParameterBean2s.size()) {
                         // do it;
                         mStoreBean.setStoreMode(1);
-                        App.getDaoSession().getStoreBeanDao().insertOrReplace(mStoreBean);
+                        App.getDaoSession().getStoreBean2Dao().insertOrReplace(mStoreBean);
                     } else {
                         isAutoSwitch.setChecked(false);
                         DialogUtils.showDialog(getContext(), getString(R.string.error), getString(R.string.must_measured_all_items));
@@ -117,7 +117,7 @@ public class CodeStepFragment2 extends Fragment implements DataUpdateInterface {
                 } else {
                     if (mStoreBean.getStoreMode() == 1) {
                         mStoreBean.setStoreMode(0);
-                        App.getDaoSession().getStoreBeanDao().insertOrReplace(mStoreBean);
+                        App.getDaoSession().getStoreBean2Dao().insertOrReplace(mStoreBean);
                     }
                 }
             }
@@ -164,7 +164,7 @@ public class CodeStepFragment2 extends Fragment implements DataUpdateInterface {
             public void onClick(View v) {
                 builder.dismiss();
                 mStoreBean.setStoreMode(0);
-                App.getDaoSession().getStoreBeanDao().insertOrReplace(mStoreBean);
+                App.getDaoSession().getStoreBean2Dao().insertOrReplace(mStoreBean);
                 App.getDaoSession().getStepBean2Dao().queryBuilder().where(StepBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).buildDelete().executeDeleteWithoutDetachingEntities();
                 dataUpdate();
             }
@@ -208,7 +208,7 @@ public class CodeStepFragment2 extends Fragment implements DataUpdateInterface {
         } else {
             isAutoSwitch.setChecked(false);
             mStoreBean.setStoreMode(0);
-            App.getDaoSession().getStoreBeanDao().insertOrReplace(mStoreBean);
+            App.getDaoSession().getStoreBean2Dao().insertOrReplace(mStoreBean);
         }
     }
 
@@ -247,16 +247,16 @@ public class CodeStepFragment2 extends Fragment implements DataUpdateInterface {
                 holder.setText(R.id.measure_item_tv, _str);
             }
 
-            /*
+            /**/
             holder.setOnClickListener(R.id.data_layout, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    StepEditDialog _dialog = new StepEditDialog(getContext(), null);
-                    // _dialog.setDataUpdateInterface(ParameterManagement2Activity.this);
+                    StepEditDialog _dialog = new StepEditDialog(getContext(), _bean);
+                    _dialog.setDataUpdateInterface(CodeStepFragment2.this);
                     _dialog.show();
                 }
             });
-             */
+
 
             holder.setOnLongClickListener(R.id.data_layout, new View.OnLongClickListener() {
                 @Override
@@ -269,7 +269,7 @@ public class CodeStepFragment2 extends Fragment implements DataUpdateInterface {
                     TextView msg = builder.findViewById(R.id.tv_msg);
                     Button cancel = builder.findViewById(R.id.btn_cancle);
                     Button sure = builder.findViewById(R.id.btn_sure);
-                    msg.setText("是否删除 " + getResources().getString(R.string.step_sequence) + _bean.getSequenceNumber() + " ?");
+                    msg.setText("是否删除 " + getResources().getString(R.string.step_sequence) + (_bean.getSequenceNumber() + 1) + " ?");
                     cancel.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

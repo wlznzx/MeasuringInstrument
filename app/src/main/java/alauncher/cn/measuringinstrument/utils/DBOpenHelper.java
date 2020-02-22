@@ -12,6 +12,7 @@ import alauncher.cn.measuringinstrument.database.greenDao.db.DaoMaster;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBean2Dao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.StoreBean2Dao;
 
 public class DBOpenHelper extends DaoMaster.DevOpenHelper {
 
@@ -32,7 +33,9 @@ public class DBOpenHelper extends DaoMaster.DevOpenHelper {
                 ResultBean2Dao.createTable(this.wrap(db), true);
             } else if (oldVersion == 29 && newVersion == 30) {
                 GroupBean2Dao.createTable(this.wrap(db), true);
-            } else {
+            } else if (oldVersion == 31 && newVersion == 32) {
+                StoreBean2Dao.createTable(this.wrap(db), true);
+            }else {
                 super.onUpgrade(db, oldVersion, newVersion);
             }
         } catch (ClassCastException e) {

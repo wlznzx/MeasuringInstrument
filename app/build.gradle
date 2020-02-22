@@ -8,7 +8,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 25
-        versionName "v3.9.9_Bate"
+        versionName "v5.0.1_Bate"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -69,7 +69,7 @@ android {
 }
 
 greendao {
-    schemaVersion 30 //数据库版本号
+    schemaVersion 32 //数据库版本号
     daoPackage 'alauncher.cn.measuringinstrument.database.greenDao.db'
 // 设置DaoMaster、DaoSession、Dao 包名
     targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用.不要用/

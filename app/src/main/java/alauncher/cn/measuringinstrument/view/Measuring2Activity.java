@@ -2,6 +2,7 @@ package alauncher.cn.measuringinstrument.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -25,11 +26,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
@@ -66,6 +69,7 @@ import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBean2Dao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.mvp.presenter.impl.MeasuringPresenterImpl2;
+import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.utils.Constants;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import alauncher.cn.measuringinstrument.widget.AdditionalDialog;
@@ -217,7 +221,12 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             modeTitle.setVisibility(View.GONE);
             mode2Title.setVisibility(View.VISIBLE);
         }
-        new SPCTask().execute();
+        if (mMeasureConfigurationBean.getIsShowChart()) {
+            chart.setVisibility(View.VISIBLE);
+        } else {
+            chart.setVisibility(View.GONE);
+        }
+        if (mMeasureConfigurationBean.getIsShowChart()) new SPCTask().execute();
     }
 
     @OnClick({R.id.value_btn, R.id.additional_btn, R.id.measure_save_btn})
@@ -260,8 +269,8 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
     private boolean doSave(boolean isManual) {
         // 判断是否时间校验模式，如果超时，不保存并且提示;
         ForceCalibrationBeanDao _dao = App.getDaoSession().getForceCalibrationBeanDao();
-        ForceCalibrationBean _bean = _dao.load((long) App.getSetupBean().getCodeID());
-        if ((_bean.getForceMode() == 1 && _bean.getUsrNum() <= 0) || (_bean.getForceMode() == 2 && System.currentTimeMillis() > _bean.getRealForceTime())) {
+        ForceCalibrationBean _bean = _dao.load(App.SETTING_ID);
+        if (_bean != null && ((_bean.getForceMode() == 1 && _bean.getUsrNum() <= 0) || (_bean.getForceMode() == 2 && System.currentTimeMillis() > _bean.getRealForceTime()))) {
             showForceDialog();
             return false;
         }
@@ -343,13 +352,14 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         // 刷新柱状图;
         String[] results = mMeasuringPresenter.getResults(values);
         for (int i = 0; i < values.length; i++) {
+            if (mMeasuringPresenter.getGeted()[i]) continue;
             if (mMeasureConfigurationBean.getMeasureMode() == HORIZONTAL_MODE_ONE) {
                 if (mMValueViewLandscapes[i] != null) {
                     mMValueViewLandscapes[i].setMValue(values[i]);
                 }
             } else if (mMeasureConfigurationBean.getMeasureMode() == HORIZONTAL_MODE_TWO) {
                 if (mValueTV[i] != null) {
-                    mValueTV[i].setText(String.valueOf(values[i]));
+                    mValueTV[i].setText(Arith.double2Str(values[i]));
                 }
                 if (mValueGroupTV[i] != null) {
                     mValueGroupTV[i].setText(results[i]);
@@ -579,6 +589,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             ParameterBean2 _bean = mDates.get(position);
+            holder.setIsRecyclable(false);
             holder.setText(R.id.show_item_tv, "M" + (_bean.getSequenceNumber() + 1));
             holder.setText(R.id.describe_tv, _bean.getDescribe());
 
@@ -602,7 +613,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
                 public void onClick(View view) {
                     if (tasking) return;
                     chartIndex = position;
-                    new SPCTask().execute();
+                    if (mMeasureConfigurationBean.getIsShowChart()) new SPCTask().execute();
                     // android.util.Log.d("wlDebug", "chartIndex = " + chartIndex);
                 }
             });
@@ -618,16 +629,29 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
 
     class SPCTask extends AsyncTask<String, Integer, Object> {
 
+        private ProgressDialog dialog;
+
         //执行的第一个方法用于在执行后台任务前做一些UI操作
         @Override
         protected void onPreExecute() {
             tasking = true;
+            dialog = new ProgressDialog(Measuring2Activity.this);
+            dialog.setTitle(R.string.loading);
+            dialog.setMessage(getResources().getString(R.string.loading_chart));
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.show();
         }
 
         //第二个执行方法,在onPreExecute()后执行，用于后台任务,不可在此方法内修改UI
         @Override
         protected Object doInBackground(String... params) {
             //处理耗时操作
+            try {
+                Thread.sleep(1 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             List<ResultBean2> _datas = getResultBean2s();
             if (_datas == null) return null;
             return ybyxtDatas(_datas);
@@ -653,9 +677,22 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
                 // yAxis.removeAllLimitLines();
                 // yAxis.addLimitLine(getLimitLine(_bean.ucl, "上公差线"));
                 // yAxis.addLimitLine(getLimitLine(_bean.lcl, "下公差线"));
-                updateChartDatas(_bean.mValues);
+                XAxis xAxis = chart.getXAxis();
+                xAxis.setAxisMinimum(0);
+                if (_bean.mValues.size() < 10) xAxis.setAxisMaximum(10);
+                if (10 <= _bean.mValues.size() && _bean.mValues.size() < 20)
+                    xAxis.setAxisMaximum(30);
+                if (_bean.mValues.size() > 20) xAxis.setAxisMaximum(30);
+                if (_bean.mValues.size() > 0) {
+                    updateChartDatas(_bean.mValues);
+                } else {
+                    chart.clear();
+                }
+            } else {
+                chart.clear();
             }
             tasking = false;
+            dialog.dismiss();
         }
 
         //onCancelled方法用于在取消执行中的任务时更改UI

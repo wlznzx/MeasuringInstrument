@@ -114,4 +114,8 @@
     <string name="without_measured_str">需测量项不能为空</string>
     <string name="error">错误</string>
     <string name="must_measured_all_items">所有测量项必须被测量</string>
+    <string name="loading">加载中</string>
+    <string name="loading_msg">正在加载数据 , 请稍等.</string>
+    <string name="loading_chart">正在加载图表，请稍等。</string>
+    <string name="measure_chart_show">显示趋势图</string>
 </resources>

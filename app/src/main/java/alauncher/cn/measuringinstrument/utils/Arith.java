@@ -1,6 +1,7 @@
 package alauncher.cn.measuringinstrument.utils;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 /**
  * 由于Java的简单类型不能够精确的对浮点数进行运算，这个工具类提供精
@@ -96,7 +97,7 @@ public class Arith {
             throw new IllegalArgumentException(
                     "The scale must be a positive integer or zero");
         }
-        BigDecimal b = new BigDecimal(Double.toString(v));
+        BigDecimal b = new BigDecimal(String.valueOf(v));
         BigDecimal one = new BigDecimal("1");
         return b.divide(one, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
@@ -120,4 +121,18 @@ public class Arith {
         return standardDeviation;
     }
 
+    /**
+     * Double 转string 去除科学记数法显示
+     *
+     * @param d
+     * @return
+     */
+    public static String double2Str(Double d) {
+        if (d == null) {
+            return "";
+        }
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setGroupingUsed(false);
+        return (nf.format(d));
+    }
 };

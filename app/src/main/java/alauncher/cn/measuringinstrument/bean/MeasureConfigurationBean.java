@@ -14,11 +14,15 @@ public class MeasureConfigurationBean {
 
     public int measureMode;
 
-    @Generated(hash = 854765263)
-    public MeasureConfigurationBean(Long id, long code_id, int measureMode) {
+    public boolean isShowChart;
+
+    @Generated(hash = 1576941849)
+    public MeasureConfigurationBean(Long id, long code_id, int measureMode,
+            boolean isShowChart) {
         this.id = id;
         this.code_id = code_id;
         this.measureMode = measureMode;
+        this.isShowChart = isShowChart;
     }
 
     @Generated(hash = 688825423)
@@ -47,6 +51,14 @@ public class MeasureConfigurationBean {
 
     public void setCode_id(long code_id) {
         this.code_id = code_id;
+    }
+
+    public boolean getIsShowChart() {
+        return this.isShowChart;
+    }
+
+    public void setIsShowChart(boolean isShowChart) {
+        this.isShowChart = isShowChart;
     }
 
 }

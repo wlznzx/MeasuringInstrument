@@ -24,8 +24,12 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
+import alauncher.cn.measuringinstrument.bean.StoreBean2;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.StepBean2Dao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.StoreBean2Dao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.TriggerConditionBeanDao;
 import alauncher.cn.measuringinstrument.view.activity_view.DataUpdateInterface;
 import alauncher.cn.measuringinstrument.widget.ParameterEditDialog;
 import butterknife.BindView;
@@ -62,7 +66,17 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
 
     @Override
     public void dataUpdate() {
-        mDates = App.getDaoSession().getParameterBean2Dao().queryBuilder().where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
+        mDates = App.getDaoSession().getParameterBean2Dao().queryBuilder()
+                .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
+        // 同步删除该程序条件，分步等信息;
+        App.getDaoSession().getStepBean2Dao().queryBuilder()
+                .where(StepBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).buildDelete().executeDeleteWithoutDetachingEntities();
+        App.getDaoSession().getTriggerConditionBeanDao().queryBuilder()
+                .where(TriggerConditionBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).buildDelete().executeDeleteWithoutDetachingEntities();
+        StoreBean2 mStoreBean = App.getDaoSession().getStoreBean2Dao()
+                .queryBuilder().where(StoreBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).unique();
+        mStoreBean.setStoreMode(0);
+        App.getDaoSession().getStoreBean2Dao().insertOrReplace(mStoreBean);
         mAdapter.notifyDataSetChanged();
     }
 

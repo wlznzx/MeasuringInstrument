@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +25,9 @@ public class MeasureConfigurationFragment extends Fragment {
 
     @BindView(R.id.status_sp)
     public Spinner showModeSpinner;
+
+    @BindView(R.id.measure_chart_show_switch)
+    public Switch chartShowSwitch;
 
     private Unbinder unbinder;
 
@@ -55,6 +61,14 @@ public class MeasureConfigurationFragment extends Fragment {
 
     private void initView() {
         mMeasureConfigurationBean = App.getDaoSession().getMeasureConfigurationBeanDao().load((long) App.getSetupBean().getCodeID());
+        chartShowSwitch.setChecked(mMeasureConfigurationBean.getIsShowChart());
+        chartShowSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                mMeasureConfigurationBean.setIsShowChart(b);
+                App.getDaoSession().getMeasureConfigurationBeanDao().insertOrReplace(mMeasureConfigurationBean);
+            }
+        });
         showModeSpinner.setSelection(mMeasureConfigurationBean.getMeasureMode());
         showModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -63,7 +77,7 @@ public class MeasureConfigurationFragment extends Fragment {
                 mMeasureConfigurationBean.setMeasureMode(i);
                 App.getDaoSession().getMeasureConfigurationBeanDao().insertOrReplace(mMeasureConfigurationBean);
             }
-            
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 

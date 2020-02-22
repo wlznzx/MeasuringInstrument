@@ -27,7 +27,6 @@ import alauncher.cn.measuringinstrument.view.Measuring2Activity;
 import alauncher.cn.measuringinstrument.view.ParameterManagement2Activity;
 import alauncher.cn.measuringinstrument.view.SPCStatistical2Activity;
 import alauncher.cn.measuringinstrument.view.Statistical2Activity;
-import alauncher.cn.measuringinstrument.view.StoreActivity;
 import alauncher.cn.measuringinstrument.view.SystemManagementActivity;
 
 import androidx.annotation.NonNull;

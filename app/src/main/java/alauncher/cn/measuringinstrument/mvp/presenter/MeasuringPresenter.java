@@ -41,4 +41,6 @@ public interface MeasuringPresenter {
     String getMResults(double[] ms);
 
     String[] getResults(double[] ms);
+
+    boolean[] getGeted();
 }

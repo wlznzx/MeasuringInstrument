@@ -29,23 +29,44 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="28dp"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="@string/measure_show_mode"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <Spinner
             android:id="@+id/status_sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:textSize="18sp"
-            android:entries="@array/measure_show_mode" />
+            android:entries="@array/measure_show_mode"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="18dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/measure_chart_show"
+            android:textSize="16sp" />
+
+        <Switch
+            android:id="@+id/measure_chart_show_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:entries="@array/measure_show_mode"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </LinearLayout>

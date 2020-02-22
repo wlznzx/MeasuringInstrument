@@ -25,7 +25,7 @@ public class MValueViewLandscape extends View {
 
     private double baseValue;
 
-    private double mValue = 30.106;
+    private double mValue = 0.003;
 
     private float stepWidth;
 
@@ -213,6 +213,7 @@ public class MValueViewLandscape extends View {
         // 文字宽
         float textWidth = paint.measureText(String.valueOf(mValue));
         float baseLineY = Math.abs(paint.ascent() + paint.descent()) / 2;
-        canvas.drawText(String.valueOf(mValue), -textWidth / 2, baseLineY, paint);
+        canvas.drawText(Arith.double2Str(mValue), -textWidth / 2, baseLineY, paint);
+        // canvas.drawText(String.valueOf(mValue), -textWidth / 2, baseLineY, paint);
     }
 }

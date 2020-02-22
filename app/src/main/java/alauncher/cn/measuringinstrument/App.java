@@ -33,10 +33,13 @@ import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean2;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
+import alauncher.cn.measuringinstrument.bean.StoreBean2;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoMaster;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.StepBean2Dao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.StoreBean2Dao;
 import alauncher.cn.measuringinstrument.utils.Constants;
 import alauncher.cn.measuringinstrument.utils.DBOpenHelper;
 import alauncher.cn.measuringinstrument.utils.JdbcUtil;
@@ -306,7 +309,16 @@ public class App extends MultiDexApplication {
                 MeasureConfigurationBean _bean = new MeasureConfigurationBean();
                 _bean.setCode_id(i);
                 _bean.setMeasureMode(0);
+                _bean.setIsShowChart(true);
                 getDaoSession().getMeasureConfigurationBeanDao().insert(_bean);
+            }
+
+            if (App.getDaoSession().getStoreBean2Dao()
+                    .queryBuilder().where(StoreBean2Dao.Properties.CodeID.eq(i)).unique() == null) {
+                StoreBean2 _bean = new StoreBean2();
+                _bean.setCodeID(i);
+                _bean.setStoreMode(0);
+                getDaoSession().getStoreBean2Dao().insert(_bean);
             }
 
             /*

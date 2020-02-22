@@ -714,6 +714,12 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         return new String[0];
     }
 
+
+    @Override
+    public boolean[] getGeted() {
+        return mGeted;
+    }
+
     /*
      *
      *   将读出来的AD字，通过校准，转化为校准后的测量值;

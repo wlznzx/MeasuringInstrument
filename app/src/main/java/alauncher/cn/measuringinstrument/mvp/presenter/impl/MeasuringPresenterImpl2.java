@@ -6,7 +6,6 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.greenrobot.greendao.DaoException;
 import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
@@ -25,21 +24,18 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
-import alauncher.cn.measuringinstrument.bean.GroupBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean2;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.ProcessBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean2;
-import alauncher.cn.measuringinstrument.bean.StepBean;
 import alauncher.cn.measuringinstrument.bean.StepBean2;
-import alauncher.cn.measuringinstrument.bean.StoreBean;
+import alauncher.cn.measuringinstrument.bean.StoreBean2;
 import alauncher.cn.measuringinstrument.bean.TriggerConditionBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBean2Dao;
-import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StepBean2Dao;
-import alauncher.cn.measuringinstrument.database.greenDao.db.StepBeanDao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.StoreBean2Dao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.utils.Avg;
@@ -47,7 +43,6 @@ import alauncher.cn.measuringinstrument.utils.Dif;
 import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.utils.Max;
 import alauncher.cn.measuringinstrument.utils.Min;
-import alauncher.cn.measuringinstrument.utils.StepUtils;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import tp.xmaihh.serialport.SerialHelper;
 import tp.xmaihh.serialport.bean.ComBean;
@@ -122,7 +117,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
     public double[] midValue;
 
-    public StoreBean mStoreBean;
+    public StoreBean2 mStoreBean;
 
     public long lastMeetConditionTime = 0;
 
@@ -205,7 +200,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                     + mParameterBean2Lists.get(i).getUpperToleranceValue() + mParameterBean2Lists.get(i).getNominalValue()) / 2;
         }
 
-        mStoreBean = App.getDaoSession().getStoreBeanDao().load(App.SETTING_ID);
+        mStoreBean = App.getDaoSession().getStoreBean2Dao()
+                .queryBuilder().where(StoreBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).unique();
 
         if (mParameterBean2Lists.size() > 0) {
             // 计算上下公差值;
@@ -268,6 +264,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             }
         }
 
+        android.util.Log.d("wlDebug", "processBeanLists = " + processBeanLists.toString());
+        android.util.Log.d("wlDebug", "mKeyMap = " + mKeyMap.toString());
         if (isSingleStep) {
             // 没有分步,判断是否有过程值与单点值同时存在的情况；
             if (haveProcessCalculate) {
@@ -682,6 +680,11 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         return result;
     }
 
+    @Override
+    public boolean[] getGeted() {
+        return mGeted;
+    }
+
     /*
      *
      *   将读出来的AD字，通过校准，转化为校准后的测量值;
@@ -940,13 +943,13 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
     private void startAutoStore() {
         if (!isSingleStep) {
-            handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime() * 1000);
+            handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, 1 * 1000);
         }
     }
 
     private void doAutoStore() {
         mView.toDoSave(false);
-        handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, mStoreBean.getDelayTime() * 1000);
+        handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, 1 * 1000);
     }
 
     private void stopAutoStore() {

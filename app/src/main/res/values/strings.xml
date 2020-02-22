@@ -266,11 +266,15 @@
     <string name="measure_item">测量项</string>
     <string name="step">步序</string>
     <string name="click_to_choose">点击选择</string>
-    <string name="step_enough">步骤序已达上线</string>
+    <string name="step_enough">步骤序已达上限</string>
     <string name="tips">提示</string>
     <string name="choose_measure_item">选择测量参数</string>
     <string name="without_measured_str">需测量项不能为空</string>
     <string name="error">错误</string>
     <string name="must_measured_all_items">所有测量项必须被测量</string>
+    <string name="loading">加载中</string>
+    <string name="loading_msg">正在加载数据 , 请稍等.</string>
+    <string name="loading_chart">正在加载图表，请稍等。</string>
+    <string name="measure_chart_show">显示趋势图</string>
 
 </resources>
