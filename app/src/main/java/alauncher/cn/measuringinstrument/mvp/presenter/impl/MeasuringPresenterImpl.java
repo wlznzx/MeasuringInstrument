@@ -720,6 +720,11 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
         return mGeted;
     }
 
+    @Override
+    public void setPause(boolean isPause) {
+
+    }
+
     /*
      *
      *   将读出来的AD字，通过校准，转化为校准后的测量值;

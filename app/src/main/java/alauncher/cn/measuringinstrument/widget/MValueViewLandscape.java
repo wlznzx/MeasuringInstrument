@@ -25,7 +25,7 @@ public class MValueViewLandscape extends View {
 
     private double baseValue;
 
-    private double mValue = 0.003;
+    private double mValue = 0.0003;
 
     private float stepWidth;
 

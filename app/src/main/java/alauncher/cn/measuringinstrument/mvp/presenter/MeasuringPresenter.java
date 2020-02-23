@@ -43,4 +43,6 @@ public interface MeasuringPresenter {
     String[] getResults(double[] ms);
 
     boolean[] getGeted();
+
+    void setPause(boolean isPause);
 }

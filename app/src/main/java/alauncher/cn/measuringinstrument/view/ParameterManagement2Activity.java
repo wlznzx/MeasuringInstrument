@@ -45,6 +45,8 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
 
     private ParameterAdapter mAdapter;
 
+    private int enableMSize = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +59,11 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
 
     @Override
     protected void initView() {
-        mDates = App.getDaoSession().getParameterBean2Dao().queryBuilder().where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
+        mDates = App.getDaoSession().getParameterBean2Dao().queryBuilder()
+                .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
+        enableMSize = App.getDaoSession().getParameterBean2Dao().queryBuilder()
+                .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()), ParameterBean2Dao.Properties.Enable.eq(true))
+                .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list().size();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ParameterManagement2Activity.this);
         rv.setLayoutManager(layoutManager);
         mAdapter = new ParameterAdapter();
@@ -68,15 +74,23 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
     public void dataUpdate() {
         mDates = App.getDaoSession().getParameterBean2Dao().queryBuilder()
                 .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
-        // 同步删除该程序条件，分步等信息;
-        App.getDaoSession().getStepBean2Dao().queryBuilder()
-                .where(StepBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).buildDelete().executeDeleteWithoutDetachingEntities();
-        App.getDaoSession().getTriggerConditionBeanDao().queryBuilder()
-                .where(TriggerConditionBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).buildDelete().executeDeleteWithoutDetachingEntities();
-        StoreBean2 mStoreBean = App.getDaoSession().getStoreBean2Dao()
-                .queryBuilder().where(StoreBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).unique();
-        mStoreBean.setStoreMode(0);
-        App.getDaoSession().getStoreBean2Dao().insertOrReplace(mStoreBean);
+        // 当实际测量参数个数有变的情况下，同步删除该程序条件，分步等信息;
+        int _enableMSize = App.getDaoSession().getParameterBean2Dao().queryBuilder()
+                .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()), ParameterBean2Dao.Properties.Enable.eq(true))
+                .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list().size();
+
+        if (_enableMSize != enableMSize) {
+            enableMSize = _enableMSize;
+            App.getDaoSession().getStepBean2Dao().queryBuilder()
+                    .where(StepBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).buildDelete().executeDeleteWithoutDetachingEntities();
+            App.getDaoSession().getTriggerConditionBeanDao().queryBuilder()
+                    .where(TriggerConditionBeanDao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).buildDelete().executeDeleteWithoutDetachingEntities();
+            StoreBean2 mStoreBean = App.getDaoSession().getStoreBean2Dao()
+                    .queryBuilder().where(StoreBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).unique();
+            mStoreBean.setStoreMode(0);
+            App.getDaoSession().getStoreBean2Dao().insertOrReplace(mStoreBean);
+            android.util.Log.d("wlDebug","do clean ");
+        }
         mAdapter.notifyDataSetChanged();
     }
 

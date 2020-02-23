@@ -348,6 +348,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         mGroupMs[0].setText("结果: " + mMeasuringPresenter.getMResults(values));
         // 显示测量分组情况;
         String[] group = mMeasuringPresenter.getMGroupValues(values);
+        if (group == null) return;
         mGroupMs[1].setText("M" + (mDates.get(0).getSequenceNumber() + 1) + "分组: " + group[0]);
         // 刷新柱状图;
         String[] results = mMeasuringPresenter.getResults(values);
@@ -416,6 +417,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                mMeasuringPresenter.setPause(true);
                 SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
                 _bean.setCodeID(arg2 + 1);
                 App.getDaoSession().getSetupBeanDao().update(_bean);
@@ -429,6 +431,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
                 }
                 updateSaveBtnMsg();
                 dialog.dismiss();
+                mMeasuringPresenter.setPause(false);
             }
         });
     }
@@ -499,16 +502,16 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         // 4. 如果当前是单步，那么就是单步；
         if (mMeasuringPresenter.isCurStepHaveProcess()) {
             if (mMeasuringPresenter.getMeasureState() == MeasuringPresenter.IN_PROCESS_VALUE_BEEN_TAKEN_MODE) {
-                android.util.Log.d("wlDebug", "do 1.");
+                // android.util.Log.d("wlDebug", "do 1.");
                 doSave(true);
             } else if (mMeasuringPresenter.getMeasureState() == MeasuringPresenter.IN_PROCESS_VALUE_MODE) {
-                android.util.Log.d("wlDebug", "do 2.");
+                // android.util.Log.d("wlDebug", "do 2.");
                 if (mMeasuringPresenter.getIsStartProcessValue()) {
                     // stop 取值;
                     mMeasuringPresenter.stopGetProcessValue();
                 }
             } else if (mMeasuringPresenter.getMeasureState() == MeasuringPresenter.NORMAL_NODE) {
-                android.util.Log.d("wlDebug", "do 3.");
+                // android.util.Log.d("wlDebug", "do 3.");
                 if (!mMeasuringPresenter.getIsStartProcessValue()) {
                     // start 取值;
                     mMeasuringPresenter.startGetProcessValue();
@@ -669,7 +672,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         @Override
         protected void onPostExecute(Object result) {
             if (result != null) {
-                // chart.clear();
+                chart.clear();
                 YBYXTBean _bean = (YBYXTBean) result;
                 YAxis yAxis = chart.getAxisLeft();
                 yAxis.setAxisMaximum(_bean.maxY);

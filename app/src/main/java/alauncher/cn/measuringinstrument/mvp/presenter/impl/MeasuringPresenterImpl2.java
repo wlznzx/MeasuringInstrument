@@ -140,6 +140,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
     private final int MSG_AUTO_STORE = 1;
 
+    private boolean isPaused = false;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -315,6 +317,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             serialHelper = new SerialHelper(sPort, iBaudRate) {
                 @Override
                 protected void onDataReceived(ComBean paramComBean) {
+                    if (isPaused) return;
                     // 重新解析Byte;
                     if (paramComBean.bRec[0] == 0x53 && paramComBean.bRec[11] == 0x54) {
 
@@ -401,7 +404,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     @Override
     public String saveResult(double[] ms, AddInfoBean bean, boolean isManual) {
 
-        android.util.Log.d("wlDebug", Arrays.toString(ms));
+        // android.util.Log.d("wlDebug", Arrays.toString(ms));
         if (ms == null) {
             return "- -";
         }
@@ -567,19 +570,23 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     @Override
     public String[] getMGroupValues(double[] ms) {
         String[] result = new String[ms.length];
-        for (int i = 0; i < ms.length; i++) {
-            List<GroupBean2> _groupList = groupBean2Lists.get(i);
-            if (_groupList == null || _groupList.size() == 0) {
-                result[i] = "- -";
-            } else {
-                result[i] = "- -";
-                for (GroupBean2 _bean : _groupList) {
-                    if (ms[i] > _bean.getLowerLimit() && ms[i] < _bean.getUpperLimit()) {
-                        result[i] = _bean.getName();
-                        break;
+        try {
+            for (int i = 0; i < ms.length; i++) {
+                List<GroupBean2> _groupList = groupBean2Lists.get(i);
+                if (_groupList == null || _groupList.size() == 0) {
+                    result[i] = "- -";
+                } else {
+                    result[i] = "- -";
+                    for (GroupBean2 _bean : _groupList) {
+                        if (ms[i] > _bean.getLowerLimit() && ms[i] < _bean.getUpperLimit()) {
+                            result[i] = _bean.getName();
+                            break;
+                        }
                     }
                 }
             }
+        } catch (IndexOutOfBoundsException e) {
+            return null;
         }
         return result;
     }
@@ -683,6 +690,11 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     @Override
     public boolean[] getGeted() {
         return mGeted;
+    }
+
+    @Override
+    public void setPause(boolean isPause) {
+        isPaused = isPause;
     }
 
     /*
