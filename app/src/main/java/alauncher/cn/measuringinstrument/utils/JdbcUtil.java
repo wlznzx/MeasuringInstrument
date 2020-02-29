@@ -7,9 +7,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
+import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.ResultBean2;
 
 public class JdbcUtil {
@@ -267,6 +269,47 @@ public class JdbcUtil {
             mpstmt.close();
         }
         close(pstmt, conn);
+        return 1;
+    }
+
+    public static int deleteParam2s(String factory_code, String machine_code) throws SQLException {
+        Connection conn = getConnection();
+        if (conn == null) return -1;
+        String sql = "delete from ntqc_param_config where machine_code=? and factory_code=?";
+        PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        pstmt.setString(1, machine_code);
+        pstmt.setString(2, factory_code);
+        int ret = pstmt.executeUpdate();//执行sql
+        pstmt.close();
+        conn.close();
+        return ret;
+    }
+
+    public static int addParam2Config(String factory_code, String machine_code, List<ParameterBean2> list) throws SQLException {
+        Connection conn = getConnection();
+        if (conn == null) return -1;
+        String sql = "insert into ntqc_param_config (factory_code,machine_code,prog_id," +
+                "prog_name,param_key,param_name,type,nominal_value,lower_tolerance,upper_tolerance,warning_up,warning_low,rmk) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        for (int i = 0; i < list.size(); i++) {
+            ParameterBean2 _bean2 = list.get(i);
+            PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, factory_code);
+            pstmt.setString(2, machine_code);
+            pstmt.setInt(3, App.getSetupBean().getCodeID());
+            pstmt.setString(4, App.getCodeName());
+            pstmt.setString(5, "M" + (_bean2.getSequenceNumber() + 1));
+            pstmt.setString(6, _bean2.getDescribe());
+            pstmt.setString(7, "0");
+            pstmt.setFloat(8, (float) _bean2.getNominalValue());
+            pstmt.setFloat(9, (float) _bean2.getLowerToleranceValue());
+            pstmt.setFloat(10, (float) _bean2.getUpperToleranceValue());
+            pstmt.setFloat(11, 0);
+            pstmt.setFloat(12, 0);
+            pstmt.setString(13, "rmk");
+            pstmt.executeUpdate();//执行sql
+            pstmt.close();
+        }
+        conn.close();
         return 1;
     }
 

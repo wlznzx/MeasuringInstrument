@@ -131,9 +131,14 @@ public class Arith {
         if (d == null) {
             return "";
         }
-        BigDecimal d1 = new BigDecimal(Double.toString(d));
-        BigDecimal d2 = new BigDecimal(Integer.toString(1));
-        // 四舍五入,保留2位小数
-        return d1.divide(d2, 4, BigDecimal.ROUND_HALF_UP).toString();
+        int a = (d + "").length() - (d + "").indexOf(".") - 1;
+        if (a >= 4) {
+            // 四舍五入,保留2位小数
+            BigDecimal d1 = new BigDecimal(Double.toString(d));
+            BigDecimal d2 = new BigDecimal(Integer.toString(1));
+            return d1.divide(d2, 4, BigDecimal.ROUND_HALF_UP).toString();
+        } else {
+            return String.valueOf(d);
+        }
     }
 };

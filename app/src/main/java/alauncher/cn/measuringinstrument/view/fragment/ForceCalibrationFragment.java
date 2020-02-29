@@ -80,7 +80,7 @@ public class ForceCalibrationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_force_calibration, container, false);
         unbinder = ButterKnife.bind(this, view);
         mForceCalibrationBeanDao = App.getDaoSession().getForceCalibrationBeanDao();
-        ForceCalibrationBean _bean = mForceCalibrationBeanDao.load(App.SETTING_ID);
+        ForceCalibrationBean _bean = mForceCalibrationBeanDao.load((long) App.getSetupBean().getCodeID());
         forceCalibrationSP.setSelection(_bean.getForceMode());
         forceCalibrationTimeEdt.setText(String.valueOf(_bean.getForceTime()));
         forceCalibrationNumberEdt.setText(String.valueOf(_bean.getForceNum()));
@@ -113,7 +113,7 @@ public class ForceCalibrationFragment extends Fragment {
 
     private ForceCalibrationBean view2Bean() {
         ForceCalibrationBean _bean = new ForceCalibrationBean();
-        _bean.set_id(App.SETTING_ID);
+        _bean.set_id(App.getSetupBean().getCodeID());
         _bean.setForceMode(forceCalibrationSP.getSelectedItemPosition());
         _bean.setForceNum(Integer.valueOf(forceCalibrationNumberEdt.getText().toString().trim()));
         _bean.setUsrNum(Integer.valueOf(forceCalibrationNumberEdt.getText().toString().trim()));

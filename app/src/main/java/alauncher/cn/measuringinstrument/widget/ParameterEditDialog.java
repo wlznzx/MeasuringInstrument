@@ -4,7 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -21,6 +23,7 @@ import alauncher.cn.measuringinstrument.bean.GroupBean2;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
+import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.view.MGroup2Activity;
 import alauncher.cn.measuringinstrument.view.activity_view.DataUpdateInterface;
 import butterknife.BindView;
@@ -135,10 +138,10 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
             showItemSP.setSelection(_bean.getSequenceNumber());
             resolutionSP.setSelection(_bean.getResolution());
             describeEdt.setText(_bean.getDescribe());
-            nominalValueEdt.setText(String.valueOf(_bean.getNominalValue()));
-            upperToleranceValueEdt.setText(String.valueOf(_bean.getUpperToleranceValue()));
-            lowerToleranceValueEdt.setText(String.valueOf(_bean.getLowerToleranceValue()));
-            deviationEdt.setText(String.valueOf(_bean.getDeviation()));
+            nominalValueEdt.setText(Arith.double2Str(_bean.getNominalValue()));
+            upperToleranceValueEdt.setText(Arith.double2Str(_bean.getUpperToleranceValue()));
+            lowerToleranceValueEdt.setText(Arith.double2Str(_bean.getLowerToleranceValue()));
+            deviationEdt.setText(Arith.double2Str(_bean.getDeviation()));
             formulaBtn.setText(_bean.getCode());
             groupBtn.setText(R.string.grouping);
             isEnableSwitch.setChecked(_bean.getEnable());
@@ -219,4 +222,21 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
         return false;
     }
 
+    @Override
+    public void dismiss() {
+        //避免闪屏 提高用户体验
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ParameterEditDialog.super.dismiss();
+            }
+        }, 500);
+
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(describeEdt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(nominalValueEdt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(upperToleranceValueEdt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(lowerToleranceValueEdt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(deviationEdt.getWindowToken(), 0);
+    }
 }

@@ -23,6 +23,8 @@ import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
+import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
+import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.StoreBean2;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBean2Dao;
@@ -30,6 +32,8 @@ import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StepBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StoreBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.TriggerConditionBeanDao;
+import alauncher.cn.measuringinstrument.utils.Arith;
+import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.view.activity_view.DataUpdateInterface;
 import alauncher.cn.measuringinstrument.widget.ParameterEditDialog;
 import butterknife.BindView;
@@ -46,6 +50,8 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
     private ParameterAdapter mAdapter;
 
     private int enableMSize = 0;
+
+    private DeviceInfoBean mDeviceInfoBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +70,7 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
         enableMSize = App.getDaoSession().getParameterBean2Dao().queryBuilder()
                 .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()), ParameterBean2Dao.Properties.Enable.eq(true))
                 .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list().size();
+        mDeviceInfoBean = App.getDeviceInfo();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ParameterManagement2Activity.this);
         rv.setLayoutManager(layoutManager);
         mAdapter = new ParameterAdapter();
@@ -89,9 +96,10 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
                     .queryBuilder().where(StoreBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).unique();
             mStoreBean.setStoreMode(0);
             App.getDaoSession().getStoreBean2Dao().insertOrReplace(mStoreBean);
-            android.util.Log.d("wlDebug","do clean ");
+            android.util.Log.d("wlDebug", "do clean ");
         }
         mAdapter.notifyDataSetChanged();
+        syncToServer();
     }
 
     class ParameterAdapter extends RecyclerView.Adapter<ViewHolder> {
@@ -114,10 +122,10 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
             holder.setText(R.id.is_enable_tv, _bean.getEnable() ? "是" : "否");
             holder.setText(R.id.m_title_tv, "M" + (_bean.getSequenceNumber() + 1));
             holder.setText(R.id.describe_tv, _bean.getDescribe());
-            holder.setText(R.id.nominal_value_tv, String.valueOf(_bean.getNominalValue()));
-            holder.setText(R.id.upper_tolerance_value_tv, String.valueOf(_bean.getUpperToleranceValue()));
-            holder.setText(R.id.lower_tolerance_value_tv, String.valueOf(_bean.getLowerToleranceValue()));
-            holder.setText(R.id.deviation_tv, String.valueOf(_bean.getDeviation()));
+            holder.setText(R.id.nominal_value_tv, Arith.double2Str(_bean.getNominalValue()));
+            holder.setText(R.id.upper_tolerance_value_tv, Arith.double2Str(_bean.getUpperToleranceValue()));
+            holder.setText(R.id.lower_tolerance_value_tv, Arith.double2Str(_bean.getLowerToleranceValue()));
+            holder.setText(R.id.deviation_tv, Arith.double2Str((_bean.getDeviation())));
             holder.setText(R.id.resolution_tv, getResources().getStringArray(R.array.resolution_values)[(int) _bean.getResolution()]);
             holder.setText(R.id.formula_tv, _bean.getCode());
 
@@ -257,6 +265,22 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
                         _dialog.dismiss();
                     }
                 });
+    }
+
+    private void syncToServer() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    int ret = JdbcUtil.deleteParam2s(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode());
+                    android.util.Log.d("wlDebug", "delete ret = " + ret);
+                    ret = JdbcUtil.addParam2Config(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), mDates);
+                    android.util.Log.d("wlDebug", "add ret = " + ret);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
 }

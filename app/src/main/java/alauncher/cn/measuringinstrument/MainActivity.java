@@ -77,6 +77,7 @@ public class MainActivity extends BaseOActivity {
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(_adapter);
 
+
         actionIV.setImageResource(R.drawable.power_button);
         actionIV.setOnClickListener(new View.OnClickListener() {
             @Override

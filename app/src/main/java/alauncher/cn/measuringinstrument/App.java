@@ -1,23 +1,19 @@
 package alauncher.cn.measuringinstrument;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
-import android.widget.Toast;
 
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.greendao.database.Database;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
@@ -26,10 +22,8 @@ import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean2;
 import alauncher.cn.measuringinstrument.bean.MeasureConfigurationBean;
-import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.RememberPasswordBean;
-import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean2;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
@@ -38,7 +32,6 @@ import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoMaster;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoSession;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
-import alauncher.cn.measuringinstrument.database.greenDao.db.StepBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StoreBean2Dao;
 import alauncher.cn.measuringinstrument.utils.Constants;
 import alauncher.cn.measuringinstrument.utils.DBOpenHelper;
@@ -219,7 +212,7 @@ public class App extends MultiDexApplication {
             _bean.setRmk("rmk");
             getDaoSession().getDeviceInfoBeanDao().insertOrReplace(_bean);
         }
-
+        /*
         if (getDaoSession().getForceCalibrationBeanDao().load(SETTING_ID) == null) {
             ForceCalibrationBean _bean = new ForceCalibrationBean();
             _bean.set_id(SETTING_ID);
@@ -228,6 +221,7 @@ public class App extends MultiDexApplication {
             _bean.setForceTime(60);
             getDaoSession().getForceCalibrationBeanDao().insert(_bean);
         }
+         */
 
         if (getDaoSession().getStoreBeanDao().load(SETTING_ID) == null) {
             StoreBean _bean = new StoreBean();
@@ -303,6 +297,15 @@ public class App extends MultiDexApplication {
                 _bean.setCh4CompensationValue(0.007);
                 _bean.setCh4KValue(0.01);
                 getDaoSession().getCalibrationBeanDao().insert(_bean);
+            }
+
+            if (getDaoSession().getForceCalibrationBeanDao().load((long) i) == null) {
+                ForceCalibrationBean _bean = new ForceCalibrationBean();
+                _bean.set_id(i);
+                _bean.setForceMode(0);
+                _bean.setForceNum(50);
+                _bean.setForceTime(60);
+                getDaoSession().getForceCalibrationBeanDao().insert(_bean);
             }
 
             if (getDaoSession().getMeasureConfigurationBeanDao().load((long) i) == null) {
