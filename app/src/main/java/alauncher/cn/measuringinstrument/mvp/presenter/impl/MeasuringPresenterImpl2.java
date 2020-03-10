@@ -964,7 +964,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         handler.sendEmptyMessageDelayed(MSG_AUTO_STORE, 1 * 1000);
     }
 
-    private void stopAutoStore() {
+    public void stopAutoStore() {
         handler.removeMessages(MSG_AUTO_STORE);
     }
 

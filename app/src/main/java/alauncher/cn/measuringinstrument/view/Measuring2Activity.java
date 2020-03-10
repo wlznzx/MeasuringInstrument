@@ -267,11 +267,12 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
     }
 
     private boolean doSave(boolean isManual) {
-        
+
         // 判断是否时间校验模式，如果超时，不保存并且提示;
         ForceCalibrationBeanDao _dao = App.getDaoSession().getForceCalibrationBeanDao();
         ForceCalibrationBean _bean = _dao.load((long) App.getSetupBean().getCodeID());
         if (_bean != null && ((_bean.getForceMode() == 1 && _bean.getUsrNum() <= 0) || (_bean.getForceMode() == 2 && System.currentTimeMillis() > _bean.getRealForceTime()))) {
+            ((MeasuringPresenterImpl2) mMeasuringPresenter).stopAutoStore();
             showForceDialog();
             return false;
         }
@@ -291,9 +292,14 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         return true;
     }
 
+    AlertDialog builder;
+
     private void showForceDialog() {
-        final AlertDialog builder = new AlertDialog.Builder(this)
-                .create();
+        if (builder == null) {
+            builder = new AlertDialog.Builder(this)
+                    .create();
+        }
+        if (builder.isShowing()) return;
         builder.show();
         if (builder.getWindow() == null) return;
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
@@ -311,6 +317,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 builder.dismiss();
             }
         });

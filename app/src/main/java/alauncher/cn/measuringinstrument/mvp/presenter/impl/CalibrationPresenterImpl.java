@@ -162,7 +162,7 @@ public class CalibrationPresenterImpl implements CalibrationPresenter {
 
         // 保存就要重新计算强制校验的值;
         ForceCalibrationBeanDao _dao = App.getDaoSession().getForceCalibrationBeanDao();
-        ForceCalibrationBean _bean = _dao.load(App.SETTING_ID);
+        ForceCalibrationBean _bean = _dao.load((long) App.getSetupBean().getCodeID());
         _bean.setUsrNum(_bean.getForceNum());
         _bean.setRealForceTime(System.currentTimeMillis() + _bean.getForceTime() * 60 * 1000);
         _dao.update(_bean);
