@@ -319,32 +319,86 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 protected void onDataReceived(ComBean paramComBean) {
                     if (isPaused) return;
                     // 重新解析Byte;
-                    if (paramComBean.bRec[0] == 0x53 && paramComBean.bRec[11] == 0x54) {
 
-                        long currentTime = System.currentTimeMillis();
-                        if (lastValueTime != 0) {
-                            long stepTime = (currentTime - lastValueTime);
-                            Log.d("wlDebug", "_value = " + lastValue + " last time:" + stepTime + "ms");
+                    if (isGetProcessValue) {
+                        // 过程取值中;
+                        /*
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                        lastValueTime = currentTime;
+                        android.util.Log.d("wlDebug", "onDataReceived = " + ByteUtil.ByteArrToHex(paramComBean.bRec));
+                        */
+                        for (int i = 0; (i + 11) < paramComBean.bRec.length; i = i + 12) {
+                            try {
+                                if (paramComBean.bRec[i] == 0x53 && paramComBean.bRec[i + 11] == 0x54) {
+                                    _chValue[0] = paramComBean.bRec[i + 2];
+                                    _chValue[1] = paramComBean.bRec[i + 3];
+                                    values[0] = ByteUtil.ByteArrToHex(_chValue);
 
-                        _chValue[0] = paramComBean.bRec[2];
-                        _chValue[1] = paramComBean.bRec[3];
-                        values[0] = ByteUtil.ByteArrToHex(_chValue);
+                                    _chValue[0] = paramComBean.bRec[i + 4];
+                                    _chValue[1] = paramComBean.bRec[i + 5];
+                                    values[1] = ByteUtil.ByteArrToHex(_chValue);
 
-                        _chValue[0] = paramComBean.bRec[4];
-                        _chValue[1] = paramComBean.bRec[5];
-                        values[1] = ByteUtil.ByteArrToHex(_chValue);
+                                    _chValue[0] = paramComBean.bRec[i + 6];
+                                    _chValue[1] = paramComBean.bRec[i + 7];
+                                    values[2] = ByteUtil.ByteArrToHex(_chValue);
 
-                        _chValue[0] = paramComBean.bRec[6];
-                        _chValue[1] = paramComBean.bRec[7];
-                        values[2] = ByteUtil.ByteArrToHex(_chValue);
+                                    _chValue[0] = paramComBean.bRec[i + 8];
+                                    _chValue[1] = paramComBean.bRec[i + 9];
+                                    values[3] = ByteUtil.ByteArrToHex(_chValue);
+                                }
 
-                        _chValue[0] = paramComBean.bRec[8];
-                        _chValue[1] = paramComBean.bRec[9];
-                        values[3] = ByteUtil.ByteArrToHex(_chValue);
-                        if (mView != null) {
-                            doCH2P(values);
+                                chValues[0] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[0], 16)), 0.007);
+                                chValues[1] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[1], 16)), 0.007);
+                                chValues[2] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[2], 16)), 0.007);
+                                chValues[3] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[3], 16)), 0.007);
+                                if (i == 0) {
+                                    if (mView != null) {
+                                        doCH2P(values);
+                                    }
+                                }
+                                if (tempValues.get(0).size() <= 5000) {
+                                    for (int j = 0; j < 4; j++) {
+                                        tempValues.get(j).add(chValues[j]);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                android.util.Log.d("wlDebug", "数字被截断", e);
+                                break;
+                            }
+                        }
+
+
+                        android.util.Log.d("wlDebug", "onDataReceived add it. " + tempValues.get(0).size());
+                    } else {
+                        if (paramComBean.bRec[0] == 0x53 && paramComBean.bRec[11] == 0x54) {
+                            long currentTime = System.currentTimeMillis();
+                            if (lastValueTime != 0) {
+                                long stepTime = (currentTime - lastValueTime);
+                                // Log.d("wlDebug", "_value = " + lastValue + " last time:" + stepTime + "ms");
+                            }
+                            lastValueTime = currentTime;
+
+                            _chValue[0] = paramComBean.bRec[2];
+                            _chValue[1] = paramComBean.bRec[3];
+                            values[0] = ByteUtil.ByteArrToHex(_chValue);
+
+                            _chValue[0] = paramComBean.bRec[4];
+                            _chValue[1] = paramComBean.bRec[5];
+                            values[1] = ByteUtil.ByteArrToHex(_chValue);
+
+                            _chValue[0] = paramComBean.bRec[6];
+                            _chValue[1] = paramComBean.bRec[7];
+                            values[2] = ByteUtil.ByteArrToHex(_chValue);
+
+                            _chValue[0] = paramComBean.bRec[8];
+                            _chValue[1] = paramComBean.bRec[9];
+                            values[3] = ByteUtil.ByteArrToHex(_chValue);
+                            if (mView != null) {
+                                doCH2P(values);
+                            }
                         }
                     }
                 }
@@ -383,7 +437,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             }
         }).start();
         */
-        forValueTest();
+        // forValueTest();
     }
 
     // 5301 1086 2031 3036 38C9 4E54
@@ -422,9 +476,11 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             }
         }
 
+        /*
         for (List<Double> list : tempValues) {
             list.clear();
         }
+         */
 
         if (!isSingleStep) {
             StepBean2 _bean = stepBeans.get(getStep());
@@ -717,11 +773,14 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             chValues[2] = 3;
             chValues[3] = 4;
         }
+
+        /* 不在这取值了;
         if (haveProcessCalculate && tempValues.get(0).size() <= 5000 && isGetProcessValue) {
             for (int i = 0; i < 4; i++) {
                 tempValues.get(i).add(chValues[i]);
             }
         }
+        */
 
         if (mParameterBean2Lists.size() > 0) {
             try {
@@ -751,7 +810,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         }
         long endTime = System.currentTimeMillis(); // 获取结束时间
         long stepTime = (endTime - startTime);
-        Log.d("wlDebug", "公式计算耗时： " + stepTime + "ms");
+        // Log.d("wlDebug", "公式计算耗时： " + stepTime + "ms");
         return null;
     }
 
@@ -851,6 +910,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             calculationValuesList.clear();
             // 添加过程值变量;
             Node node = null;
+            Log.d("wlDebug", "tempValues.size = " + tempValues.get(0).size());
             for (int i = 0; i < tempValues.get(0).size(); i++) {
                 calculationJEP.addVariable("ch1", tempValues.get(0).get(i));
                 calculationJEP.addVariable("ch2", tempValues.get(1).get(i));
