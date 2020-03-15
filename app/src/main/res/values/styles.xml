@@ -315,4 +315,9 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="spc_checkbox_style" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:drawableLeft">@drawable/black_cb</item>
+        <item name="android:button">@null</item>
+    </style>
+
 </resources>

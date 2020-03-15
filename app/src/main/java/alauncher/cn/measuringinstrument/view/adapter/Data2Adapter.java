@@ -114,7 +114,7 @@ public class Data2Adapter extends RecyclerView.Adapter<ViewHolder> {
 
         holder.setText(R.id.data_num, "" + (position + 1));
         holder.setText(R.id.data_handler, "" + datas.get(position).getHandlerAccount());
-        holder.setText(R.id.data_workpiece_id, datas.get(position).getWorkID() == null || datas.get(position).getEvent().equals("") ? "- -" : datas.get(position).getWorkID());
+        holder.setText(R.id.data_workpiece_id, datas.get(position).getWorkID() == null || datas.get(position).getWorkID().equals("") ? "- -" : datas.get(position).getWorkID());
         holder.setText(R.id.data_event, datas.get(position).getEvent() == null || datas.get(position).getEvent().equals("") ? "- -" : datas.get(position).getEvent());
         holder.setText(R.id.data_time, DateUtils.getDate(datas.get(position).getTimeStamp()));
         holder.setText(R.id.data_result, "" + datas.get(position).getResult());

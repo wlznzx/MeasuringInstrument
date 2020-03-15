@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#00FFFFFF">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="430dp"
@@ -15,9 +14,10 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:gravity="center"
             android:text="@string/add_title"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
@@ -38,19 +38,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/workpiece_id"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/workpieceid_edt"
                 style="@style/EdNumOnlyStyle"
                 android:layout_width="200dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp" />
 
             <Spinner
                 android:id="@+id/workpieceid_sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/workids"></Spinner>
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:entries="@array/workids"
+                android:background="@drawable/b_sp"
+                android:textColor="@android:color/black"></Spinner>
         </LinearLayout>
 
 
@@ -64,29 +68,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/event_id"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/eventid_edt"
                 style="@style/EdTextStyle"
                 android:layout_width="200dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp" />
 
             <Spinner
                 android:id="@+id/evnet_sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/eventid_items"></Spinner>
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:background="@drawable/b_sp"
+                android:entries="@array/eventid_items"
+                android:textColor="@android:color/black"></Spinner>
         </LinearLayout>
 
 
         <CheckBox
             android:id="@+id/additional_show_ch"
+            style="@style/spc_checkbox_style"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/is_auto_show"
             android:textColor="@android:color/black"
-            android:textSize="12dp" />
+            android:textSize="15dp" />
 
 
         <LinearLayout
@@ -103,7 +114,7 @@
                 android:background="@null"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="No"
+                android:text="@android:string/cancel"
                 android:textColor="#7D7D7D"
                 android:textSize="16sp" />
 
@@ -121,7 +132,7 @@
                 android:background="@null"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Yes"
+                android:text="@string/ok"
                 android:textColor="#38ADFF"
                 android:textSize="16sp" />
         </LinearLayout>

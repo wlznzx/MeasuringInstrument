@@ -183,7 +183,7 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             case R.id.calibration_save_btn:
                 doCalc();
                 CalibrationBean _bean = view2Bean();
-                if(_bean == null) return;
+                if (_bean == null) return;
                 android.util.Log.d("wlDebug", _bean.toString());
                 // 判断倍率;
                 /*
@@ -282,7 +282,7 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             _bean = new CalibrationBean();
         }
         _bean.setCode_id(App.getSetupBean().getCodeID());
-        try{
+        try {
             // 校验模式
             _bean.setCh1CalibrationType((int) calibrationTypeSP[0].getSelectedItemId());
             _bean.setCh2CalibrationType((int) calibrationTypeSP[1].getSelectedItemId());
@@ -323,8 +323,8 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             _bean.setCh2CompensationValue(Double.valueOf(compensationValueEdt[1].getText().toString().trim()));
             _bean.setCh3CompensationValue(Double.valueOf(compensationValueEdt[2].getText().toString().trim()));
             _bean.setCh4CompensationValue(Double.valueOf(compensationValueEdt[3].getText().toString().trim()));
-        }catch (NumberFormatException e){
-            Toast.makeText(this,R.string.number_format_tips,Toast.LENGTH_SHORT).show();
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, R.string.number_format_tips, Toast.LENGTH_SHORT).show();
             return null;
         }
         return _bean;

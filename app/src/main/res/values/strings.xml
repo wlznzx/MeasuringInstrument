@@ -127,7 +127,7 @@
     <string name="in_value">取值中.</string>
     <string name="k_value">倍\u3000\u3000率</string>
     <string name="event_id">事件号</string>
-    <string name="is_auto_show">是否自动弹出</string>
+    <string name="is_auto_show">\u3000是否自动弹出</string>
     <string name="add_title">附加信息</string>
     <string name="add_user_title">添加用户</string>
     <string name="edit_user_title">编辑用户信息</string>

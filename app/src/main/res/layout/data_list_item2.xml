@@ -43,6 +43,7 @@
         style="@style/DataTextStyle"
         android:layout_width="@dimen/data_width"
         android:layout_height="match_parent"
+        android:maxLines="3"
         android:text="@string/workpiece_id" />
 
     <TextView

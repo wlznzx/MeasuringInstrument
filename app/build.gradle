@@ -7,8 +7,8 @@ android {
         applicationId "alauncher.cn.measuringinstrument"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 26
-        versionName "v5.0.7_releases"
+        versionCode 27
+        versionName "v5.1.3_releases"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -115,6 +115,7 @@ dependencies {
     // debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
     // releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
     // Optional, if you use support library fragments:
+    // implementation 'com.github.arcadefire:nice-spinner:1.4.4'
 }
 
 android.applicationVariants.all {

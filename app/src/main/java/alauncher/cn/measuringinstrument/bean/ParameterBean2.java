@@ -43,9 +43,9 @@ public class ParameterBean2 {
 
     @Generated(hash = 411981944)
     public ParameterBean2(Long id, long codeID, int sequenceNumber, String describe,
-            double nominalValue, double upperToleranceValue,
-            double lowerToleranceValue, double deviation, int resolution,
-            double scale, String code, boolean enable) {
+                          double nominalValue, double upperToleranceValue,
+                          double lowerToleranceValue, double deviation, int resolution,
+                          double scale, String code, boolean enable) {
         this.id = id;
         this.codeID = codeID;
         this.sequenceNumber = sequenceNumber;

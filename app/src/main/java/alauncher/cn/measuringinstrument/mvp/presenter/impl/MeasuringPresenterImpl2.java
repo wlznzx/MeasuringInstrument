@@ -319,7 +319,11 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 protected void onDataReceived(ComBean paramComBean) {
                     if (isPaused) return;
                     // 重新解析Byte;
-
+                    try {
+                        Thread.sleep(40);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     if (isGetProcessValue) {
                         // 过程取值中;
                         /*
@@ -369,8 +373,6 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                                 break;
                             }
                         }
-
-
                         android.util.Log.d("wlDebug", "onDataReceived add it. " + tempValues.get(0).size());
                     } else {
                         if (paramComBean.bRec[0] == 0x53 && paramComBean.bRec[11] == 0x54) {
@@ -571,6 +573,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         for (int i = 0; i < mGeted.length; i++) {
             mGeted[i] = false;
         }
+
         ResultBean2 _bean = new ResultBean2();
         _bean.setHandlerAccount(App.handlerAccout);
         _bean.setCodeID(App.getSetupBean().getCodeID());

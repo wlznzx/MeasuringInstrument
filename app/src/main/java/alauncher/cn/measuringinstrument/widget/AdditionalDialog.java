@@ -4,9 +4,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -62,12 +64,16 @@ public class AdditionalDialog extends Dialog {
         setContentView(R.layout.additional_dialog_layout);
         ButterKnife.bind(this);
         isShowCB.setChecked(App.getSetupBean().getIsAutoPopUp());
+        ArrayAdapter<String> stepAdapter = new ArrayAdapter<>(getContext(),
+                R.layout.step_spinner_item, getContext().getResources().getStringArray(R.array.eventid_items));
+        eventSP.setAdapter(stepAdapter);
         eventSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                android.util.Log.d("wlDebug", "pos = " + eventSP.getItemAtPosition(position));
+                Log.d("wlDebug", "pos = " + eventSP.getItemAtPosition(position));
                 if (!isFrist) {
                     eventidEdt.setText((String) eventSP.getItemAtPosition(position));
+                    eventSP.setSelection(position);
                 } else {
                     isFrist = false;
                 }
@@ -78,6 +84,9 @@ public class AdditionalDialog extends Dialog {
 
             }
         });
+
+        workpieceidSP.setAdapter(new ArrayAdapter<>(getContext(),
+                R.layout.step_spinner_item, getContext().getResources().getStringArray(R.array.workids)));
     }
 
     public interface AdditionDialogInterface {
