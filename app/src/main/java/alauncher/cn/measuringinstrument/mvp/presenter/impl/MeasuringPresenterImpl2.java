@@ -1,6 +1,9 @@
 package alauncher.cn.measuringinstrument.mvp.presenter.impl;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -10,6 +13,7 @@ import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,10 +25,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import alauncher.cn.measuringinstrument.App;
+import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean2;
+import alauncher.cn.measuringinstrument.bean.MeasureConfigurationBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.ProcessBean;
@@ -39,10 +45,14 @@ import alauncher.cn.measuringinstrument.database.greenDao.db.StoreBean2Dao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.utils.Avg;
+import alauncher.cn.measuringinstrument.utils.DateUtils;
+import alauncher.cn.measuringinstrument.utils.DialogUtils;
 import alauncher.cn.measuringinstrument.utils.Dif;
+import alauncher.cn.measuringinstrument.utils.ExcelUtil;
 import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.utils.Max;
 import alauncher.cn.measuringinstrument.utils.Min;
+import alauncher.cn.measuringinstrument.view.Statistical2Activity;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import tp.xmaihh.serialport.SerialHelper;
 import tp.xmaihh.serialport.bean.ComBean;
@@ -142,6 +152,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
     private boolean isPaused = false;
 
+    private MeasureConfigurationBean mMeasureConfigurationBean;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -180,6 +192,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         groupBean2Lists.clear();
         mKeyMap.clear();
         // 获取参数列表;
+        mMeasureConfigurationBean = App.getDaoSession().getMeasureConfigurationBeanDao().load((long) App.getSetupBean().getCodeID());
         mParameterBean2Lists = App.getDaoSession().getParameterBean2Dao().queryBuilder()
                 .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()), ParameterBean2Dao.Properties.Enable.eq(true))
                 .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
@@ -373,7 +386,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                                 break;
                             }
                         }
-                        android.util.Log.d("wlDebug", "onDataReceived add it. " + tempValues.get(0).size());
+                        // android.util.Log.d("wlDebug", "onDataReceived add it. " + tempValues.get(0).size());
                     } else {
                         if (paramComBean.bRec[0] == 0x53 && paramComBean.bRec[11] == 0x54) {
                             long currentTime = System.currentTimeMillis();
@@ -657,7 +670,6 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             currentStep = 0;
         }
         measure_state = MeasuringPresenter.NORMAL_NODE;
-        // Log.d("wlDebug", "Measured = " + Integer.toBinaryString(stepBeans.get(getStep()).getMeasured()));
     }
 
     /*
@@ -686,6 +698,9 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         isGetProcessValue = false;
         measure_state = MeasuringPresenter.IN_PROCESS_VALUE_BEEN_TAKEN_MODE;
         mView.updateSaveBtnMsg();
+        if (mMeasureConfigurationBean.getIsPrint()) {
+            new ExcelTask().execute(tempValues);
+        }
     }
 
     @Override
@@ -926,6 +941,10 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             Log.d("wlDebug", "reList = " + calculationValuesList.toString());
             jep.addVariable(_process.getReplaceName(), calculationProcess(_process, calculationValuesList));
         }
+
+        // 如果需要的话，打印所有的过程值;
+
+
         if (nodes[index] == null) nodes[index] = jep.parse(reCodeList.get(index));
         return (double) jep.evaluate(nodes[index]) + mParameterBean2Lists.get(index).getDeviation();
     }
@@ -1029,6 +1048,73 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
     public void stopAutoStore() {
         handler.removeMessages(MSG_AUTO_STORE);
+    }
+
+    /*
+     *
+     * 导出Excel Task.
+     *
+     * */
+    public class ExcelTask extends AsyncTask<List<List<Double>>, Integer, String> {
+
+        private ProgressDialog dialog;
+        private String path = Environment.getExternalStorageDirectory() + "/NTGate/Print/";
+        private Context context;
+
+        //执行的第一个方法用于在执行后台任务前做一些UI操作
+        @Override
+        protected void onPreExecute() {
+            context = (Context) mView;
+            dialog = new ProgressDialog(context);
+            dialog.setTitle(context.getResources().getString(R.string.print_values_title));
+            dialog.setMessage(context.getResources().getString(R.string.print_values_msg));
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        //第二个执行方法,在onPreExecute()后执行，用于后台任务,不可在此方法内修改UI
+        @Override
+        protected String doInBackground(List<List<Double>>... params) {
+            //处理耗时操作
+
+            File destDir = new File(path);
+            if (!destDir.exists()) {
+                destDir.mkdirs();
+            }
+
+            if (params[0].size() > 0) {
+                path = path + "print_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".xls";
+                String[] title = {"ch1", "ch2", "ch3", "ch4"};
+                ExcelUtil.initExcel(path, "print", title);
+                ExcelUtil.writePrintToExcel(params[0], path);
+                return path;
+            } else {
+                return null;
+            }
+        }
+
+        /* 这个函数在doInBackground调用publishProgress(int i)时触发，虽然调用时只有一个参数
+         但是这里取到的是一个数组,所以要用progesss[0]来取值
+         第n个参数就用progress[n]来取值 */
+        @Override
+        protected void onProgressUpdate(Integer... progresses) {
+            //"loading..." + progresses[0] + "%"
+        }
+
+        /*doInBackground返回时触发，换句话说，就是doInBackground执行完后触发
+        这里的result就是上面doInBackground执行后的返回值，所以这里是"后台任务执行完毕"  */
+        @Override
+        protected void onPostExecute(String result) {
+            dialog.dismiss();
+            DialogUtils.showDialog(context, context.getResources().getString(R.string.print_values_title), context.getResources().getString(R.string.print_values_path) + path);
+        }
+
+        //onCancelled方法用于在取消执行中的任务时更改UI
+        @Override
+        protected void onCancelled() {
+
+        }
     }
 
 

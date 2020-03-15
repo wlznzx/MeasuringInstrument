@@ -342,7 +342,6 @@ public class SPCStatisticalActivity extends BaseOActivity {
     public class SPCTask extends AsyncTask<String, Integer, Object> {
 
         private ProgressDialog dialog;
-        private String path = Environment.getExternalStorageDirectory() + "/ETGate/";
 
         //执行的第一个方法用于在执行后台任务前做一些UI操作
         @Override

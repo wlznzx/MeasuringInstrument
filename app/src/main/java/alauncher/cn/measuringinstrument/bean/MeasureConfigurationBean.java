@@ -14,14 +14,17 @@ public class MeasureConfigurationBean {
 
     public int measureMode;
 
+    public boolean isPrint;
+
     public boolean isShowChart;
 
-    @Generated(hash = 1576941849)
+    @Generated(hash = 495641771)
     public MeasureConfigurationBean(Long id, long code_id, int measureMode,
-            boolean isShowChart) {
+            boolean isPrint, boolean isShowChart) {
         this.id = id;
         this.code_id = code_id;
         this.measureMode = measureMode;
+        this.isPrint = isPrint;
         this.isShowChart = isShowChart;
     }
 
@@ -37,6 +40,14 @@ public class MeasureConfigurationBean {
         this.id = id;
     }
 
+    public long getCode_id() {
+        return this.code_id;
+    }
+
+    public void setCode_id(long code_id) {
+        this.code_id = code_id;
+    }
+
     public int getMeasureMode() {
         return this.measureMode;
     }
@@ -45,12 +56,12 @@ public class MeasureConfigurationBean {
         this.measureMode = measureMode;
     }
 
-    public long getCode_id() {
-        return this.code_id;
+    public boolean getIsPrint() {
+        return this.isPrint;
     }
 
-    public void setCode_id(long code_id) {
-        this.code_id = code_id;
+    public void setIsPrint(boolean isPrint) {
+        this.isPrint = isPrint;
     }
 
     public boolean getIsShowChart() {

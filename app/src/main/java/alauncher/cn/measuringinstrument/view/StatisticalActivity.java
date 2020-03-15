@@ -569,7 +569,7 @@ public class StatisticalActivity extends BaseOActivity {
     public class ExcelTask extends AsyncTask<String, Integer, String> {
 
         private ProgressDialog dialog;
-        private String path = Environment.getExternalStorageDirectory() + "/ETGate/";
+        private String path = Environment.getExternalStorageDirectory() + "/NTGate/";
 
         //执行的第一个方法用于在执行后台任务前做一些UI操作
         @Override

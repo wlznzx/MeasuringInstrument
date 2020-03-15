@@ -276,5 +276,10 @@
     <string name="loading_msg">正在加载数据 , 请稍等.</string>
     <string name="loading_chart">正在加载图表，请稍等。</string>
     <string name="measure_chart_show">显示趋势图</string>
+    <string name="prinit_process_values">打印过程值</string>
+    <string name="print_process_values">打印过程值</string>
+    <string name="print_values_title">导出过程值</string>
+    <string name="print_values_msg">正在导出过程值，请稍等...</string>
+    <string name="print_values_path">过程值导出路径位于:</string>
 
 </resources>

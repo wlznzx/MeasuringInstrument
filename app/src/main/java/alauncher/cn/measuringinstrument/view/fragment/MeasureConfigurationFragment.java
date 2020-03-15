@@ -29,6 +29,9 @@ public class MeasureConfigurationFragment extends Fragment {
     @BindView(R.id.measure_chart_show_switch)
     public Switch chartShowSwitch;
 
+    @BindView(R.id.print_process_values_switch)
+    public Switch printProcessValuesSwitch;
+
     private Unbinder unbinder;
 
     private MeasureConfigurationBean mMeasureConfigurationBean;
@@ -66,6 +69,14 @@ public class MeasureConfigurationFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 mMeasureConfigurationBean.setIsShowChart(b);
+                App.getDaoSession().getMeasureConfigurationBeanDao().insertOrReplace(mMeasureConfigurationBean);
+            }
+        });
+        printProcessValuesSwitch.setChecked(mMeasureConfigurationBean.getIsPrint());
+        printProcessValuesSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                mMeasureConfigurationBean.setIsPrint(b);
                 App.getDaoSession().getMeasureConfigurationBeanDao().insertOrReplace(mMeasureConfigurationBean);
             }
         });

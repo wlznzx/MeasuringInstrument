@@ -234,7 +234,73 @@ public class ExcelUtil {
 
                 writebook.write();
                 workbook.close();
-                Toast.makeText(c, "导出Excel成功", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(c, "导出Excel成功", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (writebook != null) {
+                    try {
+                        writebook.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 将制定类型的List写入Excel中
+     *
+     * @param objList  待写入的list
+     * @param fileName
+     * @param c
+     * @param <T>
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> void writePrintToExcel(List<List<T>> objList, String fileName) {
+        if (objList != null && objList.size() > 0) {
+            WritableWorkbook writebook = null;
+            InputStream in = null;
+            try {
+                WorkbookSettings setEncode = new WorkbookSettings();
+                setEncode.setEncoding(UTF8_ENCODING);
+
+                in = new FileInputStream(new File(fileName));
+                Workbook workbook = Workbook.getWorkbook(in);
+                writebook = Workbook.createWorkbook(new File(fileName), workbook);
+                WritableSheet sheet = writebook.getSheet(0);
+
+                for (int j = 0; j < objList.get(0).size(); j++) {
+                    List<String> list = new ArrayList<>();
+                    for (int i = 0; i < objList.size(); i++) {
+                        list.add(String.valueOf(objList.get(i).get(j)));
+                    }
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(i, j + 1, list.get(i), arial12format));
+                        if (list.get(i).length() <= 4) {
+                            //设置列宽
+                            sheet.setColumnView(i, list.get(i).length() + 8);
+                        } else {
+                            //设置列宽
+                            sheet.setColumnView(i, list.get(i).length() + 5);
+                        }
+                    }
+                    //设置行高
+                    sheet.setRowView(j + 1, 350);
+                }
+
+                writebook.write();
+                workbook.close();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
