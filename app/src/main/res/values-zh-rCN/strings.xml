@@ -123,4 +123,10 @@
     <string name="print_values_title">导出过程值</string>
     <string name="print_values_msg">正在导出过程值，请稍等...</string>
     <string name="print_values_path">过程值导出路径位于:</string>
+    <string name="sync_server">同步至云端</string>
+    <string name="sync_title">同步</string>
+    <string name="sync_msg">同步至服务器中...</string>
+    <string name="sync_success">同步成功.</string>
+    <string name="sync_fail">同步失败，请检查网络配置.</string>
+    <string name="save_and_sync">保存/同步</string>
 </resources>

@@ -358,7 +358,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:drawableTop="@drawable/archive_24px"
-                    android:text="@string/save"
+                    android:text="@string/save_and_sync"
                     android:textColor="@android:color/white"
                     android:textSize="18sp" />
             </FrameLayout>

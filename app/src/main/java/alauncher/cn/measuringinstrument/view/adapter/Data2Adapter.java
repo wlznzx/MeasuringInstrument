@@ -41,6 +41,7 @@ public class Data2Adapter extends RecyclerView.Adapter<ViewHolder> {
     public Data2Adapter(Context context, List<ResultBean2> pDatas, List<ParameterBean2> pParameterBean2List) {
         this.context = context;
         datas = pDatas;
+        mParameterBean2List = pParameterBean2List;
         for (int i = 0; i < pParameterBean2List.size(); i++) {
             mValueID.add(View.generateViewId());
             mGroupID.add(View.generateViewId());
@@ -130,12 +131,23 @@ public class Data2Adapter extends RecyclerView.Adapter<ViewHolder> {
         }
         holder.setText(R.id.data_m, _data);
         */
-        for (int i = 0; i < datas.get(position).getMeasurementValues().size(); i++) {
-            try {
-                holder.setText(mValueID.get(i), datas.get(position).getMeasurementValues().get(i));
-                holder.setText(mGroupID.get(i), datas.get(position).getMeasurementGroup().get(i));
-            } catch (IndexOutOfBoundsException e) {
+        for (int i = 0; i < mParameterBean2List.size(); i++) {
+            // 判断是否存在这个M值的测量结果;
+            String mIndex = String.valueOf(mParameterBean2List.get(i).getSequenceNumber() + 1);
+            if (datas.get(position).getMItems().contains(mIndex)) {
+                try {
+                    holder.setText(mValueID.get(i), datas.get(position).getMeasurementValues().get(datas.get(position).getMItems().indexOf(mIndex)));
+                    holder.setText(mGroupID.get(i), datas.get(position).getMeasurementGroup().get(datas.get(position).getMItems().indexOf(mIndex)));
+                } catch (IndexOutOfBoundsException e) {
 
+                }
+            } else {
+                try {
+                    holder.setText(mValueID.get(i), "- -");
+                    holder.setText(mGroupID.get(i), "- -");
+                } catch (IndexOutOfBoundsException e) {
+
+                }
             }
         }
 

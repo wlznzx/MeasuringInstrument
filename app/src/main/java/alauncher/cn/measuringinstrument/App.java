@@ -131,7 +131,7 @@ public class App extends MultiDexApplication {
     }
 
     public static DeviceInfoBean getDeviceInfo() {
-        return getDaoSession().getDeviceInfoBeanDao().load((long) App.getSetupBean().getCodeID());
+        return getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
     }
 
     public void initDefaultDate() {

@@ -24,7 +24,6 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
-import alauncher.cn.measuringinstrument.bean.ParameterBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.StoreBean2;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBean2Dao;
@@ -33,6 +32,7 @@ import alauncher.cn.measuringinstrument.database.greenDao.db.StepBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StoreBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.TriggerConditionBeanDao;
 import alauncher.cn.measuringinstrument.utils.Arith;
+import alauncher.cn.measuringinstrument.utils.DialogUtils;
 import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.view.activity_view.DataUpdateInterface;
 import alauncher.cn.measuringinstrument.widget.ParameterEditDialog;
@@ -186,8 +186,8 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
     public void addParameterBtn(View v) {
         // 目前参数数量限制为8个;
         int size = mDates.size();
-        if (size >= 8) {
-            showMsgDialog(this, "无法添加", "当前参数数量上限为8个。");
+        if (size >= 10) {
+            showMsgDialog(this, "无法添加", "当前参数数量上限为10个。");
             return;
         }
         ParameterEditDialog _dialog = new ParameterEditDialog(this, null);
@@ -195,12 +195,17 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
         _dialog.show();
     }
 
+    @OnClick(R.id.sync_btn)
+    public void SyncBtn(View v) {
+        new SyncTask().execute();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public class DeleteTask extends AsyncTask<String, Integer, String> {
+    public class SyncTask extends AsyncTask<String, Integer, String> {
 
         private ProgressDialog dialog;
 
@@ -208,8 +213,8 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
         @Override
         protected void onPreExecute() {
             dialog = new ProgressDialog(ParameterManagement2Activity.this);
-            dialog.setTitle("删除");
-            dialog.setMessage("正在删除数据 , 请稍等.");
+            dialog.setTitle(getResources().getString(R.string.sync_title));
+            dialog.setMessage(getResources().getString(R.string.sync_msg));
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
             dialog.show();
@@ -218,7 +223,16 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
         //第二个执行方法,在onPreExecute()后执行，用于后台任务,不可在此方法内修改UI
         @Override
         protected String doInBackground(String... params) {
-            return "";
+            int deleteRet, addRet;
+            try {
+                deleteRet = JdbcUtil.deleteParam2s(
+                        mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID());
+                addRet = JdbcUtil.addParam2Config(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), mDates);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "NG";
+            }
+            return (deleteRet >= 0 && addRet > 0) ? "OK" : "NG";
         }
 
         /*这个函数在doInBackground调用publishProgress(int i)时触发，虽然调用时只有一个参数
@@ -233,12 +247,20 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
         这里的result就是上面doInBackground执行后的返回值，所以这里是"后台任务执行完毕"  */
         @Override
         protected void onPostExecute(String result) {
+            dialog.dismiss();
+            if ("OK".equals(result)) {
+                DialogUtils.showDialog(ParameterManagement2Activity.this,
+                        getResources().getString(R.string.sync_title), getResources().getString(R.string.sync_success));
+            } else {
+                DialogUtils.showDialog(ParameterManagement2Activity.this,
+                        getResources().getString(R.string.sync_title), getResources().getString(R.string.sync_fail));
+            }
         }
 
         //onCancelled方法用于在取消执行中的任务时更改UI
         @Override
         protected void onCancelled() {
-
+            dialog.dismiss();
         }
     }
 
@@ -272,7 +294,8 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
             @Override
             public void run() {
                 try {
-                    int ret = JdbcUtil.deleteParam2s(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode());
+                    int ret = JdbcUtil.deleteParam2s(mDeviceInfoBean.getFactoryCode(),
+                            mDeviceInfoBean.getDeviceCode(), App.getSetupBean().getCodeID());
                     android.util.Log.d("wlDebug", "delete ret = " + ret);
                     ret = JdbcUtil.addParam2Config(mDeviceInfoBean.getFactoryCode(), mDeviceInfoBean.getDeviceCode(), mDates);
                     android.util.Log.d("wlDebug", "add ret = " + ret);

@@ -269,6 +269,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
     private boolean doSave(boolean isManual) {
 
         // 判断是否时间校验模式，如果超时，不保存并且提示;
+        /*
         ForceCalibrationBeanDao _dao = App.getDaoSession().getForceCalibrationBeanDao();
         ForceCalibrationBean _bean = _dao.load((long) App.getSetupBean().getCodeID());
         if (_bean != null && ((_bean.getForceMode() == 1 && _bean.getUsrNum() <= 0) || (_bean.getForceMode() == 2 && System.currentTimeMillis() > _bean.getRealForceTime()))) {
@@ -276,6 +277,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             showForceDialog();
             return false;
         }
+         */
 
         String _result = mMeasuringPresenter.saveResult(curMValues, mAddInfoBean, isManual);
         if (_result.equals("NoSave")) {
@@ -284,8 +286,10 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         } else if (_result.equals("OK")) {
             Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
         }
+        /*
         _bean.setUsrNum(_bean.getUsrNum() - 1);
         _dao.update(_bean);
+         */
         if (App.getSetupBean().getIsAutoPopUp()) {
             showAddDialog();
         }
@@ -294,7 +298,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
 
     AlertDialog builder;
 
-    private void showForceDialog() {
+    public void showForceDialog() {
         if (builder == null) {
             builder = new AlertDialog.Builder(this)
                     .create();

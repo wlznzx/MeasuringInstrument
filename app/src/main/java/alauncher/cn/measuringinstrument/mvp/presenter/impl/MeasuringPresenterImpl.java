@@ -19,7 +19,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import alauncher.cn.measuringinstrument.App;
-import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
@@ -36,7 +35,6 @@ import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.utils.Avg;
 import alauncher.cn.measuringinstrument.utils.Dif;
-import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.utils.Max;
 import alauncher.cn.measuringinstrument.utils.Min;
 import alauncher.cn.measuringinstrument.utils.StepUtils;

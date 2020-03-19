@@ -224,15 +224,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
-                android:id="@+id/export_excel_btn"
+                android:id="@+id/sync_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/assignment_24px"
-                android:text="@string/export_excel"
+                android:text="@string/sync_server"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
         </FrameLayout>

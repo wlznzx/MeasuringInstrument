@@ -272,13 +272,14 @@ public class JdbcUtil {
         return 1;
     }
 
-    public static int deleteParam2s(String factory_code, String machine_code) throws SQLException {
+    public static int deleteParam2s(String factory_code, String machine_code, int progID) throws SQLException {
         Connection conn = getConnection();
         if (conn == null) return -1;
-        String sql = "delete from ntqc_param_config where machine_code=? and factory_code=?";
+        String sql = "delete from ntqc_param_config where machine_code=? and factory_code=? and prog_id=?";
         PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         pstmt.setString(1, machine_code);
         pstmt.setString(2, factory_code);
+        pstmt.setInt(3, progID);
         int ret = pstmt.executeUpdate();//执行sql
         pstmt.close();
         conn.close();
@@ -287,6 +288,7 @@ public class JdbcUtil {
 
     public static int addParam2Config(String factory_code, String machine_code, List<ParameterBean2> list) throws SQLException {
         Connection conn = getConnection();
+        int resultNum = 0;
         if (conn == null) return -1;
         String sql = "insert into ntqc_param_config (factory_code,machine_code,prog_id," +
                 "prog_name,param_key,param_name,type,nominal_value,lower_tolerance,upper_tolerance,warning_up,warning_low,rmk) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
@@ -306,11 +308,11 @@ public class JdbcUtil {
             pstmt.setFloat(11, 0);
             pstmt.setFloat(12, 0);
             pstmt.setString(13, "rmk");
-            pstmt.executeUpdate();//执行sql
+            resultNum = resultNum + pstmt.executeUpdate();//执行sql
             pstmt.close();
         }
         conn.close();
-        return 1;
+        return resultNum;
     }
 
     public static int addParamConfig(String factory_code, String machine_code, int prog_id, String prog_name, String param_key,

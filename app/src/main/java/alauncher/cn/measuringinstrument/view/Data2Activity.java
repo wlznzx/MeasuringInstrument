@@ -263,7 +263,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         index = 0;
         mTvSelectNum.setText(String.valueOf(0));
         isSelectAll = false;
-        mSelectAll.setText("全选");
+        mSelectAll.setText(R.string.select_all);
         setBtnBackground(0);
     }
 
@@ -287,7 +287,6 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     @Override
     public void onItemClickListener(int pos, List<ResultBean2> myLiveList) {
-        android.util.Log.d("wlDebug", "pos = " + pos);
         if (editorStatus) {
             ResultBean2 _bean = myLiveList.get(pos);
             boolean isSelect = _bean.getIsSelect();
@@ -302,7 +301,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
                 _bean.setIsSelect(false);
                 index--;
                 isSelectAll = false;
-                mSelectAll.setText("全选");
+                mSelectAll.setText(R.string.select_all);
             }
             setBtnBackground(index);
             mTvSelectNum.setText(String.valueOf(index));

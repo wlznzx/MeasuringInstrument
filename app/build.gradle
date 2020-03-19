@@ -6,9 +6,9 @@ android {
     defaultConfig {
         applicationId "alauncher.cn.measuringinstrument"
         minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 27
-        versionName "v5.1.5_releases"
+        targetSdkVersion 27
+        versionCode 31
+        versionName "v5.1.9_releases"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

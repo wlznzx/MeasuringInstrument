@@ -29,6 +29,7 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
+import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean2;
 import alauncher.cn.measuringinstrument.bean.MeasureConfigurationBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean;
@@ -52,7 +53,7 @@ import alauncher.cn.measuringinstrument.utils.ExcelUtil;
 import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.utils.Max;
 import alauncher.cn.measuringinstrument.utils.Min;
-import alauncher.cn.measuringinstrument.view.Statistical2Activity;
+import alauncher.cn.measuringinstrument.view.Measuring2Activity;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import tp.xmaihh.serialport.SerialHelper;
 import tp.xmaihh.serialport.bean.ComBean;
@@ -114,7 +115,6 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     // 测量状态;
     private int measure_state = 3;
 
-
     private int currentStep = -1;
 
     private List<List<ProcessBean>> processBeanLists = new ArrayList<>();
@@ -153,6 +153,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     private boolean isPaused = false;
 
     private MeasureConfigurationBean mMeasureConfigurationBean;
+
+    private ForceCalibrationBean mForceCalibrationBean;
 
     private Handler handler = new Handler() {
         @Override
@@ -193,6 +195,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         mKeyMap.clear();
         // 获取参数列表;
         mMeasureConfigurationBean = App.getDaoSession().getMeasureConfigurationBeanDao().load((long) App.getSetupBean().getCodeID());
+        mForceCalibrationBean = App.getDaoSession().getForceCalibrationBeanDao().load((long) App.getSetupBean().getCodeID());
         mParameterBean2Lists = App.getDaoSession().getParameterBean2Dao().queryBuilder()
                 .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()), ParameterBean2Dao.Properties.Enable.eq(true))
                 .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
@@ -473,7 +476,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     @Override
     public String saveResult(double[] ms, AddInfoBean bean, boolean isManual) {
 
-        // android.util.Log.d("wlDebug", Arrays.toString(ms));
+        int ret = 0;
+
         if (ms == null) {
             return "- -";
         }
@@ -567,26 +571,37 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 tempMs[mKeyMap.get(_bean.getMeasureItems().get(i))] = ms[mKeyMap.get(_bean.getMeasureItems().get(i))];
                 mGeted[mKeyMap.get(_bean.getMeasureItems().get(i))] = true;
             }
+
+
             android.util.Log.d("wlDebug", "tempMs = " + Arrays.toString(tempMs));
             if (getStep() == maxStep - 1) {
-                doSave(tempMs, bean);
+                ret = doSave(tempMs, bean);
             }
             nextStep();
         } else {
-            doSave(ms, bean);
+            ret = doSave(ms, bean);
         }
 
         measure_state = 1;
         mView.updateSaveBtnMsg();
-        return "OK";
+        return ret > 0 ? "OK" : "";
     }
 
 
-    private void doSave(double[] ms, AddInfoBean bean) {
+    private int doSave(double[] ms, AddInfoBean bean) {
+        /*
+         *  判断是否强制校验;
+         * */
+        if (mForceCalibrationBean != null && ((mForceCalibrationBean.getForceMode() == 1 && mForceCalibrationBean.getUsrNum() <= 0)
+                || (mForceCalibrationBean.getForceMode() == 2 && System.currentTimeMillis() > mForceCalibrationBean.getRealForceTime()))) {
+            stopAutoStore();
+            ((Measuring2Activity) mView).showForceDialog();
+            return -1;
+        }
+
         for (int i = 0; i < mGeted.length; i++) {
             mGeted[i] = false;
         }
-
         ResultBean2 _bean = new ResultBean2();
         _bean.setHandlerAccount(App.handlerAccout);
         _bean.setCodeID(App.getSetupBean().getCodeID());
@@ -616,8 +631,11 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             _bean.setWorkID("- -");
         }
         Log.d("wlDebug", "save bean = " + _bean.toString());
+        mForceCalibrationBean.setUsrNum(mForceCalibrationBean.getUsrNum() - 1);
+        App.getDaoSession().getForceCalibrationBeanDao().update(mForceCalibrationBean);
         App.getDaoSession().getResultBean2Dao().insert(_bean);
         toSQLServer(_bean);
+        return 1;
     }
 
     private void toSQLServer(final ResultBean2 _bean) {
@@ -874,7 +892,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         }
         long endTime = System.currentTimeMillis(); // 获取结束时间
         long stepTime = (endTime - startTime);
-        Log.d("wlDebug", "公式计算耗时： " + stepTime + "ms");
+        // Log.d("wlDebug", "公式计算耗时： " + stepTime + "ms");
         return null;
     }
 
