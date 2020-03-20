@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DebugUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.utils.Avg;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
+import alauncher.cn.measuringinstrument.utils.DebugUitls;
 import alauncher.cn.measuringinstrument.utils.DialogUtils;
 import alauncher.cn.measuringinstrument.utils.Dif;
 import alauncher.cn.measuringinstrument.utils.ExcelUtil;
@@ -455,7 +457,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             }
         }).start();
         */
-        // forValueTest();
+        forValueTest();
     }
 
     // 5301 1086 2031 3036 38C9 4E54
@@ -716,6 +718,9 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         isGetProcessValue = false;
         measure_state = MeasuringPresenter.IN_PROCESS_VALUE_BEEN_TAKEN_MODE;
         mView.updateSaveBtnMsg();
+        for (int i = 0; i < tempValues.size(); i++) {
+            tempValues.set(i, DebugUitls.injectTest());
+        }
         if (mMeasureConfigurationBean.getIsPrint()) {
             new ExcelTask().execute(tempValues);
         }
@@ -961,8 +966,6 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         }
 
         // 如果需要的话，打印所有的过程值;
-
-
         if (nodes[index] == null) nodes[index] = jep.parse(reCodeList.get(index));
         return (double) jep.evaluate(nodes[index]) + mParameterBean2Lists.get(index).getDeviation();
     }
@@ -982,7 +985,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 for (int i = percent_80; i <= percent_90; i++, num++) {
                     sum += values.get(i);
                 }
-                result = BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                result = BigDecimal.valueOf(sum / num).setScale(6, BigDecimal.ROUND_HALF_UP).doubleValue();
                 break;
             case "LMin":
                 percent_10 = (int) Math.round(values.size() * 0.1) - 1;
@@ -993,7 +996,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 for (int i = percent_10; i <= percent_20; i++, num++) {
                     sum += values.get(i);
                 }
-                result = BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                result = BigDecimal.valueOf(sum / num).setScale(6, BigDecimal.ROUND_HALF_UP).doubleValue();
                 break;
             case "LAvg":
                 percent_10 = (int) Math.round(values.size() * 0.1) - 1;

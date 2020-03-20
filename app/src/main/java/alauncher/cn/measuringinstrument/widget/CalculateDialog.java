@@ -206,7 +206,7 @@ public class CalculateDialog extends Dialog {
                     }
                     Node node = jep.parse(reCode);
                     Object result = jep.evaluate(node);
-                } catch (ParseException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(mContext, "公式有误，请检查.", Toast.LENGTH_SHORT).show();
                     return;
