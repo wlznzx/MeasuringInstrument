@@ -218,6 +218,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             processBeanLists.add(new ArrayList<>());
             midValue[i] = (mParameterBean2Lists.get(i).getLowerToleranceValue() + mParameterBean2Lists.get(i).getNominalValue()
                     + mParameterBean2Lists.get(i).getUpperToleranceValue() + mParameterBean2Lists.get(i).getNominalValue()) / 2;
+            inLimited[i] = true;
         }
 
         mStoreBean = App.getDaoSession().getStoreBean2Dao()
@@ -235,21 +236,46 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
             for (int i = 0; i < mParameterBean2Lists.size(); i++) {
                 String _reCode = mParameterBean2Lists.get(i).getCode();
-                Matcher matcher = p.matcher(_reCode);
+                String _Code = _reCode;
+                android.util.Log.d("wlDebug", "base reCode = " + _reCode);
+                Matcher matcher = p.matcher(_Code);
                 while (matcher.find()) {
-                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(0).size(),
-                            _reCode.substring(matcher.start() + 5, matcher.end() - 1), _reCode.substring(matcher.start(), matcher.start() + 4));
+//                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(0).size(),
+//                            _reCode.substring(matcher.start() + 5, matcher.end() - 1), _reCode.substring(matcher.start(), matcher.start() + 4));
+//                    processBeanLists.get(i).add(_process);
+//                    _reCode = _reCode.replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+                    String fullCode = _Code.substring(matcher.start() + 5, matcher.end() - 1);
+                    String[] expressions = fullCode.split(",");
+                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(i).size(),
+                            Arrays.asList(expressions), _Code.substring(matcher.start(), matcher.start() + 4), fullCode);
                     processBeanLists.get(i).add(_process);
-                    _reCode = _reCode.replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+                    _reCode = _reCode.replace(_process.getExpressionType() + "(" + fullCode + ")", _process.getReplaceName());
                 }
                 reCodeList.add(_reCode);
 
+                android.util.Log.d("wlDebug", "_reCode = " + _reCode);
                 // 用于计算过程值，实时显示的公式;
+                /*
                 String _reCodesForCalculate = mParameterBean2Lists.get(i).getCode();
                 matcher = _reCPattern.matcher(_reCodesForCalculate);
                 while (matcher.find()) {
                     _reCodesForCalculate = _reCodesForCalculate.replace(_reCodesForCalculate.substring(matcher.start(), matcher.end() - 1), "");
                 }
+                if (processBeanLists.get(i) != null) {
+                    for (ProcessBean _process : processBeanLists.get(i)) {
+                        android.util.Log.d("wlDebug", "i_" + i + " _process = " + _process.toString());
+                        _reCodesForCalculate = _reCodesForCalculate.replace(_process.getFullCode(), _process.getExpression().get(0));
+                        android.util.Log.d("wlDebug", "i_" + i + " = " + _reCodesForCalculate);
+                    }
+                }
+                 */
+                String _reCodesForCalculate = _reCode;
+                if (processBeanLists.get(i) != null) {
+                    for (ProcessBean _process : processBeanLists.get(i)) {
+                        _reCodesForCalculate = _reCodesForCalculate.replace(_process.getReplaceName(), "(" + _process.getExpression().get(0) + ")");
+                    }
+                }
+                android.util.Log.d("wlDebug", "i_" + i + " = " + _reCodesForCalculate);
                 reCodesForCaluationList.add(_reCodesForCalculate);
             }
         }
@@ -457,7 +483,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             }
         }).start();
         */
-        // forValueTest();
+//        forValueTest();
     }
 
     // 5301 1086 2031 3036 38C9 4E54
@@ -724,11 +750,11 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         isGetProcessValue = false;
         measure_state = MeasuringPresenter.IN_PROCESS_VALUE_BEEN_TAKEN_MODE;
         mView.updateSaveBtnMsg();
-        /*
+        /**/
         for (int i = 0; i < tempValues.size(); i++) {
             tempValues.set(i, DebugUitls.injectTest());
         }
-        */
+
         if (mMeasureConfigurationBean.getIsPrint()) {
             new ExcelTask().execute(tempValues);
         }
@@ -886,8 +912,12 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 for (int i = 0; i < mParameterBean2Lists.size(); i++) {
                     if (reCodeList.get(i) != null && !reCodeList.get(i).equals("")) {
                         if (processBeanLists.get(i).size() > 0) {
-                            Node node = jep.parse(reCodesForCaluationList.get(i));
-                            mValues[i] = Arith.round((double) jep.evaluate(node) + mParameterBean2Lists.get(i).getDeviation(), 4);
+                            try {
+                                Node node = jep.parse(reCodesForCaluationList.get(i));
+                                mValues[i] = Arith.round((double) jep.evaluate(node) + mParameterBean2Lists.get(i).getDeviation(), 4);
+                            } catch (Exception e) {
+                                // android.util.Log.d("wlDebug", "reCodesForCaluationList.get(i) = " + reCodesForCaluationList.get(i), e);
+                            }
                         } else {
                             if (nodes[i] == null) nodes[i] = jep.parse(reCodeList.get(i));
                             mValues[i] = Arith.round((double) jep.evaluate(nodes[i]) + mParameterBean2Lists.get(i).getDeviation(), 4);
@@ -959,17 +989,19 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             calculationValuesList.clear();
             // 添加过程值变量;
             Node node = null;
-            // Log.d("wlDebug", "tempValues.size = " + tempValues.get(0).size());
+            Log.d("wlDebug", "tempValues.size = " + tempValues.get(0).size());
             for (int i = 0; i < tempValues.get(0).size(); i++) {
                 calculationJEP.addVariable("ch1", tempValues.get(0).get(i));
                 calculationJEP.addVariable("ch2", tempValues.get(1).get(i));
                 calculationJEP.addVariable("ch3", tempValues.get(2).get(i));
                 calculationJEP.addVariable("ch4", tempValues.get(3).get(i));
-                node = calculationJEP.parse(_process.getExpression());
-                calculationValuesList.add((Double) calculationJEP.evaluate(node));
+                for (String str : _process.getExpression()) {
+                    node = calculationJEP.parse(str);
+                    calculationValuesList.add((Double) calculationJEP.evaluate(node));
+                }
             }
             Collections.sort(calculationValuesList);
-            // Log.d("wlDebug", "reList = " + calculationValuesList.toString());
+            Log.d("wlDebug", "reList = " + calculationValuesList.size());
             jep.addVariable(_process.getReplaceName(), calculationProcess(_process, calculationValuesList));
         }
 

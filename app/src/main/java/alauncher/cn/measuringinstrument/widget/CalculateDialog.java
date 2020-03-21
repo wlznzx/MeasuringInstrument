@@ -12,6 +12,7 @@ import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -183,9 +184,11 @@ public class CalculateDialog extends Dialog {
                 Pattern p = Pattern.compile(_regx);
                 Matcher matcher = p.matcher(code);
                 while (matcher.find()) {
-                    ProcessBean _process = new ProcessBean("x" + process.size(), code.substring(matcher.start() + 5, matcher.end() - 1), code.substring(matcher.start(), matcher.start() + 4));
+                    String fullCode = code.substring(matcher.start() + 5, matcher.end() - 1);
+                    String[] expressions = fullCode.split(",");
+                    ProcessBean _process = new ProcessBean("x" + process.size(), Arrays.asList(expressions), code.substring(matcher.start(), matcher.start() + 4), fullCode);
                     process.add(_process);
-                    reCode = reCode.replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+                    reCode = reCode.replace(_process.getExpressionType() + "(" + fullCode + ")", _process.getReplaceName());
                 }
                 JEP jep = new JEP();
                 jep.addFunction("Max", new Max());
@@ -200,10 +203,13 @@ public class CalculateDialog extends Dialog {
                     for (ProcessBean _process : process) {
                         // 添加过程值变量;
                         jep.addVariable(_process.getReplaceName(), 1);
-                        Node node = jep.parse(_process.getExpression());
-                        Object result = jep.evaluate(node);
-                        System.out.println(_process.toString());
+                        for (String str : _process.getExpression()) {
+                            Node node = jep.parse(str);
+                            Object result = jep.evaluate(node);
+                            android.util.Log.d("wlDebug", "str = " + str);
+                        }
                     }
+                    android.util.Log.d("wlDebug", "reCode = " + reCode);
                     Node node = jep.parse(reCode);
                     Object result = jep.evaluate(node);
                 } catch (Exception e) {

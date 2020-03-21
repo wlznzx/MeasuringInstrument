@@ -208,9 +208,9 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 reCodes[0] = mParameterBean.getM1_code();
                 Matcher matcher = p.matcher(mParameterBean.getM1_code());
                 while (matcher.find()) {
-                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(0).size(), mParameterBean.getM1_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM1_code().substring(matcher.start(), matcher.start() + 4));
-                    processBeanLists.get(0).add(_process);
-                    reCodes[0] = reCodes[0].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+//                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(0).size(), mParameterBean.getM1_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM1_code().substring(matcher.start(), matcher.start() + 4));
+//                    processBeanLists.get(0).add(_process);
+//                    reCodes[0] = reCodes[0].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
                 }
 
                 reCodesForCaluations[0] = mParameterBean.getM1_code();
@@ -224,9 +224,9 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 reCodes[1] = mParameterBean.getM2_code();
                 Matcher matcher = p.matcher(mParameterBean.getM2_code());
                 while (matcher.find()) {
-                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(1).size(), mParameterBean.getM2_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM2_code().substring(matcher.start(), matcher.start() + 4));
-                    processBeanLists.get(1).add(_process);
-                    reCodes[1] = reCodes[1].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+//                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(1).size(), mParameterBean.getM2_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM2_code().substring(matcher.start(), matcher.start() + 4));
+//                    processBeanLists.get(1).add(_process);
+//                    reCodes[1] = reCodes[1].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
                 }
 
                 reCodesForCaluations[1] = mParameterBean.getM2_code();
@@ -240,9 +240,9 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 reCodes[2] = mParameterBean.getM3_code();
                 Matcher matcher = p.matcher(mParameterBean.getM3_code());
                 while (matcher.find()) {
-                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(2).size(), mParameterBean.getM3_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM3_code().substring(matcher.start(), matcher.start() + 4));
-                    processBeanLists.get(2).add(_process);
-                    reCodes[2] = reCodes[2].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+//                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(2).size(), mParameterBean.getM3_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM3_code().substring(matcher.start(), matcher.start() + 4));
+//                    processBeanLists.get(2).add(_process);
+//                    reCodes[2] = reCodes[2].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
                 }
 
                 reCodesForCaluations[2] = mParameterBean.getM3_code();
@@ -256,9 +256,9 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 reCodes[3] = mParameterBean.getM4_code();
                 Matcher matcher = p.matcher(mParameterBean.getM4_code());
                 while (matcher.find()) {
-                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(3).size(), mParameterBean.getM4_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM4_code().substring(matcher.start(), matcher.start() + 4));
-                    processBeanLists.get(3).add(_process);
-                    reCodes[3] = reCodes[3].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
+//                    ProcessBean _process = new ProcessBean("x" + processBeanLists.get(3).size(), mParameterBean.getM4_code().substring(matcher.start() + 5, matcher.end() - 1), mParameterBean.getM4_code().substring(matcher.start(), matcher.start() + 4));
+//                    processBeanLists.get(3).add(_process);
+//                    reCodes[3] = reCodes[3].replace(_process.getExpressionType() + "(" + _process.getExpression() + ")", _process.getReplaceName());
                 }
 
                 reCodesForCaluations[3] = mParameterBean.getM4_code();
@@ -945,7 +945,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
                 calculationJEP.addVariable("ch2", tempValues.get(1).get(i));
                 calculationJEP.addVariable("ch3", tempValues.get(2).get(i));
                 calculationJEP.addVariable("ch4", tempValues.get(3).get(i));
-                node = calculationJEP.parse(_process.getExpression());
+//                node = calculationJEP.parse(_process.getExpression());
                 calculationValuesList.add((Double) calculationJEP.evaluate(node));
             }
             Collections.sort(calculationValuesList);
