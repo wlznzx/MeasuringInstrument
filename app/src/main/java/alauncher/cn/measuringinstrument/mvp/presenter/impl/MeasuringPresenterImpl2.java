@@ -457,7 +457,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             }
         }).start();
         */
-        forValueTest();
+        // forValueTest();
     }
 
     // 5301 1086 2031 3036 38C9 4E54
@@ -476,26 +476,32 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     }
 
     @Override
-    public String saveResult(double[] ms, AddInfoBean bean, boolean isManual) {
+    public String saveResult(double[] pms, AddInfoBean bean, boolean isManual) {
 
         int ret = 0;
 
-        if (ms == null) {
+        if (pms == null) {
             return "- -";
         }
+
+        double[] reMs = new double[pms.length];
+        reMs = pms.clone();
 
         // 如果是手动点击的保存，需要计算，具体第几个测量参数是过程值，就取过程值;
         if (isManual) {
             for (int i = 0; i < processBeanLists.size(); i++) {
                 if (processBeanLists.get(i).size() > 0) {
                     try {
-                        ms[i] = handlerProcessValues2(processBeanLists.get(i), i);
+                        reMs[i] = handlerProcessValues2(processBeanLists.get(i), i);
+                        android.util.Log.d("wlDebug", "m" + i + " = " + reMs[i]);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                 }
             }
         }
+
+        android.util.Log.d("wlDebug", "ms = " + Arrays.toString(reMs));
 
         /*
         for (List<Double> list : tempValues) {
@@ -517,15 +523,15 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                     double scaleUpperLimit = midValue[mIndex] + m;
                     double scaleLowerLimit = midValue[mIndex] - m;
 
-                    Log.d("wlDebug", "scaleUpperLimit = " + scaleUpperLimit + " scaleLowerLimit = " + scaleLowerLimit + " M = " + ms[mIndex]);
-                    if (ms[mIndex] < scaleLowerLimit || ms[mIndex] > scaleUpperLimit) {
+                    Log.d("wlDebug", "scaleUpperLimit = " + scaleUpperLimit + " scaleLowerLimit = " + scaleLowerLimit + " M = " + reMs[mIndex]);
+                    if (reMs[mIndex] < scaleLowerLimit || reMs[mIndex] > scaleUpperLimit) {
                         lastMeetConditionTime = -1;
                         inLimited[mIndex] = false;
                         Log.d("wlDebug", "不在范围内.");
                         return "NoSave";
                     }
                 } else {
-                    if (ms[mIndex] < _TriggerConditionBean.getLowerLimit() || ms[mIndex] > _TriggerConditionBean.getUpperLimit()) {
+                    if (reMs[mIndex] < _TriggerConditionBean.getLowerLimit() || reMs[mIndex] > _TriggerConditionBean.getUpperLimit()) {
                         lastMeetConditionTime = -1;
                         inLimited[mIndex] = false;
                         return "NoSave";
@@ -570,7 +576,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             }
             */
             for (int i = 0; i < _bean.getMeasureItems().size(); i++) {
-                tempMs[mKeyMap.get(_bean.getMeasureItems().get(i))] = ms[mKeyMap.get(_bean.getMeasureItems().get(i))];
+                tempMs[mKeyMap.get(_bean.getMeasureItems().get(i))] = reMs[mKeyMap.get(_bean.getMeasureItems().get(i))];
                 mGeted[mKeyMap.get(_bean.getMeasureItems().get(i))] = true;
             }
 
@@ -581,7 +587,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             }
             nextStep();
         } else {
-            ret = doSave(ms, bean);
+            ret = doSave(reMs, bean);
         }
 
         measure_state = 1;
@@ -718,9 +724,11 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         isGetProcessValue = false;
         measure_state = MeasuringPresenter.IN_PROCESS_VALUE_BEEN_TAKEN_MODE;
         mView.updateSaveBtnMsg();
+        /*
         for (int i = 0; i < tempValues.size(); i++) {
             tempValues.set(i, DebugUitls.injectTest());
         }
+        */
         if (mMeasureConfigurationBean.getIsPrint()) {
             new ExcelTask().execute(tempValues);
         }
@@ -849,8 +857,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 e.printStackTrace();
             }
         }
-        long endTime = System.currentTimeMillis(); // 获取结束时间
-        long stepTime = (endTime - startTime);
+        // long endTime = System.currentTimeMillis(); // 获取结束时间
+        // long stepTime = (endTime - startTime);
         // Log.d("wlDebug", "公式计算耗时： " + stepTime + "ms");
         return null;
     }
@@ -951,7 +959,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             calculationValuesList.clear();
             // 添加过程值变量;
             Node node = null;
-            Log.d("wlDebug", "tempValues.size = " + tempValues.get(0).size());
+            // Log.d("wlDebug", "tempValues.size = " + tempValues.get(0).size());
             for (int i = 0; i < tempValues.get(0).size(); i++) {
                 calculationJEP.addVariable("ch1", tempValues.get(0).get(i));
                 calculationJEP.addVariable("ch2", tempValues.get(1).get(i));
@@ -961,12 +969,16 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 calculationValuesList.add((Double) calculationJEP.evaluate(node));
             }
             Collections.sort(calculationValuesList);
-            Log.d("wlDebug", "reList = " + calculationValuesList.toString());
+            // Log.d("wlDebug", "reList = " + calculationValuesList.toString());
             jep.addVariable(_process.getReplaceName(), calculationProcess(_process, calculationValuesList));
         }
 
         // 如果需要的话，打印所有的过程值;
-        if (nodes[index] == null) nodes[index] = jep.parse(reCodeList.get(index));
+        if (nodes[index] == null) {
+            nodes[index] = jep.parse(reCodeList.get(index));
+        }
+        Log.d("wlDebug", "jep.evaluate(nodes[index])  = " + jep.evaluate(nodes[index]));
+        Log.d("wlDebug", "mParameterBean2Lists.get(index).getDeviation()  = " + mParameterBean2Lists.get(index).getDeviation());
         return (double) jep.evaluate(nodes[index]) + mParameterBean2Lists.get(index).getDeviation();
     }
 
