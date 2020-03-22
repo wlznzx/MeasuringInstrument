@@ -750,11 +750,11 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         isGetProcessValue = false;
         measure_state = MeasuringPresenter.IN_PROCESS_VALUE_BEEN_TAKEN_MODE;
         mView.updateSaveBtnMsg();
-        /**/
+        /*
         for (int i = 0; i < tempValues.size(); i++) {
             tempValues.set(i, DebugUitls.injectTest());
         }
-
+        */
         if (mMeasureConfigurationBean.getIsPrint()) {
             new ExcelTask().execute(tempValues);
         }
@@ -1009,7 +1009,6 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         if (nodes[index] == null) {
             nodes[index] = jep.parse(reCodeList.get(index));
         }
-        Log.d("wlDebug", "jep.evaluate(nodes[index])  = " + jep.evaluate(nodes[index]));
         Log.d("wlDebug", "mParameterBean2Lists.get(index).getDeviation()  = " + mParameterBean2Lists.get(index).getDeviation());
         return (double) jep.evaluate(nodes[index]) + mParameterBean2Lists.get(index).getDeviation();
     }
@@ -1018,61 +1017,62 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         if (values.size() == 0) return 0;
         double sum = 0D;
         int num = 0;
-        int percent_10, percent_20, percent_80, percent_90;
+        int percent_5, percent_10, percent_90, percent_95;
         double result = 0;
         switch (bean.getExpressionType()) {
             case "LMax":
-                percent_80 = (int) Math.round(values.size() * 0.8) - 1;
                 percent_90 = (int) Math.round(values.size() * 0.9) - 1;
+                percent_95 = (int) Math.round(values.size() * 0.95) - 1;
 
-                if (percent_80 < 0) percent_80 = 0;
-                for (int i = percent_80; i <= percent_90; i++, num++) {
+                if (percent_90 < 0) percent_90 = 0;
+                for (int i = percent_90; i <= percent_95; i++, num++) {
                     sum += values.get(i);
                 }
-                result = BigDecimal.valueOf(sum / num).setScale(6, BigDecimal.ROUND_HALF_UP).doubleValue();
+                result = BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                 break;
             case "LMin":
+                percent_5 = (int) Math.round(values.size() * 0.05) - 1;
                 percent_10 = (int) Math.round(values.size() * 0.1) - 1;
-                percent_20 = (int) Math.round(values.size() * 0.2) - 1;
 
+                if (percent_5 < 0) percent_5 = 0;
                 if (percent_10 < 0) percent_10 = 0;
-                if (percent_20 < 0) percent_20 = 0;
-                for (int i = percent_10; i <= percent_20; i++, num++) {
+                for (int i = percent_5; i <= percent_10; i++, num++) {
                     sum += values.get(i);
                 }
-                result = BigDecimal.valueOf(sum / num).setScale(6, BigDecimal.ROUND_HALF_UP).doubleValue();
+                result = BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                 break;
             case "LAvg":
-                percent_10 = (int) Math.round(values.size() * 0.1) - 1;
-                percent_90 = (int) Math.round(values.size() * 0.9) - 1;
-                if (percent_10 < 0) percent_10 = 0;
-                for (int i = percent_10; i <= percent_90; i++, num++) {
+                percent_5 = (int) Math.round(values.size() * 0.05) - 1;
+                percent_95 = (int) Math.round(values.size() * 0.95) - 1;
+                if (percent_5 < 0) percent_5 = 0;
+                for (int i = percent_5; i <= percent_95; i++, num++) {
                     sum += values.get(i);
                 }
                 result = BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                 break;
             case "LDif":
                 percent_10 = (int) Math.round(values.size() * 0.1) - 1;
-                percent_20 = (int) Math.round(values.size() * 0.2) - 1;
-                percent_80 = (int) Math.round(values.size() * 0.8) - 1;
+                percent_5 = (int) Math.round(values.size() * 0.05) - 1;
+                percent_95 = (int) Math.round(values.size() * 0.95) - 1;
                 percent_90 = (int) Math.round(values.size() * 0.9) - 1;
+                if (percent_5 < 0) percent_5 = 0;
                 if (percent_10 < 0) percent_10 = 0;
-                if (percent_20 < 0) percent_20 = 0;
-                if (percent_80 < 0) percent_80 = 0;
                 if (percent_90 < 0) percent_90 = 0;
-                Log.d("wlDebug", "percent_10 = " + percent_10);
-                Log.d("wlDebug", "percent_20 = " + percent_20);
-                Log.d("wlDebug", "percent_80 = " + percent_80);
-                Log.d("wlDebug", "percent_90 = " + percent_90);
-                for (int i = percent_80; i <= percent_90; i++, num++) {
+                if (percent_95 < 0) percent_95 = 0;
+                Log.d("wlDebug", "percent_5 = " + percent_5 +
+                        " percent_10 = " + percent_10 + " percent_90 = " + percent_90 + " percent_95 = " + percent_95);
+
+                for (int i = percent_90; i <= percent_95; i++, num++) {
                     sum += values.get(i);
                 }
+                double _avg1 = sum / num;
                 double sum2 = 0;
                 int num2 = 0;
-                for (int i = percent_10; i <= percent_20; i++, num2++) {
+                for (int i = percent_5; i <= percent_10; i++, num2++) {
                     sum2 += values.get(i);
                 }
-                result = BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() - BigDecimal.valueOf(sum2 / num2).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                double _avg2 = sum2 / num2;
+                result = BigDecimal.valueOf(_avg1 - _avg2).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                 break;
         }
         Log.d("wlDebug", bean.getExpressionType() + " = " + result);
