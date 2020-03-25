@@ -145,6 +145,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     private double[] mValues;
     // 计算Node;
     private Node[] nodes;
+    // 计算reNodes;
+    private Node[] reNodes;
     // 分组信息;
     private List<List<GroupBean2>> groupBean2Lists = new ArrayList<>();
     // M值与测量值的键值对;
@@ -209,6 +211,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
         mValues = new double[mParameterBean2Lists.size()];
         nodes = new Node[mParameterBean2Lists.size()];
+        reNodes = new Node[mParameterBean2Lists.size()];
         mGeted = new boolean[mParameterBean2Lists.size()];
         inLimited = new boolean[mParameterBean2Lists.size()];
         tempMs = new double[mParameterBean2Lists.size()];
@@ -398,15 +401,24 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                                     values[3] = ByteUtil.ByteArrToHex(_chValue);
                                 }
 
-                                chValues[0] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[0], 16)), 0.007);
-                                chValues[1] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[1], 16)), 0.007);
-                                chValues[2] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[2], 16)), 0.007);
-                                chValues[3] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[3], 16)), 0.007);
+
+                                if (mCalibrationBean != null) {
+                                    chValues[0] = Arith.add(Arith.mul(mCalibrationBean.getCh1KValue(), Integer.parseInt(values[0], 16)), mCalibrationBean.getCh1CompensationValue());
+                                    chValues[1] = Arith.add(Arith.mul(mCalibrationBean.getCh2KValue(), Integer.parseInt(values[1], 16)), mCalibrationBean.getCh2CompensationValue());
+                                    chValues[2] = Arith.add(Arith.mul(mCalibrationBean.getCh3KValue(), Integer.parseInt(values[2], 16)), mCalibrationBean.getCh3CompensationValue());
+                                    chValues[3] = Arith.add(Arith.mul(mCalibrationBean.getCh4KValue(), Integer.parseInt(values[3], 16)), mCalibrationBean.getCh4CompensationValue());
+                                } else {
+                                    chValues[0] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[0], 16)), 0.007);
+                                    chValues[1] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[1], 16)), 0.007);
+                                    chValues[2] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[2], 16)), 0.007);
+                                    chValues[3] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[3], 16)), 0.007);
+                                }
                                 if (i == 0) {
                                     if (mView != null) {
                                         doCH2P(values);
                                     }
                                 }
+                                // android.util.Log.d("wlDebug", "ch1 = " + chValues[0]);
                                 if (tempValues.get(0).size() <= 5000) {
                                     for (int j = 0; j < 4; j++) {
                                         tempValues.get(j).add(chValues[j]);
@@ -510,8 +522,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             return "- -";
         }
 
-        double[] reMs = new double[pms.length];
-        reMs = pms.clone();
+        double[] reMs = pms.clone();
 
         // 如果是手动点击的保存，需要计算，具体第几个测量参数是过程值，就取过程值;
         if (isManual) {
@@ -519,8 +530,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 if (processBeanLists.get(i).size() > 0) {
                     try {
                         reMs[i] = handlerProcessValues2(processBeanLists.get(i), i);
-                        android.util.Log.d("wlDebug", "m" + i + " = " + reMs[i]);
-                    } catch (ParseException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -837,6 +847,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     private double[] doCH2P(String[] inputValue) {
         long startTime = System.currentTimeMillis(); // 获取开始时间
         // 计算测量值，ch1~ch4;
+        /*
         if (mCalibrationBean != null) {
             chValues[0] = Arith.add(Arith.mul(mCalibrationBean.getCh1KValue(), Integer.parseInt(inputValue[0], 16)), mCalibrationBean.getCh1CompensationValue());
             chValues[1] = Arith.add(Arith.mul(mCalibrationBean.getCh2KValue(), Integer.parseInt(inputValue[1], 16)), mCalibrationBean.getCh2CompensationValue());
@@ -848,6 +859,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             chValues[2] = 3;
             chValues[3] = 4;
         }
+         */
 
         /* 不在这取值了;
         if (haveProcessCalculate && tempValues.get(0).size() <= 5000 && isGetProcessValue) {
@@ -867,15 +879,15 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 for (int i = 0; i < mParameterBean2Lists.size(); i++) {
                     if (reCodeList.get(i) != null && !reCodeList.get(i).equals("")) {
                         if (processBeanLists.get(i).size() > 0) {
-                            Node node = jep.parse(reCodesForCaluationList.get(i));
-                            mValues[i] = Arith.round((double) jep.evaluate(node) + mParameterBean2Lists.get(i).getDeviation(), 4);
+                            if (reNodes[i] == null)
+                                reNodes[i] = jep.parse(reCodesForCaluationList.get(i));
+                            mValues[i] = Arith.round((double) jep.evaluate(reNodes[i]) + mParameterBean2Lists.get(i).getDeviation(), 4);
                         } else {
                             if (nodes[i] == null) nodes[i] = jep.parse(reCodeList.get(i));
                             mValues[i] = Arith.round((double) jep.evaluate(nodes[i]) + mParameterBean2Lists.get(i).getDeviation(), 4);
                         }
                     }
                 }
-
                 if (mView != null) {
                     mView.onMeasuringDataUpdate(mValues);
                 }
@@ -984,7 +996,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     // 计算出过程值，写入List;
     private List<Double> calculationValuesList = new ArrayList<>();
 
-    private double handlerProcessValues2(List<ProcessBean> list, int index) throws ParseException {
+    private double handlerProcessValues2(List<ProcessBean> list, int index) throws Exception {
         for (ProcessBean _process : list) {
             calculationValuesList.clear();
             // 添加过程值变量;
@@ -995,13 +1007,16 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 calculationJEP.addVariable("ch2", tempValues.get(1).get(i));
                 calculationJEP.addVariable("ch3", tempValues.get(2).get(i));
                 calculationJEP.addVariable("ch4", tempValues.get(3).get(i));
-                for (String str : _process.getExpression()) {
-                    node = calculationJEP.parse(str);
-                    calculationValuesList.add((Double) calculationJEP.evaluate(node));
+                try {
+                    for (String str : _process.getExpression()) {
+                        node = calculationJEP.parse(str);
+                        calculationValuesList.add((Double) calculationJEP.evaluate(node));
+                    }
+                } catch (Exception e) {
+
                 }
             }
             Collections.sort(calculationValuesList);
-            Log.d("wlDebug", "reList = " + calculationValuesList.size());
             jep.addVariable(_process.getReplaceName(), calculationProcess(_process, calculationValuesList));
         }
 
@@ -1009,8 +1024,10 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         if (nodes[index] == null) {
             nodes[index] = jep.parse(reCodeList.get(index));
         }
-        Log.d("wlDebug", "mParameterBean2Lists.get(index).getDeviation()  = " + mParameterBean2Lists.get(index).getDeviation());
-        return (double) jep.evaluate(nodes[index]) + mParameterBean2Lists.get(index).getDeviation();
+        // Log.d("wlDebug", "mParameterBean2Lists.get(index).getDeviation()  = " + mParameterBean2Lists.get(index).getDeviation());
+        return BigDecimal.valueOf((double) jep.evaluate(nodes[index]) +
+                mParameterBean2Lists.get(index).getDeviation()).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
+        // return (double) jep.evaluate(nodes[index]) + mParameterBean2Lists.get(index).getDeviation();
     }
 
     private double calculationProcess(ProcessBean bean, List<Double> values) {
@@ -1028,7 +1045,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 for (int i = percent_90; i <= percent_95; i++, num++) {
                     sum += values.get(i);
                 }
-                result = BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                result = BigDecimal.valueOf(sum / num).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
                 break;
             case "LMin":
                 percent_5 = (int) Math.round(values.size() * 0.05) - 1;
@@ -1039,7 +1056,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 for (int i = percent_5; i <= percent_10; i++, num++) {
                     sum += values.get(i);
                 }
-                result = BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                result = BigDecimal.valueOf(sum / num).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
                 break;
             case "LAvg":
                 percent_5 = (int) Math.round(values.size() * 0.05) - 1;
@@ -1048,7 +1065,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 for (int i = percent_5; i <= percent_95; i++, num++) {
                     sum += values.get(i);
                 }
-                result = BigDecimal.valueOf(sum / num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                result = BigDecimal.valueOf(sum / num).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
                 break;
             case "LDif":
                 percent_10 = (int) Math.round(values.size() * 0.1) - 1;
@@ -1059,8 +1076,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 if (percent_10 < 0) percent_10 = 0;
                 if (percent_90 < 0) percent_90 = 0;
                 if (percent_95 < 0) percent_95 = 0;
-                Log.d("wlDebug", "percent_5 = " + percent_5 +
-                        " percent_10 = " + percent_10 + " percent_90 = " + percent_90 + " percent_95 = " + percent_95);
+//                Log.d("wlDebug", "percent_5 = " + percent_5 +
+//                        " percent_10 = " + percent_10 + " percent_90 = " + percent_90 + " percent_95 = " + percent_95);
 
                 for (int i = percent_90; i <= percent_95; i++, num++) {
                     sum += values.get(i);
@@ -1072,7 +1089,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                     sum2 += values.get(i);
                 }
                 double _avg2 = sum2 / num2;
-                result = BigDecimal.valueOf(_avg1 - _avg2).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                result = BigDecimal.valueOf(_avg1 - _avg2).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
                 break;
         }
         Log.d("wlDebug", bean.getExpressionType() + " = " + result);
