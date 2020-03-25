@@ -536,9 +536,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 }
             }
         }
-
         android.util.Log.d("wlDebug", "ms = " + Arrays.toString(reMs));
-
         /*
         for (List<Double> list : tempValues) {
             list.clear();
@@ -654,7 +652,11 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         _bean.setMDescribe(new ArrayList<>());
 
         for (int i = 0; i < ms.length; i++) {
-            _bean.getMeasurementValues().add(String.valueOf(ms[i]));
+            String _value = String.valueOf(ms[i]);
+            if (_value.contains("E")) {
+                _value = new BigDecimal(ms[i] + "").setScale(4, BigDecimal.ROUND_HALF_UP).toString();
+            }
+            _bean.getMeasurementValues().add(_value);
             _bean.getMItems().add("" + (mParameterBean2Lists.get(i).getSequenceNumber() + 1));
             _bean.getMDescribe().add(mParameterBean2Lists.get(i).getDescribe());
         }

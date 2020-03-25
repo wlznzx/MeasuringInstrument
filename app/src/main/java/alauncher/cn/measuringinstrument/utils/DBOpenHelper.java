@@ -5,9 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.wenld.greendaoupgradehelper.DBMigrationHelper;
 
-import alauncher.cn.measuringinstrument.bean.GroupBean2;
-import alauncher.cn.measuringinstrument.bean.ParameterBean2;
-import alauncher.cn.measuringinstrument.bean.ResultBean2;
 import alauncher.cn.measuringinstrument.database.greenDao.db.DaoMaster;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
