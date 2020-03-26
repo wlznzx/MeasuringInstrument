@@ -454,6 +454,18 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                             _chValue[0] = paramComBean.bRec[8];
                             _chValue[1] = paramComBean.bRec[9];
                             values[3] = ByteUtil.ByteArrToHex(_chValue);
+
+                            if (mCalibrationBean != null) {
+                                chValues[0] = Arith.add(Arith.mul(mCalibrationBean.getCh1KValue(), Integer.parseInt(values[0], 16)), mCalibrationBean.getCh1CompensationValue());
+                                chValues[1] = Arith.add(Arith.mul(mCalibrationBean.getCh2KValue(), Integer.parseInt(values[1], 16)), mCalibrationBean.getCh2CompensationValue());
+                                chValues[2] = Arith.add(Arith.mul(mCalibrationBean.getCh3KValue(), Integer.parseInt(values[2], 16)), mCalibrationBean.getCh3CompensationValue());
+                                chValues[3] = Arith.add(Arith.mul(mCalibrationBean.getCh4KValue(), Integer.parseInt(values[3], 16)), mCalibrationBean.getCh4CompensationValue());
+                            } else {
+                                chValues[0] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[0], 16)), 0.007);
+                                chValues[1] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[1], 16)), 0.007);
+                                chValues[2] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[2], 16)), 0.007);
+                                chValues[3] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[3], 16)), 0.007);
+                            }
                             if (mView != null) {
                                 doCH2P(values);
                             }
@@ -495,7 +507,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             }
         }).start();
         */
-//        forValueTest();
+        // forValueTest();
     }
 
     // 5301 1086 2031 3036 38C9 4E54
@@ -812,8 +824,6 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     }
 
     /*
-     *
-     *
      *
      * */
     @Override
