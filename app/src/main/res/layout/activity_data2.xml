@@ -12,7 +12,7 @@
         android:layout_height="@dimen/action_bar_height" />
 
 
-    <HorizontalScrollView
+    <alauncher.cn.measuringinstrument.widget.DHorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="9">
@@ -73,7 +73,7 @@
                 android:layout_marginTop="12dp" />
         </LinearLayout>
 
-    </HorizontalScrollView>
+    </alauncher.cn.measuringinstrument.widget.DHorizontalScrollView>
 
     <LinearLayout
         android:id="@+id/ll_mycollection_bottom_dialog"

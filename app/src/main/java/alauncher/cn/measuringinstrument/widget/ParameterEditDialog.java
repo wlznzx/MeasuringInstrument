@@ -18,7 +18,6 @@ import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.bean.GroupBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean2;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBean2Dao;
@@ -133,7 +132,7 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
         });
 
         resolutionSP.setSelection(6, true);
-        showItemSP.setSelection(mDatas.size() >= 8 ? 7 : mDatas.size());
+        showItemSP.setSelection(mDatas.size() >= 10 ? 9 : mDatas.size());
         if (_bean != null) {
             showItemSP.setSelection(_bean.getSequenceNumber());
             resolutionSP.setSelection(_bean.getResolution());

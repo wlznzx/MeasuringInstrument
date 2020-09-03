@@ -558,7 +558,7 @@ public class Statistical2Activity extends BaseOActivity {
     public class ExcelTask extends AsyncTask<String, Integer, String> {
 
         private ProgressDialog dialog;
-        private String path = Environment.getExternalStorageDirectory() + "/NTGate/";
+        private String path = Environment.getExternalStorageDirectory() + "/NTGage/";
 
         //执行的第一个方法用于在执行后台任务前做一些UI操作
         @Override
@@ -583,7 +583,11 @@ public class Statistical2Activity extends BaseOActivity {
 
             if (excelData.size() > 0) {
                 path = path + "datas_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".xls";
-                ExcelUtil.initExcel(path, "data", title);
+                List<String> titles = new ArrayList<>();
+                for (int i = 0; i < title.length; i++) {
+                    titles.add(title[i]);
+                }
+                ExcelUtil.initExcel(path, "data", titles);
                 ExcelUtil.writeStatisticalToExcel(excelData, path, Statistical2Activity.this);
                 return path;
             } else {

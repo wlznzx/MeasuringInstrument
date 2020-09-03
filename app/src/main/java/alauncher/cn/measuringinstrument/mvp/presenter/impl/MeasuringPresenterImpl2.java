@@ -493,14 +493,10 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(2000);
-                    mView.onMeasuringDataUpdate(doCH2P(_values));
-                    Thread.sleep(2000);
-                    mView.onMeasuringDataUpdate(doCH2P(_values));
-                    Thread.sleep(2000);
-                    mView.onMeasuringDataUpdate(doCH2P(_values));
-                    Thread.sleep(2000);
-                    mView.onMeasuringDataUpdate(doCH2P(_values));
+                    for (int i = 0; i < 20; i++) {
+                        Thread.sleep(2000);
+                        mView.onMeasuringDataUpdate(doCH2P(_values));
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -625,7 +621,6 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 tempMs[mKeyMap.get(_bean.getMeasureItems().get(i))] = reMs[mKeyMap.get(_bean.getMeasureItems().get(i))];
                 mGeted[mKeyMap.get(_bean.getMeasureItems().get(i))] = true;
             }
-
 
             android.util.Log.d("wlDebug", "tempMs = " + Arrays.toString(tempMs));
             if (getStep() == maxStep - 1) {
@@ -782,6 +777,23 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         if (mMeasureConfigurationBean.getIsPrint()) {
             new ExcelTask().execute(tempValues);
         }
+        for (int i = 0; i < processBeanLists.size(); i++) {
+            if (processBeanLists.get(i).size() > 0) {
+                try {
+                    mValues[i] = handlerProcessValues2(processBeanLists.get(i), i);
+//                    StepBean2 _bean = stepBeans.get(getStep());
+//                    for (int j = 0; j < _bean.getMeasureItems().size(); j++) {
+//                        mGeted[mKeyMap.get(_bean.getMeasureItems().get(j))] = true;
+//                    }
+                    mGeted[i] = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (mView != null) {
+            mView.onMeasuringDataUpdate(mValues);
+        }
     }
 
     @Override
@@ -857,7 +869,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
      * */
 
     private double[] doCH2P(String[] inputValue) {
-        long startTime = System.currentTimeMillis(); // 获取开始时间
+        // long startTime = System.currentTimeMillis(); // 获取开始时间
         // 计算测量值，ch1~ch4;
         /*
         if (mCalibrationBean != null) {
@@ -889,17 +901,23 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 jep.addVariable("ch4", chValues[3]);
 
                 for (int i = 0; i < mParameterBean2Lists.size(); i++) {
-                    if (reCodeList.get(i) != null && !reCodeList.get(i).equals("")) {
+                    if (reCodeList.get(i) != null && !reCodeList.get(i).equals("") && !getGeted()[i]) {
                         if (processBeanLists.get(i).size() > 0) {
-                            if (reNodes[i] == null)
-                                reNodes[i] = jep.parse(reCodesForCaluationList.get(i));
-                            mValues[i] = Arith.round((double) jep.evaluate(reNodes[i]) + mParameterBean2Lists.get(i).getDeviation(), 4);
+                            String _code = mParameterBean2Lists.get(i).getCode();
+                            if (!_code.contains("LDif")) {
+                                if (reNodes[i] == null)
+                                    reNodes[i] = jep.parse(reCodesForCaluationList.get(i));
+                                mValues[i] = Arith.round((double) jep.evaluate(reNodes[i]) + mParameterBean2Lists.get(i).getDeviation(), 4);
+                            } else {
+                                mValues[i] = 0;
+                            }
                         } else {
                             if (nodes[i] == null) nodes[i] = jep.parse(reCodeList.get(i));
                             mValues[i] = Arith.round((double) jep.evaluate(nodes[i]) + mParameterBean2Lists.get(i).getDeviation(), 4);
                         }
                     }
                 }
+
                 if (mView != null) {
                     mView.onMeasuringDataUpdate(mValues);
                 }
@@ -921,11 +939,13 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         chValues[2] = inputValue[2];
         chValues[3] = inputValue[3];
 
+        /*
         if (isGetProcessValue && haveProcessCalculate && tempValues.get(0).size() <= 5000) {
             for (int i = 0; i < 4; i++) {
                 tempValues.get(i).add(chValues[i]);
             }
         }
+        */
 
         if (mParameterBean2Lists.size() > 0) {
             try {
@@ -1152,7 +1172,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     public class ExcelTask extends AsyncTask<List<List<Double>>, Integer, String> {
 
         private ProgressDialog dialog;
-        private String path = Environment.getExternalStorageDirectory() + "/NTGate/Print/";
+        private String path = Environment.getExternalStorageDirectory() + "/NTGage/Print/";
         private Context context;
 
         //执行的第一个方法用于在执行后台任务前做一些UI操作
@@ -1180,7 +1200,11 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             if (params[0].size() > 0) {
                 path = path + "print_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".xls";
                 String[] title = {"ch1", "ch2", "ch3", "ch4"};
-                ExcelUtil.initExcel(path, "print", title);
+                List<String> titles = new ArrayList<>();
+                for (int i = 0; i < title.length; i++) {
+                    titles.add(title[i]);
+                }
+                ExcelUtil.initExcel(path, "print", titles);
                 ExcelUtil.writePrintToExcel(params[0], path);
                 return path;
             } else {

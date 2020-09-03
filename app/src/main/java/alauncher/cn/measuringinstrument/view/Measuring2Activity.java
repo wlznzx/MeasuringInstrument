@@ -365,7 +365,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         // 刷新柱状图;
         String[] results = mMeasuringPresenter.getResults(values);
         for (int i = 0; i < values.length; i++) {
-            if (mMeasuringPresenter.getGeted()[i]) continue;
+            // if (mMeasuringPresenter.getGeted()[i]) continue;
             if (mMeasureConfigurationBean.getMeasureMode() == HORIZONTAL_MODE_ONE) {
                 if (mMValueViewLandscapes[i] != null) {
                     mMValueViewLandscapes[i].setMValue(values[i]);

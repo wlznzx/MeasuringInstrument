@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
@@ -79,7 +80,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
     private boolean editorStatus = false;
     private int index = 0;
 
-    private String[] title = {"操作员", "时间", "工件号", "事件", "结果", "M(描述)(分组)测量值"};
+    private String[] title = {"操作员", "时间", "工件号", "事件", "结果"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,6 +288,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     @Override
     public void onItemClickListener(int pos, List<ResultBean2> myLiveList) {
+        if (pos == -1) return;
         if (editorStatus) {
             ResultBean2 _bean = myLiveList.get(pos);
             boolean isSelect = _bean.getIsSelect();
@@ -413,7 +415,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
     public class ExcelTask extends AsyncTask<String, Integer, String> {
 
         private ProgressDialog dialog;
-        private String path = Environment.getExternalStorageDirectory() + "/NTGate/";
+        private String path = Environment.getExternalStorageDirectory() + "/NTGage/";
 
         //执行的第一个方法用于在执行后台任务前做一些UI操作
         @Override
@@ -445,8 +447,22 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
                 }
             }
 
+            Collections.reverse(selectedList);
+
             path = path + "datas_" + DateUtils.getFileDate(System.currentTimeMillis()) + ".xls";
-            ExcelUtil.initExcel(path, "data", title);
+            List<String> titles = new ArrayList<>();
+            for (int i = 0; i < title.length; i++) {
+                titles.add(title[i]);
+            }
+
+            if (selectedList.size() > 0) {
+                ResultBean2 _bean = selectedList.get(0);
+                for (int i = 0; i < _bean.getMItems().size(); i++) {
+                    titles.add("M" + _bean.getMItems().get(i) + "(" + _bean.getMDescribe().get(i) + ")");
+                }
+            }
+
+            ExcelUtil.initExcel(path, "data", titles);
             ExcelUtil.writeObjListToExcel(selectedList, path, Data2Activity.this);
             return "后台任务执行完毕";
         }
