@@ -2,6 +2,7 @@ package alauncher.cn.measuringinstrument.view;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -14,6 +15,7 @@ import com.yanzhenjie.recyclerview.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
@@ -24,6 +26,7 @@ import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
 import alauncher.cn.measuringinstrument.widget.UserEditDialog;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,11 +54,11 @@ public class AccoutManagementActivity extends BaseActivity implements UserEditDi
         setContentView(R.layout.activity_accout);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void initView() {
         rv.setSwipeMenuCreator(swipeMenuCreator);
         rv.setOnItemMenuClickListener(mMenuItemClickListener);
-
         mUserDao = App.getDaoSession().getUserDao();
         mDatas = mUserDao.loadAll();
         _adapter = new AccoutAdapter(mDatas);

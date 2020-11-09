@@ -74,10 +74,24 @@
         android:layout_marginTop="4dp"
         android:fontFamily="@font/calibri"
         android:gravity="center"
-        android:text="无锡市恩梯量仪科技有限公司"
+        android:text="无锡恩梯量仪科技有限公司"
         android:textColor="@color/colorPrimary"
         android:textSize="8sp" />
 
+
+    <EditText
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/calibri"
+        android:text="v1.5.0_releases"
+        android:background="@null"
+        android:textSize="14sp"
+        android:enabled="false"
+        android:textColor="@color/colorPrimary" />
 
     <LinearLayout
         android:layout_width="match_parent"

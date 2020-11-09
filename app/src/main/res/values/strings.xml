@@ -1,25 +1,25 @@
 <resources>
-    <string name="app_name">恩梯量仪</string>
+    <string name="app_name">NTGage</string>
     <string name="measuring">Measuring</string>
     <string name="data_query">Data duery</string>
-    <string name="parameter_management">Parameter management</string>
+    <string name="parameter_management">Param</string>
     <string name="calibration">Calibration</string>
-    <string name="user_management">User Management</string>
-    <string name="program_management">Program management</string>
-    <string name="system_management">System Management</string>
+    <string name="user_management">User</string>
+    <string name="program_management">Program</string>
+    <string name="system_management">System</string>
     <string name="store">Store</string>
-    <string name="spc_analysis">SPC analysis</string>
-    <string name="statistical_report">Statistical report</string>
+    <string name="spc_analysis">SPC</string>
+    <string name="statistical_report">Report</string>
 
-    <string name="main_title">4Channels Measuring</string>
+    <string name="main_title">DeskTop</string>
     <string name="describe">Describe</string>
-    <string name="nominal_value">Nominal value</string>
-    <string name="upper_tolerance_value">Upper tolerance value</string>
-    <string name="lower_tolerance_value">Lower tolerance value</string>
+    <string name="nominal_value">Nominal</string>
+    <string name="upper_tolerance_value">UT</string>
+    <string name="lower_tolerance_value">LT</string>
     <string name="resolution">Resolution</string>
-    <string name="deviation">Deviation</string>
+    <string name="deviation">Offset</string>
     <string name="formula">Formula</string>
-    <string name="grouping">Grouping</string>
+    <string name="m_group">Grouping</string>
     <string name="save">Save</string>
     <string name="m1_group">M1 Group</string>
     <string name="m2_group">M2 Group</string>
@@ -33,6 +33,7 @@
     <string name="lower_limit">Lower limit</string>
     <string name="upper_limit">Upper limit</string>
     <string name="set">Set</string>
+    <string name="set_only">设置</string>
     <string name="small_part_standard">Small part standard</string>
     <string name="big_part_standard">Big part standard</string>
     <string name="upper_limit_of_information_rate">Upper limit of information rate</string>
@@ -105,7 +106,7 @@
     <string name="statistical_p">分析参数</string>
     <string name="handler_line">HLine</string>
 
-
+    <string name="group_describe">描述</string>
     <string name="text1">显示文本框</string>
     <string name="relative">布局</string>
     <string name="btn_1">1</string>
@@ -137,10 +138,10 @@
     <string name="accout_user">账号*</string>
     <string name="password_user">密码*</string>
     <string name="repassword_user">重复密码*</string>
-    <string name="login_title">用户登录</string>
+    <string name="login_title">Login</string>
     <string name="login_user_name">用户名:</string>
-    <string name="login_user_password">密码:</string>
-    <string name="login">登录</string>
+    <string name="login_user_password">PassWord:</string>
+    <string name="login">Log On</string>
     <string name="username_notnull">用户名不能为空</string>
     <string name="password_notnull">密码不能为空</string>
     <string name="user_not_exist">账号不存在</string>
@@ -181,9 +182,10 @@
     <string name="factory_code">工厂编号</string>
     <string name="factory_name">工厂名称</string>
     <string name="device_info">设备信息</string>
-    <string name="default_factory_code">123456789</string>
-    <string name="default_factory_name">无锡恩梯量仪科技有限公司</string>
+    <string name="default_factory_code">NT1001</string>
+    <string name="default_factory_name">质量管理平台</string>
     <string name="manufacturer">制造商</string>
+    <string name="manufacturer_name">恩梯科技</string>
     <string name="device_name">设备名称</string>
     <string name="default_device_name">物联网量仪</string>
     <string name="device_code">设备编号</string>
@@ -218,13 +220,16 @@
     <string name="set_as_current">设为当前</string>
     <string name="is">是</string>
     <string name="not">否</string>
-    <string name="condition_name">条件名</string>
+    <string name="condition_name">条\u2000件\u2000名</string>
+    <string name="getvalue">取值方式</string>
     <string name="stable_time">持续时间</string>
-    <string name="scale">比例</string>
+    <string name="is_scale">系数</string>
     <string name="parameter">参数</string>
+    <string name="is_parameter">参\u3000\u3000数</string>
     <string name="add_condition">添加条件</string>
-    <string name="is_scale">是否比例</string>
-    <string name="stable">比例</string>
+    <string name="ratio">比例</string>
+    <string name="is_ratio">比\u3000\u3000例</string>
+    <string name="stable">系\u3000\u3000数</string>
     <string name="edit_condition">编辑条件</string>
     <string name="max">Max</string>
     <string name="min">Min</string>
@@ -246,7 +251,7 @@
     <string name="start_get_value">开始取过程值</string>
     <string name="stop_get_value">结束取过程值</string>
     <string name="not_supported_same_msg_by_step">不支持过程值与单点值同时测量，在分步第%1$d，请确认。</string>
-    <string name="is_enable">是否启用</string>
+    <string name="is_enable">启\u3000用</string>
     <string name="add_parameter">添加参数</string>
     <string name="edit_parameter">编辑参数</string>
     <string name="pic">图例</string>
@@ -265,6 +270,7 @@
     <string name="edit_step">编辑步序</string>
     <string name="measure_item">测量项</string>
     <string name="step">步序</string>
+    <string name="stepname">步序名</string>
     <string name="click_to_choose">点击选择</string>
     <string name="step_enough">步骤序已达上限</string>
     <string name="tips">提示</string>
@@ -288,5 +294,34 @@
     <string name="sync_fail">同步失败，请检查网络配置.</string>
     <string name="save_and_sync">保存/同步</string>
     <string name="export_pdf">导出PDF</string>
-
+    <string name="cannot_delete">无法删除</string>
+    <string name="cannot_delete_msg">无法删除当前使用程序</string>
+    <string name="upload_server">参数同步后台</string>
+    <string name="add_code">添加程序</string>
+    <string name="m_type">测试类型</string>
+    <string name="machine_info">机床信息</string>
+    <string name="process_no">工序号\u3000</string>
+    <string name="analysis_pattern">分析方式</string>
+    <string name="ucl_x">UCL_X</string>
+    <string name="ucl_r">UCL_R</string>
+    <string name="lcl_r">LCL_R</string>
+    <string name="lcl_x">LCL_X</string>
+    <string name="save_success">保存成功</string>
+    <string name="clear">清空</string>
+    <string name="clear_success">清空成功</string>
+    <string name="user">用户</string>
+    <string name="frequent">频数</string>
+    <string name="normal_curve">正态曲线</string>
+    <string name="authority_management">权限管理</string>
+    <string name="authority_group">权限组名</string>
+    <string name="remarks">备注</string>
+    <string name="authority">权限</string>
+    <string name="add_authority_group">添加权限组</string>
+    <string name="edit_authority_group">编辑用户组名</string>
+    <string name="authority_set">权限设置</string>
+    <string name="un_authorized">未授权</string>
+    <string name="un_authorized_tips">该模块未授权，无法使用.</string>
+    <string name="authority_name_cannot_be_empty">权限名不能为空</string>
+    <string name="add_code_tips">程序名不能为空</string>
+    <string name="grouping">分组</string>
 </resources>

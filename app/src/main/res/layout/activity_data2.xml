@@ -63,6 +63,24 @@
                     style="@style/TextStyle"
                     android:layout_width="@dimen/data_width"
                     android:layout_height="match_parent"
+                    android:text="@string/m_type" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/machine_info" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
+                    android:text="@string/process_no" />
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="@dimen/data_width"
+                    android:layout_height="match_parent"
                     android:text="@string/result" />
             </LinearLayout>
 

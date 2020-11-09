@@ -54,6 +54,27 @@
         android:text="@string/event" />
 
     <TextView
+        android:id="@+id/data_mtype"
+        style="@style/DataTextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/m_type" />
+
+    <TextView
+        android:id="@+id/data_machine_info"
+        style="@style/DataTextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/machine_info" />
+
+    <TextView
+        android:id="@+id/data_process_no"
+        style="@style/DataTextStyle"
+        android:layout_width="@dimen/data_width"
+        android:layout_height="match_parent"
+        android:text="@string/process_no" />
+
+    <TextView
         android:id="@+id/data_result"
         style="@style/DataTextStyle"
         android:layout_width="@dimen/data_width"

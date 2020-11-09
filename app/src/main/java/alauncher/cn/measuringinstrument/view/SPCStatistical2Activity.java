@@ -14,24 +14,33 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
@@ -42,7 +51,11 @@ import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.stat.descriptive.rank.Max;
 import org.apache.commons.math3.stat.descriptive.rank.Min;
 
+import java.lang.reflect.Array;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -50,22 +63,21 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
+import alauncher.cn.measuringinstrument.bean.AnalysisPatternBean;
+import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
-import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean2;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
+import alauncher.cn.measuringinstrument.bean.User;
+import alauncher.cn.measuringinstrument.database.greenDao.db.AnalysisPatternBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBean2Dao;
-import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBeanDao;
 import alauncher.cn.measuringinstrument.utils.Constants;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
 import alauncher.cn.measuringinstrument.utils.Format;
 import alauncher.cn.measuringinstrument.utils.StringConverter;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static alauncher.cn.measuringinstrument.App.getDaoSession;
-
 
 public class SPCStatistical2Activity extends BaseOActivity {
 
@@ -74,6 +86,12 @@ public class SPCStatistical2Activity extends BaseOActivity {
 
     @BindView(R.id.r_chart)
     public LineChart rChart;
+
+    @BindView(R.id.combine_chart)
+    public CombinedChart mCombinedChart;
+
+    @BindView(R.id.combine_chart_layout)
+    public View mCombinedChartLayout;
 
     protected Typeface tfRegular;
 
@@ -88,6 +106,9 @@ public class SPCStatistical2Activity extends BaseOActivity {
 
     @BindView(R.id.group_num_sp)
     public Spinner groupNumSP;
+
+    @BindView(R.id.user_sp)
+    public Spinner userSP;
 
     @BindView(R.id.start_time_btn)
     public Button startTimeBtn;
@@ -173,7 +194,21 @@ public class SPCStatistical2Activity extends BaseOActivity {
     @BindView(R.id.ppu_tv)
     public TextView ppuTV;
 
-    public ResultBeanDao mResultBeanDao;
+    @BindView(R.id.process_no_sp)
+    public Spinner processNoSP;
+
+    @BindView(R.id.machine_info_sp)
+    public Spinner machineInfoSP;
+
+    @BindView(R.id.m_type_sp)
+    public Spinner mTypeSP;
+
+    @BindView(R.id.time_mode_sw)
+    public Switch timeSW;
+
+    public List<User> users;
+
+//    public ResultBeanDao mResultBeanDao;
 
     private long startTimeStamp = 0;
 
@@ -194,6 +229,8 @@ public class SPCStatistical2Activity extends BaseOActivity {
 
     private List<ParameterBean2> mParameterBean2Lists;
 
+    private List<CodeBean> mCodeBeanLists;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -202,12 +239,14 @@ public class SPCStatistical2Activity extends BaseOActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        /*
         SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
         _bean.setXUpperLine(Double.valueOf(xuclEdt.getText().toString().trim()));
         _bean.setXLowerLine(Double.valueOf(xlclEdt.getText().toString().trim()));
         _bean.setRUpperLine(Double.valueOf(ruclEdt.getText().toString().trim()));
         _bean.setRLowerLine(Double.valueOf(rlclEdt.getText().toString().trim()));
         App.getDaoSession().getSetupBeanDao().insertOrReplace(_bean);
+         */
     }
 
     @Override
@@ -215,7 +254,10 @@ public class SPCStatistical2Activity extends BaseOActivity {
         setContentView(R.layout.activity_spc_statistical);
     }
 
-    @OnClick({R.id.start_time_btn, R.id.stop_time_btn, R.id.spc_statistical_btn, R.id.delete_spc_result, R.id.jzjct_btn})
+    @OnClick({R.id.start_time_btn, R.id.stop_time_btn,
+            R.id.spc_statistical_btn,
+            R.id.delete_spc_result, R.id.jzjct_btn,
+            R.id.enlarge_combine_chart_btn, R.id.narrow_combine_chart_btn})
     public void OnClick(View v) {
         switch (v.getId()) {
             case R.id.start_time_btn:
@@ -244,6 +286,7 @@ public class SPCStatistical2Activity extends BaseOActivity {
                 ).show();
                 break;
             case R.id.stop_time_btn:
+                android.util.Log.d("wlDebug", "stop_time_btn click");
                 Calendar _now = Calendar.getInstance();
                 new DatePickerDialog(
                         SPCStatistical2Activity.this,
@@ -273,8 +316,16 @@ public class SPCStatistical2Activity extends BaseOActivity {
                 break;
             case R.id.delete_spc_result:
                 clearChart();
+//                mCombinedChart.setScaleX(2);
+//                mCombinedChart.setScaleY(2);
+//                mCombinedChart.getScrollX();
                 break;
-
+            case R.id.enlarge_combine_chart_btn:
+                mCombinedChart.zoomIn();
+                break;
+            case R.id.narrow_combine_chart_btn:
+                mCombinedChart.zoomOut();
+                break;
         }
     }
 
@@ -292,6 +343,8 @@ public class SPCStatistical2Activity extends BaseOActivity {
                 chart.setVisibility(View.VISIBLE);
                 rChart.setVisibility(View.VISIBLE);
                 mTableLayout.setVisibility(View.GONE);
+                mCombinedChart.setVisibility(View.GONE);
+                mCombinedChartLayout.setVisibility(View.GONE);
                 break;
             case R.id.ybyxt_btn:
                 if (spc_mode != YBYXT_MODE) {
@@ -301,11 +354,15 @@ public class SPCStatistical2Activity extends BaseOActivity {
                 chart.setVisibility(View.VISIBLE);
                 rChart.setVisibility(View.INVISIBLE);
                 mTableLayout.setVisibility(View.GONE);
+                mCombinedChart.setVisibility(View.GONE);
+                mCombinedChartLayout.setVisibility(View.GONE);
                 break;
             case R.id.gcnlt_btn:
                 chart.setVisibility(View.GONE);
                 rChart.setVisibility(View.GONE);
                 mTableLayout.setVisibility(View.VISIBLE);
+                mCombinedChart.setVisibility(View.VISIBLE);
+                mCombinedChartLayout.setVisibility(View.VISIBLE);
                 if (spc_mode != GCNLT_MODE) {
                     clearChart();
                 }
@@ -319,15 +376,27 @@ public class SPCStatistical2Activity extends BaseOActivity {
         mFilterBean = new FilterBean();
         mFilterBean.codeID = codeSP.getSelectedItemId() + 1;
         mFilterBean.targetNum = (int) targetSP.getSelectedItemId();
-
+        mFilterBean.accout = users.get(userSP.getSelectedItemPosition()).getAccout();
         mFilterBean.groupSize = Integer.valueOf((String) groupSizeSP.getSelectedItem());
         mFilterBean.groupNum = Integer.valueOf((String) groupNumSP.getSelectedItem());
-        mFilterBean.isTimeAuto = timeRG.getCheckedRadioButtonId() == R.id.auto_time_rb ? true : false;
-        mFilterBean.isLineAuto = lineRG.getCheckedRadioButtonId() == R.id.auto_line_rb ? true : false;
-        mFilterBean.setXucl(Double.valueOf(xuclEdt.getText().toString().trim()));
-        mFilterBean.setXlcl(Double.valueOf(xlclEdt.getText().toString().trim()));
-        mFilterBean.setRucl(Double.valueOf(ruclEdt.getText().toString().trim()));
-        mFilterBean.setRlcl(Double.valueOf(rlclEdt.getText().toString().trim()));
+        mFilterBean.mType = mTypeSP.getSelectedItem().toString().trim();
+        mFilterBean.processNo = processNoSP.getSelectedItem().toString().trim();
+        mFilterBean.machineInfo = machineInfoSP.getSelectedItem().toString().trim();
+        // 测量模式；
+        mParameterBean2Lists = App.getDaoSession().getParameterBean2Dao().queryBuilder()
+                .where(ParameterBean2Dao.Properties.CodeID.eq(mFilterBean.codeID), ParameterBean2Dao.Properties.Enable.eq(true))
+                .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
+        ParameterBean2 _bean2 = mParameterBean2Lists.get(mFilterBean.getTargetNum());
+        AnalysisPatternBean bean = App.getDaoSession().getAnalysisPatternBeanDao().queryBuilder().where(AnalysisPatternBeanDao.Properties.PID.eq(_bean2.getId())).unique();
+        mFilterBean.isTimeAuto = timeSW.isChecked();
+        mFilterBean.isLineAuto = bean.isLineAuto;
+        mFilterBean.isA3Auto = bean.isAAuto;
+        mFilterBean.setXucl(bean.getUclX());
+        mFilterBean.setXlcl(bean.getLclX());
+        mFilterBean.setRucl(bean.getUclR());
+        mFilterBean.setRlcl(bean.getLclR());
+        mFilterBean.set_a3(bean.get_a3());
+        mFilterBean.setA3(bean.getA3());
         android.util.Log.d("wlDebug", "mFilterBean = " + mFilterBean.toString());
         // dataFilterUpdate();
     }
@@ -389,12 +458,19 @@ public class SPCStatistical2Activity extends BaseOActivity {
                     yAxis.setAxisMaximum(_bean.maxXY);
                     yAxis.setAxisMinimum(_bean.minXY);
                     yAxis.removeAllLimitLines();
-                    yAxis.addLimitLine(getLimitLine(_bean.xUCL, "上控制线"));
-                    yAxis.addLimitLine(getLimitLine(_bean.xLCL, "下控制线"));
-                    android.util.Log.d("wllDebug", "_bean.xUCL = " + _bean.xUCL);
-                    android.util.Log.d("wllDebug", "_bean.xLCL = " + _bean.xLCL);
+//                    yAxis.addLimitLine(getLimitLine(_bean.xUCL, "上控制线"));
+//                    yAxis.addLimitLine(getLimitLine(_bean.xLCL, "下控制线"));
+                    if (mFilterBean.isLineAuto()) {
+                        yAxis.addLimitLine(getLimitLine(_bean.rUCL, "上控制线"));
+                        yAxis.addLimitLine(getLimitLine(_bean.rLCL, "下控制线"));
+                    } else {
+                        yAxis.addLimitLine(getLimitLine((float) mFilterBean.rucl, "上控制线"));
+                        yAxis.addLimitLine(getLimitLine((float) mFilterBean.rlcl, "下控制线"));
+                    }
                     yAxis.addLimitLine(getLimitLine(_bean.upperValue, "上公差线"));
                     yAxis.addLimitLine(getLimitLine(_bean.lowerValue, "下公差线"));
+                    android.util.Log.d("wllDebug", "_bean.xUCL = " + _bean.xUCL);
+                    android.util.Log.d("wllDebug", "_bean.xLCL = " + _bean.xLCL);
                     android.util.Log.d("wllDebug", "_bean.upperValue = " + _bean.upperValue);
                     android.util.Log.d("wllDebug", "_bean.lowerValue = " + _bean.lowerValue);
                     updateChartDatas(_bean.xValues);
@@ -403,8 +479,13 @@ public class SPCStatistical2Activity extends BaseOActivity {
                     rYAxis.setAxisMaximum(_bean.maxRY);
                     rYAxis.setAxisMinimum(_bean.minRY);
                     rYAxis.removeAllLimitLines();
-                    rYAxis.addLimitLine(getLimitLine(_bean.rUCL, "上控制线"));
-                    rYAxis.addLimitLine(getLimitLine(_bean.rLCL, "下控制线"));
+                    if (mFilterBean.isLineAuto()) {
+                        rYAxis.addLimitLine(getLimitLine(_bean.rUCL, "上控制线"));
+                        rYAxis.addLimitLine(getLimitLine(_bean.rLCL, "下控制线"));
+                    } else {
+                        rYAxis.addLimitLine(getLimitLine((float) mFilterBean.rucl, "上控制线"));
+                        rYAxis.addLimitLine(getLimitLine((float) mFilterBean.rlcl, "下控制线"));
+                    }
                     /**/
                     if (rChart.getData() == null) {
                         ArrayList<ILineDataSet> rDataSets = new ArrayList<>();
@@ -434,10 +515,20 @@ public class SPCStatistical2Activity extends BaseOActivity {
                     maxValueTV.setText("" + Format.m1(_bean.maxValue, 4));
                     minValueTV.setText("" + Format.m1(_bean.minValue, 4));
                     nominalValueTV.setText("" + Format.m1(_bean.nominalValue, 4));
-                    gcUslTV.setText("" + Format.m1(_bean.usl, 4));
-                    gcLslTV.setText("" + Format.m1(_bean.lsl, 4));
-                    _3aTV.setText("" + Format.m1((_bean.averageValue + _bean.a * -3), 4));
-                    _aTV.setText("" + Format.m1((_bean.averageValue + _bean.a * 3), 4));
+                    if (mFilterBean.isLineAuto()) {
+                        gcUslTV.setText("" + Format.m1(_bean.usl, 4));
+                        gcLslTV.setText("" + Format.m1(_bean.lsl, 4));
+                    } else {
+                        gcUslTV.setText("" + Format.m1(mFilterBean.xucl, 4));
+                        gcLslTV.setText("" + Format.m1(mFilterBean.xlcl, 4));
+                    }
+                    if (mFilterBean.isA3Auto()) {
+                        _3aTV.setText("" + Format.m1((_bean.averageValue + _bean.a * -3), 4));
+                        _aTV.setText("" + Format.m1((_bean.averageValue + _bean.a * 3), 4));
+                    } else {
+                        _3aTV.setText("" + Format.m1((mFilterBean._a3), 4));
+                        _aTV.setText("" + Format.m1((mFilterBean.a3), 4));
+                    }
                     cpTV.setText("" + Format.m1(_bean.cp, 2));
                     cpkTV.setText("" + Format.m1(_bean.cpk, 2));
                     cplTV.setText("" + Format.m1(_bean.cpl, 2));
@@ -446,6 +537,16 @@ public class SPCStatistical2Activity extends BaseOActivity {
                     ppkTV.setText("" + Format.m1(_bean.ppk, 2));
                     pplTV.setText("" + Format.m1(_bean.ppl, 2));
                     ppuTV.setText("" + Format.m1(_bean.ppu, 2));
+                    // 过程能力图形;
+                    //颜色集合
+                    List<Integer> colors = new ArrayList<>();
+                    colors.add(Color.BLUE);
+                    colors.add(Color.RED);
+                    colors.add(Color.YELLOW);
+                    colors.add(Color.CYAN);
+                    showCombinedChart(_bean.xData, _bean.barData, _bean.lineData,
+                            getResources().getString(R.string.frequent), getResources()
+                                    .getString(R.string.normal_curve), R.color.colorPrimary, colors.get(1));
                 }
             } else {
                 Toast.makeText(SPCStatistical2Activity.this, "数据源数量不足以分析.", Toast.LENGTH_SHORT).show();
@@ -463,16 +564,36 @@ public class SPCStatistical2Activity extends BaseOActivity {
 
         int _limit = mFilterBean.getGroupNum() * mFilterBean.getGroupSize();
 
-        if (!mFilterBean.isTimeAuto() && startTimeStamp >= stopTimeStamp) {
-            return null;
-        }
+//        if (mFilterBean.isTimeAuto() && startTimeStamp >= stopTimeStamp) {
+//            return null;
+//        }
 
         String queryString = "";
-        if (mFilterBean.isTimeAuto()) {
+        /*
+        if (!mFilterBean.isTimeAuto()) {
             queryString = "SELECT * FROM " + ResultBean2Dao.TABLENAME + " where " + ResultBean2Dao.Properties.CodeID.columnName + " = " + mFilterBean.getCodeID() + " order by _id desc limit " + _limit;
         } else {
             queryString = "SELECT * FROM " + ResultBean2Dao.TABLENAME + " where " + ResultBean2Dao.Properties.TimeStamp.columnName + " between " + startTimeStamp + " and " + stopTimeStamp + " order by _id desc limit " + _limit;
         }
+         */
+        queryString = "SELECT * FROM " + ResultBean2Dao.TABLENAME + " where " + ResultBean2Dao.Properties.CodeID.columnName + " = " + mFilterBean.getCodeID();
+        if (mFilterBean.isTimeAuto()) {
+            queryString = queryString + " and " + ResultBean2Dao.Properties.TimeStamp.columnName + " between " + startTimeStamp + " and " + stopTimeStamp;
+        }
+        if (!mFilterBean.getmType().equals("所有")) {
+            queryString = queryString + " and " + ResultBean2Dao.Properties.MType.columnName + " = " + "'" + mFilterBean.getmType() + "'";
+        }
+        if (!mFilterBean.getProcessNo().equals("所有")) {
+            queryString = queryString + " and " + ResultBean2Dao.Properties.ProcessNo.columnName + " = " + "'" + mFilterBean.getProcessNo() + "'";
+        }
+        if (!mFilterBean.getMachineInfo().equals("所有")) {
+            queryString = queryString + " and " + ResultBean2Dao.Properties.MachineInfo.columnName + " = " + "'" + mFilterBean.getMachineInfo() + "'";
+        }
+        if (mFilterBean.getAccout() != null) {
+            queryString = queryString + " and " + ResultBean2Dao.Properties.HandlerAccount.columnName + " = " + "'" + mFilterBean.getAccout() + "'";
+        }
+        queryString = queryString + " order by _id desc limit " + _limit;
+        android.util.Log.d("wlDebug", "queryString = " + queryString);
 
         Cursor cursor = App.getDaoSession().getResultBean2Dao().getDatabase().rawQuery(queryString, null);
 
@@ -487,7 +608,6 @@ public class SPCStatistical2Activity extends BaseOActivity {
         int mDescribeIndex = cursor.getColumnIndex(ResultBean2Dao.Properties.MDescribe.columnName);
 
         List<ResultBean2> _datas = new ArrayList<>();
-
         while (cursor.moveToNext()) {
             ResultBean2 rBean = new ResultBean2();
             rBean.setHandlerAccount(cursor.getString(HandlerAccount));
@@ -501,16 +621,13 @@ public class SPCStatistical2Activity extends BaseOActivity {
             rBean.setMDescribe(StringConverter.convertToEntityPropertyG(cursor.getString(mDescribeIndex)));
             _datas.add(rBean);
         }
-
-        for (ResultBean2 _bean : _datas) {
-            android.util.Log.d("wlDebug", _bean.toString());
-        }
-
+//        for (ResultBean2 _bean : _datas) {
+//            android.util.Log.d("wlDebug", _bean.toString());
+//        }
         if (_datas.size() < _limit) {
             // Toast.makeText(SPCStatisticalActivity.this, "数据源数量不足以分析.", Toast.LENGTH_SHORT).show();
             return null;
         }
-
         return _datas;
     }
 
@@ -711,13 +828,45 @@ public class SPCStatistical2Activity extends BaseOActivity {
         ppu = (upperValue - _bean.averageValue) / (3 * deviation2);
         ppk = Math.min(PPKl, PPKu);
 
-
         _bean.cp = cp;
         _bean.pp = pp;
         _bean.ppl = ppl;
         _bean.ppu = ppu;
         _bean.ppk = ppk;
 
+        // 计算中心值
+        // 计算标准差
+        // 计算组数：数据个数 / 4
+        int group_size = _datas.size() / 4;
+        // 组坐标上限;
+        double group_upper_limit = _bean.averageValue + 4 * deviation2;
+        // 组坐标上限;
+        double group_lower_limit = _bean.averageValue - 4 * deviation2;
+        // 组距;
+        _bean.barData = new ArrayList<>();
+        _bean.xData = new ArrayList<>();
+        _bean.lineData = new ArrayList<>();
+        final NumberFormat formatter = new DecimalFormat("0.0000");
+        double group_space = (group_upper_limit - group_lower_limit) / (group_size - 1);
+        for (int i = 0; i < group_size; i++) {
+            float _num = 0;
+            for (int j = 0; j < values.length; j++) {
+                if (i == 0) {
+                    if (values[j] < group_lower_limit + (i + 1) * group_space) _num++;
+                } else if (i == group_size - 1) {
+                    if (values[j] >= group_lower_limit + i * group_space) _num++;
+                } else if (values[j] >= group_lower_limit + i * group_space && values[j] < group_lower_limit + (i + 1) * group_space) {
+                    _num++;
+                }
+            }
+            _bean.barData.add(_num);
+            // 组坐标
+            double x = group_lower_limit + i * group_space;
+            _bean.xData.add(formatter.format(x));
+            float l = (float) ((1 / Math.sqrt(2 * Math.PI) * deviation2) * Math.exp(-1 * ((x - _bean.averageValue) * (x - _bean.averageValue)) / (2 * deviation2 * deviation2)) * _bean.averageValue);
+            _bean.lineData.add(l);
+            android.util.Log.d("alauncher", "l = " + l);
+        }
         return _bean;
     }
 
@@ -738,6 +887,19 @@ public class SPCStatistical2Activity extends BaseOActivity {
 
     @Override
     protected void initView() {
+        timeSW.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                //控制开关字体颜色
+                if (b) {
+                    startTimeBtn.setEnabled(true);
+                    stopTimeBtn.setEnabled(true);
+                } else {
+                    startTimeBtn.setEnabled(false);
+                    stopTimeBtn.setEnabled(false);
+                }
+            }
+        });
         timeRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -786,8 +948,40 @@ public class SPCStatistical2Activity extends BaseOActivity {
         ruclEdt.setEnabled(false);
         rlclEdt.setEnabled(false);
 
-        mResultBeanDao = getDaoSession().getResultBeanDao();
-        ((RadioButton) lineRG.getChildAt(0)).setChecked(true);
+        // 初始化筛选条件 用户
+        int userDefaultPosition = 0;
+        users = App.getDaoSession().getUserDao().loadAll();
+        List<String> userList = new ArrayList<>();
+        for (int i = 0; i < users.size(); i++) {
+            User _user = users.get(i);
+            userList.add(_user.getName());
+            if (_user.getAccout().equals(App.handlerAccout)) {
+                userDefaultPosition = i;
+            }
+        }
+        ArrayAdapter<String> userAdapter = new ArrayAdapter<String>(SPCStatistical2Activity.this,
+                android.R.layout.simple_spinner_item,
+                userList);
+        userAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        userSP.setAdapter(userAdapter);
+        userSP.setSelection(userDefaultPosition);
+
+        // 程序;
+        int codeDefaultPosition = 0;
+        mCodeBeanLists = App.getDaoSession().getCodeBeanDao().loadAll();
+        List<String> codeList = new ArrayList<>();
+        for (int i = 0; i < mCodeBeanLists.size(); i++) {
+            CodeBean _code = mCodeBeanLists.get(i);
+            codeList.add(_code.getName());
+            if (App.getSetupBean().getCodeID() == _code.getId()) {
+                codeDefaultPosition = i;
+            }
+        }
+        ArrayAdapter<String> codeAdapter = new ArrayAdapter<String>(SPCStatistical2Activity.this,
+                android.R.layout.simple_spinner_item,
+                codeList);
+        codeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        codeSP.setAdapter(codeAdapter);
         codeSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -816,7 +1010,9 @@ public class SPCStatistical2Activity extends BaseOActivity {
 
             }
         });
+        codeSP.setSelection(codeDefaultPosition);
 
+        ((RadioButton) lineRG.getChildAt(0)).setChecked(true);
         // background color
         chart.setBackgroundColor(Color.WHITE);
         rChart.setBackgroundColor(Color.WHITE);
@@ -872,10 +1068,161 @@ public class SPCStatistical2Activity extends BaseOActivity {
 
             // horizontal grid lines
             // yAxis.enableGridDashedLine(10f, 10f, 0f);
+            initChart();
         }
-        //
+
 
     }
+
+    // 初始化过程能力图;
+    private void initChart() {
+        YAxis leftAxis;
+        YAxis rightAxis;
+        XAxis xAxis;
+        //不显示描述内容
+        mCombinedChart.getDescription().setEnabled(false);
+
+        mCombinedChart.setDrawOrder(new CombinedChart.DrawOrder[]{
+                CombinedChart.DrawOrder.BAR,
+                CombinedChart.DrawOrder.LINE
+        });
+
+        mCombinedChart.setBackgroundColor(Color.WHITE);
+        mCombinedChart.setDrawGridBackground(false);
+        mCombinedChart.setDrawBarShadow(false);
+        mCombinedChart.setHighlightFullBarEnabled(false);
+        //显示边界
+        mCombinedChart.setDrawBorders(true);
+        mCombinedChart.getXAxis().setLabelRotationAngle(-30);
+        //
+        leftAxis = mCombinedChart.getAxisLeft();
+        rightAxis = mCombinedChart.getAxisRight();
+        xAxis = mCombinedChart.getXAxis();
+        //图例说明
+        Legend legend = mCombinedChart.getLegend();
+        legend.setWordWrapEnabled(true);
+
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legend.setDrawInside(false);
+        //Y轴设置
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setAxisMinimum(0f);
+
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setAxisMinimum(0f);
+
+        mCombinedChart.animateX(1500); // 立即执行的动画,x轴
+    }
+
+    /**
+     * 设置X轴坐标值
+     *
+     * @param xAxisValues x轴坐标集合
+     */
+    public void setXAxis(final List<String> xAxisValues) {
+
+        //设置X轴在底部
+        XAxis xAxis = mCombinedChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1f);
+        xAxis.setLabelCount(xAxisValues.size() - 1, false);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
+        // mCombinedChart.invalidate();
+    }
+
+    /**
+     * 得到折线图(一条)
+     *
+     * @param lineChartY 折线Y轴值
+     * @param lineName   折线图名字
+     * @param lineColor  折线颜色
+     * @return
+     */
+    private LineData getLineData(List<Float> lineChartY, String lineName, int lineColor) {
+        LineData lineData = new LineData();
+
+        ArrayList<Entry> yValue = new ArrayList<>();
+        for (int i = 0; i < lineChartY.size(); i++) {
+            yValue.add(new Entry(i, lineChartY.get(i)));
+        }
+        LineDataSet dataSet = new LineDataSet(yValue, lineName);
+
+        dataSet.setColor(lineColor);
+        dataSet.setCircleColor(lineColor);
+        dataSet.setValueTextColor(lineColor);
+
+        dataSet.setCircleSize(3);
+        //显示值
+        dataSet.setDrawValues(true);
+        dataSet.setValueTextSize(0f);
+        dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        dataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
+        lineData.addDataSet(dataSet);
+        return lineData;
+    }
+
+    /**
+     * 得到柱状图
+     *
+     * @param barChartY Y轴值
+     * @param barName   柱状图名字
+     * @param barColor  柱状图颜色
+     * @return
+     */
+
+    private BarData getBarData(List<Float> barChartY, String barName, int barColor) {
+        BarData barData = new BarData();
+        ArrayList<BarEntry> yValues = new ArrayList<>();
+        for (int i = 0; i < barChartY.size(); i++) {
+            yValues.add(new BarEntry(i, barChartY.get(i)));
+        }
+        final NumberFormat formatter = new DecimalFormat("0");
+        BarDataSet barDataSet = new BarDataSet(yValues, barName);
+        barDataSet.setColor(barColor);
+        barDataSet.setValueTextSize(10f);
+        barDataSet.setValueTextColor(barColor);
+        barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        barDataSet.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return formatter.format(value);
+            }
+        });
+        barData.addDataSet(barDataSet);
+
+        //以下是为了解决 柱状图 左右两边只显示了一半的问题 根据实际情况 而定
+        mCombinedChart.getXAxis().setAxisMinimum(-0.5f);
+        mCombinedChart.getXAxis().setAxisMaximum((float) (barChartY.size() - 0.5));
+        return barData;
+    }
+
+    /**
+     * 显示混合图(柱状图+折线图)
+     *
+     * @param xAxisValues X轴坐标
+     * @param barChartY   柱状图Y轴值
+     * @param lineChartY  折线图Y轴值
+     * @param barName     柱状图名字
+     * @param lineName    折线图名字
+     * @param barColor    柱状图颜色
+     * @param lineColor   折线图颜色
+     */
+
+    public void showCombinedChart(
+            List<String> xAxisValues, List<Float> barChartY, List<Float> lineChartY
+            , String barName, String lineName, int barColor, int lineColor) {
+        initChart();
+        setXAxis(xAxisValues);
+
+        CombinedData combinedData = new CombinedData();
+        combinedData.setData(getBarData(barChartY, barName, barColor));
+        combinedData.setData(getLineData(lineChartY, lineName, lineColor));
+        mCombinedChart.setData(combinedData);
+        mCombinedChart.invalidate();
+    }
+
 
     private double getValuesFromResultBean2(ResultBean2 _bean, int index) {
         double result = 0;
@@ -982,6 +1329,7 @@ public class SPCStatistical2Activity extends BaseOActivity {
         */
         chart.clear();
         rChart.clear();
+        mCombinedChart.clear();
         averageValueTV.setText("");
         maxValueTV.setText("");
         minValueTV.setText("");
@@ -1015,6 +1363,14 @@ public class SPCStatistical2Activity extends BaseOActivity {
 
         private int groupNum;
 
+        private String accout;
+
+        private String mType;
+
+        private String machineInfo;
+
+        private String processNo;
+
         private double xucl;
 
         private double xlcl;
@@ -1022,6 +1378,12 @@ public class SPCStatistical2Activity extends BaseOActivity {
         private double rucl;
 
         private double rlcl;
+
+        private double a3;
+
+        private double _a3;
+
+        private boolean isA3Auto;
 
         private boolean isTimeAuto;
 
@@ -1038,6 +1400,38 @@ public class SPCStatistical2Activity extends BaseOActivity {
         public boolean isTimeAuto() {
 
             return isTimeAuto;
+        }
+
+        public String getAccout() {
+            return accout;
+        }
+
+        public void setAccout(String accout) {
+            this.accout = accout;
+        }
+
+        public String getmType() {
+            return mType;
+        }
+
+        public void setmType(String mType) {
+            this.mType = mType;
+        }
+
+        public String getMachineInfo() {
+            return machineInfo;
+        }
+
+        public void setMachineInfo(String machineInfo) {
+            this.machineInfo = machineInfo;
+        }
+
+        public String getProcessNo() {
+            return processNo;
+        }
+
+        public void setProcessNo(String processNo) {
+            this.processNo = processNo;
         }
 
         public void setTimeAuto(boolean timeAuto) {
@@ -1108,6 +1502,30 @@ public class SPCStatistical2Activity extends BaseOActivity {
             this.rlcl = rlcl;
         }
 
+        public double getA3() {
+            return a3;
+        }
+
+        public void setA3(double a3) {
+            this.a3 = a3;
+        }
+
+        public double get_a3() {
+            return _a3;
+        }
+
+        public void set_a3(double _a3) {
+            this._a3 = _a3;
+        }
+
+        public boolean isA3Auto() {
+            return isA3Auto;
+        }
+
+        public void setA3Auto(boolean a3Auto) {
+            isA3Auto = a3Auto;
+        }
+
         @Override
         public String toString() {
             return "FilterBean{" +
@@ -1115,10 +1533,17 @@ public class SPCStatistical2Activity extends BaseOActivity {
                     ", targetNum=" + targetNum +
                     ", groupSize=" + groupSize +
                     ", groupNum=" + groupNum +
+                    ", accout='" + accout + '\'' +
+                    ", mType='" + mType + '\'' +
+                    ", machineInfo='" + machineInfo + '\'' +
+                    ", processNo='" + processNo + '\'' +
                     ", xucl=" + xucl +
                     ", xlcl=" + xlcl +
                     ", rucl=" + rucl +
                     ", rlcl=" + rlcl +
+                    ", a3=" + a3 +
+                    ", _a3=" + _a3 +
+                    ", isA3Auto=" + isA3Auto +
                     ", isTimeAuto=" + isTimeAuto +
                     ", isLineAuto=" + isLineAuto +
                     '}';
@@ -1227,6 +1652,12 @@ public class SPCStatistical2Activity extends BaseOActivity {
         double ppl;
         //
         double ppu;
+        //
+        List<Float> barData;
+        //
+        List<Float> lineData;
+        //
+        List<String> xData;
 
         @Override
         public String toString() {

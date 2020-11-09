@@ -178,7 +178,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         Button cancel = builder.findViewById(R.id.btn_cancle);
         Button sure = builder.findViewById(R.id.btn_sure);
         if (msg == null || cancel == null || sure == null) return;
-
+        
         if (index == 1) {
             msg.setText("删除后不可恢复，是否删除该条目？");
         } else {

@@ -42,11 +42,11 @@
                 android:gravity="center_vertical">
 
                 <TextView
-                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
+                    android:text="@string/show_item"
 
-                    android:text="@string/show_item" />
+                    android:textColor="@android:color/black" />
 
                 <Spinner
                     android:id="@+id/show_item_sp"
@@ -63,10 +63,10 @@
                 android:gravity="center_vertical">
 
                 <TextView
-                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
-                    android:text="@string/describe" />
+                    android:text="@string/describe"
+                    android:textColor="@android:color/black" />
 
                 <EditText
                     android:id="@+id/describe_edt"
@@ -85,10 +85,10 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
-                    android:text="@string/nominal_value" />
+                    android:text="@string/nominal_value"
+                    android:textColor="@android:color/black" />
 
                 <EditText
                     android:id="@+id/nominal_value_edt"
@@ -108,10 +108,10 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
-                    android:text="@string/upper_tolerance_value" />
+                    android:text="@string/upper_tolerance_value"
+                    android:textColor="@android:color/black" />
 
                 <EditText
                     android:id="@+id/upper_tolerance_value_edt"
@@ -131,10 +131,10 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
-                    android:text="@string/lower_tolerance_value" />
+                    android:text="@string/lower_tolerance_value"
+                    android:textColor="@android:color/black" />
 
                 <EditText
                     android:id="@+id/lower_tolerance_value_edt"
@@ -154,10 +154,10 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
-                    android:text="@string/resolution" />
+                    android:text="@string/resolution"
+                    android:textColor="@android:color/black" />
 
                 <Spinner
                     android:id="@+id/resolution_sp"
@@ -176,10 +176,10 @@
                 android:visibility="visible">
 
                 <TextView
-                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
-                    android:text="@string/deviation" />
+                    android:text="@string/deviation"
+                    android:textColor="@android:color/black" />
 
                 <EditText
                     android:id="@+id/deviation_edt"
@@ -199,10 +199,10 @@
                 android:visibility="visible">
 
                 <TextView
-                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
-                    android:text="@string/formula" />
+                    android:text="@string/formula"
+                    android:textColor="@android:color/black" />
 
                 <Button
                     android:id="@+id/formula_btn"
@@ -221,17 +221,39 @@
                 android:visibility="visible">
 
                 <TextView
-                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
-                    android:text="@string/grouping" />
+                    android:text="@string/m_group"
+                    android:textColor="@android:color/black" />
 
                 <Button
                     android:id="@+id/group_btn"
                     android:layout_width="@dimen/dialog_width"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
-                    android:text="@string/grouping" />
+                    android:text="@string/m_group" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="@dimen/dialog_tv_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/grouping"
+                    android:textColor="@android:color/black" />
+
+                <Button
+                    android:id="@+id/analysis_pattern_btn"
+                    android:layout_width="@dimen/dialog_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="@string/analysis_pattern" />
             </LinearLayout>
 
             <LinearLayout
@@ -243,10 +265,10 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:textColor="@android:color/black"
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
-                    android:text="@string/is_enable" />
+                    android:text="@string/is_enable"
+                    android:textColor="@android:color/black" />
 
                 <Switch
                     android:id="@+id/is_enable_sw"

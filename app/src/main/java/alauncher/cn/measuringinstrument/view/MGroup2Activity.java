@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -58,6 +59,17 @@ public class MGroup2Activity extends BaseOActivity implements DataUpdateInterfac
         mMGroupAdapter = new MGroupAdapter();
         rv.setAdapter(mMGroupAdapter);
     }
+
+/*
+    隐藏键盘
+    public void hideInput() {
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        View v = getWindow().peekDecorView();
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }*/
+
+
 
     @OnClick(R.id.add_group_btn)
     public void addGroup(View v) {

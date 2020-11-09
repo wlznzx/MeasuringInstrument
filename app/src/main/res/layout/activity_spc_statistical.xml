@@ -57,6 +57,78 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:text="@string/user" />
+
+        <Spinner
+            android:id="@+id/user_sp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:entries="@array/group_size_array" />
+
+        <TextView
+            style="@style/BaseTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/process_no" />
+
+        <Spinner
+            android:id="@+id/process_no_sp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:entries="@array/process_no_array_sp" />
+    </LinearLayout>
+
+    <!-- 测量类型 / 机床编号 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/BaseTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/m_type" />
+
+        <Spinner
+            android:id="@+id/m_type_sp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:entries="@array/m_type_array_sp" />
+
+        <TextView
+            style="@style/BaseTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/machine_info" />
+
+        <Spinner
+            android:id="@+id/machine_info_sp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:entries="@array/machine_array_sp" />
+    </LinearLayout>
+
+    <!-- 子组大小 / 子组数量 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/BaseTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="@string/group_size" />
 
         <Spinner
@@ -81,11 +153,57 @@
             android:entries="@array/group_num_array" />
     </LinearLayout>
 
+    <!-- 时间区间 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
+
+        <TextView
+            style="@style/BaseTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/time_mode" />
+
+        <Switch
+            android:id="@+id/time_mode_sw"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+
+
+        <Button
+            android:id="@+id/start_time_btn"
+            android:textSize="12sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1" />
+
+        <TextView
+            style="@style/BaseTextStyle"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="~" />
+
+        <Button
+            android:id="@+id/stop_time_btn"
+            android:textSize="12sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             style="@style/BaseTextStyle"
@@ -123,7 +241,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             style="@style/BaseTextStyle"
@@ -134,7 +253,6 @@
 
 
         <Button
-            android:id="@+id/start_time_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -148,7 +266,6 @@
             android:text="@string/end_time" />
 
         <Button
-            android:id="@+id/stop_time_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -160,7 +277,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             style="@style/BaseTextStyle"
@@ -196,7 +314,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             style="@style/BaseTextStyle"
@@ -247,7 +366,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             style="@style/BaseTextStyle"
@@ -279,7 +399,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
             <TextView
                 style="@style/BaseTextStyle"
@@ -299,10 +419,12 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>
 
+
+    <!-- 切换按钮 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -349,7 +471,7 @@
         android:id="@+id/TableLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10"
+        android:layout_weight="5"
         android:divider="@drawable/line_h"
         android:orientation="vertical"
         android:visibility="gone">
@@ -366,6 +488,33 @@
             android:layout_height="1dp"
             android:background="@drawable/line_h"></ImageView>
     </LinearLayout>
+    <FrameLayout
+        android:id="@+id/combine_chart_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:visibility="gone">
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/combine_chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </com.github.mikephil.charting.charts.CombinedChart>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right">
+            <ImageButton
+                android:id="@+id/enlarge_combine_chart_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/zoom_in_24px"></ImageButton>
+            <ImageButton
+                android:id="@+id/narrow_combine_chart_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/zoom_out_24px"></ImageButton>
+        </LinearLayout>
+    </FrameLayout>
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/statistical_chart"

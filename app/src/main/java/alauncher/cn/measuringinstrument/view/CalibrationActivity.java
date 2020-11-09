@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.Date;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
@@ -156,15 +157,21 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
         doUpdateMeasureADValue();
         doCalcMeasureValue(currentCHADValue);
     }
-
+    //根据最后点击大小件取值按钮的时间来判断以大小件单件谁来校准
+    Long datesmall=Long.valueOf(0);
+    Long datebig= Long.valueOf(0);
     @OnClick({R.id.samll_part_btn, R.id.big_part_btn, R.id.calibration_save_btn, R.id.select_all_btn})
     public void onBtnClick(View view) {
+
         switch (view.getId()) {
             case R.id.samll_part_btn:
                 for (int i = 0; i < smallPartADEdt.length; i++)
                     try {
                         int x = Integer.parseInt(measureADEdt[i].getText().toString().trim(), 10);
                         smallPartADEdt[i].setText("" + x);
+                        Date date=new Date();
+                       datesmall= date.getTime();
+
                     } catch (NumberFormatException e) {
 
                     }
@@ -175,6 +182,8 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
                     try {
                         int x = Integer.parseInt(measureADEdt[i].getText().toString().trim(), 10);
                         bigPartADEdt[i].setText("" + x);
+                        Date date=new Date();
+                         datebig= date.getTime();
                     } catch (NumberFormatException e) {
 
                     }
@@ -183,9 +192,9 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             case R.id.calibration_save_btn:
                 doCalc();
                 CalibrationBean _bean = view2Bean();
-                if (_bean == null) return;
-                android.util.Log.d("wlDebug", _bean.toString());
-                // 判断倍率;
+                    if (_bean == null) return;
+                    android.util.Log.d("wlDebug", _bean.toString());
+                    // 判断倍率;
                 /*
                 if (chRbs[0].isChecked() && (_bean.getCh1KValue() < (_bean.getCh1LowerLimitRate() / 1000) || _bean.getCh1KValue() > (_bean.getCh1UpperLimitRate() / 1000))) {
                     Toast.makeText(this, "Ch1测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
@@ -204,34 +213,41 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
                     return;
                 }
                 */
-                if (chRbs[0].isChecked() && (_bean.getCh1KValue() < -10 || _bean.getCh1KValue() > 10)) {
-                    Toast.makeText(this, "Ch1测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
-                    return;
+                    if (chRbs[0].isChecked() && (_bean.getCh1KValue() < -0.1 || _bean.getCh1KValue() > 0.1)) {
+                        Toast.makeText(this, "Ch1测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (chRbs[1].isChecked() && (_bean.getCh2KValue() < -0.1 || _bean.getCh2KValue() > 0.1)) {
+                        Toast.makeText(this, "Ch2测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (chRbs[2].isChecked() && (_bean.getCh3KValue() < -0.1 || _bean.getCh3KValue() > 0.1)) {
+                        Toast.makeText(this, "Ch3测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (chRbs[3].isChecked() && (_bean.getCh4KValue() < -0.1 || _bean.getCh4KValue() > 0.1)) {
+                        Toast.makeText(this, "Ch4测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                if (s == 0) {
+                    Toast.makeText(this, "校验失败.", Toast.LENGTH_SHORT).show();
+                    break;
+                } else {
+                    Toast.makeText(this, "校验保存成功.", Toast.LENGTH_SHORT).show();
+                    mCalibrationPresenter.saveCalibration(_bean);
+                    break;
                 }
-                if (chRbs[1].isChecked() && (_bean.getCh2KValue() < -10 || _bean.getCh2KValue() > 10)) {
-                    Toast.makeText(this, "Ch2测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
-                    return;
+                    case R.id.select_all_btn:
+                        for (CheckBox _box : chRbs) {
+                            _box.setChecked(isSelectAll);
+                        }
+                        isSelectAll = !isSelectAll;
+                        break;
                 }
-                if (chRbs[2].isChecked() && (_bean.getCh3KValue() < -10 || _bean.getCh3KValue() > 10)) {
-                    Toast.makeText(this, "Ch3测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (chRbs[3].isChecked() && (_bean.getCh4KValue() < -10 || _bean.getCh4KValue() > 10)) {
-                    Toast.makeText(this, "Ch4测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Toast.makeText(this, "校验保存成功.", Toast.LENGTH_SHORT).show();
-                mCalibrationPresenter.saveCalibration(_bean);
-                break;
-            case R.id.select_all_btn:
-                for (CheckBox _box : chRbs) {
-                    _box.setChecked(isSelectAll);
-                }
-                isSelectAll = !isSelectAll;
-                break;
+
         }
 
-    }
 
     @OnCheckedChanged({R.id.ch1_rb, R.id.ch2_rb, R.id.ch3_rb, R.id.ch4_rb})
     public void radioButtonCheckChange(boolean isChecked) {
@@ -373,7 +389,8 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             }
         });
     }
-
+    //添加判断是否为空，为空则不进行后面校验步骤
+   private int s=1;
     private void doCalc() {
         for (int i = 0; i < chRbs.length; i++) {
             if (chRbs[i].isChecked()) {
@@ -383,7 +400,7 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
                 if (calibrationTypeSP[i].getSelectedItemId() == 0) {
                     try {
                         // android.util.Log.d("wlDebug", "is ?= " + smallPartADEdt[i].getText() + "sAD = " + smallPartADEdt[i].getText().equals(""));
-                        if (!smallPartADEdt[i].getText().toString().trim().equals("")) {
+                        if (!smallPartADEdt[i].getText().toString().trim().equals("")&&datebig<datesmall) {
                             double y1 = Double.valueOf(smallPartEdt[i].getText().toString().trim());
                             int x1 = Integer.parseInt(smallPartADEdt[i].getText().toString().trim(), 10);
                             k = Double.valueOf(kValueEdt[i].getText().toString().trim()) / 1000;
@@ -392,7 +409,8 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
                             BigDecimal _c = new BigDecimal(c + "");
                             // measureValueEdt[i].setText(_c + "");
                             compensationValueEdt[i].setText(String.valueOf(Arith.round(c, 4)));
-                        } else if (!bigPartADEdt[i].getText().equals("")) {
+                            s=1;
+                        } else if (!bigPartADEdt[i].getText().equals("")&&datebig>datesmall) {
                             double y2 = Double.valueOf(bigPartCHEdt[i].getText().toString().trim());
                             int x2 = Integer.parseInt(bigPartADEdt[i].getText().toString().trim(), 10);
                             k = Double.valueOf(kValueEdt[i].getText().toString().trim()) / 1000;
@@ -402,10 +420,13 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
                             // measureValueEdt[i].setText(_c + "");
 //                            compensationValueEdt[i].setText(decimalFormat.format(_c));
                             compensationValueEdt[i].setText(String.valueOf(Arith.round(c, 4)));
+                            s=1;
                         }
+
                     } catch (NumberFormatException e) {
                         android.util.Log.d("wlDebug", "---------", e);
                         Toast.makeText(this, "请先取得对应件的AD值", Toast.LENGTH_SHORT).show();
+                        s=0;
                     }
                 }
                 // 双键校准;
@@ -434,16 +455,19 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
                         kValueEdt[i].setText(String.valueOf(bg));
                         android.util.Log.d("wlDebug", "c = " + c);
                         compensationValueEdt[i].setText(String.valueOf(Arith.round(c, 4)));
-
+                        s=1;
                     } catch (NumberFormatException e) {
                         Toast.makeText(this, "请先取得对应件的AD值", Toast.LENGTH_SHORT).show();
+                        s=0;
                     } catch (ArithmeticException e) {
                         Toast.makeText(this, "大小件取值无差异", Toast.LENGTH_SHORT).show();
+                        s=0;
                     }
                 }
             }
             doCalcMeasureValue(currentCHADValue);
         }
+
     }
 
 }

@@ -33,7 +33,6 @@ public class CodeDetailActivity extends BaseActivity implements ForceCalibration
     @BindView(R.id.tab_tl_indicator)
     protected TabLayout mTlIndicator;
 
-
     @BindView(R.id.tab_vp)
     protected ViewPager mVp;
     /************** Adapter ***************/

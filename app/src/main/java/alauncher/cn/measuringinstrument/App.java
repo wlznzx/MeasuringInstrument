@@ -15,6 +15,7 @@ import org.greenrobot.greendao.database.Database;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import alauncher.cn.measuringinstrument.bean.AnalysisPatternBean;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
@@ -70,8 +71,8 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        // 初始化数据库;
         DaoMaster.DevOpenHelper openHelper = new DBOpenHelper(this, "mi.db");
-
         Database db = openHelper.getWritableDb();
         DaoMaster daoMaster = new DaoMaster(db);
         mDaoSession = daoMaster.newSession();
@@ -85,6 +86,8 @@ public class App extends MultiDexApplication {
 
 //        Beta.autoCheckUpgrade = true;
         // Beta.canShowUpgradeActs.add(SystemManagementActivity.class);
+
+        // 这一段，就是集成了Bugly;
         Beta.enableNotification = false;
         Beta.upgradeListener = new UpgradeListener() {
             @Override
@@ -189,7 +192,6 @@ public class App extends MultiDexApplication {
             _operator.setEmail("");
             getDaoSession().getUserDao().insert(_operator);
         }
-
 
         if (getDaoSession().getRememberPasswordBeanDao().load(App.SETTING_ID) == null) {
             RememberPasswordBean _bean = new RememberPasswordBean();
@@ -324,22 +326,6 @@ public class App extends MultiDexApplication {
                 getDaoSession().getStoreBean2Dao().insert(_bean);
             }
 
-            /*
-            if (getDaoSession().getTriggerConditionBeanDao().queryBuilder().where(TriggerConditionBeanDao.Properties.CodeID.eq(i)).list().size() == 0) {
-                for (int j = 1; j <= 4; j++) {
-                    TriggerConditionBean _bean = new TriggerConditionBean();
-                    _bean.setMIndex(j);
-                    _bean.setCodeID(i);
-                    _bean.setConditionName("条件" + j);
-                    _bean.setIsScale(false);
-                    _bean.setScale(0.9);
-                    _bean.setUpperLimit(100);
-                    _bean.setLowerLimit(-100);
-                    getDaoSession().getTriggerConditionBeanDao().insert(_bean);
-                }
-            }
-            */
-
             // 初始化分组;
             if (getDaoSession().getParameterBeanDao().load((long) i) == null) {
                 for (int j = 1; j <= 4; j++) {
@@ -367,7 +353,7 @@ public class App extends MultiDexApplication {
 
             if (getDaoSession().getCodeBeanDao().load((long) (i)) == null) {
                 CodeBean _bean = new CodeBean();
-                _bean.setCodeID(i);
+                _bean.setId(Long.valueOf(i));
                 _bean.setName("程序" + i);
                 _bean.setMachineTool(getResources().getString(R.string.machine_tool) + i);
                 _bean.setParts(getResources().getString(R.string.spare_parts) + i);
@@ -391,6 +377,7 @@ public class App extends MultiDexApplication {
                     _bean.setEnable(true);
                     Long pID = getDaoSession().getParameterBean2Dao().insertOrReplace(_bean);
                     for (int z = 0; z < 4; z++) {
+                        // 给每个参数赋分组初值;
                         GroupBean2 groupBean2 = new GroupBean2();
                         groupBean2.setName(String.valueOf(z + 1));
                         groupBean2.setDescribe(String.valueOf(z));
@@ -399,6 +386,18 @@ public class App extends MultiDexApplication {
                         groupBean2.setPID(pID);
                         getDaoSession().getGroupBean2Dao().insertOrReplace(groupBean2);
                     }
+                    // 初始化分析模式;
+                    AnalysisPatternBean _analysisPatternBean = new AnalysisPatternBean();
+                    _analysisPatternBean.setPID(pID);
+                    _analysisPatternBean.setIsAAuto(true);
+                    _analysisPatternBean.setIsLineAuto(true);
+                    _analysisPatternBean.setUclX(0);
+                    _analysisPatternBean.setLclX(0);
+                    _analysisPatternBean.setUclR(0);
+                    _analysisPatternBean.setLclR(0);
+                    _analysisPatternBean.setA3(0);
+                    _analysisPatternBean.set_a3(0);
+                    App.getDaoSession().getAnalysisPatternBeanDao().insert(_analysisPatternBean);
                 }
             }
         }
@@ -407,314 +406,315 @@ public class App extends MultiDexApplication {
         // initTestDatas();
         // initTestDatas2();
     }
-
+    /*
     public void initTestDatas() {
         Arrays.asList("23.9896", "24", "24", "24");
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9914", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9914", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.992", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.992", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.992", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.992", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
         // 6
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9914", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9914", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9906", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9906", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         // 11
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9912", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9912", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9922", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9922", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9912", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9912", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         // 21
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9912", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9912", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9914", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9914", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.991", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.991", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         // 31
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.99", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9894", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9894", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9896", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9898", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9902", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("23.9912", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false,"- -", "- -", "- -",Arrays.asList("23.9912", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
     }
-
+    */
 
     public void initTestDatas2() {
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0088005065918", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0088005065918", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0117988586426", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0117988586426", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0066986083984", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0066986083984", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0082015991211", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0082015991211", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0122985839844", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0122985839844", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
         // 6
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0084991455078", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0084991455078", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0127983093262", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0127983093262", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0089988708496", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0089988708496", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0083999633789", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0083999633789", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0088996887207", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0088996887207", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         // 11
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0099983215332", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0099983215332", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0084991455078", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0084991455078", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0099983215332", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0099983215332", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0124015808105", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0124015808105", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0102996826172", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0102996826172", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0136985778809", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0136985778809", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.013801574707", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.013801574707", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.013801574707", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.013801574707", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0139007568359", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0139007568359", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
 
         App.getDaoSession().getResultBean2Dao().insert(new ResultBean2(null, 1, "admin",
                 System.currentTimeMillis(), "wkid", "wkex", "eventid", "ev",
-                "OK", false, Arrays.asList("36.0139007568359", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
+                "OK", false, "- -", "- -", "- -", Arrays.asList("36.0139007568359", "24", "24", "24"), Arrays.asList("m1", "m2", "m3", "m4"), Arrays.asList("1", "2", "3", "4"),
                 null, null, null, null, true));
     }
+
 }

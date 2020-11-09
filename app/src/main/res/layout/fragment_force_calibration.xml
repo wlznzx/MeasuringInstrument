@@ -23,13 +23,21 @@
             android:text="@string/parameter"/>
 
         <TextView
+            android:id="@+id/m_value_tv1"
+            style="@style/BaseTabletTextStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="@string/ratio"/>
+
+        <TextView
             android:id="@+id/scale_tv"
             style="@style/BaseTabletTextStyle"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:inputType="numberSigned|numberDecimal"
-            android:text="@string/scale" />
+            android:text="@string/is_scale" />
 
         <TextView
             android:id="@+id/upper_limit_tv"

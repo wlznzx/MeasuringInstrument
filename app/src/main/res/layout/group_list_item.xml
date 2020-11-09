@@ -18,8 +18,8 @@
     <TextView
         android:id="@+id/upper_limit_tv"
         style="@style/TextStyle"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="72dp"
+        android:layout_height="31dp"
         android:layout_weight="1"
         android:text="@string/upper_limit_not_space" />
 
@@ -27,7 +27,7 @@
         android:id="@+id/lower_limit_tv"
         style="@style/TextStyle"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="31dp"
         android:layout_weight="1"
         android:text="@string/lower_limit_not_space" />
 

@@ -6,9 +6,11 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -78,6 +82,8 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
 
+
+
 public class Measuring2Activity extends BaseOActivity implements MeasuringActivityView, AdditionalDialog.AdditionDialogInterface {
 
     @BindView(R.id.value_btn)
@@ -97,6 +103,9 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
 
     @BindView(R.id.r_chart)
     public LineChart chart;
+
+    @BindView(R.id.chartTitle)
+    public TextView title;
 
     private double[] curMValues;
 
@@ -137,6 +146,10 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
     private final int HORIZONTAL_MODE_ONE = 0;
 
     private final int HORIZONTAL_MODE_TWO = 1;
+
+    protected Typeface tfRegular;
+
+    Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +200,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             xAxis.setDrawGridLines(false);
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setTextColor(Color.WHITE);
+
         }
         YAxis yAxis;
         {   // // Y-Axis Style // //
@@ -213,6 +227,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         mMeasuringAdapter = new MeasuringAdapter();
         measureRV.setAdapter(mMeasuringAdapter);
         mMeasuringAdapter.notifyDataSetChanged();
+
 
         if (mMeasureConfigurationBean.getMeasureMode() == HORIZONTAL_MODE_ONE) {
             modeTitle.setVisibility(View.VISIBLE);
@@ -265,6 +280,21 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         inValue = false;
         mMeasuringPresenter.stopMeasuring();
     }
+    /*用来关闭上个提示框*/
+    public  void  Toastxiaoxi(String xx)
+    {
+        if(toast!=null)
+        {
+            toast.cancel();//注销之前显示的那条信息
+            toast=null;//这里要注意上一步相当于隐藏了信息，mtoast并没有为空，我们强制是他为空
+        }
+        if(toast==null){
+            toast=Toast.makeText(this, xx , Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+
 
     private boolean doSave(boolean isManual) {
 
@@ -282,9 +312,13 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         String _result = mMeasuringPresenter.saveResult(curMValues, mAddInfoBean, isManual);
         if (_result.equals("NoSave")) {
             // Toast.makeText(this, "测试结果不在自动保存区间内.", Toast.LENGTH_SHORT).show();
+            //getResources().getString(R.string.step_tips)  取当前步骤
+
             return false;
         } else if (_result.equals("OK")) {
-            Toast.makeText(this, "测试结果保存成功.", Toast.LENGTH_SHORT).show();
+
+            Toastxiaoxi("测试结果保存成功");
+            /*Toast.makeText(this, "测试结果保存成功." , Toast.LENGTH_SHORT).show();*/
         }
         /*
         _bean.setUsrNum(_bean.getUsrNum() - 1);
@@ -513,6 +547,8 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
 
         // 4. 如果当前是单步，那么就是单步；
         if (mMeasuringPresenter.isCurStepHaveProcess()) {
+
+
             if (mMeasuringPresenter.getMeasureState() == MeasuringPresenter.IN_PROCESS_VALUE_BEEN_TAKEN_MODE) {
                 // android.util.Log.d("wlDebug", "do 1.");
                 doSave(true);
@@ -530,6 +566,9 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
                 }
             }
         } else {
+
+            Toastxiaoxi(saveTv.getText()+"成功！");
+            /*Toast.makeText(this, ""+saveTv.getText()+"成功！" , Toast.LENGTH_SHORT).show();*/
             doSave(true);
         }
     }
@@ -607,7 +646,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             holder.setIsRecyclable(false);
             holder.setText(R.id.show_item_tv, "M" + (_bean.getSequenceNumber() + 1));
             holder.setText(R.id.describe_tv, _bean.getDescribe());
-
+           /* title.setText("M" + (_bean.getSequenceNumber() + 1)+"趋势图");*/
             if (mMeasureConfigurationBean.getMeasureMode() == HORIZONTAL_MODE_ONE) {
                 if (mMValueViewLandscapes[position] == null) {
                     mMValueViewLandscapes[position] = holder.getView(R.id.m_value_view);
@@ -656,6 +695,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
             dialog.show();
+
         }
 
         //第二个执行方法,在onPreExecute()后执行，用于后台任务,不可在此方法内修改UI
@@ -668,6 +708,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
                 e.printStackTrace();
             }
             List<ResultBean2> _datas = getResultBean2s();
+          /*  title.setText(ParameterBean2Dao.Properties.SequenceNumber+"");*/
             if (_datas == null) return null;
             return ybyxtDatas(_datas);
         }
@@ -678,20 +719,34 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         @Override
         protected void onProgressUpdate(Integer... progresses) {
         }
+            /*上、下公差获取值*/
+        private LimitLine getLimitLine(float value, String str) {
+            LimitLine ll1 = new LimitLine(value, str);
+            ll1.setLineWidth(2f);
+            ll1.setLineColor(Color.RED);
+            ll1.enableDashedLine(10f, 10f, 0f);
+            ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+            ll1.setTextSize(10f);
+//            ll1.setTypeface(tfRegular);
+            return ll1;
+        }
+
+
 
         /*doInBackground返回时触发，换句话说，就是doInBackground执行完后触发
         这里的result就是上面doInBackground执行后的返回值，所以这里是"后台任务执行完毕"  */
         @Override
         protected void onPostExecute(Object result) {
             if (result != null) {
+
                 chart.clear();
                 YBYXTBean _bean = (YBYXTBean) result;
                 YAxis yAxis = chart.getAxisLeft();
                 yAxis.setAxisMaximum(_bean.maxY);
                 yAxis.setAxisMinimum(_bean.minY);
-                // yAxis.removeAllLimitLines();
-                // yAxis.addLimitLine(getLimitLine(_bean.ucl, "上公差线"));
-                // yAxis.addLimitLine(getLimitLine(_bean.lcl, "下公差线"));
+                yAxis.removeAllLimitLines();
+                yAxis.addLimitLine(getLimitLine(_bean.ucl, "上公差线"));
+                yAxis.addLimitLine(getLimitLine(_bean.lcl, "下公差线"));
                 XAxis xAxis = chart.getXAxis();
                 xAxis.setAxisMinimum(0);
                 if (_bean.mValues.size() < 10) xAxis.setAxisMaximum(10);
@@ -765,6 +820,9 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         double result = 0;
         try {
             result = Double.parseDouble(_bean.getMeasurementValues().get(index));
+            //测量界面趋势图标题
+            index=index+1;
+            title.setText("M" +index+"趋势图");
         } catch (Exception e) {
 
         }
@@ -780,9 +838,14 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         if (chart.getData() == null) {
             LineDataSet dataSet = new LineDataSet(values, "Label");
             initLineDataSet(dataSet);
+
             // create a data object with the data sets
             LineData data = new LineData(dataSet);
             chart.setData(data);
+            //图上显示所有数据点的值
+            dataSet.setValueTextColor(Color.WHITE);
+            dataSet.setDrawValues(true);
+
         } else {
             LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
             set1.setValues(values);
@@ -798,10 +861,14 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
     }
 
     private void initLineDataSet(LineDataSet set1) {
+
         // create a dataset and give it a type
         set1.setDrawIcons(false);
         // draw dashed line 设置虚线;
         // set1.enableDashedLine(10f, 5f, 0f);
+
+        set1.setDrawValues(true);
+        //设置折线图每个数值显示
 
         // black lines and points
         set1.setColor(Color.WHITE);
@@ -820,6 +887,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         set1.setFormSize(15.f);
 
         // text size of values
+
         set1.setValueTextSize(9f);
         set1.setCubicIntensity(0.05f);
 
@@ -848,7 +916,11 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         } else {
             set1.setFillColor(Color.BLACK);
         }
+
+
+
     }
+
 
     class YBYXTBean {
         // M数据；

@@ -1,6 +1,9 @@
 package alauncher.cn.measuringinstrument.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,10 +12,17 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
+import org.greenrobot.greendao.database.Database;
+import org.w3c.dom.Text;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
@@ -22,6 +32,7 @@ import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.bean.RememberPasswordBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
+import alauncher.cn.measuringinstrument.utils.BuildUtils;
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
@@ -38,6 +49,9 @@ public class LoginActivity extends BaseOActivity {
     @BindView(R.id.login_btn)
     public Button loginBtn;
 
+    @BindView(R.id.textView2)
+    public EditText textView2;
+
     @BindView(R.id.is_remember_cb)
     public CheckBox isRemeberCB;
 
@@ -45,6 +59,7 @@ public class LoginActivity extends BaseOActivity {
 
     private List<User> users;
 
+    public static String nowpassword;
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +101,15 @@ public class LoginActivity extends BaseOActivity {
             }
         }).start();
         */
+        Context cox = getApplicationContext();
+        textView2.setText(BuildUtils.packageName(cox));
+
     }
+
+
+
+
+
 
     private void tPostgreSQL() {
         Connection c = null;
@@ -144,9 +167,51 @@ public class LoginActivity extends BaseOActivity {
 
     private void goSQL() {
     }
+    public void getTodaypassword()
+    {
+        Date now=new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
+        String tablename=dateFormat.format(now);
+        int riqiSUM = Integer.parseInt(tablename);
+        riqiSUM = (riqiSUM * 6 - 12345);
+        int ab = riqiSUM /1000;
+        String riqis = String.valueOf(riqiSUM);
+        char riqi[] = riqis.toCharArray();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < riqis.length(); i++)
+        {
+            if (i!=riqis.length())
+            {
+                sb.append(riqi[riqis.length()-i-1]);
+            }
+        }
+        int dz = Integer.valueOf(sb.toString());
+        dz=dz + ab;
+        String Sdz = String.valueOf(dz);
+        nowpassword=Sdz;
+
+    }
+
+
 
     @OnClick(R.id.login_btn)
     public void onLogin(View v) {
+        getTodaypassword();
+        User _user = new User();
+        _user.setAccout("admin");
+        _user.setPassword(nowpassword);
+        _user.setName("管理员");
+        _user.setStatus(0);
+        _user.setId("1");
+        _user.setLimit(0);
+        _user.setEmail("");
+       App.getDaoSession().getUserDao().update(_user);
+//        String sql = "update user set Password = "+nowpassword+" where user.ID = 1";
+//        db.execSQL(sql);
+
+
+
         String accoutStr = loginUserNameEdt.getText().toString().trim();
         if (accoutStr == null || accoutStr.equals("")) {
             Toast.makeText(this, R.string.username_notnull, Toast.LENGTH_SHORT).show();
@@ -158,14 +223,14 @@ public class LoginActivity extends BaseOActivity {
             return;
         }
 
-        User _user;
-        _user = mUserDao.load(accoutStr);
-        if (_user == null) {
+        User _user2;
+        _user2 = mUserDao.load(accoutStr);
+        if (_user2 == null) {
             Toast.makeText(this, R.string.user_not_exist, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (!_user.getPassword().equals(passwordStr)) {
+        if (!_user2.getPassword().equals(passwordStr)) {
             Toast.makeText(this, R.string.password_error, Toast.LENGTH_SHORT).show();
             return;
         }

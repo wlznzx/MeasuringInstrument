@@ -816,7 +816,6 @@ public class SPCStatisticalActivity extends BaseOActivity {
         ppu = (upperValue - _bean.averageValue) / (3 * deviation2);
         ppk = Math.min(PPKl, PPKu);
 
-
         _bean.cp = cp;
         _bean.pp = pp;
         _bean.ppl = ppl;

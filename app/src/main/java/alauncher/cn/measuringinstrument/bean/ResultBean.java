@@ -48,9 +48,9 @@ public class ResultBean {
 
     @Generated(hash = 573637926)
     public ResultBean(Long id, long codeID, String handlerAccout, long timeStamp,
-            String workid, String workid_extra, String eventid, String event, String result,
-            double m1, double m2, double m3, double m4, String m1_group, String m2_group,
-            String m3_group, String m4_group) {
+                      String workid, String workid_extra, String eventid, String event, String result,
+                      double m1, double m2, double m3, double m4, String m1_group, String m2_group,
+                      String m3_group, String m4_group) {
         this.id = id;
         this.codeID = codeID;
         this.handlerAccout = handlerAccout;
@@ -74,7 +74,7 @@ public class ResultBean {
     public ResultBean() {
     }
 
-    public ResultBean(double pM1){
+    public ResultBean(double pM1) {
         this.m1 = pM1;
     }
 

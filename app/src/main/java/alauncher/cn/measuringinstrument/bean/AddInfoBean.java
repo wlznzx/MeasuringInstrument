@@ -18,6 +18,12 @@ public class AddInfoBean {
 
     private String work;
 
+    private String mtype;
+
+    private String machineinfo;
+
+    private String processNo;
+
     public String getEvent() {
         return event;
     }
@@ -56,5 +62,29 @@ public class AddInfoBean {
 
     public void setAutoShow(boolean autoShow) {
         isAutoShow = autoShow;
+    }
+
+    public String getMtype() {
+        return mtype;
+    }
+
+    public void setMtype(String mtype) {
+        this.mtype = mtype;
+    }
+
+    public String getMachineinfo() {
+        return machineinfo;
+    }
+
+    public void setMachineinfo(String machineinfo) {
+        this.machineinfo = machineinfo;
+    }
+
+    public String getProcessNo() {
+        return processNo;
+    }
+
+    public void setProcessNo(String processNo) {
+        this.processNo = processNo;
     }
 }

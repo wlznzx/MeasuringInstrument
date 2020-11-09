@@ -679,9 +679,15 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         if (bean != null) {
             _bean.setEvent(bean.getEvent());
             _bean.setWorkID(bean.getWorkid());
+            _bean.setMType(bean.getMtype());
+            _bean.setMachineInfo(bean.getMachineinfo());
+            _bean.setProcessNo(bean.getProcessNo());
         } else {
             _bean.setEvent("- -");
             _bean.setWorkID("- -");
+            _bean.setMType("- -");
+            _bean.setMachineInfo("- -");
+            _bean.setProcessNo("- -");
         }
         Log.d("wlDebug", "save bean = " + _bean.toString());
         mForceCalibrationBean.setUsrNum(mForceCalibrationBean.getUsrNum() - 1);

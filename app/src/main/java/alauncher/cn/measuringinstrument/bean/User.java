@@ -28,9 +28,12 @@ public class User {
 
     public int limit;
 
-    @Generated(hash = 668259641)
+    public long useAuthorityGroupID = -1;
+
+    @Generated(hash = 1244145118)
     public User(String accout, @NotNull String name, @NotNull String password,
-            int status, String email, String id, int limit) {
+            int status, String email, String id, int limit,
+            long useAuthorityGroupID) {
         this.accout = accout;
         this.name = name;
         this.password = password;
@@ -38,6 +41,7 @@ public class User {
         this.email = email;
         this.id = id;
         this.limit = limit;
+        this.useAuthorityGroupID = useAuthorityGroupID;
     }
 
     @Generated(hash = 586692638)
@@ -92,6 +96,22 @@ public class User {
         this.id = id;
     }
 
+    public int getLimit() {
+        return this.limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public long getUseAuthorityGroupID() {
+        return this.useAuthorityGroupID;
+    }
+
+    public void setUseAuthorityGroupID(long useAuthorityGroupID) {
+        this.useAuthorityGroupID = useAuthorityGroupID;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -101,14 +121,8 @@ public class User {
                 ", status=" + status +
                 ", email='" + email + '\'' +
                 ", id='" + id + '\'' +
+                ", limit=" + limit +
+                ", useAuthorityGroupID=" + useAuthorityGroupID +
                 '}';
-    }
-
-    public int getLimit() {
-        return this.limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
     }
 }

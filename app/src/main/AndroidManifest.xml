@@ -92,7 +92,21 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".view.Code2Activity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".view.AccoutManagementActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.AuthorityManagementActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -119,7 +133,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".view.AnalysisPatternActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".view.Statistical2Activity"
             android:windowSoftInputMode="adjustResize|stateHidden">
@@ -209,6 +229,14 @@
 
         <activity
             android:name=".view.CodeDetialActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".view.AuthorityDetailActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />

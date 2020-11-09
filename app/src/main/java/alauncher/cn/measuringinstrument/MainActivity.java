@@ -18,9 +18,14 @@ import java.util.List;
 
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
+import alauncher.cn.measuringinstrument.bean.AuthorityBean;
+import alauncher.cn.measuringinstrument.bean.AuthorityGroupBean;
+import alauncher.cn.measuringinstrument.database.greenDao.db.AuthorityBeanDao;
+import alauncher.cn.measuringinstrument.utils.DialogUtils;
 import alauncher.cn.measuringinstrument.view.AccoutManagementActivity;
+import alauncher.cn.measuringinstrument.view.AuthorityManagementActivity;
 import alauncher.cn.measuringinstrument.view.CalibrationActivity;
-import alauncher.cn.measuringinstrument.view.CodeActivity;
+import alauncher.cn.measuringinstrument.view.Code2Activity;
 import alauncher.cn.measuringinstrument.view.Data2Activity;
 import alauncher.cn.measuringinstrument.view.LoginActivity;
 import alauncher.cn.measuringinstrument.view.Measuring2Activity;
@@ -40,9 +45,56 @@ public class MainActivity extends BaseOActivity {
     @BindView(R.id.rv)
     RecyclerView rv;
 
+    private AuthorityGroupBean mAuthorityGroupBean;
+
+    private List<MainInfo> mMainInfo = new ArrayList();
+    private List<MainInfo> useMainInfo = new ArrayList();
+
+    private MainLayoutAdapter mMainLayoutAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 初始化所有的
+        {
+            mMainInfo.add(new MainInfo(R.string.measuring, R.drawable.equalizer,0));
+            mMainInfo.add(new MainInfo(R.string.data_query, R.drawable.find_in_page,1));
+            mMainInfo.add(new MainInfo(R.string.parameter_management, R.drawable.functions,2));
+            mMainInfo.add(new MainInfo(R.string.calibration, R.drawable.straighten,3));
+            mMainInfo.add(new MainInfo(R.string.user_management, R.drawable.account_box,4));
+            mMainInfo.add(new MainInfo(R.string.authority_management, R.drawable.authority,5));
+            mMainInfo.add(new MainInfo(R.string.program_management, R.drawable.code,6));
+            mMainInfo.add(new MainInfo(R.string.system_management, R.drawable.phonelink_setup,7));
+            mMainInfo.add(new MainInfo(R.string.spc_analysis, R.drawable.show_chart,8));
+            mMainInfo.add(new MainInfo(R.string.statistical_report, R.drawable.assignment,9));
+            mMainInfo.add(new MainInfo(R.string.logout, R.drawable.logout_96,10));
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        android.util.Log.d("alauncher","mUser = " + mUser.toString());
+        mAuthorityGroupBean = App.getDaoSession().getAuthorityGroupBeanDao().load(Long.valueOf(mUser.getUseAuthorityGroupID()));
+        useMainInfo.clear();
+        for(MainInfo info : mMainInfo){
+            AuthorityBean _bean = null;
+            if(mAuthorityGroupBean != null){
+                _bean = App.getDaoSession().getAuthorityBeanDao().queryBuilder()
+                        .where(AuthorityBeanDao.Properties.Id.eq(String.valueOf(info.id))
+                                ,AuthorityBeanDao.Properties.GroupID.eq(mAuthorityGroupBean.getId())).unique();
+            }
+            if(_bean == null){
+                // 默认打开权限;
+            } else {
+                if(!_bean.getAuthorized()){
+                    continue;
+                }
+            }
+            useMainInfo.add(info);
+        }
+        mMainLayoutAdapter.setDatas(useMainInfo);
+        mMainLayoutAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -52,31 +104,32 @@ public class MainActivity extends BaseOActivity {
 
     @Override
     protected void initView() {
-        List<MainInfo> _datas = new ArrayList();
-        _datas.add(new MainInfo(R.string.measuring, R.drawable.equalizer));
-        try {
-            if (App.getDaoSession().getUserDao().load(App.handlerAccout).getLimit() < 2) {
-                _datas.add(new MainInfo(R.string.data_query, R.drawable.find_in_page));
-                _datas.add(new MainInfo(R.string.parameter_management, R.drawable.functions));
-                _datas.add(new MainInfo(R.string.calibration, R.drawable.straighten));
-                _datas.add(new MainInfo(R.string.user_management, R.drawable.account_box));
-                _datas.add(new MainInfo(R.string.program_management, R.drawable.code));
-                _datas.add(new MainInfo(R.string.system_management, R.drawable.phonelink_setup));
-                // _datas.add(new MainInfo(R.string.store, R.drawable.archive));
-                _datas.add(new MainInfo(R.string.spc_analysis, R.drawable.show_chart));
-                _datas.add(new MainInfo(R.string.statistical_report, R.drawable.assignment));
-                _datas.add(new MainInfo(R.string.logout, R.drawable.logout_96));
-            }
-        } catch (NullPointerException e) {
 
-        }
-        MainLayoutAdapter _adapter = new MainLayoutAdapter(_datas);
+//        List<MainInfo> _datas = new ArrayList();
+//        _datas.add(new MainInfo(R.string.measuring, R.drawable.equalizer,0));
+//        try {
+//            if (App.getDaoSession().getUserDao().load(App.handlerAccout).getLimit() < 2) {
+//                _datas.add(new MainInfo(R.string.data_query, R.drawable.find_in_page,0));
+//                _datas.add(new MainInfo(R.string.parameter_management, R.drawable.functions,1));
+//                _datas.add(new MainInfo(R.string.calibration, R.drawable.straighten,2));
+//                _datas.add(new MainInfo(R.string.user_management, R.drawable.account_box,3));
+//                _datas.add(new MainInfo(R.string.authority_management, R.drawable.authority,4));
+//                _datas.add(new MainInfo(R.string.program_management, R.drawable.code,5));
+//                _datas.add(new MainInfo(R.string.system_management, R.drawable.phonelink_setup,6));
+//                // _datas.add(new MainInfo(R.string.store, R.drawable.archive));
+//                _datas.add(new MainInfo(R.string.spc_analysis, R.drawable.show_chart,7));
+//                _datas.add(new MainInfo(R.string.statistical_report, R.drawable.assignment,8));
+//                _datas.add(new MainInfo(R.string.logout, R.drawable.logout_96,9));
+//            }
+//        } catch (NullPointerException e) {
+//
+//        }
+        mMainLayoutAdapter = new MainLayoutAdapter(useMainInfo);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         rv.addItemDecoration(new RecyclerItemDecoration(24, 3));
         rv.setLayoutManager(layoutManager);
-        rv.setAdapter(_adapter);
-
+        rv.setAdapter(mMainLayoutAdapter);
 
         actionIV.setImageResource(R.drawable.power_button);
         actionIV.setOnClickListener(new View.OnClickListener() {
@@ -143,10 +196,12 @@ public class MainActivity extends BaseOActivity {
     class MainInfo {
         public int strID;
         public int drawableID;
+        public int id;
 
-        public MainInfo(int strID, int drawableID) {
+        public MainInfo(int strID, int drawableID, int pid) {
             this.strID = strID;
             this.drawableID = drawableID;
+            this.id = pid;
         }
     }
 
@@ -156,6 +211,10 @@ public class MainActivity extends BaseOActivity {
 
         public MainLayoutAdapter(List<MainInfo> pDatas) {
             datas = pDatas;
+        }
+
+        public void setDatas(List<MainInfo> datas) {
+            this.datas = datas;
         }
 
         @NonNull
@@ -171,7 +230,25 @@ public class MainActivity extends BaseOActivity {
             holder.setOnClickListener(R.id.main_item, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    switch (position) {
+                    AuthorityBean _bean = null;
+                    // android.util.Log.d("alauncher","mAuthorityGroupBean = " + mAuthorityGroupBean.toString());
+                    if(mAuthorityGroupBean != null){
+                        _bean = App.getDaoSession().getAuthorityBeanDao().queryBuilder()
+                                .where(AuthorityBeanDao.Properties.Id.eq(String.valueOf(datas.get(position).id))
+                                        ,AuthorityBeanDao.Properties.GroupID.eq(mAuthorityGroupBean.getId())).unique();
+                    }
+                    if(_bean == null){
+                        // 默认打开权限;
+                    } else {
+                        if(!_bean.getAuthorized()){
+                            DialogUtils.showDialog(MainActivity.this,
+                                    getResources().getString(R.string.un_authorized),
+                                    getResources().getString(R.string.un_authorized_tips));
+                            return;
+                        }
+                    }
+                    switch (datas.get(position).id) {
+                        // 进入子菜单，鉴权；
                         case 0:
                             openActivty(Measuring2Activity.class, datas.get(position).strID);
                             break;
@@ -188,27 +265,29 @@ public class MainActivity extends BaseOActivity {
                             openActivty(AccoutManagementActivity.class, datas.get(position).strID);
                             break;
                         case 5:
-                            openActivty(CodeActivity.class, datas.get(position).strID);
+                            openActivty(AuthorityManagementActivity.class, datas.get(position).strID);
                             break;
                         case 6:
-                            openActivty(SystemManagementActivity.class, datas.get(position).strID);
+                            openActivty(Code2Activity.class, datas.get(position).strID);
                             break;
                         case 7:
-                            openActivty(SPCStatistical2Activity.class, datas.get(position).strID);
+                            openActivty(SystemManagementActivity.class, datas.get(position).strID);
                             break;
                         case 8:
-                            openActivty(Statistical2Activity.class, datas.get(position).strID);
+                            openActivty(SPCStatistical2Activity.class, datas.get(position).strID);
                             break;
                         case 9:
+                            openActivty(Statistical2Activity.class, datas.get(position).strID);
+                            break;
+                        case 10:
                             // openActivty(Statistical2Activity.class, datas.get(position).strID);
                             exitDialog();
                             break;
-                        case 10:
+                        case 11:
 //                            logout();
                         default:
                             break;
                     }
-
                 }
             });
         }
@@ -258,9 +337,9 @@ public class MainActivity extends BaseOActivity {
         builder.show();
         if (builder.getWindow() == null) return;
         builder.getWindow().setContentView(R.layout.exit_dialog);//设置弹出框加载的布局
-        TextView cancellationTV = (TextView) builder.findViewById(R.id.cancellation_btn);
-        TextView exitTV = (TextView) builder.findViewById(R.id.exit_btn);
-        TextView quitTV = (TextView) builder.findViewById(R.id.quit_btn);
+        TextView cancellationTV = builder.findViewById(R.id.cancellation_btn);
+        TextView exitTV = builder.findViewById(R.id.exit_btn);
+        TextView quitTV = builder.findViewById(R.id.quit_btn);
         cancellationTV.setOnClickListener(this::onClick);
         exitTV.setOnClickListener(this::onClick);
         quitTV.setOnClickListener(this::onClick);

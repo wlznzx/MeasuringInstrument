@@ -44,6 +44,8 @@ public abstract class BaseOActivity extends Activity implements BaseView {
     @BindView(R.id.action_bar_tips)
     public TextView actionTips;
 
+    public User mUser;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,10 +88,10 @@ public abstract class BaseOActivity extends Activity implements BaseView {
         super.onResume();
         /**/
         CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
-        User user = App.getDaoSession().getUserDao().load(App.handlerAccout);
+        mUser = App.getDaoSession().getUserDao().load(App.handlerAccout);
         String _name = App.handlerAccout;
-        if (user != null) {
-            _name = user.getName();
+        if (mUser != null) {
+            _name = mUser.getName();
         }
         if (_bean != null) {
             actionTips.setText(_name + " " + _bean.getName());

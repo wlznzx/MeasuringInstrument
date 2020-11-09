@@ -1,5 +1,7 @@
 package alauncher.cn.measuringinstrument.bean;
 
+import android.widget.EditText;
+
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -7,7 +9,9 @@ import org.greenrobot.greendao.annotation.Id;
 
 import java.util.List;
 
+import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.utils.StringConverter;
+import butterknife.BindView;
 
 @Entity
 public class ResultBean2 {
@@ -33,6 +37,12 @@ public class ResultBean2 {
 
     public boolean isSelect;
 
+    public String mType;
+
+    public String machineInfo;
+
+    private String processNo;
+
     @Convert(columnType = String.class, converter = StringConverter.class)
     private List<String> measurementValues;
 
@@ -56,12 +66,14 @@ public class ResultBean2 {
 
     private boolean isUploaded;
 
-    @Generated(hash = 1383205740)
-    public ResultBean2(Long id, long codeID, String handlerAccount, long timeStamp, String workID,
-            String workIDExtra, String eventID, String event, String result, boolean isSelect,
-            List<String> measurementValues, List<String> measurementGroup, List<String> mItems,
-            List<String> mDescribe, List<String> rValues, List<String> gValues, List<String> eValues,
-            boolean isUploaded) {
+    @Generated(hash = 1748277256)
+    public ResultBean2(Long id, long codeID, String handlerAccount, long timeStamp,
+                       String workID, String workIDExtra, String eventID, String event,
+                       String result, boolean isSelect, String mType, String machineInfo,
+                       String processNo, List<String> measurementValues,
+                       List<String> measurementGroup, List<String> mItems,
+                       List<String> mDescribe, List<String> rValues, List<String> gValues,
+                       List<String> eValues, boolean isUploaded) {
         this.id = id;
         this.codeID = codeID;
         this.handlerAccount = handlerAccount;
@@ -72,6 +84,9 @@ public class ResultBean2 {
         this.event = event;
         this.result = result;
         this.isSelect = isSelect;
+        this.mType = mType;
+        this.machineInfo = machineInfo;
+        this.processNo = processNo;
         this.measurementValues = measurementValues;
         this.measurementGroup = measurementGroup;
         this.mItems = mItems;
@@ -84,7 +99,6 @@ public class ResultBean2 {
 
     @Generated(hash = 1498620417)
     public ResultBean2() {
-
     }
 
     public Long getId() {
@@ -159,6 +173,30 @@ public class ResultBean2 {
         this.result = result;
     }
 
+    public boolean getIsSelect() {
+        return this.isSelect;
+    }
+
+    public void setIsSelect(boolean isSelect) {
+        this.isSelect = isSelect;
+    }
+
+    public String getMType() {
+        return this.mType;
+    }
+
+    public void setMType(String mType) {
+        this.mType = mType;
+    }
+
+    public String getMachineInfo() {
+        return this.machineInfo;
+    }
+
+    public void setMachineInfo(String machineInfo) {
+        this.machineInfo = machineInfo;
+    }
+
     public List<String> getMeasurementValues() {
         return this.measurementValues;
     }
@@ -181,33 +219,6 @@ public class ResultBean2 {
 
     public void setMItems(List<String> mItems) {
         this.mItems = mItems;
-    }
-
-    @Override
-    public String toString() {
-        return "ResultBean2{" +
-                "id=" + id +
-                ", codeID=" + codeID +
-                ", handlerAccount='" + handlerAccount + '\'' +
-                ", timeStamp=" + timeStamp +
-                ", workID='" + workID + '\'' +
-                ", workIDExtra='" + workIDExtra + '\'' +
-                ", eventID='" + eventID + '\'' +
-                ", event='" + event + '\'' +
-                ", result='" + result + '\'' +
-                ", measurementValues=" + measurementValues +
-                ", measurementGroup=" + measurementGroup +
-                ", mItems=" + mItems +
-                ", isSelect=" + isSelect +
-                '}';
-    }
-
-    public boolean getIsSelect() {
-        return this.isSelect;
-    }
-
-    public void setIsSelect(boolean isSelect) {
-        this.isSelect = isSelect;
     }
 
     public List<String> getMDescribe() {
@@ -248,5 +259,40 @@ public class ResultBean2 {
 
     public void setIsUploaded(boolean isUploaded) {
         this.isUploaded = isUploaded;
+    }
+
+    public String getProcessNo() {
+        return this.processNo;
+    }
+
+    public void setProcessNo(String processNo) {
+        this.processNo = processNo;
+    }
+
+    @Override
+    public String toString() {
+        return "ResultBean2{" +
+                "id=" + id +
+                ", codeID=" + codeID +
+                ", handlerAccount='" + handlerAccount + '\'' +
+                ", timeStamp=" + timeStamp +
+                ", workID='" + workID + '\'' +
+                ", workIDExtra='" + workIDExtra + '\'' +
+                ", eventID='" + eventID + '\'' +
+                ", event='" + event + '\'' +
+                ", result='" + result + '\'' +
+                ", isSelect=" + isSelect +
+                ", mType='" + mType + '\'' +
+                ", machineInfo='" + machineInfo + '\'' +
+                ", processNo='" + processNo + '\'' +
+                ", measurementValues=" + measurementValues +
+                ", measurementGroup=" + measurementGroup +
+                ", mItems=" + mItems +
+                ", mDescribe=" + mDescribe +
+                ", rValues=" + rValues +
+                ", gValues=" + gValues +
+                ", eValues=" + eValues +
+                ", isUploaded=" + isUploaded +
+                '}';
     }
 }

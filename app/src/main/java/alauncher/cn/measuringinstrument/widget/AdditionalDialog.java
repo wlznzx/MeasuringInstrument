@@ -30,6 +30,15 @@ public class AdditionalDialog extends Dialog {
     @BindView(R.id.eventid_edt)
     public EditText eventidEdt;
 
+    @BindView(R.id.m_type_edt)
+    public Spinner MTypeEdt;
+
+    @BindView(R.id.machine_info_edt)
+    public Spinner machineInfoEdt;
+
+    @BindView(R.id.process_no_edt)
+    public Spinner processNoEdt;
+
     @BindView(R.id.workpieceid_sp)
     public Spinner workpieceidSP;
 
@@ -87,6 +96,15 @@ public class AdditionalDialog extends Dialog {
 
         workpieceidSP.setAdapter(new ArrayAdapter<>(getContext(),
                 R.layout.step_spinner_item, getContext().getResources().getStringArray(R.array.workids)));
+
+        MTypeEdt.setAdapter(new ArrayAdapter<>(getContext(),
+                R.layout.step_spinner_item, getContext().getResources().getStringArray(R.array.m_type_array)));
+
+        machineInfoEdt.setAdapter(new ArrayAdapter<>(getContext(),
+                R.layout.step_spinner_item, getContext().getResources().getStringArray(R.array.machine_array)));
+
+        processNoEdt.setAdapter(new ArrayAdapter<>(getContext(),
+                R.layout.step_spinner_item, getContext().getResources().getStringArray(R.array.process_no_array)));
     }
 
     public interface AdditionDialogInterface {
@@ -106,6 +124,9 @@ public class AdditionalDialog extends Dialog {
                     _bean.setWork(mContext.getResources().getStringArray(R.array.workids)[(int) workpieceidSP.getSelectedItemId()]);
                     _bean.setEvent(eventidEdt.getText().toString().trim());
                     _bean.setEventid(eventidEdt.getText().toString().trim());
+                    _bean.setMtype(MTypeEdt.getSelectedItem().toString().trim());
+                    _bean.setMachineinfo(machineInfoEdt.getSelectedItem().toString().trim());
+                    _bean.setProcessNo(processNoEdt.getSelectedItem().toString().trim());
                     mAdditionDialogInterface.onAdditionSet(_bean);
                 }
                 break;

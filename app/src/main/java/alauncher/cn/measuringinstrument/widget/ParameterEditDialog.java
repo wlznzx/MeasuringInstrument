@@ -18,11 +18,13 @@ import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
+import alauncher.cn.measuringinstrument.bean.AnalysisPatternBean;
 import alauncher.cn.measuringinstrument.bean.GroupBean2;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.database.greenDao.db.GroupBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.utils.Arith;
+import alauncher.cn.measuringinstrument.view.AnalysisPatternActivity;
 import alauncher.cn.measuringinstrument.view.MGroup2Activity;
 import alauncher.cn.measuringinstrument.view.activity_view.DataUpdateInterface;
 import butterknife.BindView;
@@ -65,6 +67,9 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
 
     @BindView(R.id.show_item_sp)
     public Spinner showItemSP;
+
+    @BindView(R.id.analysis_pattern_btn)
+    public Button analysisPatternBtn;
 
     ParameterBean2 _bean;
 
@@ -131,6 +136,15 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
             }
         });
 
+        analysisPatternBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), AnalysisPatternActivity.class);
+                intent.putExtra("pID", _bean != null ? _bean.getId() : -1);
+                getContext().startActivity(intent);
+            }
+        });
+
         resolutionSP.setSelection(6, true);
         showItemSP.setSelection(mDatas.size() >= 10 ? 9 : mDatas.size());
         if (_bean != null) {
@@ -142,7 +156,7 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
             lowerToleranceValueEdt.setText(Arith.double2Str(_bean.getLowerToleranceValue()));
             deviationEdt.setText(Arith.double2Str(_bean.getDeviation()));
             formulaBtn.setText(_bean.getCode());
-            groupBtn.setText(R.string.grouping);
+            groupBtn.setText(R.string.m_group);
             isEnableSwitch.setChecked(_bean.getEnable());
         }
         // 每次进入参数设置,删除添加的数组;
@@ -212,6 +226,18 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
                     _bean2.setPID(pID);
                 }
                 App.getDaoSession().getGroupBean2Dao().updateInTx(_bean2List);
+                // 创建默认分析参数;
+                AnalysisPatternBean _analysisPatternBean = new AnalysisPatternBean();
+                _analysisPatternBean.setPID(pID);
+                _analysisPatternBean.setIsAAuto(true);
+                _analysisPatternBean.setIsLineAuto(true);
+                _analysisPatternBean.setUclX(0);
+                _analysisPatternBean.setLclX(0);
+                _analysisPatternBean.setUclR(0);
+                _analysisPatternBean.setLclR(0);
+                _analysisPatternBean.setA3(0);
+                _analysisPatternBean.set_a3(0);
+                App.getDaoSession().getAnalysisPatternBeanDao().insert(_analysisPatternBean);
             }
             return true;
         } catch (NumberFormatException e) {

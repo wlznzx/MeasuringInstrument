@@ -24,7 +24,7 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property CodeID = new Property(0, long.class, "codeID", true, "_id");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property MachineTool = new Property(2, String.class, "machineTool", false, "MACHINE_TOOL");
         public final static Property Parts = new Property(3, String.class, "parts", false, "PARTS");
@@ -45,7 +45,7 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"CODE_BEAN\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 0: codeID
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"NAME\" TEXT," + // 1: name
                 "\"MACHINE_TOOL\" TEXT," + // 2: machineTool
                 "\"PARTS\" TEXT," + // 3: parts
@@ -62,7 +62,11 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, CodeBean entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getCodeID());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
  
         String name = entity.getName();
         if (name != null) {
@@ -89,7 +93,11 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, CodeBean entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getCodeID());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
  
         String name = entity.getName();
         if (name != null) {
@@ -115,13 +123,13 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
 
     @Override
     public Long readKey(Cursor cursor, int offset) {
-        return cursor.getLong(offset + 0);
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public CodeBean readEntity(Cursor cursor, int offset) {
         CodeBean entity = new CodeBean( //
-            cursor.getLong(offset + 0), // codeID
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // machineTool
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // parts
@@ -133,7 +141,7 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
      
     @Override
     public void readEntity(Cursor cursor, CodeBean entity, int offset) {
-        entity.setCodeID(cursor.getLong(offset + 0));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setMachineTool(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setParts(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
@@ -143,14 +151,14 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
     
     @Override
     protected final Long updateKeyAfterInsert(CodeBean entity, long rowId) {
-        entity.setCodeID(rowId);
+        entity.setId(rowId);
         return rowId;
     }
     
     @Override
     public Long getKey(CodeBean entity) {
         if(entity != null) {
-            return entity.getCodeID();
+            return entity.getId();
         } else {
             return null;
         }
@@ -158,7 +166,7 @@ public class CodeBeanDao extends AbstractDao<CodeBean, Long> {
 
     @Override
     public boolean hasKey(CodeBean entity) {
-        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
+        return entity.getId() != null;
     }
 
     @Override

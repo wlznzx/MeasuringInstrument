@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.MeasureConfigurationBean;
+import alauncher.cn.measuringinstrument.database.greenDao.db.MeasureConfigurationBeanDao;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -63,7 +64,8 @@ public class MeasureConfigurationFragment extends Fragment {
 
 
     private void initView() {
-        mMeasureConfigurationBean = App.getDaoSession().getMeasureConfigurationBeanDao().load((long) App.getSetupBean().getCodeID());
+        mMeasureConfigurationBean = App.getDaoSession().getMeasureConfigurationBeanDao()
+                .queryBuilder().where(MeasureConfigurationBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID())).unique();
         chartShowSwitch.setChecked(mMeasureConfigurationBean.getIsShowChart());
         chartShowSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
