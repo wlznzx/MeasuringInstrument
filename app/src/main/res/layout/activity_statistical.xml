@@ -202,7 +202,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/delete_outline_24px"
-                android:text="@string/delete_result"
+                android:text="@string/export_result"
                 android:textColor="@android:color/white" />
         </FrameLayout>
     </LinearLayout>

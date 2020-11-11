@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="430dp"
     android:layout_height="match_parent"
     android:background="@drawable/dialog_corner_bg"
     android:orientation="vertical">
@@ -15,35 +15,40 @@
             android:id="@+id/user_dialog_title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:text="@string/add_user_title"
-            android:textSize="18sp" />
+            android:textColor="#38ADFF"
+            android:textSize="22sp" />
 
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:background="#E4E4E4" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/accout_user" />
+                android:layout_width="@dimen/dialog_tv_width"
+                android:text="@string/accout_user"
+                android:textColor="@android:color/black"/>
 
             <EditText
                 android:id="@+id/accout_edt"
                 style="@style/EdWordStyle"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dialog_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="4" />
+                android:layout_marginLeft="30dp" />
         </LinearLayout>
 
 
@@ -54,17 +59,17 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/full_name" />
+                android:layout_width="@dimen/dialog_tv_width"
+                android:text="@string/full_name"
+                android:textColor="@android:color/black"/>
 
             <EditText
                 android:id="@+id/fullname_edt"
                 style="@style/EdTextStyle"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dialog_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="4" />
+                android:layout_marginLeft="30dp" />
 
         </LinearLayout>
 
@@ -75,17 +80,17 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="@dimen/dialog_tv_width"
+                android:textColor="@android:color/black"
                 android:text="@string/password_user" />
 
             <EditText
                 android:id="@+id/password_edt"
                 style="@style/EdWordStyle"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dialog_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
+                android:layout_marginLeft="30dp"
                 android:inputType="textPassword" />
 
         </LinearLayout>
@@ -97,17 +102,17 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="@dimen/dialog_tv_width"
+                android:textColor="@android:color/black"
                 android:text="@string/repassword_user" />
 
             <EditText
                 android:id="@+id/repassword_edt"
                 style="@style/EdWordStyle"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dialog_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
+                android:layout_marginLeft="30dp"
                 android:inputType="textPassword" />
 
         </LinearLayout>
@@ -119,17 +124,16 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="@dimen/dialog_tv_width"
+                android:textColor="@android:color/black"
                 android:text="@string/limit" />
 
             <Spinner
                 android:id="@+id/limit_sp"
-                style="@style/SPTextStyle"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
+                android:layout_marginLeft="30dp"
                 android:entries="@array/limit_array" />
 
         </LinearLayout>
@@ -141,17 +145,16 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="@dimen/dialog_tv_width"
+                android:textColor="@android:color/black"
                 android:text="@string/status" />
 
             <Spinner
                 android:id="@+id/status_sp"
-                style="@style/SPTextStyle"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
+                android:layout_marginLeft="30dp"
                 android:entries="@array/position" />
 
         </LinearLayout>
@@ -163,17 +166,17 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="@dimen/dialog_tv_width"
+                android:textColor="@android:color/black"
                 android:text="@string/id" />
 
             <EditText
                 android:id="@+id/workpiece_edt"
                 style="@style/EdNumOnlyStyle"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dialog_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="4" />
+                android:layout_marginLeft="30dp" />
 
         </LinearLayout>
 
@@ -184,17 +187,17 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="@dimen/dialog_tv_width"
+                android:textColor="@android:color/black"
                 android:text="@string/email" />
 
             <EditText
                 android:id="@+id/email_edt"
                 style="@style/EdWordStyle"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dialog_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="4" />
+                android:layout_marginLeft="30dp" />
 
         </LinearLayout>
 

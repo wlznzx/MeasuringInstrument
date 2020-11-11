@@ -58,7 +58,7 @@ public class AnalysisPatternActivity extends BaseOActivity implements DataUpdate
     @Override
     protected void initView() {
         pID = getIntent().getLongExtra("pID", -1);
-        initBean();
+        actionTitleTV.setText(R.string.analysis_pattern);
     }
 
     @OnClick(R.id.save_btn)
@@ -86,7 +86,7 @@ public class AnalysisPatternActivity extends BaseOActivity implements DataUpdate
         bean.setLclR(0);
         bean.setA3(0);
         bean.set_a3(0);
-        App.getDaoSession().getAnalysisPatternBeanDao().insertOrReplace(bean);
+//        App.getDaoSession().getAnalysisPatternBeanDao().insertOrReplace(bean);
         dataUpdate();
     }
 
@@ -96,7 +96,6 @@ public class AnalysisPatternActivity extends BaseOActivity implements DataUpdate
     }
 
     private void initBean() {
-        bean = App.getDaoSession().getAnalysisPatternBeanDao().queryBuilder().where(AnalysisPatternBeanDao.Properties.PID.eq(pID)).unique();
         lineRG.check(bean.getIsLineAuto() ? R.id.auto_line_rb : R.id.line_rb);
         deviationRG.check(bean.getIsAAuto() ? R.id.deviation_auto_rb : R.id.deviation_rb);
         uclXEdt.setText(String.valueOf(bean.getUclX()));
@@ -105,5 +104,14 @@ public class AnalysisPatternActivity extends BaseOActivity implements DataUpdate
         lclREdt.setText(String.valueOf(bean.getLclR()));
         aEdt.setText(String.valueOf(bean.getA3()));
         _aEdt.setText(String.valueOf(bean.get_a3()));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        App.getDaoSession().clear();
+        bean = App.getDaoSession().getAnalysisPatternBeanDao().queryBuilder().where(AnalysisPatternBeanDao.Properties.PID.eq(pID)).unique();
+        initBean();
+        android.util.Log.d("alauncher","AnalysisPatternActivity onResume");
     }
 }

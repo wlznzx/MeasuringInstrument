@@ -208,7 +208,7 @@ public class App extends MultiDexApplication {
             _bean.setId(SETTING_ID);
             _bean.setFactoryCode(getResources().getString(R.string.default_factory_code));
             _bean.setFactoryName(getResources().getString(R.string.default_factory_name));
-            _bean.setManufacturer(getResources().getString(R.string.manufacturer));
+            _bean.setManufacturer(getResources().getString(R.string.manufacturer_name));
             _bean.setDeviceCode(SystemPropertiesProxy.getString(this, "ro.serialno"));
             _bean.setDeviceName(getResources().getString(R.string.default_device_name));
             _bean.setRmk("rmk");
@@ -278,25 +278,25 @@ public class App extends MultiDexApplication {
                     _bean.setCh4SmallPartStandard(30);
                 }
                 _bean.setCh1CalibrationType(1);
-                _bean.setCh1CompensationValue(0.007);
+                _bean.setCh1CompensationValue(0);
                 _bean.setCh1KValue(0.01);
 
                 _bean.setCh2BigPartStandard(30.059);
                 _bean.setCh2SmallPartStandard(30.0168);
                 _bean.setCh2CalibrationType(1);
-                _bean.setCh2CompensationValue(0.007);
+                _bean.setCh2CompensationValue(0);
                 _bean.setCh2KValue(0.01);
 
                 _bean.setCh3BigPartStandard(30.059);
                 _bean.setCh3SmallPartStandard(30.0168);
                 _bean.setCh3CalibrationType(1);
-                _bean.setCh3CompensationValue(0.007);
+                _bean.setCh3CompensationValue(0);
                 _bean.setCh3KValue(0.01);
 
                 _bean.setCh4BigPartStandard(30.059);
                 _bean.setCh4SmallPartStandard(30.0168);
                 _bean.setCh4CalibrationType(1);
-                _bean.setCh4CompensationValue(0.007);
+                _bean.setCh4CompensationValue(0);
                 _bean.setCh4KValue(0.01);
                 getDaoSession().getCalibrationBeanDao().insert(_bean);
             }
@@ -404,7 +404,7 @@ public class App extends MultiDexApplication {
         // 初始化
 
         // initTestDatas();
-        // initTestDatas2();
+//        initTestDatas2();
     }
     /*
     public void initTestDatas() {

@@ -76,6 +76,7 @@ public class SetActivity extends BaseActivity {
         mVp.setAdapter(tabFragmentPageAdapter);
         mVp.setOffscreenPageLimit(3);
         mTlIndicator.setupWithViewPager(mVp);
+        actionTitleTV.setText(R.string.set_only);
     }
 
     private View tab_icon(String name) {

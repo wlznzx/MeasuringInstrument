@@ -9,14 +9,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.lang.reflect.Field;
 
@@ -43,6 +41,9 @@ public abstract class BaseOActivity extends Activity implements BaseView {
 
     @BindView(R.id.action_bar_tips)
     public TextView actionTips;
+
+    @BindView(R.id.action_bar_code)
+    public TextView actionBarCodeTips;
 
     public User mUser;
 
@@ -94,9 +95,11 @@ public abstract class BaseOActivity extends Activity implements BaseView {
             _name = mUser.getName();
         }
         if (_bean != null) {
-            actionTips.setText(_name + " " + _bean.getName());
+            actionTips.setText(_name);
+            actionBarCodeTips.setText( _bean.getName());
         } else {
-            actionTips.setText(_name + " 程序" + App.getSetupBean().getCodeID());
+            actionTips.setText(_name);
+            actionBarCodeTips.setText("程序" + App.getSetupBean().getCodeID());
         }
 
     }

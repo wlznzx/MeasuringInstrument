@@ -100,7 +100,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
                 .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
         LayoutInflater inflater = LayoutInflater.from(this);
         mData2Adapter = new Data2Adapter(Data2Activity.this, mResultBean2Dao.queryBuilder()
-                .where(ResultBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBean2Dao.Properties.Id).list(), mDates);
+                .where(ResultBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBean2Dao.Properties.TimeStamp).list(), mDates);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Data2Activity.this);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(mData2Adapter);
@@ -178,7 +178,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         Button cancel = builder.findViewById(R.id.btn_cancle);
         Button sure = builder.findViewById(R.id.btn_sure);
         if (msg == null || cancel == null || sure == null) return;
-        
+
         if (index == 1) {
             msg.setText("删除后不可恢复，是否删除该条目？");
         } else {
@@ -559,6 +559,9 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         int measurementGroupIndex = cursor.getColumnIndex(ResultBean2Dao.Properties.MeasurementGroup.columnName);
         int mItemsIndex = cursor.getColumnIndex(ResultBean2Dao.Properties.MItems.columnName);
         int mDescribeIndex = cursor.getColumnIndex(ResultBean2Dao.Properties.MDescribe.columnName);
+        int mMType = cursor.getColumnIndex(ResultBean2Dao.Properties.MType.columnName);
+        int mMachineInfo = cursor.getColumnIndex(ResultBean2Dao.Properties.MachineInfo.columnName);
+        int mProcessNo = cursor.getColumnIndex(ResultBean2Dao.Properties.ProcessNo.columnName);
 
         List<ResultBean2> _datas = new ArrayList<>();
 
@@ -573,6 +576,9 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             rBean.setMeasurementGroup(StringConverter.convertToEntityPropertyG(cursor.getString(measurementGroupIndex)));
             rBean.setMItems(StringConverter.convertToEntityPropertyG(cursor.getString(mItemsIndex)));
             rBean.setMDescribe(StringConverter.convertToEntityPropertyG(cursor.getString(mDescribeIndex)));
+            rBean.setMType(cursor.getString(mMType));
+            rBean.setMachineInfo(cursor.getString(mMachineInfo));
+            rBean.setProcessNo(cursor.getString(mProcessNo));
             _datas.add(rBean);
         }
         mData2Adapter.notifyAdapter(_datas, false);

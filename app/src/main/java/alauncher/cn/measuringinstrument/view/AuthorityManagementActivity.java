@@ -2,7 +2,6 @@ package alauncher.cn.measuringinstrument.view;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -24,7 +23,7 @@ import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.bean.AuthorityGroupBean;
 import alauncher.cn.measuringinstrument.view.activity_view.DataUpdateInterface;
@@ -33,7 +32,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class AuthorityManagementActivity extends BaseActivity implements DataUpdateInterface {
+public class AuthorityManagementActivity extends BaseOActivity implements DataUpdateInterface {
 
     @BindView(R.id.rv)
     SwipeRecyclerView rv;
@@ -191,7 +190,7 @@ public class AuthorityManagementActivity extends BaseActivity implements DataUpd
 //            holder.setText(R.id.accout_status_tv, "" + mActivity.getResources().getStringArray(R.array.position)[datas.get(position).getStatus()]);
 //            holder.setText(R.id.accout_email_tv, "" + datas.get(position).email);
             final AuthorityGroupBean bean = mDatas.get(position);
-            android.util.Log.d("alauncher","bean = " + bean.toString());
+            android.util.Log.d("alauncher", "bean = " + bean.toString());
             holder.setText(R.id.authority_group_tv, bean.getName());
             holder.setText(R.id.describe_tv, bean.getDescribe());
             holder.setText(R.id.remarks_tv, bean.getRemarks());

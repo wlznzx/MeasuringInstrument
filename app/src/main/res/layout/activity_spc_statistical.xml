@@ -57,7 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/user" />
+            android:text="@string/user_with_space" />
 
         <Spinner
             android:id="@+id/user_sp"
@@ -185,7 +185,7 @@
 
         <TextView
             style="@style/BaseTextStyle"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:text="~" />
 

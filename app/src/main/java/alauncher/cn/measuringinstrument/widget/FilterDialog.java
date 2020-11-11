@@ -4,7 +4,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -61,7 +63,7 @@ public class FilterDialog extends Dialog {
     private FilterInterface mFilterInterface;
 
     public FilterDialog(Context context, FilterInterface pFilterInterface) {
-        super(context);
+        super(context, R.style.Dialog);
         mContext = context;
         mUserDao = App.getDaoSession().getUserDao();
         mFilterInterface = pFilterInterface;
@@ -168,4 +170,19 @@ public class FilterDialog extends Dialog {
         return bean;
     }
 
+    public void dismiss() {
+        //避免闪屏 提高用户体验
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                FilterDialog.super.dismiss();
+            }
+        }, 500);
+
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(filterHandlerSP.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(workpieceIDEdt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(eventFilterEdt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(resultFilterSP.getWindowToken(), 0);
+    }
 }

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
+import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
@@ -34,7 +35,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class AccoutManagementActivity extends BaseActivity implements UserEditDialog.UIInterface {
+public class AccoutManagementActivity extends BaseOActivity implements UserEditDialog.UIInterface {
 
     @BindView(R.id.rv)
     SwipeRecyclerView rv;

@@ -165,5 +165,11 @@
         <string name="login_title">用户登录</string>
     <string name="login">登录</string>
     <string name="login_user_password">密码:</string>
-    
+    <string name="describe_with_space">备\u3000\u3000注</string>
+    <string name="remarks_with_space">备\u3000注</string>
+    <string name="group_num">子组数\u3000</string>
+    <string name="user_with_space">用\u3000\u3000户</string>
+    <string name="standard_deviation">标准差</string>
+    <string name="export_result">导出记录</string>
+    <string name="edit_group">编辑分组</string>
 </resources>

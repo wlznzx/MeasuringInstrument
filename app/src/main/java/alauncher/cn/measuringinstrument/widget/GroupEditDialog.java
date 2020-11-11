@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import alauncher.cn.measuringinstrument.App;
@@ -31,6 +32,9 @@ public class GroupEditDialog extends Dialog {
 
     @BindView(R.id.describe_edt)
     public EditText describeEdt;
+
+    @BindView(R.id.group_title_tv)
+    public TextView groupTitleTV;
 
     DataUpdateInterface dataUpdateInterface;
 
@@ -80,6 +84,7 @@ public class GroupEditDialog extends Dialog {
             lowerLimitEdt.setText(String.valueOf(mGroupBean2.getLowerLimit()));
             upperLimitEdt.setText(String.valueOf(mGroupBean2.getUpperLimit()));
             describeEdt.setText(mGroupBean2.getDescribe());
+            groupTitleTV.setText(R.string.edit_group);
         }
     }
 

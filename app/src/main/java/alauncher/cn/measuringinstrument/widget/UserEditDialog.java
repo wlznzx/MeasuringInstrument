@@ -3,7 +3,9 @@ package alauncher.cn.measuringinstrument.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -62,18 +64,18 @@ public class UserEditDialog extends Dialog {
 
     private User mUser;
 
-    public Map<Integer,Integer> spMap = new HashMap<>();
-    public Map<Integer,Integer> toMap = new HashMap<>();
+    public Map<Integer, Integer> spMap = new HashMap<>();
+    public Map<Integer, Integer> toMap = new HashMap<>();
 
     public UserEditDialog(Context context) {
-        super(context);
+        super(context, R.style.Dialog);
         mContext = context;
         mUserDao = App.getDaoSession().getUserDao();
-        spMap.put(0,0);
-        spMap.put(1,4);
+        spMap.put(0, 0);
+        spMap.put(1, 4);
 
-        toMap.put(0,0);
-        toMap.put(4,1);
+        toMap.put(0, 0);
+        toMap.put(4, 1);
     }
 
     public UserEditDialog(Context context, int themeResId) {
@@ -187,5 +189,27 @@ public class UserEditDialog extends Dialog {
 
     public interface UIInterface {
         void upDateUserUI();
+    }
+
+    public void dismiss() {
+        //避免闪屏 提高用户体验
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                UserEditDialog.super.dismiss();
+            }
+        }, 500);
+
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(accoutEdt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(fullNameEdt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(passwordEdt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(rePasswordEdt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(statusSP.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(limitSP.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(workpieceEdt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(emailEdt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(dialogTitleTV.getWindowToken(), 0);
+
     }
 }

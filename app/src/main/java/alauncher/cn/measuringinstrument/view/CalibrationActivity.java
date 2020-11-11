@@ -140,10 +140,10 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             k[3] = bean.getCh4KValue();
 
             NumberFormat nf = NumberFormat.getInstance();
-            kValueEdt[0].setText(String.valueOf(bean.getCh1KValue() * 1000));
-            kValueEdt[1].setText(String.valueOf(bean.getCh2KValue() * 1000));
-            kValueEdt[2].setText(String.valueOf(bean.getCh3KValue() * 1000));
-            kValueEdt[3].setText(String.valueOf(bean.getCh4KValue() * 1000));
+            kValueEdt[0].setText(String.valueOf(bean.getCh1KValue()));
+            kValueEdt[1].setText(String.valueOf(bean.getCh2KValue()));
+            kValueEdt[2].setText(String.valueOf(bean.getCh3KValue()));
+            kValueEdt[3].setText(String.valueOf(bean.getCh4KValue()));
             // 补偿值;
             compensationValueEdt[0].setText(String.valueOf(bean.getCh1CompensationValue()));
             compensationValueEdt[1].setText(String.valueOf(bean.getCh2CompensationValue()));

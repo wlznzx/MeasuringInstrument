@@ -245,7 +245,7 @@
                 <TextView
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
-                    android:text="@string/grouping"
+                    android:text="@string/analysis_pattern"
                     android:textColor="@android:color/black" />
 
                 <Button

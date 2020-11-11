@@ -89,7 +89,7 @@
                 <TextView
                     android:layout_width="@dimen/dialog_tv_width"
                     android:layout_height="wrap_content"
-                    android:text="@string/remarks"
+                    android:text="@string/remarks_with_space"
                     android:textColor="@android:color/black" />
 
                 <EditText

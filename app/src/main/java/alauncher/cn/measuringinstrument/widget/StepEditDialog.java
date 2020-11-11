@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -261,5 +263,20 @@ public class StepEditDialog extends Dialog {
     private void showTips(String msg) {
         dialogTipsTV.setVisibility(View.VISIBLE);
         dialogTipsTV.setText(msg);
+    }
+
+    public void dismiss() {
+        //避免闪屏 提高用户体验
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                StepEditDialog.super.dismiss();
+            }
+        }, 500);
+
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(showItemSP.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(conditionSP.getWindowToken(), 0);
+
     }
 }

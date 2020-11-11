@@ -58,6 +58,7 @@ public class MGroup2Activity extends BaseOActivity implements DataUpdateInterfac
         rv.setLayoutManager(layoutManager);
         mMGroupAdapter = new MGroupAdapter();
         rv.setAdapter(mMGroupAdapter);
+        actionTitleTV.setText(R.string.grouping);
     }
 
 /*
@@ -87,7 +88,6 @@ public class MGroup2Activity extends BaseOActivity implements DataUpdateInterfac
     }
 
     class MGroupAdapter extends RecyclerView.Adapter<ViewHolder> {
-
         public MGroupAdapter() {
 
         }

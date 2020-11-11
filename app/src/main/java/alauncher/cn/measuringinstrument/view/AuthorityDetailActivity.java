@@ -22,11 +22,7 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.view.fragment.AuthorityDetailFragment;
 import alauncher.cn.measuringinstrument.view.fragment.AuthorityUserFragment;
-import alauncher.cn.measuringinstrument.view.fragment.CodeBaseInfoFragment;
-import alauncher.cn.measuringinstrument.view.fragment.CodeStepFragment2;
 import alauncher.cn.measuringinstrument.view.fragment.ForceCalibrationFragment;
-import alauncher.cn.measuringinstrument.view.fragment.MeasureConfigurationFragment;
-import alauncher.cn.measuringinstrument.view.fragment.WorkpieceFragment;
 import butterknife.BindView;
 
 public class AuthorityDetailActivity extends BaseActivity implements ForceCalibrationFragment.RefreshInterface {
@@ -68,7 +64,7 @@ public class AuthorityDetailActivity extends BaseActivity implements ForceCalibr
         }
         if (authorityUserFragment == null)
             authorityUserFragment = new AuthorityUserFragment();
-            authorityUserFragment.setAuthorityGroupID(authorityGroupID);
+        authorityUserFragment.setAuthorityGroupID(authorityGroupID);
         if (authorityDetailFragment == null) {
             authorityDetailFragment = new AuthorityDetailFragment();
             authorityDetailFragment.setAuthorityGroupID(authorityGroupID);
@@ -84,6 +80,7 @@ public class AuthorityDetailActivity extends BaseActivity implements ForceCalibr
         mVp.setAdapter(tabFragmentPageAdapter);
         mVp.setOffscreenPageLimit(1);
         mTlIndicator.setupWithViewPager(mVp);
+        actionTitleTV.setText(R.string.authority_management);
     }
 
     private View tab_icon(String name) {

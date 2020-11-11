@@ -315,6 +315,7 @@
     <string name="authority_management">权限管理</string>
     <string name="authority_group">权限组名</string>
     <string name="remarks">备注</string>
+    <string name="remarks_with_space">remarks</string>
     <string name="authority">权限</string>
     <string name="add_authority_group">添加权限组</string>
     <string name="edit_authority_group">编辑用户组名</string>
@@ -324,4 +325,9 @@
     <string name="authority_name_cannot_be_empty">权限名不能为空</string>
     <string name="add_code_tips">程序名不能为空</string>
     <string name="grouping">分组</string>
+    <string name="describe_with_space">备注</string>
+    <string name="user_with_space">用\u3000\u3000户</string>
+    <string name="standard_deviation">deviation</string>
+    <string name="export_result">导出记录</string>
+    <string name="edit_group">编辑分组</string>
 </resources>
