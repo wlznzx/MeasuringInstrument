@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/accout_list_item_layout"
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:gravity="center_vertical"
@@ -10,8 +11,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:visibility="gone"
-        android:src="@drawable/uncheck_radio" />
+        android:src="@drawable/uncheck_radio"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/accout_tv"
@@ -45,7 +46,8 @@
         android:id="@+id/accout_email_tv"
         style="@style/TextStyle"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_height="9dp"
+        android:layout_weight="1"
+        android:visibility="gone" />
 
 </LinearLayout>

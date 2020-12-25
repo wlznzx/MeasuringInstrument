@@ -4,7 +4,6 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
-
 @Entity
 public class AuthorityGroupBean {
 
@@ -17,13 +16,16 @@ public class AuthorityGroupBean {
 
     public String remarks;
 
-    @Generated(hash = 2002996042)
-    public AuthorityGroupBean(Long id, String name, String describe,
-            String remarks) {
+    public int limit;
+
+    @Generated(hash = 1821103672)
+    public AuthorityGroupBean(Long id, String name, String describe, String remarks,
+            int limit) {
         this.id = id;
         this.name = name;
         this.describe = describe;
         this.remarks = remarks;
+        this.limit = limit;
     }
 
     @Generated(hash = 788752761)
@@ -62,13 +64,13 @@ public class AuthorityGroupBean {
         this.remarks = remarks;
     }
 
-    @Override
-    public String toString() {
-        return "AuthorityGroupBean{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", describe='" + describe + '\'' +
-                ", remarks='" + remarks + '\'' +
-                '}';
+    public int getLimit() {
+        return this.limit;
     }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    
 }

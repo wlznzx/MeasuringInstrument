@@ -2,8 +2,6 @@ package alauncher.cn.measuringinstrument.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,11 +9,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.annotation.Nullable;
-
-import org.greenrobot.greendao.database.Database;
-import org.w3c.dom.Text;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -60,6 +53,7 @@ public class LoginActivity extends BaseOActivity {
     private List<User> users;
 
     public static String nowpassword;
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,14 +75,13 @@ public class LoginActivity extends BaseOActivity {
         actionTips.setVisibility(View.INVISIBLE);
 
         RememberPasswordBean _bean = App.getDaoSession().getRememberPasswordBeanDao().load(App.SETTING_ID);
-        if (_bean.getIsRemeber() && _bean.getLogined()) {
-            loginUserNameEdt.setText(_bean.getAccount());
-            loginUserPasswordEdt.setText(_bean.getPassowrd());
+        if(_bean != null){
+            if (_bean.getIsRemeber() && _bean.getLogined()) {
+                loginUserNameEdt.setText(_bean.getAccount());
+                loginUserPasswordEdt.setText(_bean.getPassowrd());
+            }
+            isRemeberCB.setChecked(_bean.getIsRemeber());
         }
-
-
-        isRemeberCB.setChecked(_bean.getIsRemeber());
-
         /*
         DeviceInfoBean _dBean = App.getDeviceInfo();
 
@@ -105,10 +98,6 @@ public class LoginActivity extends BaseOActivity {
         textView2.setText(BuildUtils.packageName(cox));
 
     }
-
-
-
-
 
 
     private void tPostgreSQL() {
@@ -167,49 +156,39 @@ public class LoginActivity extends BaseOActivity {
 
     private void goSQL() {
     }
-    public void getTodaypassword()
-    {
-        Date now=new Date();
+
+    public void getTodaypassword() {
+        Date now = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
-        String tablename=dateFormat.format(now);
+        String tablename = dateFormat.format(now);
         int riqiSUM = Integer.parseInt(tablename);
         riqiSUM = (riqiSUM * 6 - 12345);
-        int ab = riqiSUM /1000;
+        int ab = riqiSUM / 1000;
         String riqis = String.valueOf(riqiSUM);
         char riqi[] = riqis.toCharArray();
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < riqis.length(); i++)
-        {
-            if (i!=riqis.length())
-            {
-                sb.append(riqi[riqis.length()-i-1]);
+        for (int i = 0; i < riqis.length(); i++) {
+            if (i != riqis.length()) {
+                sb.append(riqi[riqis.length() - i - 1]);
             }
         }
         int dz = Integer.valueOf(sb.toString());
-        dz=dz + ab;
+        dz = dz + ab;
         String Sdz = String.valueOf(dz);
-        nowpassword=Sdz;
+        nowpassword = Sdz;
 
     }
-
 
 
     @OnClick(R.id.login_btn)
     public void onLogin(View v) {
         getTodaypassword();
-        User _user = new User();
-        _user.setAccout("admin");
+        User _user = App.getDaoSession().getUserDao().load("admin");
         _user.setPassword(nowpassword);
-        _user.setName("管理员");
-        _user.setStatus(0);
-        _user.setId("1");
-        _user.setLimit(0);
-        _user.setEmail("");
-       App.getDaoSession().getUserDao().update(_user);
+        App.getDaoSession().getUserDao().update(_user);
 //        String sql = "update user set Password = "+nowpassword+" where user.ID = 1";
 //        db.execSQL(sql);
-
 
 
         String accoutStr = loginUserNameEdt.getText().toString().trim();

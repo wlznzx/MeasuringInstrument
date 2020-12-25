@@ -59,6 +59,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="@dimen/dialog_tv_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/limit"
+                    android:textColor="@android:color/black" />
+
+                <Spinner
+                    android:id="@+id/limit_sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -71,7 +90,7 @@
 
                 <EditText
                     android:id="@+id/describe_edt"
-                    style="@style/EdNumOnlyStyleSPC"
+                    style="@style/BaseEdTextStyle"
                     android:layout_width="@dimen/dialog_width"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
@@ -94,7 +113,7 @@
 
                 <EditText
                     android:id="@+id/remarks_edt"
-                    style="@style/EdNumOnlyStyleSPC"
+                    style="@style/BaseEdTextStyle"
                     android:layout_width="@dimen/dialog_width"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
@@ -128,11 +147,11 @@
                 android:id="@+id/authority_name_tips_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="@string/authority_name_cannot_be_empty"
-                android:layout_marginTop="15dp"
-                android:textColor="@android:color/holo_red_light" />
+                android:textColor="@android:color/holo_red_light"
+                android:visibility="gone" />
         </LinearLayout>
 
         <View

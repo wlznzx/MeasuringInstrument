@@ -7,14 +7,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
+import alauncher.cn.measuringinstrument.bean.AuthorityBean;
 import alauncher.cn.measuringinstrument.bean.AuthorityGroupBean;
+import alauncher.cn.measuringinstrument.database.greenDao.db.AuthorityBeanDao;
 import alauncher.cn.measuringinstrument.view.AuthorityDetailActivity;
 import alauncher.cn.measuringinstrument.view.activity_view.DataUpdateInterface;
 import butterknife.BindView;
@@ -46,9 +53,14 @@ public class AuthorityGroupEditDialog extends Dialog implements CalculateDialog.
     @BindView(R.id.authority_name_tips_tv)
     public TextView authorityNameTipsTV;
 
+    @BindView(R.id.limit_sp)
+    public Spinner limitSP;
+
     AuthorityGroupBean mAuthorityGroupBean;
 
     DataUpdateInterface dataUpdateInterface;
+
+    ArrayAdapter<String> limitAdapter;
 
     private boolean isAdd = true;
 
@@ -57,7 +69,7 @@ public class AuthorityGroupEditDialog extends Dialog implements CalculateDialog.
         mContext = context;
         mAuthorityGroupBean = pAuthorityGroupBean;
         if (pAuthorityGroupBean != null) {
-            android.util.Log.d("alauncher",mAuthorityGroupBean.toString());
+            android.util.Log.d("alauncher", mAuthorityGroupBean.toString());
             isAdd = false;
         }
     }
@@ -88,12 +100,29 @@ public class AuthorityGroupEditDialog extends Dialog implements CalculateDialog.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.authority_group_dialog_layout);
         ButterKnife.bind(this);
+
+        List<String> limitList = new ArrayList<>();
+        for (int i = App.getCurrentAuthorityGroupBean().getLimit() + 1; i < 11; i++) {
+            limitList.add(String.valueOf(i));
+        }
+        limitAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item,
+                limitList);
+        limitSP.setAdapter(limitAdapter);
+
         if (!isAdd) {
             authorityGroupTV.setText(R.string.edit_authority_group);
             authoritySetLayout.setVisibility(View.VISIBLE);
             authorityGroupEDT.setText(mAuthorityGroupBean.getName());
             describeEDT.setText(mAuthorityGroupBean.getDescribe());
             remarksEDT.setText(mAuthorityGroupBean.getRemarks());
+            int k = limitAdapter.getCount();
+            for (int i = 0; i < k; i++) {
+                if (limitAdapter.getItem(i).toString().equals(String.valueOf(mAuthorityGroupBean.getLimit()))) {
+                    limitSP.setSelection(i, true);
+                    break;
+                }
+            }
         }
         authoritySetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +142,7 @@ public class AuthorityGroupEditDialog extends Dialog implements CalculateDialog.
 
 
     public boolean doAdd() {
-        if(authorityGroupEDT.getText().toString().trim().equals("")){
+        if (authorityGroupEDT.getText().toString().trim().equals("")) {
             authorityNameTipsTV.setVisibility(View.VISIBLE);
             return false;
         }
@@ -122,13 +151,20 @@ public class AuthorityGroupEditDialog extends Dialog implements CalculateDialog.
             mAuthorityGroupBean.setDescribe(describeEDT.getText().toString().trim());
             mAuthorityGroupBean.setName(authorityGroupEDT.getText().toString().trim());
             mAuthorityGroupBean.setRemarks(remarksEDT.getText().toString().trim());
+            mAuthorityGroupBean.setLimit(Integer.parseInt(limitSP.getSelectedItem().toString()));
+            Long pID = App.getDaoSession().getAuthorityGroupBeanDao().insertOrReplace(mAuthorityGroupBean);
             // 如果是新加数据;
             if (isAdd) {
-
+                // 将当前用户所属用户组的
+                List<AuthorityBean> _authorityBeans = App.getDaoSession().getAuthorityBeanDao().queryBuilder()
+                        .where(AuthorityBeanDao.Properties.GroupID.eq(App.getCurrentAuthorityGroupBean().getId())).list();
+                for (AuthorityBean _bean : _authorityBeans) {
+                    _bean.setGroupID(pID);
+                    App.getDaoSession().getAuthorityBeanDao().insert(_bean);
+                }
             } else {
 
             }
-            Long pID = App.getDaoSession().getAuthorityGroupBeanDao().insertOrReplace(mAuthorityGroupBean);
             return true;
         } catch (NumberFormatException e) {
             Toast.makeText(mContext, "输入条件有误，请检查。", Toast.LENGTH_SHORT).show();

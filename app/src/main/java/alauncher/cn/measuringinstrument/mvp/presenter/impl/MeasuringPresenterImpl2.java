@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
-import org.nfunk.jep.ParseException;
 
 import java.io.File;
 import java.math.BigDecimal;

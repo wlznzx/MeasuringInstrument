@@ -318,7 +318,7 @@
     <string name="remarks_with_space">remarks</string>
     <string name="authority">权限</string>
     <string name="add_authority_group">添加权限组</string>
-    <string name="edit_authority_group">编辑用户组名</string>
+    <string name="edit_authority_group">编辑权限组</string>
     <string name="authority_set">权限设置</string>
     <string name="un_authorized">未授权</string>
     <string name="un_authorized_tips">该模块未授权，无法使用.</string>
@@ -330,4 +330,6 @@
     <string name="standard_deviation">deviation</string>
     <string name="export_result">导出记录</string>
     <string name="edit_group">编辑分组</string>
+    <string name="authorization_failed_title">授权失败</string>
+    <string name="authorization_failed_msg">抱歉，您所处的用户组不具备开通此功能的权限。</string>
 </resources>

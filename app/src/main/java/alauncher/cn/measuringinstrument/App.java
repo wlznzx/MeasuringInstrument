@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import alauncher.cn.measuringinstrument.bean.AnalysisPatternBean;
+import alauncher.cn.measuringinstrument.bean.AuthorityBean;
+import alauncher.cn.measuringinstrument.bean.AuthorityGroupBean;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.DeviceInfoBean;
@@ -103,9 +105,6 @@ public class App extends MultiDexApplication {
             }
         };
         Bugly.init(getApplicationContext(), "e4d9621d74", true);
-
-        Runtime rt = Runtime.getRuntime();
-        long maxMemory = rt.maxMemory();
     }
 
     public static DaoSession getDaoSession() {
@@ -114,6 +113,15 @@ public class App extends MultiDexApplication {
 
     public static SetupBean getSetupBean() {
         return getDaoSession().getSetupBeanDao().load(SETTING_ID);
+    }
+
+    public static AuthorityGroupBean getCurrentAuthorityGroupBean() {
+        try {
+            android.util.Log.d("wlDebug", "App.handlerAccout = " + App.handlerAccout);
+            return getDaoSession().getAuthorityGroupBeanDao().load(getDaoSession().getUserDao().load(App.handlerAccout).getUseAuthorityGroupID());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static void setSetupPopUp(boolean isPopUp) {
@@ -155,11 +163,11 @@ public class App extends MultiDexApplication {
             User _user = new User();
             _user.setAccout("admin");
             _user.setPassword("123456");
-            _user.setName("管理员");
+            _user.setName("系统管理员");
             _user.setStatus(0);
             _user.setId("1");
-            _user.setLimit(0);
             _user.setEmail("");
+            _user.setUseAuthorityGroupID(0);
             getDaoSession().getUserDao().insert(_user);
 
             User _manager = new User();
@@ -168,8 +176,9 @@ public class App extends MultiDexApplication {
             _manager.setName("经理");
             _manager.setStatus(0);
             _manager.setId("2");
-            _manager.setLimit(0);
+//            _manager.setLimit(1);
             _manager.setEmail("");
+            _manager.setUseAuthorityGroupID(1);
             getDaoSession().getUserDao().insert(_manager);
 
             User _monitor = new User();
@@ -178,19 +187,127 @@ public class App extends MultiDexApplication {
             _monitor.setName("班长");
             _monitor.setStatus(0);
             _monitor.setId("3");
-            _monitor.setLimit(0);
+//            _monitor.setLimit(2);
             _monitor.setEmail("");
+            _monitor.setUseAuthorityGroupID(2);
             getDaoSession().getUserDao().insert(_monitor);
 
             User _operator = new User();
-            _operator.setAccout("operator");
+            _operator.setAccout("operator1");
             _operator.setPassword("123456");
             _operator.setName("测试员");
             _operator.setStatus(0);
             _operator.setId("4");
-            _operator.setLimit(4);
+//            _operator.setLimit(5);
             _operator.setEmail("");
+            _operator.setUseAuthorityGroupID(3);
             getDaoSession().getUserDao().insert(_operator);
+        }
+
+        if (getDaoSession().getAuthorityGroupBeanDao().loadAll().size() == 0) {
+            AuthorityGroupBean _systemManagerGroup = new AuthorityGroupBean();
+            _systemManagerGroup.setName("系统管理员组");
+            _systemManagerGroup.setId((long) 0);
+            _systemManagerGroup.setLimit(0);
+            getDaoSession().getAuthorityGroupBeanDao().insert(_systemManagerGroup);
+            for (int i = 0; i < 11; i++) {
+                AuthorityBean _bean = new AuthorityBean();
+                _bean.setId(String.valueOf(i));
+                _bean.setGroupID(_systemManagerGroup.getId());
+                _bean.setAuthorized(true);
+                getDaoSession().getAuthorityBeanDao().insert(_bean);
+            }
+
+            AuthorityGroupBean _managerGroup = new AuthorityGroupBean();
+            _managerGroup.setName("管理员组");
+            _managerGroup.setId((long) 1);
+            _managerGroup.setLimit(1);
+            getDaoSession().getAuthorityGroupBeanDao().insert(_managerGroup);
+            for (int i = 0; i < 11; i++) {
+                AuthorityBean _bean = new AuthorityBean();
+                _bean.setId(String.valueOf(i));
+                _bean.setGroupID(_managerGroup.getId());
+                _bean.setAuthorized(true);
+                getDaoSession().getAuthorityBeanDao().insert(_bean);
+            }
+
+            AuthorityGroupBean _monitorGroup = new AuthorityGroupBean();
+            _monitorGroup.setName("班长组");
+            _monitorGroup.setId((long) 2);
+            _monitorGroup.setLimit(2);
+            getDaoSession().getAuthorityGroupBeanDao().insert(_monitorGroup);
+            for (int i = 0; i < 11; i++) {
+                AuthorityBean _bean = new AuthorityBean();
+                _bean.setId(String.valueOf(i));
+                _bean.setGroupID(_monitorGroup.getId());
+                if (i == 9 || i == 5) {
+                    _bean.setAuthorized(false);
+                } else {
+                    _bean.setAuthorized(true);
+                }
+                getDaoSession().getAuthorityBeanDao().insert(_bean);
+            }
+
+            AuthorityGroupBean _operatorGroup = new AuthorityGroupBean();
+            _operatorGroup.setName("操作员组");
+            _operatorGroup.setId((long) 3);
+            _operatorGroup.setLimit(3);
+            getDaoSession().getAuthorityGroupBeanDao().insert(_operatorGroup);
+            for (int i = 0; i < 11; i++) {
+                AuthorityBean _bean = new AuthorityBean();
+                _bean.setId(String.valueOf(i));
+                _bean.setGroupID(_operatorGroup.getId());
+                if (i == 0 || i == 1 || i == 3 || i == 4 || i == 10) {
+                    _bean.setAuthorized(true);
+                    if (i == 3) {
+                        for (int j = 0; j < 10; j++) {
+                            AuthorityBean _sBean = new AuthorityBean();
+                            _sBean.setId(i + "_" + j);
+                            _sBean.setGroupID(_operatorGroup.getId());
+                            if (j == 0 || j == 6 || j == 7 || j == 8 || j == 9) {
+                                _sBean.setAuthorized(true);
+                            } else {
+                                _sBean.setAuthorized(false);
+                            }
+                            getDaoSession().getAuthorityBeanDao().insert(_sBean);
+                        }
+                    }
+                    if (i == 1) {
+                        for (int j = 0; j < 1; j++) {
+                            AuthorityBean _sBean = new AuthorityBean();
+                            _sBean.setId(i + "_" + j);
+                            _sBean.setGroupID(_operatorGroup.getId());
+                            if (j == 1) {
+                                _sBean.setAuthorized(true);
+                            } else {
+                                _sBean.setAuthorized(false);
+                            }
+                            getDaoSession().getAuthorityBeanDao().insert(_sBean);
+                        }
+                    }
+                } else {
+                    _bean.setAuthorized(false);
+                }
+                getDaoSession().getAuthorityBeanDao().insert(_bean);
+            }
+
+            // 默认组;
+            AuthorityGroupBean _defaultGroup = new AuthorityGroupBean();
+            _defaultGroup.setName("默认组");
+            _defaultGroup.setId((long) 4);
+            _defaultGroup.setLimit(100);
+            getDaoSession().getAuthorityGroupBeanDao().insert(_defaultGroup);
+            for (int i = 0; i < 11; i++) {
+                AuthorityBean _bean = new AuthorityBean();
+                _bean.setId(String.valueOf(i));
+                _bean.setGroupID(_defaultGroup.getId());
+                if (i == 0 || i == 1 || i == 3 || i == 4 || i == 8 || i == 10) {
+                    _bean.setAuthorized(true);
+                } else {
+                    _bean.setAuthorized(false);
+                }
+                getDaoSession().getAuthorityBeanDao().insert(_bean);
+            }
         }
 
         if (getDaoSession().getRememberPasswordBeanDao().load(App.SETTING_ID) == null) {

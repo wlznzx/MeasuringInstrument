@@ -38,10 +38,10 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="@dimen/dialog_tv_width"
+                android:layout_height="wrap_content"
                 android:text="@string/accout_user"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black" />
 
             <EditText
                 android:id="@+id/accout_edt"
@@ -59,10 +59,10 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="@dimen/dialog_tv_width"
+                android:layout_height="wrap_content"
                 android:text="@string/full_name"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black" />
 
             <EditText
                 android:id="@+id/fullname_edt"
@@ -80,10 +80,10 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="@dimen/dialog_tv_width"
-                android:textColor="@android:color/black"
-                android:text="@string/password_user" />
+                android:layout_height="wrap_content"
+                android:text="@string/password_user"
+                android:textColor="@android:color/black" />
 
             <EditText
                 android:id="@+id/password_edt"
@@ -102,10 +102,10 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="@dimen/dialog_tv_width"
-                android:textColor="@android:color/black"
-                android:text="@string/repassword_user" />
+                android:layout_height="wrap_content"
+                android:text="@string/repassword_user"
+                android:textColor="@android:color/black" />
 
             <EditText
                 android:id="@+id/repassword_edt"
@@ -121,21 +121,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="@dimen/dialog_tv_width"
-                android:textColor="@android:color/black"
-                android:text="@string/limit" />
+                android:layout_height="wrap_content"
+                android:text="@string/limit"
+                android:textColor="@android:color/black" />
 
             <Spinner
                 android:id="@+id/limit_sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:entries="@array/limit_array" />
+                android:layout_marginLeft="30dp" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/authority_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/dialog_tv_width"
+                android:layout_height="wrap_content"
+                android:text="@string/authority_group"
+                android:textColor="@android:color/black" />
+
+            <Spinner
+                android:id="@+id/authority_group_sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -145,10 +164,10 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="@dimen/dialog_tv_width"
-                android:textColor="@android:color/black"
-                android:text="@string/status" />
+                android:layout_height="wrap_content"
+                android:text="@string/status"
+                android:textColor="@android:color/black" />
 
             <Spinner
                 android:id="@+id/status_sp"
@@ -166,10 +185,10 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="@dimen/dialog_tv_width"
-                android:textColor="@android:color/black"
-                android:text="@string/id" />
+                android:layout_height="wrap_content"
+                android:text="@string/id"
+                android:textColor="@android:color/black" />
 
             <EditText
                 android:id="@+id/workpiece_edt"
@@ -184,13 +203,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="@dimen/dialog_tv_width"
-                android:textColor="@android:color/black"
-                android:text="@string/email" />
+                android:layout_height="wrap_content"
+                android:text="@string/email"
+                android:textColor="@android:color/black" />
 
             <EditText
                 android:id="@+id/email_edt"

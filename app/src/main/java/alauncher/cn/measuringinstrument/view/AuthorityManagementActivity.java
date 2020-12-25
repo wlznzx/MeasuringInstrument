@@ -26,6 +26,9 @@ import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.bean.AuthorityGroupBean;
+import alauncher.cn.measuringinstrument.bean.User;
+import alauncher.cn.measuringinstrument.database.greenDao.db.AuthorityGroupBeanDao;
+import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
 import alauncher.cn.measuringinstrument.view.activity_view.DataUpdateInterface;
 import alauncher.cn.measuringinstrument.widget.AuthorityGroupEditDialog;
 import butterknife.BindView;
@@ -54,9 +57,11 @@ public class AuthorityManagementActivity extends BaseOActivity implements DataUp
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void initView() {
-        rv.setSwipeMenuCreator(swipeMenuCreator);
-        rv.setOnItemMenuClickListener(mMenuItemClickListener);
-        mDatas = App.getDaoSession().getAuthorityGroupBeanDao().loadAll();
+//        rv.setSwipeMenuCreator(swipeMenuCreator);
+//        rv.setOnItemMenuClickListener(mMenuItemClickListener);
+        android.util.Log.d("wlDebug", "App.getCurrentAuthorityGroupBean() = " + App.getCurrentAuthorityGroupBean().getLimit());
+        initDate();
+//        mDatas = App.getDaoSession().getAuthorityGroupBeanDao().loadAll();
         mAuthorityAdapter = new AuthorityAdapter(mDatas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AuthorityManagementActivity.this);
         rv.setLayoutManager(layoutManager);
@@ -109,6 +114,38 @@ public class AuthorityManagementActivity extends BaseOActivity implements DataUp
     private OnItemMenuClickListener mMenuItemClickListener = new OnItemMenuClickListener() {
         @Override
         public void onItemClick(SwipeMenuBridge menuBridge, final int position) {
+            final AlertDialog.Builder normalDialog =
+                    new AlertDialog.Builder(AuthorityManagementActivity.this);
+            normalDialog.setIcon(R.drawable.delete);
+            normalDialog.setTitle("删除用户");
+            normalDialog.setPositiveButton("确定",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            AuthorityGroupBean _bean = mDatas.get(position);
+                            if (_bean != null) {
+                                App.getDaoSession().getAuthorityGroupBeanDao().delete(_bean);
+                                // 在该权限组被删除的同时，属于该权限的用户的权限组的用户所属权限组切换为默认.
+                                List<User> _users = App.getDaoSession().getUserDao()
+                                        .queryBuilder().where(UserDao.Properties.UseAuthorityGroupID.eq(_bean.getId())).list();
+                                for (User user : _users) {
+                                    user.setUseAuthorityGroupID(4);
+                                    App.getDaoSession().getUserDao().insertOrReplace(user);
+                                }
+                                updateUI();
+                            }
+                        }
+                    });
+            normalDialog.setNegativeButton("取消",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            // 显示
+            normalDialog.show();
+            /*
             menuBridge.closeMenu();
 
             int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。
@@ -118,28 +155,7 @@ public class AuthorityManagementActivity extends BaseOActivity implements DataUp
 //                Toast.makeText(AccoutManagementActivity.this, "list第" + position + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT)
 //                        .show();
 
-                final AlertDialog.Builder normalDialog =
-                        new AlertDialog.Builder(AuthorityManagementActivity.this);
-                normalDialog.setIcon(R.drawable.delete);
-                normalDialog.setTitle("删除用户");
-//                normalDialog.setMessage("确认删除 " + mDatas.get(position).getAccout() + " 用户吗？");
-                normalDialog.setPositiveButton("确定",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                App.getDaoSession().getAuthorityGroupBeanDao().delete(mDatas.get(position));
-                                updateUI();
-                            }
-                        });
-                normalDialog.setNegativeButton("取消",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
 
-                            }
-                        });
-                // 显示
-                normalDialog.show();
             } else if (direction == SwipeRecyclerView.LEFT_DIRECTION) {
                 if (menuPosition == 0) {
                     doShowEditDialog(null);
@@ -148,11 +164,18 @@ public class AuthorityManagementActivity extends BaseOActivity implements DataUp
                 }
 
             }
+             */
         }
     };
 
+    private void initDate() {
+        mDatas = App.getDaoSession().getAuthorityGroupBeanDao().queryBuilder()
+                .where(AuthorityGroupBeanDao.Properties.Limit.gt(App.getCurrentAuthorityGroupBean().getLimit()),
+                        AuthorityGroupBeanDao.Properties.Limit.lt(11)).list();
+    }
+
     private void updateUI() {
-        mDatas = App.getDaoSession().getAuthorityGroupBeanDao().loadAll();
+        initDate();
         mAuthorityAdapter.setDatas(mDatas);
         mAuthorityAdapter.notifyDataSetChanged();
     }
@@ -204,6 +227,38 @@ public class AuthorityManagementActivity extends BaseOActivity implements DataUp
             holder.setOnLongClickListener(R.id.authority_item, new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    final AlertDialog.Builder normalDialog =
+                            new AlertDialog.Builder(AuthorityManagementActivity.this);
+                    normalDialog.setIcon(R.drawable.delete_24_icon);
+                    normalDialog.setTitle("删除权限组");
+//                normalDialog.setMessage("确认删除 " + mDatas.get(position).getAccout() + " 用户吗？");
+                    normalDialog.setPositiveButton("确定",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    AuthorityGroupBean _bean = mDatas.get(position);
+                                    if (_bean != null) {
+                                        App.getDaoSession().getAuthorityGroupBeanDao().delete(_bean);
+                                        // 在该权限组被删除的同时，属于该权限的用户的权限组的用户所属权限组切换为默认.
+                                        List<User> _users = App.getDaoSession().getUserDao()
+                                                .queryBuilder().where(UserDao.Properties.UseAuthorityGroupID.eq(_bean.getId())).list();
+                                        for (User user : _users) {
+                                            user.setUseAuthorityGroupID(4);
+                                            App.getDaoSession().getUserDao().insertOrReplace(user);
+                                        }
+                                        updateUI();
+                                    }
+                                }
+                            });
+                    normalDialog.setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                    // 显示
+                    normalDialog.show();
                     return false;
                 }
             });
@@ -219,6 +274,7 @@ public class AuthorityManagementActivity extends BaseOActivity implements DataUp
     public void onClick() {
         doShowEditDialog(null);
     }
+
 
     private void doShowEditDialog(AuthorityGroupBean bean) {
         AuthorityGroupEditDialog _dialog = new AuthorityGroupEditDialog(AuthorityManagementActivity.this, bean);

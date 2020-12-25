@@ -28,12 +28,12 @@ public class User {
 
     public int limit;
 
-    public long useAuthorityGroupID = -1;
+    public long useAuthorityGroupID = 100;
 
     @Generated(hash = 1244145118)
     public User(String accout, @NotNull String name, @NotNull String password,
-            int status, String email, String id, int limit,
-            long useAuthorityGroupID) {
+                int status, String email, String id, int limit,
+                long useAuthorityGroupID) {
         this.accout = accout;
         this.name = name;
         this.password = password;

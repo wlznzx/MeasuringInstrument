@@ -6,18 +6,23 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
+import alauncher.cn.measuringinstrument.bean.AuthorityGroupBean;
 import alauncher.cn.measuringinstrument.bean.User;
+import alauncher.cn.measuringinstrument.database.greenDao.db.AuthorityGroupBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
 import alauncher.cn.measuringinstrument.utils.UserReg;
 import butterknife.BindView;
@@ -46,6 +51,9 @@ public class UserEditDialog extends Dialog {
     @BindView(R.id.limit_sp)
     public Spinner limitSP;
 
+    @BindView(R.id.authority_group_sp)
+    public Spinner authorityGroupSP;
+
     @BindView(R.id.workpiece_edt)
     public EditText workpieceEdt;
 
@@ -55,6 +63,9 @@ public class UserEditDialog extends Dialog {
     @BindView(R.id.user_dialog_title_tv)
     public TextView dialogTitleTV;
 
+    @BindView(R.id.authority_layout)
+    public View authorityLayout;
+
 
     AdditionDialogInterface mAdditionDialogInterface;
 
@@ -62,10 +73,13 @@ public class UserEditDialog extends Dialog {
 
     UIInterface mUIInterface;
 
-    private User mUser;
+    private User mUser, currentUser;
 
     public Map<Integer, Integer> spMap = new HashMap<>();
     public Map<Integer, Integer> toMap = new HashMap<>();
+
+    //
+    List<AuthorityGroupBean> mAuthorityGroupBeans;
 
     public UserEditDialog(Context context) {
         super(context, R.style.Dialog);
@@ -96,14 +110,23 @@ public class UserEditDialog extends Dialog {
     public void goEditMode(User user) {
         dialogTitleTV.setText(R.string.edit_user_title);
         mUser = user;
-        mUser.getAccout();
         accoutEdt.setText(mUser.getAccout());
         accoutEdt.setEnabled(false);
         fullNameEdt.setText(mUser.getName());
         passwordEdt.setText(mUser.getPassword());
         rePasswordEdt.setText(mUser.getPassword());
         statusSP.setSelection(mUser.getStatus());
-        limitSP.setSelection(toMap.get(mUser.getLimit()));
+        for (int i = 0; i < mAuthorityGroupBeans.size(); i++) {
+            if (mUser.getUseAuthorityGroupID() == mAuthorityGroupBeans.get(i).getId()) {
+                authorityGroupSP.setSelection((i + 1));
+                break;
+            }
+        }
+        if (mUser.getAccout().equals(App.handlerAccout)) {
+            authorityLayout.setVisibility(View.GONE);
+        }
+        // limitSP.setSelection(mUser.getLimit() - currentUser.getLimit());
+        // limitSP.setSelection(mUser.getLimit());
         emailEdt.setText(mUser.getEmail());
         workpieceEdt.setText(mUser.getId());
     }
@@ -127,6 +150,29 @@ public class UserEditDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.adduser_dialog_layout);
         ButterKnife.bind(this);
+        currentUser = App.getDaoSession().getUserDao().load(App.handlerAccout);
+        List<String> aGroupList = new ArrayList<>();
+
+        mAuthorityGroupBeans = App.getDaoSession().getAuthorityGroupBeanDao().queryBuilder()
+                .where(AuthorityGroupBeanDao.Properties.Limit.gt(App.getCurrentAuthorityGroupBean().getLimit()),
+                        AuthorityGroupBeanDao.Properties.Limit.lt(11)).list();
+        aGroupList.add("默认组");
+        for (AuthorityGroupBean _bean : mAuthorityGroupBeans) {
+            aGroupList.add(_bean.getName());
+        }
+        ArrayAdapter<String> aGroupAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item,
+                aGroupList);
+        authorityGroupSP.setAdapter(aGroupAdapter);
+        //
+        List<String> limitList = new ArrayList<>();
+        for (int i = currentUser.getLimit(); i < 11; i++) {
+            limitList.add(String.valueOf(i));
+        }
+        ArrayAdapter<String> limitAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item,
+                limitList);
+        limitSP.setAdapter(limitAdapter);
     }
 
     public interface AdditionDialogInterface {
@@ -137,16 +183,16 @@ public class UserEditDialog extends Dialog {
     public void doAddUser() {
         String accoutStr = accoutEdt.getText().toString().trim();
         if (accoutStr == null || accoutStr.equals("")) {
-            Toast.makeText(mContext, "用户名不能为空.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "账号不能为空.", Toast.LENGTH_SHORT).show();
             return;
         }
         if (!UserReg.validateUserName(accoutStr)) {
-            Toast.makeText(mContext, "用户名格式错误", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "账号格式错误", Toast.LENGTH_SHORT).show();
             return;
         }
         String fullName = fullNameEdt.getText().toString().trim();
         if (fullName == null || fullName.equals("")) {
-            Toast.makeText(mContext, "全名不能为空.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "名称不能为空.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -163,7 +209,7 @@ public class UserEditDialog extends Dialog {
 
         if (mUser == null) {
             if (mUserDao.load(accoutStr) != null) {
-                Toast.makeText(mContext, "用户名已经注册了.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "账号已经注册了.", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
@@ -175,8 +221,13 @@ public class UserEditDialog extends Dialog {
         _user.setStatus((int) statusSP.getSelectedItemId());
         _user.setEmail(emailEdt.getText().toString().trim());
         _user.setId(workpieceEdt.getText().toString().trim());
-        int _id = (int) limitSP.getSelectedItemId();
-        _user.setLimit(spMap.get(_id));
+        int _id = (int) authorityGroupSP.getSelectedItemId();
+        if (_id == 0) {
+            _user.setUseAuthorityGroupID(4);
+        } else {
+            _user.setUseAuthorityGroupID(mAuthorityGroupBeans.get((_id - 1)).getId());
+        }
+        _user.setLimit(Integer.parseInt(limitSP.getSelectedItem().toString()));
         android.util.Log.d("wlDebug", _user.toString());
         dismiss();
         if (mUser != null) {
@@ -206,10 +257,9 @@ public class UserEditDialog extends Dialog {
         imm.hideSoftInputFromWindow(passwordEdt.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(rePasswordEdt.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(statusSP.getWindowToken(), 0);
-        imm.hideSoftInputFromWindow(limitSP.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(authorityGroupSP.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(workpieceEdt.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(emailEdt.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(dialogTitleTV.getWindowToken(), 0);
-
     }
 }

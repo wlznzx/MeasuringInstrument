@@ -10,7 +10,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,15 +27,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
@@ -59,16 +55,12 @@ import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.bean.AddInfoBean;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
-import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
 import alauncher.cn.measuringinstrument.bean.MeasureConfigurationBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
-import alauncher.cn.measuringinstrument.bean.ResultBean;
 import alauncher.cn.measuringinstrument.bean.ResultBean2;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
-import alauncher.cn.measuringinstrument.bean.StepBean;
 import alauncher.cn.measuringinstrument.bean.StepBean2;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
-import alauncher.cn.measuringinstrument.database.greenDao.db.ForceCalibrationBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBean2Dao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
@@ -77,11 +69,11 @@ import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.utils.Constants;
 import alauncher.cn.measuringinstrument.view.activity_view.MeasuringActivityView;
 import alauncher.cn.measuringinstrument.widget.AdditionalDialog;
+import alauncher.cn.measuringinstrument.widget.CustomMarkerView;
 import alauncher.cn.measuringinstrument.widget.MValueViewLandscape;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
-
 
 
 public class Measuring2Activity extends BaseOActivity implements MeasuringActivityView, AdditionalDialog.AdditionDialogInterface {
@@ -209,6 +201,8 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             yAxis.setTextColor(Color.WHITE);
         }
         chart.clear();
+        CustomMarkerView mv = new CustomMarkerView(this, R.layout.custom_marker_view_layout);
+        chart.setMarkerView(mv);
         initParameters();
         // 开始取值;
         startValue();
@@ -280,20 +274,18 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         inValue = false;
         mMeasuringPresenter.stopMeasuring();
     }
+
     /*用来关闭上个提示框*/
-    public  void  Toastxiaoxi(String xx)
-    {
-        if(toast!=null)
-        {
+    public void Toastxiaoxi(String xx) {
+        if (toast != null) {
             toast.cancel();//注销之前显示的那条信息
-            toast=null;//这里要注意上一步相当于隐藏了信息，mtoast并没有为空，我们强制是他为空
+            toast = null;//这里要注意上一步相当于隐藏了信息，mtoast并没有为空，我们强制是他为空
         }
-        if(toast==null){
-            toast=Toast.makeText(this, xx , Toast.LENGTH_SHORT);
+        if (toast == null) {
+            toast = Toast.makeText(this, xx, Toast.LENGTH_SHORT);
             toast.show();
         }
     }
-
 
 
     private boolean doSave(boolean isManual) {
@@ -567,7 +559,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             }
         } else {
 
-            Toastxiaoxi(saveTv.getText()+"成功！");
+            Toastxiaoxi(saveTv.getText() + "成功！");
             /*Toast.makeText(this, ""+saveTv.getText()+"成功！" , Toast.LENGTH_SHORT).show();*/
             doSave(true);
         }
@@ -646,7 +638,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             holder.setIsRecyclable(false);
             holder.setText(R.id.show_item_tv, "M" + (_bean.getSequenceNumber() + 1));
             holder.setText(R.id.describe_tv, _bean.getDescribe());
-           /* title.setText("M" + (_bean.getSequenceNumber() + 1)+"趋势图");*/
+            /* title.setText("M" + (_bean.getSequenceNumber() + 1)+"趋势图");*/
             if (mMeasureConfigurationBean.getMeasureMode() == HORIZONTAL_MODE_ONE) {
                 if (mMValueViewLandscapes[position] == null) {
                     mMValueViewLandscapes[position] = holder.getView(R.id.m_value_view);
@@ -708,7 +700,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
                 e.printStackTrace();
             }
             List<ResultBean2> _datas = getResultBean2s();
-          /*  title.setText(ParameterBean2Dao.Properties.SequenceNumber+"");*/
+            /*  title.setText(ParameterBean2Dao.Properties.SequenceNumber+"");*/
             if (_datas == null) return null;
             return ybyxtDatas(_datas);
         }
@@ -719,7 +711,8 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         @Override
         protected void onProgressUpdate(Integer... progresses) {
         }
-            /*上、下公差获取值*/
+
+        /*上、下公差获取值*/
         private LimitLine getLimitLine(float value, String str) {
             LimitLine ll1 = new LimitLine(value, str);
             ll1.setLineWidth(2f);
@@ -730,7 +723,6 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
 //            ll1.setTypeface(tfRegular);
             return ll1;
         }
-
 
 
         /*doInBackground返回时触发，换句话说，就是doInBackground执行完后触发
@@ -821,8 +813,8 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         try {
             result = Double.parseDouble(_bean.getMeasurementValues().get(index));
             //测量界面趋势图标题
-            index=index+1;
-            title.setText("M" +index+"趋势图");
+            index = index + 1;
+            title.setText("M" + index + "趋势图");
         } catch (Exception e) {
 
         }
@@ -916,9 +908,6 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         } else {
             set1.setFillColor(Color.BLACK);
         }
-
-
-
     }
 
 

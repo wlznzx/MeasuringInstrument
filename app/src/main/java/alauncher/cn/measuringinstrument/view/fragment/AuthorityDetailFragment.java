@@ -10,7 +10,6 @@ import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +22,8 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
@@ -39,7 +39,9 @@ public class AuthorityDetailFragment extends Fragment {
 
     private Unbinder unbinder;
 
-    private List<AuthorityBean> authorityBeanLists;
+    // private List<AuthorityBean> authorityBeanLists;
+
+    private Map<String, AuthorityBean> authorityBeanLists = new HashMap<>();
 
     @BindView(R.id.elv)
     public ExpandableListView mExpandableListView;
@@ -61,11 +63,11 @@ public class AuthorityDetailFragment extends Fragment {
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
         // 统一存储;
-        for (AuthorityBean _bean : authorityBeanLists){
-            App.getDaoSession().getAuthorityBeanDao().insertOrReplace(_bean);
-            android.util.Log.d("alauncher","_bean = " + _bean.toString());
+        for (Map.Entry<String, AuthorityBean> entry : authorityBeanLists.entrySet()) {
+            App.getDaoSession().getAuthorityBeanDao().insertOrReplace(entry.getValue());
+            android.util.Log.d("alauncher", "_bean = " + entry.toString());
         }
-        DialogUtils.showDialog(getContext(),getResources().getString(R.string.save),getResources().getString(R.string.save_success));
+        DialogUtils.showDialog(getContext(), getResources().getString(R.string.save), getResources().getString(R.string.save_success));
     }
 
     @Override
@@ -162,7 +164,7 @@ public class AuthorityDetailFragment extends Fragment {
             Switch sw = convertView.findViewById(R.id.authority_enable_sw);
             sw.setFocusable(false);
             AuthorityBean _authorityBean = authorityBeanLists.get(groupPosition);
-            if(_authorityBean == null){
+            if (_authorityBean == null) {
                 sw.setChecked(true);
             } else {
                 sw.setChecked(_authorityBean.getAuthorized());
@@ -170,7 +172,20 @@ public class AuthorityDetailFragment extends Fragment {
             sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    authorityBeanLists.get(groupPosition).setAuthorized(isChecked);
+                    AuthorityBean _bean = App.getDaoSession().getAuthorityBeanDao().queryBuilder()
+                            .where(AuthorityBeanDao.Properties.Id.eq(groupPosition)
+                                    , AuthorityBeanDao.Properties.GroupID.eq(App.getCurrentAuthorityGroupBean().getId())).unique();
+                    android.util.Log.d("wlDebug", "groupPosition = " + groupPosition
+                            + " isChecked = " + isChecked + "_bean.getAuthorized() = " + _bean.getAuthorized());
+                    if (!_bean.getAuthorized()) {
+                        DialogUtils.showDialog(getActivity()
+                                , getResources().getString(R.string.authorization_failed_title),
+                                getResources().getString(R.string.authorization_failed_msg));
+                        buttonView.setChecked(false);
+                        return;
+                    }
+//                    android.util.Log.d("alauncher", "groupPosition = " + groupPosition);
+                    authorityBeanLists.get("" + groupPosition).setAuthorized(isChecked);
                 }
             });
             return convertView;
@@ -184,10 +199,47 @@ public class AuthorityDetailFragment extends Fragment {
                 convertView = mInflater.inflate(R.layout.authority_detail_child_item, parent, false);
             }
             TextView tvChild = convertView.findViewById(R.id.authority_tv);
+            Switch sw = convertView.findViewById(R.id.authority_enable_sw);
+            sw.setFocusable(false);
+            AuthorityBean _authorityBean = authorityBeanLists.get(groupPosition + "_" + childPosition);
+            if (_authorityBean == null) {
+                sw.setChecked(true);
+            } else {
+                sw.setChecked(_authorityBean.getAuthorized());
+            }
+            /*
             tvChild.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, child, Toast.LENGTH_SHORT).show();
+                    AuthorityBean _bean = App.getDaoSession().getAuthorityBeanDao().queryBuilder()
+                            .where(AuthorityBeanDao.Properties.Id.eq(groupPosition + "_" + childPosition)
+                                    , AuthorityBeanDao.Properties.GroupID.eq(App.getCurrentAuthorityGroupBean().getId())).unique();
+                    if (_bean != null && !_bean.getAuthorized()) {
+                        DialogUtils.showDialog(getActivity()
+                                , getResources().getString(R.string.authorization_failed_title),
+                                getResources().getString(R.string.authorization_failed_msg));
+                        sw.setChecked(false);
+                        return;
+                    }
+                    _authorityBean.setAuthorized(i);
+                    // Toast.makeText(mContext, child, Toast.LENGTH_SHORT).show();
+                }
+            });
+             */
+            sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    AuthorityBean _bean = App.getDaoSession().getAuthorityBeanDao().queryBuilder()
+                            .where(AuthorityBeanDao.Properties.Id.eq(groupPosition + "_" + childPosition)
+                                    , AuthorityBeanDao.Properties.GroupID.eq(App.getCurrentAuthorityGroupBean().getId())).unique();
+                    if (_bean != null && !_bean.getAuthorized()) {
+                        DialogUtils.showDialog(getActivity()
+                                , getResources().getString(R.string.authorization_failed_title),
+                                getResources().getString(R.string.authorization_failed_msg));
+                        buttonView.setChecked(false);
+                        return;
+                    }
+                    _authorityBean.setAuthorized(isChecked);
                 }
             });
             tvChild.setText(child);
@@ -207,40 +259,50 @@ public class AuthorityDetailFragment extends Fragment {
 
     private void initData() {
         //
-        authorityBeanLists = new ArrayList<>();
+        // authorityBeanLists = new ArrayList<>();
         mGroupList = new ArrayList<>();
         mItemSet = new ArrayList<>();
 
         try {
-            JSONArray data = new JSONArray(getFromAssets(getContext(),"authority.json"));
-            for(int i = 0; i < data.length(); i++){
+            JSONArray data = new JSONArray(getFromAssets(getContext(), "authority.json"));
+            for (int i = 0; i < data.length(); i++) {
                 JSONObject _object = data.getJSONObject(i);
                 String id = _object.getString("id");
                 String name = _object.getString("name");
-                android.util.Log.d("alauncher","name = " + name);
+                android.util.Log.d("alauncher", "name = " + name);
                 mGroupList.add(name);
                 JSONArray _secondLevelArr = _object.getJSONArray("second_level");
                 //
                 ArrayList<String> _list = new ArrayList<>();
-                for(int j = 0; j < _secondLevelArr.length(); j++){
+                for (int j = 0; j < _secondLevelArr.length(); j++) {
                     JSONObject _secondObject = _secondLevelArr.getJSONObject(j);
                     String _secondID = _secondObject.getString("id");
                     String _secondName = _secondObject.getString("name");
-                    // _list.add(_secondName);
-//                    android.util.Log.d("alauncher","_secondID = " + _secondID);
-//                    android.util.Log.d("alauncher","_secondName = " + _secondName);
+                    _list.add(_secondName);
+                    AuthorityBean _bean = App.getDaoSession().getAuthorityBeanDao().queryBuilder().where(AuthorityBeanDao.Properties.GroupID.eq(authorityGroupID)
+                            , AuthorityBeanDao.Properties.Id.eq(_secondID)).unique();
+                    if (_bean == null) {
+                        _bean = new AuthorityBean();
+                        _bean.setGroupID(authorityGroupID);
+                        _bean.setId(_secondID);
+                        _bean.setAuthorized(true);
+                    }
+                    authorityBeanLists.put(_bean.getId(), _bean);
+                    android.util.Log.d("alauncher", "_secondID = " + _secondID);
+                    android.util.Log.d("alauncher", "_secondName = " + _secondName);
                 }
                 mItemSet.add(_list);
                 // Base Authority.
                 AuthorityBean _bean = App.getDaoSession().getAuthorityBeanDao().queryBuilder().where(AuthorityBeanDao.Properties.GroupID.eq(authorityGroupID)
-                        ,AuthorityBeanDao.Properties.Id.eq(id)).unique();
-                if(_bean == null){
+                        , AuthorityBeanDao.Properties.Id.eq(id)).unique();
+                if (_bean == null) {
                     _bean = new AuthorityBean();
                     _bean.setGroupID(authorityGroupID);
-                    _bean.setId("" + i);
+                    _bean.setId(id);
                     _bean.setAuthorized(true);
                 }
-                authorityBeanLists.add(_bean);
+                android.util.Log.d("alauncher", "fristID = " + _bean.getId());
+                authorityBeanLists.put(_bean.getId(), _bean);
             }
         } catch (JSONException e) {
             e.printStackTrace();

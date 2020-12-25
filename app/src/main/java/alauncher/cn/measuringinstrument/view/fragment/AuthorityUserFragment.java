@@ -8,22 +8,20 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
-import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.User;
+import alauncher.cn.measuringinstrument.database.greenDao.db.AuthorityGroupBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
-import alauncher.cn.measuringinstrument.view.DataActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -62,7 +60,17 @@ public class AuthorityUserFragment extends Fragment {
 
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
-        List<User> allUser = App.getDaoSession().getUserDao().loadAll();
+        // 这个只能出现比当前用户权限低的用户;
+        List<User> allUser = new ArrayList<>();
+        List<User> _datas = App.getDaoSession().getUserDao().loadAll();
+        for (User user : _datas) {
+            android.util.Log.d("wlDebug", "user = " + user.toString());
+            int limit = App.getDaoSession().getAuthorityGroupBeanDao().queryBuilder()
+                    .where(AuthorityGroupBeanDao.Properties.Id.eq(user.getUseAuthorityGroupID())).unique().getLimit();
+            if (limit > App.getCurrentAuthorityGroupBean().getLimit()) {
+                allUser.add(user);
+            }
+        }
         String[] _item = new String[allUser.size()];
         boolean[] _selected = new boolean[allUser.size()];
         boolean[] _base = new boolean[allUser.size()];
@@ -93,7 +101,7 @@ public class AuthorityUserFragment extends Fragment {
                         if (_selected[i]) {
                             _user.setUseAuthorityGroupID(authorityGroupID);
                         } else {
-                            _user.setUseAuthorityGroupID(-1);
+                            _user.setUseAuthorityGroupID(4);
                         }
                         App.getDaoSession().getUserDao().insertOrReplace(_user);
                     }

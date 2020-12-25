@@ -51,11 +51,9 @@ import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.stat.descriptive.rank.Max;
 import org.apache.commons.math3.stat.descriptive.rank.Min;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -76,6 +74,7 @@ import alauncher.cn.measuringinstrument.utils.Constants;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
 import alauncher.cn.measuringinstrument.utils.Format;
 import alauncher.cn.measuringinstrument.utils.StringConverter;
+import alauncher.cn.measuringinstrument.widget.CustomMarkerView;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -589,7 +588,7 @@ public class SPCStatistical2Activity extends BaseOActivity {
         if (!mFilterBean.getMachineInfo().equals("所有")) {
             queryString = queryString + " and " + ResultBean2Dao.Properties.MachineInfo.columnName + " = " + "'" + mFilterBean.getMachineInfo() + "'";
         }
-        if (mFilterBean.getAccout() != null) {
+        if (!mFilterBean.getAccout().equals("所有")) {
             queryString = queryString + " and " + ResultBean2Dao.Properties.HandlerAccount.columnName + " = " + "'" + mFilterBean.getAccout() + "'";
         }
         queryString = queryString + " order by _id desc limit " + _limit;
@@ -801,7 +800,11 @@ public class SPCStatistical2Activity extends BaseOActivity {
         }
         rbar = mean.evaluate(_rGroup);
         double d2 = Constants.d2[mFilterBean.groupSize - 2];
-        deviation = rbar / d2;
+        if(mFilterBean.isA3Auto()){
+            deviation = rbar / d2;
+        }else{
+            deviation = (mFilterBean.getA3() - mFilterBean.get_a3())/6;
+        }
         double cp, ca, CPKu, CPKl, cpl, cpu, cpk;
         _bean.a = deviation;
         cp = T / (6 * deviation);
@@ -816,10 +819,12 @@ public class SPCStatistical2Activity extends BaseOActivity {
         _bean.cpl = cpl;
         _bean.cpu = cpu;
         _bean.cpk = cpk;
-
         double pp, pa, PPKu, PPKl, ppl, ppu, ppk, deviation2;
-
-        deviation2 = StandardDeviation.evaluate(values);
+        if(mFilterBean.isA3Auto()){
+            deviation2 = StandardDeviation.evaluate(values);
+        }else{
+            deviation2 = (mFilterBean.getA3() - mFilterBean.get_a3())/6;
+        }
         pp = T / (6 * deviation2);
         pa = (_bean.averageValue - U) / (T / 2);
         PPKu = Math.abs(upperValue - _bean.averageValue) / (3 * deviation2);
@@ -837,7 +842,8 @@ public class SPCStatistical2Activity extends BaseOActivity {
         // 计算中心值
         // 计算标准差
         // 计算组数：数据个数 / 4
-        int group_size = _datas.size() / 4;
+//        int group_size = _datas.size() / 4;
+        int group_size = 25;
         // 组坐标上限;
         double group_upper_limit = _bean.averageValue + 4 * deviation2;
         // 组坐标上限;
@@ -950,8 +956,14 @@ public class SPCStatistical2Activity extends BaseOActivity {
 
         // 初始化筛选条件 用户
         int userDefaultPosition = 0;
-        users = App.getDaoSession().getUserDao().loadAll();
+        users = new ArrayList<>();
+        User __user = new User();
+        __user.setName("所有");
+        __user.setAccout("所有");
+        users.add(__user);
+        users.addAll(App.getDaoSession().getUserDao().loadAll());
         List<String> userList = new ArrayList<>();
+//        userList.add("所有");
         for (int i = 0; i < users.size(); i++) {
             User _user = users.get(i);
             userList.add(_user.getName());
@@ -1029,6 +1041,9 @@ public class SPCStatistical2Activity extends BaseOActivity {
         rChart.setDoubleTapToZoomEnabled(false);
 
         // chart.setOnChartValueSelectedListener(this);
+        CustomMarkerView mv = new CustomMarkerView(this, R.layout.custom_marker_view_layout);
+        chart.setMarkerView(mv);
+        rChart.setMarkerView(mv);
         chart.setDrawGridBackground(false);
         rChart.setDrawGridBackground(false);
 
@@ -1046,10 +1061,10 @@ public class SPCStatistical2Activity extends BaseOActivity {
 
         XAxis xAxis;
         {   // // X-Axis Style // //
-            xAxis = chart.getXAxis();
-
             chart.getXAxis().setDrawGridLines(false);
+            chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
             rChart.getXAxis().setDrawGridLines(false);
+            rChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
 
             // vertical grid lines
             // xAxis.enableGridDashedLine(10f, 10f, 0f);
@@ -1057,12 +1072,9 @@ public class SPCStatistical2Activity extends BaseOActivity {
 
         YAxis yAxis;
         {   // // Y-Axis Style // //
-            yAxis = chart.getAxisLeft();
-
             // disable dual axis (only use LEFT axis)
             chart.getAxisRight().setEnabled(false);
             rChart.getAxisRight().setEnabled(false);
-
             chart.getAxisLeft().setDrawGridLines(false);
             rChart.getAxisLeft().setDrawGridLines(false);
 
@@ -1078,10 +1090,10 @@ public class SPCStatistical2Activity extends BaseOActivity {
     private void initChart() {
         YAxis leftAxis;
         YAxis rightAxis;
-        XAxis xAxis;
         //不显示描述内容
         mCombinedChart.getDescription().setEnabled(false);
-
+        CustomMarkerView mv = new CustomMarkerView(this, R.layout.custom_marker_view_layout);
+        mCombinedChart.setMarkerView(mv);
         mCombinedChart.setDrawOrder(new CombinedChart.DrawOrder[]{
                 CombinedChart.DrawOrder.BAR,
                 CombinedChart.DrawOrder.LINE
@@ -1097,7 +1109,6 @@ public class SPCStatistical2Activity extends BaseOActivity {
         //
         leftAxis = mCombinedChart.getAxisLeft();
         rightAxis = mCombinedChart.getAxisRight();
-        xAxis = mCombinedChart.getXAxis();
         //图例说明
         Legend legend = mCombinedChart.getLegend();
         legend.setWordWrapEnabled(true);

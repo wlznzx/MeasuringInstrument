@@ -155,14 +155,14 @@
     <string name="remarks">备注</string>
     <string name="authority">权限</string>
     <string name="add_authority_group">添加权限组</string>
-    <string name="edit_authority_group">编辑用户组名</string>
+    <string name="edit_authority_group">编辑权限组</string>
     <string name="authority_set">权限设置</string>
     <string name="un_authorized">未授权</string>
     <string name="un_authorized_tips">该模块未授权，无法使用.</string>
     <string name="authority_name_cannot_be_empty">权限名不能为空</string>
     <string name="add_code_tips">程序名不能为空</string>
     <string name="grouping">分组</string>
-        <string name="login_title">用户登录</string>
+    <string name="login_title">用户登录</string>
     <string name="login">登录</string>
     <string name="login_user_password">密码:</string>
     <string name="describe_with_space">备\u3000\u3000注</string>
@@ -172,4 +172,6 @@
     <string name="standard_deviation">标准差</string>
     <string name="export_result">导出记录</string>
     <string name="edit_group">编辑分组</string>
+    <string name="authorization_failed_title">授权失败</string>
+    <string name="authorization_failed_msg">抱歉，您所处的用户组不具备开通此功能的权限。</string>
 </resources>

@@ -57,37 +57,37 @@ public class MainActivity extends BaseOActivity {
         super.onCreate(savedInstanceState);
         // 初始化所有的
         {
-            mMainInfo.add(new MainInfo(R.string.measuring, R.drawable.equalizer,0));
-            mMainInfo.add(new MainInfo(R.string.data_query, R.drawable.find_in_page,1));
-            mMainInfo.add(new MainInfo(R.string.parameter_management, R.drawable.functions,2));
-            mMainInfo.add(new MainInfo(R.string.calibration, R.drawable.straighten,3));
-            mMainInfo.add(new MainInfo(R.string.user_management, R.drawable.account_box,4));
-            mMainInfo.add(new MainInfo(R.string.authority_management, R.drawable.authority,5));
-            mMainInfo.add(new MainInfo(R.string.program_management, R.drawable.code,6));
-            mMainInfo.add(new MainInfo(R.string.system_management, R.drawable.phonelink_setup,7));
-            mMainInfo.add(new MainInfo(R.string.spc_analysis, R.drawable.show_chart,8));
-            mMainInfo.add(new MainInfo(R.string.statistical_report, R.drawable.assignment,9));
-            mMainInfo.add(new MainInfo(R.string.logout, R.drawable.logout_96,10));
+            mMainInfo.add(new MainInfo(R.string.measuring, R.drawable.equalizer, 0));
+            mMainInfo.add(new MainInfo(R.string.data_query, R.drawable.find_in_page, 1));
+            mMainInfo.add(new MainInfo(R.string.parameter_management, R.drawable.functions, 2));
+            mMainInfo.add(new MainInfo(R.string.calibration, R.drawable.straighten, 3));
+            mMainInfo.add(new MainInfo(R.string.user_management, R.drawable.account_box, 4));
+            mMainInfo.add(new MainInfo(R.string.authority_management, R.drawable.authority, 5));
+            mMainInfo.add(new MainInfo(R.string.program_management, R.drawable.code, 6));
+            mMainInfo.add(new MainInfo(R.string.system_management, R.drawable.phonelink_setup, 7));
+            mMainInfo.add(new MainInfo(R.string.spc_analysis, R.drawable.show_chart, 8));
+            mMainInfo.add(new MainInfo(R.string.statistical_report, R.drawable.assignment, 9));
+            mMainInfo.add(new MainInfo(R.string.logout, R.drawable.logout_96, 10));
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        android.util.Log.d("alauncher","mUser = " + mUser.toString());
+        android.util.Log.d("alauncher", "mUser = " + mUser.toString());
         mAuthorityGroupBean = App.getDaoSession().getAuthorityGroupBeanDao().load(Long.valueOf(mUser.getUseAuthorityGroupID()));
         useMainInfo.clear();
-        for(MainInfo info : mMainInfo){
+        for (MainInfo info : mMainInfo) {
             AuthorityBean _bean = null;
-            if(mAuthorityGroupBean != null){
+            if (mAuthorityGroupBean != null) {
                 _bean = App.getDaoSession().getAuthorityBeanDao().queryBuilder()
                         .where(AuthorityBeanDao.Properties.Id.eq(String.valueOf(info.id))
-                                ,AuthorityBeanDao.Properties.GroupID.eq(mAuthorityGroupBean.getId())).unique();
+                                , AuthorityBeanDao.Properties.GroupID.eq(mAuthorityGroupBean.getId())).unique();
             }
-            if(_bean == null){
+            if (_bean == null) {
                 // 默认打开权限;
             } else {
-                if(!_bean.getAuthorized()){
+                if (!_bean.getAuthorized()) {
                     continue;
                 }
             }
@@ -232,15 +232,15 @@ public class MainActivity extends BaseOActivity {
                 public void onClick(View v) {
                     AuthorityBean _bean = null;
                     // android.util.Log.d("alauncher","mAuthorityGroupBean = " + mAuthorityGroupBean.toString());
-                    if(mAuthorityGroupBean != null){
+                    if (mAuthorityGroupBean != null) {
                         _bean = App.getDaoSession().getAuthorityBeanDao().queryBuilder()
                                 .where(AuthorityBeanDao.Properties.Id.eq(String.valueOf(datas.get(position).id))
-                                        ,AuthorityBeanDao.Properties.GroupID.eq(mAuthorityGroupBean.getId())).unique();
+                                        , AuthorityBeanDao.Properties.GroupID.eq(mAuthorityGroupBean.getId())).unique();
                     }
-                    if(_bean == null){
+                    if (_bean == null) {
                         // 默认打开权限;
                     } else {
-                        if(!_bean.getAuthorized()){
+                        if (!_bean.getAuthorized()) {
                             DialogUtils.showDialog(MainActivity.this,
                                     getResources().getString(R.string.un_authorized),
                                     getResources().getString(R.string.un_authorized_tips));

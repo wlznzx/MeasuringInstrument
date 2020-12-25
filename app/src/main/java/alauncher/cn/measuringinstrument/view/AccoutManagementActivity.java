@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -14,15 +15,15 @@ import com.yanzhenjie.recyclerview.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
-import alauncher.cn.measuringinstrument.base.BaseActivity;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.base.ViewHolder;
 import alauncher.cn.measuringinstrument.bean.User;
+import alauncher.cn.measuringinstrument.database.greenDao.db.AuthorityGroupBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
 import alauncher.cn.measuringinstrument.widget.UserEditDialog;
 
@@ -43,6 +44,7 @@ public class AccoutManagementActivity extends BaseOActivity implements UserEditD
     UserDao mUserDao;
 
     List<User> mDatas;
+
     AccoutAdapter _adapter;
 
     @Override
@@ -58,14 +60,32 @@ public class AccoutManagementActivity extends BaseOActivity implements UserEditD
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void initView() {
-        rv.setSwipeMenuCreator(swipeMenuCreator);
+//        rv.setSwipeMenuCreator(swipeMenuCreator);
         rv.setOnItemMenuClickListener(mMenuItemClickListener);
         mUserDao = App.getDaoSession().getUserDao();
-        mDatas = mUserDao.loadAll();
+        updateData();
         _adapter = new AccoutAdapter(mDatas);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AccoutManagementActivity.this);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(_adapter);
+    }
+
+
+    private void updateData() {
+        mDatas = new ArrayList<>();
+        List<User> _datas = mUserDao.loadAll();
+        mDatas.clear();
+        for (User user : _datas) {
+            android.util.Log.d("wlDebug", "user = " + user.toString());
+            int limit = App.getDaoSession().getAuthorityGroupBeanDao().queryBuilder()
+                    .where(AuthorityGroupBeanDao.Properties.Id.eq(user.getUseAuthorityGroupID())).unique().getLimit();
+            if (user.getAccout().equals(App.handlerAccout)) {
+                mDatas.add(user);
+            }
+            if (limit > App.getCurrentAuthorityGroupBean().getLimit()) {
+                mDatas.add(user);
+            }
+        }
     }
 
     /**
@@ -172,7 +192,7 @@ public class AccoutManagementActivity extends BaseOActivity implements UserEditD
     };
 
     private void updateUI() {
-        mDatas = mUserDao.loadAll();
+        updateData();
         _adapter.setDatas(mDatas);
         _adapter.notifyDataSetChanged();
     }
@@ -210,6 +230,50 @@ public class AccoutManagementActivity extends BaseOActivity implements UserEditD
             holder.setText(R.id.accout_name_tv, datas.get(position).name);
             holder.setText(R.id.accout_status_tv, "" + mActivity.getResources().getStringArray(R.array.position)[datas.get(position).getStatus()]);
             holder.setText(R.id.accout_email_tv, "" + datas.get(position).email);
+
+            holder.setOnClickListener(R.id.accout_list_item_layout, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    doShowEditUserDialog(mDatas.get(position));
+                }
+            });
+
+            holder.setOnLongClickListener(R.id.accout_list_item_layout, new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    final AlertDialog.Builder normalDialog =
+                            new AlertDialog.Builder(AccoutManagementActivity.this);
+                    normalDialog.setIcon(R.drawable.delete_24_icon);
+                    normalDialog.setTitle("删除用户");
+                    normalDialog.setMessage("确认删除 " + mDatas.get(position).getAccout() + " 用户吗？");
+                    normalDialog.setPositiveButton("确定",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //...To-do
+                                    if (mDatas.get(position).getAccout().equals("admin")) {
+                                        Toast.makeText(AccoutManagementActivity.this, "管理员账号不能删除.", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    if (mDatas.get(position).getAccout().equals("etTester")) {
+
+                                    }
+                                    mUserDao.delete(mDatas.get(position));
+                                    updateUI();
+                                }
+                            });
+                    normalDialog.setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                    // 显示
+                    normalDialog.show();
+                    return false;
+                }
+            });
         }
 
         @Override

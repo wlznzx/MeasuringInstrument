@@ -64,7 +64,7 @@ public class AnalysisPatternActivity extends BaseOActivity implements DataUpdate
     @OnClick(R.id.save_btn)
     public void doSave(View v) {
         DialogUtils.showDialog(this, getResources().getString(R.string.save), getResources().getString(R.string.save_success));
-        bean.setIsAAuto(lineRG.getCheckedRadioButtonId() == R.id.deviation_auto_rb);
+        bean.setIsAAuto(deviationRG.getCheckedRadioButtonId() == R.id.deviation_auto_rb);
         bean.setIsLineAuto(lineRG.getCheckedRadioButtonId() == R.id.auto_line_rb);
         bean.setUclX(Double.valueOf(uclXEdt.getText().toString().trim()));
         bean.setLclX(Double.valueOf(lclXEdt.getText().toString().trim()));

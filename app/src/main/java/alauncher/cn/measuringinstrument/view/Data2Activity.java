@@ -27,9 +27,11 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
+import alauncher.cn.measuringinstrument.bean.AuthorityBean;
 import alauncher.cn.measuringinstrument.bean.FilterBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
 import alauncher.cn.measuringinstrument.bean.ResultBean2;
+import alauncher.cn.measuringinstrument.database.greenDao.db.AuthorityBeanDao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBean2Dao;
 import alauncher.cn.measuringinstrument.utils.CommonUtil;
@@ -82,6 +84,8 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     private String[] title = {"操作员", "时间", "工件号", "事件", "结果"};
 
+    private List<Boolean> authorityLists = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +98,15 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     @Override
     protected void initView() {
+        // 权限相关;
+        for (int i = 0; i < 1; i++) {
+            AuthorityBean _bean = App.getDaoSession().getAuthorityBeanDao().queryBuilder()
+                    .where(AuthorityBeanDao.Properties.Id.eq("1_" + i)
+                            , AuthorityBeanDao.Properties.GroupID.eq
+                                    (App.getCurrentAuthorityGroupBean().getId())).unique();
+            authorityLists.add(_bean == null ? true : _bean.getAuthorized());
+        }
+
         mResultBean2Dao = App.getDaoSession().getResultBean2Dao();
         mDates = App.getDaoSession().getParameterBean2Dao().queryBuilder()
                 .where(ParameterBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID()), ParameterBean2Dao.Properties.Enable.eq(true))
@@ -132,6 +145,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
                 finish();
             }
         });
+        mBtnDelete.setVisibility(authorityLists.get(0) ? View.VISIBLE : View.INVISIBLE);
     }
 
     /**
@@ -204,7 +218,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
      */
     private void excelDatas() {
         if (index == 0) {
-            excelBtn.setEnabled(false);
+            // excelBtn.setEnabled(false);
             return;
         }
         final AlertDialog builder = new AlertDialog.Builder(this)
@@ -457,8 +471,10 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
             if (selectedList.size() > 0) {
                 ResultBean2 _bean = selectedList.get(0);
-                for (int i = 0; i < _bean.getMItems().size(); i++) {
-                    titles.add("M" + _bean.getMItems().get(i) + "(" + _bean.getMDescribe().get(i) + ")");
+                if (_bean != null && _bean.getMItems() != null && _bean.getMDescribe() != null) {
+                    for (int i = 0; i < _bean.getMItems().size(); i++) {
+                        titles.add("M" + _bean.getMItems().get(i) + "(" + _bean.getMDescribe().get(i) + ")");
+                    }
                 }
             }
 
@@ -541,6 +557,8 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             strParamLt.add(bean.getResult());
         }
 
+        queryString = queryString + " ORDER BY " + ResultBean2Dao.Properties.TimeStamp.columnName + " DESC";
+
         Object[] objs = strParamLt.toArray();
         String[] strs = new String[objs.length];
 
@@ -562,11 +580,13 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         int mMType = cursor.getColumnIndex(ResultBean2Dao.Properties.MType.columnName);
         int mMachineInfo = cursor.getColumnIndex(ResultBean2Dao.Properties.MachineInfo.columnName);
         int mProcessNo = cursor.getColumnIndex(ResultBean2Dao.Properties.ProcessNo.columnName);
+        int id = cursor.getColumnIndex(ResultBean2Dao.Properties.Id.columnName);
 
         List<ResultBean2> _datas = new ArrayList<>();
 
         while (cursor.moveToNext()) {
             ResultBean2 rBean = new ResultBean2();
+            rBean.setId(cursor.getLong(id));
             rBean.setHandlerAccount(cursor.getString(HandlerAccount));
             rBean.setWorkID(cursor.getString(WorkID));
             rBean.setTimeStamp(cursor.getLong(TimeStamp));
@@ -581,6 +601,10 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             rBean.setProcessNo(cursor.getString(mProcessNo));
             _datas.add(rBean);
         }
-        mData2Adapter.notifyAdapter(_datas, false);
+
+        mData2Adapter = new Data2Adapter(Data2Activity.this, _datas, mDates);
+        rv.setAdapter(mData2Adapter);
+        mData2Adapter.setOnItemClickListener(this);
+//        mData2Adapter.notifyAdapter(_datas, false);
     }
 }
