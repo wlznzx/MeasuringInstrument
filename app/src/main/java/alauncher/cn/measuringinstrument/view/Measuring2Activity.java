@@ -311,14 +311,15 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
 
             Toastxiaoxi("测试结果保存成功");
             /*Toast.makeText(this, "测试结果保存成功." , Toast.LENGTH_SHORT).show();*/
+            if (App.getSetupBean().getIsAutoPopUp()) {
+                showAddDialog();
+            }
         }
         /*
         _bean.setUsrNum(_bean.getUsrNum() - 1);
         _dao.update(_bean);
          */
-        if (App.getSetupBean().getIsAutoPopUp()) {
-            showAddDialog();
-        }
+
         return true;
     }
 

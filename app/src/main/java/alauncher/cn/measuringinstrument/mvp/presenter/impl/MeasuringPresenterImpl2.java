@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.DebugUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -47,7 +46,6 @@ import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
 import alauncher.cn.measuringinstrument.utils.Arith;
 import alauncher.cn.measuringinstrument.utils.Avg;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
-import alauncher.cn.measuringinstrument.utils.DebugUitls;
 import alauncher.cn.measuringinstrument.utils.DialogUtils;
 import alauncher.cn.measuringinstrument.utils.Dif;
 import alauncher.cn.measuringinstrument.utils.ExcelUtil;
