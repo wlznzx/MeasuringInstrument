@@ -77,8 +77,9 @@ public class BuildUtils {
             WifiManager wifi = (WifiManager) context
                     .getSystemService(Context.WIFI_SERVICE);
             WifiInfo info = wifi.getConnectionInfo();
-            if (info != null && info.getMacAddress() != null)
+            if (info != null && info.getMacAddress() != null) {
                 mac = info.getMacAddress().replace(":", "");
+            }
         }
         if (mac != null) {
             mac = mac.toLowerCase();
@@ -91,7 +92,9 @@ public class BuildUtils {
         try {
             List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface nif : all) {
-                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+                if (!nif.getName().equalsIgnoreCase("wlan0")) {
+                    continue;
+                }
                 byte[] macBytes = nif.getHardwareAddress();
                 if (macBytes == null) {
                     return null;

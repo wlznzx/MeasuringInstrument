@@ -223,8 +223,9 @@ public class AccoutManagementActivity extends BaseOActivity implements UserEditD
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            if (datas.get(position).getAccout().equals(App.handlerAccout))
+            if (datas.get(position).getAccout().equals(App.handlerAccout)) {
                 holder.setImageResource(R.id.accout_item_radio, R.drawable.radio_checked);
+            }
             holder.setText(R.id.accout_tv, "" + datas.get(position).accout);
             holder.setText(R.id.accout_id_tv, "" + datas.get(position).id);
             holder.setText(R.id.accout_name_tv, datas.get(position).name);

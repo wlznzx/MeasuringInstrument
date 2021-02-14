@@ -23,6 +23,7 @@ public class UpgradeActivity extends Activity {
     private TextView content;
     private Button cancel;
     private Button start;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +39,9 @@ public class UpgradeActivity extends Activity {
         cancel = getView(R.id.cancel);
         start = getView(R.id.start);
 
-        if(Beta.getStrategyTask() == null) return;
+        if (Beta.getStrategyTask() == null) {
+            return;
+        }
         /*获取下载任务，初始化界面信息*/
         updateBtn(Beta.getStrategyTask());
         tv.setText(tv.getText().toString() + Beta.getStrategyTask().getSavedLength() + "");
@@ -114,7 +117,9 @@ public class UpgradeActivity extends Activity {
 
 
     public void updateBtn(DownloadTask task) {
-        if(task == null) return;
+        if (task == null) {
+            return;
+        }
 
         /*根据下载任务状态设置按钮*/
         switch (task.getStatus()) {

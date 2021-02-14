@@ -227,14 +227,18 @@ public class MValueView extends View {
         _value = mValue - baseValue;
         if (_value > 0) {
             _top = (float) ((3 * offectHeight) - _value / resolution * stepHeight);
-            if (_top < 0) _top = 0;
+            if (_top < 0) {
+                _top = 0;
+            }
             _bottom = getMeasuredHeight() / 2;
             // rect = new RectF(stepWidth + border, _top, stepWidth * 3 - border, _bottom);
             rect.set(stepWidth + border, _top, stepWidth * 3 - border, _bottom);
         } else {
             _value = Math.abs(_value);
             _top = getMeasuredHeight() / 2;
-            if (_top < 0) _top = 0;
+            if (_top < 0) {
+                _top = 0;
+            }
             _bottom = (float) (_top + _value / resolution * stepHeight);
 //            rect = new RectF(stepWidth + border, _top, stepWidth * 3 - border, _bottom);
             rect.set(stepWidth + border, _top, stepWidth * 3 - border, _bottom);

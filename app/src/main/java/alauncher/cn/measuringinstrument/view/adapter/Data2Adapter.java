@@ -70,7 +70,7 @@ public class Data2Adapter extends RecyclerView.Adapter<ViewHolder> {
 
         View itemView = LayoutInflater.from(context).inflate(R.layout.data_list_item2, parent, false);
         ViewGroup _Layout = itemView.findViewById(R.id.data_layout);
-        int id = itemView.generateViewId();
+        int id = View.generateViewId();
         itemView.setId(id);
         for (int i = 0; i < mValueID.size(); i++) {
             View valueView = LayoutInflater.from(context).inflate(R.layout.measure_data_item, _Layout, false);

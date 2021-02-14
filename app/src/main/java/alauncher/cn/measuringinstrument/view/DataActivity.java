@@ -144,7 +144,9 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
      * 全选和反选
      */
     private void selectAllMain() {
-        if (mDataAdapter == null) return;
+        if (mDataAdapter == null) {
+            return;
+        }
         if (!isSelectAll) {
             for (int i = 0, j = mDataAdapter.getMyLiveList().size(); i < j; i++) {
                 mDataAdapter.getMyLiveList().get(i).setSelect(true);
@@ -178,12 +180,16 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
         final AlertDialog builder = new AlertDialog.Builder(this)
                 .create();
         builder.show();
-        if (builder.getWindow() == null) return;
+        if (builder.getWindow() == null) {
+            return;
+        }
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
         TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
         Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
         Button sure = (Button) builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancle == null || sure == null) return;
+        if (msg == null || cancle == null || sure == null) {
+            return;
+        }
 
         if (index == 1) {
             msg.setText("删除后不可恢复，是否删除该条目？");
@@ -231,12 +237,16 @@ public class DataActivity extends BaseOActivity implements View.OnClickListener,
         final AlertDialog builder = new AlertDialog.Builder(this)
                 .create();
         builder.show();
-        if (builder.getWindow() == null) return;
+        if (builder.getWindow() == null) {
+            return;
+        }
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
         TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
         Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
         Button sure = (Button) builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancle == null || sure == null) return;
+        if (msg == null || cancle == null || sure == null) {
+            return;
+        }
 
         if (index == 1) {
             msg.setText("是否导出这个条目");

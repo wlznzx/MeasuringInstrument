@@ -112,6 +112,6 @@ public class AnalysisPatternActivity extends BaseOActivity implements DataUpdate
         App.getDaoSession().clear();
         bean = App.getDaoSession().getAnalysisPatternBeanDao().queryBuilder().where(AnalysisPatternBeanDao.Properties.PID.eq(pID)).unique();
         initBean();
-        android.util.Log.d("alauncher","AnalysisPatternActivity onResume");
+        android.util.Log.d("alauncher", "AnalysisPatternActivity onResume");
     }
 }

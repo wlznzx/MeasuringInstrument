@@ -386,6 +386,7 @@ public class SPCStatistical2Activity extends BaseOActivity {
                 .where(ParameterBean2Dao.Properties.CodeID.eq(mFilterBean.codeID), ParameterBean2Dao.Properties.Enable.eq(true))
                 .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
         ParameterBean2 _bean2 = mParameterBean2Lists.get(mFilterBean.getTargetNum());
+        android.util.Log.d("wlDebug", "spc pid = " + _bean2.getId());
         AnalysisPatternBean bean = App.getDaoSession().getAnalysisPatternBeanDao().queryBuilder().where(AnalysisPatternBeanDao.Properties.PID.eq(_bean2.getId())).unique();
         mFilterBean.isTimeAuto = timeSW.isChecked();
         mFilterBean.isLineAuto = bean.isLineAuto;
@@ -427,7 +428,9 @@ public class SPCStatistical2Activity extends BaseOActivity {
             //处理耗时操作
             startStatistical();
             List<ResultBean2> _datas = dataFilterUpdate();
-            if (_datas == null) return null;
+            if (_datas == null) {
+                return null;
+            }
             if (spc_mode == JZJCT_MODE) {
                 return jzjctDatas(_datas);
             } else if (spc_mode == YBYXT_MODE) {
@@ -555,7 +558,9 @@ public class SPCStatistical2Activity extends BaseOActivity {
         //onCancelled方法用于在取消执行中的任务时更改UI
         @Override
         protected void onCancelled() {
-            if (dialog != null) dialog.dismiss();
+            if (dialog != null) {
+                dialog.dismiss();
+            }
         }
     }
 
@@ -800,10 +805,10 @@ public class SPCStatistical2Activity extends BaseOActivity {
         }
         rbar = mean.evaluate(_rGroup);
         double d2 = Constants.d2[mFilterBean.groupSize - 2];
-        if(mFilterBean.isA3Auto()){
+        if (mFilterBean.isA3Auto()) {
             deviation = rbar / d2;
-        }else{
-            deviation = (mFilterBean.getA3() - mFilterBean.get_a3())/6;
+        } else {
+            deviation = (mFilterBean.getA3() - mFilterBean.get_a3()) / 6;
         }
         double cp, ca, CPKu, CPKl, cpl, cpu, cpk;
         _bean.a = deviation;
@@ -820,10 +825,10 @@ public class SPCStatistical2Activity extends BaseOActivity {
         _bean.cpu = cpu;
         _bean.cpk = cpk;
         double pp, pa, PPKu, PPKl, ppl, ppu, ppk, deviation2;
-        if(mFilterBean.isA3Auto()){
+        if (mFilterBean.isA3Auto()) {
             deviation2 = StandardDeviation.evaluate(values);
-        }else{
-            deviation2 = (mFilterBean.getA3() - mFilterBean.get_a3())/6;
+        } else {
+            deviation2 = (mFilterBean.getA3() - mFilterBean.get_a3()) / 6;
         }
         pp = T / (6 * deviation2);
         pa = (_bean.averageValue - U) / (T / 2);
@@ -858,9 +863,13 @@ public class SPCStatistical2Activity extends BaseOActivity {
             float _num = 0;
             for (int j = 0; j < values.length; j++) {
                 if (i == 0) {
-                    if (values[j] < group_lower_limit + (i + 1) * group_space) _num++;
+                    if (values[j] < group_lower_limit + (i + 1) * group_space) {
+                        _num++;
+                    }
                 } else if (i == group_size - 1) {
-                    if (values[j] >= group_lower_limit + i * group_space) _num++;
+                    if (values[j] >= group_lower_limit + i * group_space) {
+                        _num++;
+                    }
                 } else if (values[j] >= group_lower_limit + i * group_space && values[j] < group_lower_limit + (i + 1) * group_space) {
                     _num++;
                 }

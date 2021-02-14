@@ -79,7 +79,9 @@ public class JdbcUtil {
     public static int addResult(String factory_code, String machine_code, int prog_id, String serial_number,
                                 String result, String ng_reason, String operator, String operate_time) throws Exception {
         Connection con = getConnection();
-        if (con == null) return -1;
+        if (con == null) {
+            return -1;
+        }
         // String sql = "insert into aistu values('" + name + "'," + id + ",'" + age + "','" + email + "','" + tel + "','" + salary + "','" + riqi + "')";
         String sql = "insert into ntqc_result (factory_code,machine_code,prog_id,serial_number,result,ng_reason,operator,operate_time) "
                 + "values('" + factory_code + "','" + machine_code + "','" + prog_id + "','" + serial_number + "','" + result + "','" + ng_reason + "','" + operator + "','" + operate_time + "')";
@@ -94,7 +96,9 @@ public class JdbcUtil {
     public static int selectDevice(String machine_code) {
         int count = 0;
         Connection con = getConnection();
-        if (con == null) return -1;
+        if (con == null) {
+            return -1;
+        }
         String sql = "select count(*) from ntqc_equipment where machine_code = '" + machine_code + "'";
         try {
 
@@ -112,7 +116,9 @@ public class JdbcUtil {
 
     public static int addDevice(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) {
         Connection con = getConnection();
-        if (con == null) return -1;
+        if (con == null) {
+            return -1;
+        }
         String sql = "insert into ntqc_equipment (factory_code,factory_name,machine_code,machine_name,manufacturer,manufacture_date,rmk,operator,operate_time) values (?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -134,7 +140,9 @@ public class JdbcUtil {
 
     public static int updateDevice(String factory_code, String factory_name, String machine_code, String machine_name, String manufacturer, String rmk, String operator) {
         Connection conn = getConnection();
-        if (conn == null) return -1;
+        if (conn == null) {
+            return -1;
+        }
         String sql = "update ntqc_equipment set factory_code=?,factory_name=?,machine_name=?,manufacturer=?,rmk=?,operator=?,operate_time=? where machine_code=?";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -236,7 +244,9 @@ public class JdbcUtil {
     public static int addResult2(String factory_code, String machine_code, int prog_id, String serial_number,
                                  final ResultBean2 _bean) throws Exception {
         Connection conn = getConnection();
-        if (conn == null) return -1;
+        if (conn == null) {
+            return -1;
+        }
         String sql = "insert into ntqc_result (factory_code,machine_code,prog_id,serial_number,result,ng_reason,operator,operate_time) VALUES (?,?,?,?,?,?,?,?);";
         PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
         pstmt.setString(1, factory_code);
@@ -274,7 +284,9 @@ public class JdbcUtil {
 
     public static int deleteParam2s(String factory_code, String machine_code, int progID) throws SQLException {
         Connection conn = getConnection();
-        if (conn == null) return -1;
+        if (conn == null) {
+            return -1;
+        }
         String sql = "delete from ntqc_param_config where machine_code=? and factory_code=? and prog_id=?";
         PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         pstmt.setString(1, machine_code);
@@ -289,7 +301,9 @@ public class JdbcUtil {
     public static int addParam2Config(String factory_code, String machine_code, List<ParameterBean2> list) throws SQLException {
         Connection conn = getConnection();
         int resultNum = 0;
-        if (conn == null) return -1;
+        if (conn == null) {
+            return -1;
+        }
         String sql = "insert into ntqc_param_config (factory_code,machine_code,prog_id," +
                 "prog_name,param_key,param_name,type,nominal_value,lower_tolerance,upper_tolerance,warning_up,warning_low,rmk) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
         for (int i = 0; i < list.size(); i++) {
@@ -319,7 +333,9 @@ public class JdbcUtil {
                                      String param_name, String type,
                                      float warning_up, float warning_low, String rmk, ParameterBean _bean) throws Exception {
         Connection conn = getConnection();
-        if (conn == null) return -1;
+        if (conn == null) {
+            return -1;
+        }
         String sql = "insert into ntqc_param_config (factory_code,machine_code,prog_id," +
                 "prog_name,param_key,param_name,type,nominal_value,lower_tolerance,upper_tolerance,warning_up,warning_low,rmk) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
@@ -424,7 +440,9 @@ public class JdbcUtil {
                                         String param_name, String type,
                                         float warning_up, float warning_low, String rmk, ParameterBean _bean) throws Exception {
         Connection conn = getConnection();
-        if (conn == null) return -1;
+        if (conn == null) {
+            return -1;
+        }
         String sql = "update ntqc_param_config set factory_code=?,prog_name=?,param_name=?,type=?,nominal_value=?,lower_tolerance=?,upper_tolerance=?,warning_up=?,warning_low=?,rmk=? where machine_code=? and prog_id=? and param_key=?";
         PreparedStatement pstmt = (PreparedStatement) conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//传入参数：Statement.RETURN_GENERATED_KEYS
         pstmt.setString(1, factory_code);
@@ -476,7 +494,9 @@ public class JdbcUtil {
     public static int selectParamConfig(String machine_code, int prog_id, String param_key) {
         int count = 0;
         Connection con = getConnection();
-        if (con == null) return -1;
+        if (con == null) {
+            return -1;
+        }
         String sql = "select count(*) from ntqc_param_config where machine_code = '" + machine_code + "' and " + "prog_id = '" + prog_id + "' and param_key = '" + param_key + "'";
         try {
             PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);

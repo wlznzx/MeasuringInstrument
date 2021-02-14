@@ -179,14 +179,18 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
 
     private void startValue() {
         // start 取值;
-        if (inValue) return;
+        if (inValue) {
+            return;
+        }
         inValue = true;
         mMeasuringPresenter.startMeasuring();
     }
 
     private void stopValue() {
         // stop 取值;
-        if (!inValue) return;
+        if (!inValue) {
+            return;
+        }
         inValue = false;
         mMeasuringPresenter.stopMeasuring();
     }
@@ -231,12 +235,16 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
         final AlertDialog builder = new AlertDialog.Builder(this)
                 .create();
         builder.show();
-        if (builder.getWindow() == null) return;
+        if (builder.getWindow() == null) {
+            return;
+        }
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
         TextView msg = builder.findViewById(R.id.tv_msg);
         Button cancel = builder.findViewById(R.id.btn_cancle);
         Button sure = builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancel == null || sure == null) return;
+        if (msg == null || cancel == null || sure == null) {
+            return;
+        }
         msg.setText("请校验后继续测量.");
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -397,8 +405,9 @@ public class MeasuringActivity extends BaseOActivity implements MeasuringActivit
                     }
                     // mGroupMs[i].setText(group[i]);
                 }
-                if (!((MeasuringPresenterImpl) mMeasuringPresenter).mGeted[0])
+                if (!((MeasuringPresenterImpl) mMeasuringPresenter).mGeted[0]) {
                     mGroupMs[1].setText("M1分组: " + group[0]); // 显示M1分组;
+                }
                 break;
             case 1:
                 mTValues[3].setText(NumberUtils.get4bits(mValues[0]));

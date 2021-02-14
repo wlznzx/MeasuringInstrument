@@ -74,7 +74,7 @@ public class MainActivity extends BaseOActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        android.util.Log.d("alauncher", "mUser = " + mUser.toString());
+//        android.util.Log.d("alauncher", "mUser = " + mUser.toString());
         mAuthorityGroupBean = App.getDaoSession().getAuthorityGroupBeanDao().load(Long.valueOf(mUser.getUseAuthorityGroupID()));
         useMainInfo.clear();
         for (MainInfo info : mMainInfo) {
@@ -170,12 +170,16 @@ public class MainActivity extends BaseOActivity {
         final AlertDialog builder = new AlertDialog.Builder(MainActivity.this)
                 .create();
         builder.show();
-        if (builder.getWindow() == null) return;
+        if (builder.getWindow() == null) {
+            return;
+        }
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
         TextView msg = builder.findViewById(R.id.tv_msg);
         Button cancel = builder.findViewById(R.id.btn_cancle);
         Button sure = builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancel == null || sure == null) return;
+        if (msg == null || cancel == null || sure == null) {
+            return;
+        }
         msg.setText("确认注销当前账号？");
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -332,11 +336,13 @@ public class MainActivity extends BaseOActivity {
     private AlertDialog builder;
 
     private void exitDialog() {
-        // new AlertDialog.Builder(this).setTitle("列表框").setItems(new String[]{"Item1", "Item2"}, null).show();
         builder = new AlertDialog.Builder(MainActivity.this).create();
         builder.show();
-        if (builder.getWindow() == null) return;
-        builder.getWindow().setContentView(R.layout.exit_dialog);//设置弹出框加载的布局
+        if (builder.getWindow() == null) {
+            return;
+        }
+        //设置弹出框加载的布局
+        builder.getWindow().setContentView(R.layout.exit_dialog);
         TextView cancellationTV = builder.findViewById(R.id.cancellation_btn);
         TextView exitTV = builder.findViewById(R.id.exit_btn);
         TextView quitTV = builder.findViewById(R.id.quit_btn);

@@ -72,14 +72,16 @@ public class CodeDetailActivity extends BaseActivity implements ForceCalibration
                 measureConfigurationFragment = (MeasureConfigurationFragment) fragment;
             }
         }
-        if (codeBaseInfoFragment == null)
+        if (codeBaseInfoFragment == null) {
             codeBaseInfoFragment = new CodeBaseInfoFragment();
+        }
         if (forceCalibrationFragment == null) {
             forceCalibrationFragment = new ForceCalibrationFragment();
             forceCalibrationFragment.setRefreshInterface(this);
         }
-        if (mCodeStepFragment2 == null)
+        if (mCodeStepFragment2 == null) {
             mCodeStepFragment2 = new CodeStepFragment2();
+        }
         if (mWorkpieceFragment == null) {
             mWorkpieceFragment = new WorkpieceFragment();
         }

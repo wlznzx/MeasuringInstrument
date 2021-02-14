@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
-import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Typeface;
@@ -15,6 +14,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.utils.Arith;
 
 public class MValueViewLandscape extends View {
@@ -170,12 +170,16 @@ public class MValueViewLandscape extends View {
         _value = mValue - baseValue;
         if (_value > 0) {
             _right = (float) (halfWidth + _value / resolution * stepWidth);
-            if (_right > getMeasuredWidth() - border) _right = getMeasuredWidth() - border;
+            if (_right > getMeasuredWidth() - border) {
+                _right = getMeasuredWidth() - border;
+            }
             rect.set(halfWidth + border, border * 2, _right, getMeasuredHeight() - border * 2);
         } else {
             // _value = Math.abs(_value);
             _left = (float) (halfWidth + _value / resolution * stepWidth);
-            if (_left < border) _left = border;
+            if (_left < border) {
+                _left = border;
+            }
             rect.set(_left, border * 2, halfWidth, getMeasuredHeight() - border * 2);
         }
         /*
@@ -187,18 +191,24 @@ public class MValueViewLandscape extends View {
         */
         if (_value > 0) {
             if (_value > upperTolerance) {
+                android.util.Log.d("wlDebug", "use redLinearGradient.");
                 paint.setShader(redLinearGradient);
             } else if (_value > hw) {
+                android.util.Log.d("wlDebug", "use yellowLinearGradient.");
                 paint.setShader(yellowLinearGradient);
             } else {
+                android.util.Log.d("wlDebug", "use greenLinearGradient.");
                 paint.setShader(greenLinearGradient);
             }
         } else {
             if (_value < lowerTolerance) {
+
                 paint.setShader(redLinearGradient);
             } else if (_value < lw) {
+
                 paint.setShader(yellowLinearGradient);
             } else {
+
                 paint.setShader(greenLinearGradient);
             }
         }
@@ -215,5 +225,42 @@ public class MValueViewLandscape extends View {
         float baseLineY = Math.abs(paint.ascent() + paint.descent()) / 2;
         canvas.drawText(Arith.double2Str(mValue), -textWidth / 2, baseLineY, paint);
         // canvas.drawText(String.valueOf(mValue), -textWidth / 2, baseLineY, paint);
+    }
+
+    public int getColorByValue(double pValue) {
+        pValue = pValue - baseValue;
+        // HL刻度线 , 上公差线;
+        upperTolerance = nominal_value + upper_tolerance_value - baseValue;
+        // LL刻度线 , 下公差线;
+        lowerTolerance = nominal_value + lower_tolerance_value - baseValue;
+        hw = 0.9 * upperTolerance + 0.1 * lowerTolerance;
+        lw = 0.1 * upperTolerance + 0.9 * lowerTolerance;
+        /*
+        android.util.Log.d("wlDebug", "upperTolerance = " + upperTolerance);
+        android.util.Log.d("wlDebug", "lowerTolerance = " + lowerTolerance);
+        android.util.Log.d("wlDebug", "hw = " + hw);
+        android.util.Log.d("wlDebug", "lw = " + lw);
+        android.util.Log.d("wlDebug", "pValue = " + pValue);
+           */
+        if (pValue > 0) {
+            if (pValue > upperTolerance) {
+                return R.drawable.measure_item_ng;
+            } else if (pValue > hw) {
+                return R.drawable.measure_item_warning;
+            } else {
+                return R.drawable.measure_item_ok;
+            }
+        } else {
+            if (pValue < lowerTolerance) {
+//                android.util.Log.d("wlDebug", "use redLinearGradient2.");
+                return R.drawable.measure_item_ng;
+            } else if (pValue < lw) {
+//                android.util.Log.d("wlDebug", "use yellowLinearGradient2.");
+                return R.drawable.measure_item_warning;
+            } else {
+//                android.util.Log.d("wlDebug", "use greenLinearGradient2.");
+                return R.drawable.measure_item_ok;
+            }
+        }
     }
 }

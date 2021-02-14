@@ -19,9 +19,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.thl.filechooser.FileChooser;
+import com.thl.filechooser.FileInfo;
+
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
 import alauncher.cn.measuringinstrument.utils.BackupTask;
+import alauncher.cn.measuringinstrument.utils.ContentUriUtil;
 import alauncher.cn.measuringinstrument.utils.UriToPathUtil;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -72,12 +76,16 @@ public class BackupActivity extends BaseOActivity implements BackupTask.BackupIn
                 final AlertDialog builder = new AlertDialog.Builder(this)
                         .create();
                 builder.show();
-                if (builder.getWindow() == null) return;
+                if (builder.getWindow() == null) {
+                    return;
+                }
                 builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
                 TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
                 Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
                 Button sure = (Button) builder.findViewById(R.id.btn_sure);
-                if (msg == null || cancle == null || sure == null) return;
+                if (msg == null || cancle == null || sure == null) {
+                    return;
+                }
                 msg.setText("确认导入数据？");
                 cancle.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -94,6 +102,7 @@ public class BackupActivity extends BaseOActivity implements BackupTask.BackupIn
                 });
                 break;
             case R.id.out_btn:
+                /*
                 final AlertDialog outbuilder = new AlertDialog.Builder(this)
                         .create();
                 outbuilder.show();
@@ -117,6 +126,36 @@ public class BackupActivity extends BaseOActivity implements BackupTask.BackupIn
                         outbuilder.dismiss();
                     }
                 });
+                 */
+                FileChooser fileChooser = new FileChooser(BackupActivity.this, new FileChooser.FileChoosenListener() {
+                    @Override
+                    public void onFileChoosen(String filePath) {
+                        // ((TextView) findViewById(R.id.tv_msg)).setText(filePath);
+//                        android.util.Log.d("wlDebug", "filePath = " + filePath);
+                        dataBackup(filePath);
+                    }
+                });
+                fileChooser.setBackIconRes(R.drawable.arrow_back_24px);
+                fileChooser.setTitle(getResources().getString(R.string.select_output_path));
+                fileChooser.setDoneText(getResources().getString(R.string.ok));
+                fileChooser.setThemeColor(R.color.colorPrimary);
+                //                          FILE_TYPE_FOLDER="type_folder";  //文件夹
+                //                          FILE_TYPE_VIDEO="type_video";    //视频
+                //                          FILE_TYPE_AUDIO="type_audio";    //音频
+                //                          FILE_TYPE_FILE="type_file";      //全部文件
+                //                          FILE_TYPE_APK="type_apk";        //apk
+                //                          FILE_TYPE_ZIP="type_zip";        //zip
+                //                          FILE_TYPE_RAR="type_rar";        //rar
+                //                          FILE_TYPE_JPEG="type_jpeg";      //jpeg
+                //                          FILE_TYPE_JPG="type_jpg";         //jpg
+                //                          FILE_TYPE_PNG="type_png";         //png
+                //
+                //                          FILE_TYPE_ALL="type_all";         //所有文件
+                //                           FILE_TYPE_IMAGE="type_image";    //所有图片
+                //                           FILE_TYPE_PACKAGE="type_package";  //压缩包
+                fileChooser.setChooseType(FileInfo.FILE_TYPE_FOLDER);
+                fileChooser.showFile(true);  //是否显示文件
+                fileChooser.open();
                 break;
         }
     }
@@ -127,8 +166,8 @@ public class BackupActivity extends BaseOActivity implements BackupTask.BackupIn
     }
 
     // 数据备份
-    private void dataBackup() {
-        new BackupTask(this, this, true).execute("backupDatabase");
+    private void dataBackup(String path) {
+        new BackupTask(this, this, true).execute("backupDatabase", path);
     }
 
     @Override
@@ -137,6 +176,8 @@ public class BackupActivity extends BaseOActivity implements BackupTask.BackupIn
         if (resultCode == Activity.RESULT_OK) {//是否选择，没选择就不会继续
             Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。
             String _path = UriToPathUtil.getFilePathByUri(this, uri);
+//            String _path = ContentUriUtil.getPath(this, uri);
+            android.util.Log.d("wlDebug", "ContentUriUtil.getFilePathByUri = " + ContentUriUtil.getPath(this, uri));
             // _path = getDataColumn(this, uri, null, null);
             android.util.Log.d("wlDebug", "_path = " + _path);
             // _path = uri.getPath();
@@ -220,8 +261,9 @@ public class BackupActivity extends BaseOActivity implements BackupTask.BackupIn
                 return cursor.getString(column_index);
             }
         } finally {
-            if (cursor != null)
+            if (cursor != null){
                 cursor.close();
+            }
         }
         return null;
     }

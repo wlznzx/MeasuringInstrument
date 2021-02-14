@@ -75,7 +75,7 @@ public class LoginActivity extends BaseOActivity {
         actionTips.setVisibility(View.INVISIBLE);
 
         RememberPasswordBean _bean = App.getDaoSession().getRememberPasswordBeanDao().load(App.SETTING_ID);
-        if(_bean != null){
+        if (_bean != null) {
             if (_bean.getIsRemeber() && _bean.getLogined()) {
                 loginUserNameEdt.setText(_bean.getAccount());
                 loginUserPasswordEdt.setText(_bean.getPassowrd());
@@ -228,7 +228,7 @@ public class LoginActivity extends BaseOActivity {
 
     @OnClick(R.id.quick_login_btn)
     public void onQuickBtn(View v) {
-        App.handlerAccout = "operator";
+        App.handlerAccout = "defOperator";
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }

@@ -8,6 +8,7 @@ import android.widget.EditText;
 
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
+import alauncher.cn.measuringinstrument.bean.AnalysisPatternBean;
 import alauncher.cn.measuringinstrument.bean.CalibrationBean;
 import alauncher.cn.measuringinstrument.bean.CodeBean;
 import alauncher.cn.measuringinstrument.bean.ForceCalibrationBean;
@@ -55,7 +56,9 @@ public class CodeEditDialog extends Dialog {
                 break;
             case R.id.yes:
                 if (doCodeAdd()) {
-                    if (dataUpdateInterface != null) dataUpdateInterface.dataUpdate();
+                    if (dataUpdateInterface != null) {
+                        dataUpdateInterface.dataUpdate();
+                    }
                     dismiss();
                 }
                 break;
@@ -246,6 +249,19 @@ public class CodeEditDialog extends Dialog {
                     groupBean2.setPID(pID);
                     App.getDaoSession().getGroupBean2Dao().insertOrReplace(groupBean2);
                 }
+
+                // 创建默认分析参数;
+                AnalysisPatternBean _analysisPatternBean = new AnalysisPatternBean();
+                _analysisPatternBean.setPID(pID);
+                _analysisPatternBean.setIsAAuto(true);
+                _analysisPatternBean.setIsLineAuto(true);
+                _analysisPatternBean.setUclX(0);
+                _analysisPatternBean.setLclX(0);
+                _analysisPatternBean.setUclR(0);
+                _analysisPatternBean.setLclR(0);
+                _analysisPatternBean.setA3(0);
+                _analysisPatternBean.set_a3(0);
+                App.getDaoSession().getAnalysisPatternBeanDao().insert(_analysisPatternBean);
             }
         }
     }

@@ -22,14 +22,17 @@ public class DeviceUtils {
             WifiManager wifi = (WifiManager) context
                     .getSystemService(Context.WIFI_SERVICE);
             WifiInfo info = wifi.getConnectionInfo();
-            if (info != null && info.getMacAddress() != null)
+            if (info != null && info.getMacAddress() != null) {
                 mac = info.getMacAddress().replace(":", "");
+            }
         }
         if (mac != null) {
             mac = mac.toLowerCase();
         }
         // return "YU:QI:NO:1";
-        if(mac == null)return "ALauncher";
+        if (mac == null) {
+            return "ALauncher";
+        }
         return mac;
     }
 
@@ -37,7 +40,9 @@ public class DeviceUtils {
         try {
             List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface nif : all) {
-                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+                if (!nif.getName().equalsIgnoreCase("wlan0")) {
+                    continue;
+                }
                 byte[] macBytes = nif.getHardwareAddress();
                 if (macBytes == null) {
                     return null;
@@ -75,7 +80,9 @@ public class DeviceUtils {
             iF = interfaces.nextElement();
             try {
                 hardWareAddress = bytesToString(iF.getHardwareAddress());
-                if (hardWareAddress == null) continue;
+                if (hardWareAddress == null){
+                    continue;
+                }
             } catch (SocketException e) {
                 e.printStackTrace();
             }

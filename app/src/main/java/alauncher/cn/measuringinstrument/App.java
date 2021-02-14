@@ -2,8 +2,9 @@ package alauncher.cn.measuringinstrument;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
+
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
@@ -67,7 +68,7 @@ public class App extends MultiDexApplication {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        MultiDex.install(this);
+        // MultiDex.install(this);
     }
 
     @Override
@@ -105,6 +106,7 @@ public class App extends MultiDexApplication {
             }
         };
         Bugly.init(getApplicationContext(), "e4d9621d74", true);
+        MultiDex.install(this);
     }
 
     public static DaoSession getDaoSession() {
@@ -202,6 +204,16 @@ public class App extends MultiDexApplication {
             _operator.setEmail("");
             _operator.setUseAuthorityGroupID(3);
             getDaoSession().getUserDao().insert(_operator);
+
+            User _defOperator = new User();
+            _defOperator.setAccout("defOperator");
+            _defOperator.setPassword("123456");
+            _defOperator.setName("默认用户");
+            _defOperator.setStatus(0);
+            _defOperator.setId("5");
+            _defOperator.setEmail("");
+            _defOperator.setUseAuthorityGroupID(3);
+            getDaoSession().getUserDao().insert(_defOperator);
         }
 
         if (getDaoSession().getAuthorityGroupBeanDao().loadAll().size() == 0) {

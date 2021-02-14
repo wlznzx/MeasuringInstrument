@@ -64,7 +64,9 @@ public class GroupEditDialog extends Dialog {
                 break;
             case R.id.yes:
                 if (doConditionAdd()) {
-                    if (dataUpdateInterface != null) dataUpdateInterface.dataUpdate();
+                    if (dataUpdateInterface != null) {
+                        dataUpdateInterface.dataUpdate();
+                    }
                     dismiss();
                 }
                 break;

@@ -168,20 +168,24 @@ public class ConditionDialog extends Dialog {
             return false;
         }
 
-        if (_bean == null) _bean = new TriggerConditionBean();
+        if (_bean == null) {
+            _bean = new TriggerConditionBean();
+        }
         try {
             _bean.setConditionName(conditionNameEdt.getText().toString().trim());
             _bean.setIsScale(isScaleSwitch.isChecked());
-            if (!isScaleSwitch.isChecked())
+            if (!isScaleSwitch.isChecked()) {
                 _bean.setUpperLimit(Double.valueOf(upperlimitEdt.getText().toString().trim()));
-            if (!isScaleSwitch.isChecked())
+            }
+            if (!isScaleSwitch.isChecked()) {
                 _bean.setLowerLimit(Double.valueOf(lowerlimitEdt.getText().toString().trim()));
-
+            }
             _bean.setStableTime(Double.valueOf(scaleTimeEdt.getText().toString().trim()));
             _bean.setCodeID(App.getSetupBean().getCodeID());
             _bean.setMIndex(mParameterBean2s.get(mIndexSP.getSelectedItemPosition()).getSequenceNumber());
-            if (isScaleSwitch.isChecked())
+            if (isScaleSwitch.isChecked()) {
                 _bean.setScale(Double.valueOf(scaleEdt.getText().toString().trim()));
+            }
             App.getDaoSession().getTriggerConditionBeanDao().insertOrReplace(_bean);
             return true;
         } catch (NumberFormatException e) {
@@ -195,7 +199,7 @@ public class ConditionDialog extends Dialog {
         void upDateUserUI();
     }
 
-
+    @Override
     public void dismiss() {
         //避免闪屏 提高用户体验
         new Handler().postDelayed(new Runnable() {

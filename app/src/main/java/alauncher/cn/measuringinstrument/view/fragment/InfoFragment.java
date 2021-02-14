@@ -23,7 +23,6 @@ import alauncher.cn.measuringinstrument.utils.DialogUtils;
 import alauncher.cn.measuringinstrument.utils.JdbcUtil;
 import alauncher.cn.measuringinstrument.utils.SPUtils;
 import alauncher.cn.measuringinstrument.utils.SystemPropertiesProxy;
-import alauncher.cn.measuringinstrument.view.ParameterManagement2Activity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -136,7 +135,13 @@ public class InfoFragment extends Fragment {
         softwareVersionEdt.setText(BuildUtils.packageName(getContext()));
         androidVersionEdt.setText(Build.VERSION.RELEASE);
         deviceCodeEdt.setText(SystemPropertiesProxy.getString(getContext(), "ro.serialno"));
-        baseVersionEdt.setText(SystemPropertiesProxy.getString(getContext(), "ro.build.description"));
+        String description = SystemPropertiesProxy.getString(getContext(), "ro.build.description");
+        String str[] = description.split("\\.");
+        if (str != null && str.length >= 3) {
+            baseVersionEdt.setText(str[3]);
+        } else {
+            baseVersionEdt.setText(description);
+        }
     }
 
     public class SyncTask extends AsyncTask<String, Integer, String> {

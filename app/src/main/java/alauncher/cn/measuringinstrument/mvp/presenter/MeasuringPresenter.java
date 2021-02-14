@@ -45,4 +45,6 @@ public interface MeasuringPresenter {
     boolean[] getGeted();
 
     void setPause(boolean isPause);
+
+    boolean isInMeasuring(String item);
 }

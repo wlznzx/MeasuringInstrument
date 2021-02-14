@@ -291,10 +291,11 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         android.util.Log.d("wlDebug", "" + stepBeans.toString());
 
         maxStep = stepBeans.size();
-        if (maxStep > 0)
+        if (maxStep > 0) {
             currentStep = 0;
-        else
+        } else {
             currentStep = -1;
+        }
 
         // 判断是否设置分步测量;
         isSingleStep = true;
@@ -312,6 +313,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
         android.util.Log.d("wlDebug", "processBeanLists = " + processBeanLists.toString());
         android.util.Log.d("wlDebug", "mKeyMap = " + mKeyMap.toString());
+        android.util.Log.d("wlDebug", "haveProcessCalculate = " + haveProcessCalculate);
         if (isSingleStep) {
             // 没有分步,判断是否有过程值与单点值同时存在的情况；
             if (haveProcessCalculate) {
@@ -361,7 +363,9 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             serialHelper = new SerialHelper(sPort, iBaudRate) {
                 @Override
                 protected void onDataReceived(ComBean paramComBean) {
-                    if (isPaused) return;
+                    if (isPaused) {
+                        return;
+                    }
                     // 重新解析Byte;
                     try {
                         Thread.sleep(40);
@@ -397,7 +401,6 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                                     _chValue[1] = paramComBean.bRec[i + 9];
                                     values[3] = ByteUtil.ByteArrToHex(_chValue);
                                 }
-
 
                                 if (mCalibrationBean != null) {
                                     chValues[0] = Arith.add(Arith.mul(mCalibrationBean.getCh1KValue(), Integer.parseInt(values[0], 16)), mCalibrationBean.getCh1CompensationValue());
@@ -480,27 +483,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         lastMeetConditionTime = System.currentTimeMillis();
 
         // 测试用;
-        String[] _values = {"500", "950", "980", "1000"};
-        String[] _values2 = {"3036", "3036", "13036", "3036"};
-        String[] _values3 = {"13036", "2036", "13036", "13036"};
-        String[] _values4 = {"2036", "2036", "2036", "2036"};
-
-        /*
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    for (int i = 0; i < 20; i++) {
-                        Thread.sleep(2000);
-                        mView.onMeasuringDataUpdate(doCH2P(_values));
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-        */
-        // forValueTest();
+//        forValueTest();
     }
 
     // 5301 1086 2031 3036 38C9 4E54
@@ -865,6 +848,24 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         isPaused = isPause;
     }
 
+    @Override
+    public boolean isInMeasuring(String item) {
+        try {
+            StepBean2 _bean = stepBeans.get(getStep());
+            android.util.Log.d("wlDebug", "_beanItems = " + _bean.getMeasureItems().toString() + " item = " + item);
+            if (isSingleStep) {
+                return true;
+            } else {
+                if (_bean == null) {
+                    return true;
+                }
+                return _bean.getMeasureItems().contains(item);
+            }
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
     /*
      *
      *   将读出来的AD字，通过校准，转化为校准后的测量值;
@@ -908,14 +909,17 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                         if (processBeanLists.get(i).size() > 0) {
                             String _code = mParameterBean2Lists.get(i).getCode();
                             if (!_code.contains("LDif")) {
-                                if (reNodes[i] == null)
+                                if (reNodes[i] == null) {
                                     reNodes[i] = jep.parse(reCodesForCaluationList.get(i));
+                                }
                                 mValues[i] = Arith.round((double) jep.evaluate(reNodes[i]) + mParameterBean2Lists.get(i).getDeviation(), 4);
                             } else {
                                 mValues[i] = 0;
                             }
                         } else {
-                            if (nodes[i] == null) nodes[i] = jep.parse(reCodeList.get(i));
+                            if (nodes[i] == null) {
+                                nodes[i] = jep.parse(reCodeList.get(i));
+                            }
                             mValues[i] = Arith.round((double) jep.evaluate(nodes[i]) + mParameterBean2Lists.get(i).getDeviation(), 4);
                         }
                     }
@@ -966,7 +970,9 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                                 // android.util.Log.d("wlDebug", "reCodesForCaluationList.get(i) = " + reCodesForCaluationList.get(i), e);
                             }
                         } else {
-                            if (nodes[i] == null) nodes[i] = jep.parse(reCodeList.get(i));
+                            if (nodes[i] == null) {
+                                nodes[i] = jep.parse(reCodeList.get(i));
+                            }
                             mValues[i] = Arith.round((double) jep.evaluate(nodes[i]) + mParameterBean2Lists.get(i).getDeviation(), 4);
                         }
                     }
@@ -1066,7 +1072,9 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     }
 
     private double calculationProcess(ProcessBean bean, List<Double> values) {
-        if (values.size() == 0) return 0;
+        if (values.size() == 0) {
+            return 0;
+        }
         double sum = 0D;
         int num = 0;
         int percent_5, percent_10, percent_90, percent_95;
@@ -1076,7 +1084,9 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 percent_90 = (int) Math.round(values.size() * 0.9) - 1;
                 percent_95 = (int) Math.round(values.size() * 0.95) - 1;
 
-                if (percent_90 < 0) percent_90 = 0;
+                if (percent_90 < 0) {
+                    percent_90 = 0;
+                }
                 for (int i = percent_90; i <= percent_95; i++, num++) {
                     sum += values.get(i);
                 }
@@ -1086,8 +1096,12 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 percent_5 = (int) Math.round(values.size() * 0.05) - 1;
                 percent_10 = (int) Math.round(values.size() * 0.1) - 1;
 
-                if (percent_5 < 0) percent_5 = 0;
-                if (percent_10 < 0) percent_10 = 0;
+                if (percent_5 < 0) {
+                    percent_5 = 0;
+                }
+                if (percent_10 < 0) {
+                    percent_10 = 0;
+                }
                 for (int i = percent_5; i <= percent_10; i++, num++) {
                     sum += values.get(i);
                 }
@@ -1096,7 +1110,9 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             case "LAvg":
                 percent_5 = (int) Math.round(values.size() * 0.05) - 1;
                 percent_95 = (int) Math.round(values.size() * 0.95) - 1;
-                if (percent_5 < 0) percent_5 = 0;
+                if (percent_5 < 0) {
+                    percent_5 = 0;
+                }
                 for (int i = percent_5; i <= percent_95; i++, num++) {
                     sum += values.get(i);
                 }
@@ -1107,10 +1123,18 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 percent_5 = (int) Math.round(values.size() * 0.05) - 1;
                 percent_95 = (int) Math.round(values.size() * 0.95) - 1;
                 percent_90 = (int) Math.round(values.size() * 0.9) - 1;
-                if (percent_5 < 0) percent_5 = 0;
-                if (percent_10 < 0) percent_10 = 0;
-                if (percent_90 < 0) percent_90 = 0;
-                if (percent_95 < 0) percent_95 = 0;
+                if (percent_5 < 0) {
+                    percent_5 = 0;
+                }
+                if (percent_10 < 0) {
+                    percent_10 = 0;
+                }
+                if (percent_90 < 0) {
+                    percent_90 = 0;
+                }
+                if (percent_95 < 0) {
+                    percent_95 = 0;
+                }
 //                Log.d("wlDebug", "percent_5 = " + percent_5 +
 //                        " percent_10 = " + percent_10 + " percent_90 = " + percent_90 + " percent_95 = " + percent_95);
 
@@ -1140,7 +1164,9 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             StepBean2 _bean = stepBeans.get(getStep());
             for (int j = 0; j < mParameterBean2Lists.size(); j++) {
                 if (_bean.getMeasureItems().contains(String.valueOf(mParameterBean2Lists.get(j).getSequenceNumber()))) {
-                    if (processBeanLists.get(j).size() > 0) return true;
+                    if (processBeanLists.get(j).size() > 0) {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -1236,6 +1262,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         protected void onCancelled() {
 
         }
+
     }
 
 
@@ -1244,11 +1271,17 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1000);
-                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{30, 30, 30, 30}));
                     Thread.sleep(2000);
-                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.806335611, 0, 0, 0}));
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{-200, -200, 0, 0}));
 
+                    Thread.sleep(2000);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{30, 30, 30, 30}));
+
+                    Thread.sleep(2000);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{-200, -200, 0, 0}));
+
+                    Thread.sleep(2000);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{30, 30, 30, 30}));
 
                     Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.880121264, 0, 0, 0}));
@@ -1277,7 +1310,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                     Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.500988845, 0, 0, 0}));
 
-                    /*
+
                     Thread.sleep(500);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.656299797, 0, 0, 0}));
                     Thread.sleep(500);
@@ -1449,8 +1482,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                     Thread.sleep(500);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.883354002, 0, 0, 0}));
                     Thread.sleep(500);
+                    /*
                      */
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

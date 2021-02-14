@@ -124,7 +124,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
     }
 
     /////////Toast//////////////////
-
+    @Override
     public void toast(String msg) {
         toast(msg, Toast.LENGTH_SHORT, 0);
     }
@@ -132,7 +132,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
     public void toast(String msg, int state) {
         toast(msg, Toast.LENGTH_LONG, state);
     }
-
+    @Override
     public void toast(int strId) {
         toast(strId, 0);
     }
@@ -154,6 +154,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AppCompatActivi
         toast.show();
     }
 
+    @Override
     public Context getContext(){
         return this;
     }

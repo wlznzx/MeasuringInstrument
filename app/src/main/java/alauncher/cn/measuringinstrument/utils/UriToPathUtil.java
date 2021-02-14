@@ -20,6 +20,7 @@ public class UriToPathUtil {
             return path;
         }
         android.util.Log.d("wlDebug", "uri.getAuthority() = " + uri.getAuthority() + " uri.getScheme() = " + uri.getScheme());
+        android.util.Log.d("wlDebug", "uri.toString() = " + uri.toString());
         // 以 content:// 开头的，比如 content://media/extenral/images/media/17766
         if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme()) && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             Cursor cursor = context.getContentResolver().query(uri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
@@ -87,8 +88,9 @@ public class UriToPathUtil {
                 return cursor.getString(column_index);
             }
         } finally {
-            if (cursor != null)
+            if (cursor != null) {
                 cursor.close();
+            }
         }
         return null;
     }

@@ -84,6 +84,7 @@ public abstract class SerialHelper {
         private ReadThread() {
         }
 
+        @Override
         public void run() {
             super.run();
             while (!isInterrupted()) {
@@ -124,6 +125,7 @@ public abstract class SerialHelper {
         private SendThread() {
         }
 
+        @Override
         public void run() {
             super.run();
             while (!isInterrupted()) {

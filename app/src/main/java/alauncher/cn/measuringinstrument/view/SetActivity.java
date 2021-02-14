@@ -60,12 +60,12 @@ public class SetActivity extends BaseActivity {
                 helpFragment = (HelpFragment) fragment;
             }
         }
-        if (codeBaseInfoFragment == null)
+        if (codeBaseInfoFragment == null) {
             codeBaseInfoFragment = new InfoFragment();
-
-        if (helpFragment == null)
+        }
+        if (helpFragment == null) {
             helpFragment = new HelpFragment();
-
+        }
         String[] mTitles = new String[]{getString(R.string.device_info), "帮助"};
         mTitleList = Arrays.asList(mTitles);
 

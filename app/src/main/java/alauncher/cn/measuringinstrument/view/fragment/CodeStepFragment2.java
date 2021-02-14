@@ -96,8 +96,9 @@ public class CodeStepFragment2 extends Fragment implements DataUpdateInterface {
                 if (isChecked) {
                     measuredItems.clear();
                     for (StepBean2 _bean : mStepBean2s) {
-                        if (_bean.getMeasureItems() != null)
+                        if (_bean.getMeasureItems() != null) {
                             measuredItems.addAll(_bean.getMeasureItems());
+                        }
                     }
                     // 所有参数被测量完毕;
                     if (measuredItems.size() == mParameterBean2s.size()) {
@@ -140,12 +141,16 @@ public class CodeStepFragment2 extends Fragment implements DataUpdateInterface {
     private void clearDialog() {
         final AlertDialog builder = new AlertDialog.Builder(getContext()).create();
         builder.show();
-        if (builder.getWindow() == null) return;
+        if (builder.getWindow() == null) {
+            return;
+        }
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
         TextView msg = builder.findViewById(R.id.tv_msg);
         Button cancel = builder.findViewById(R.id.btn_cancle);
         Button sure = builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancel == null || sure == null) return;
+        if (msg == null || cancel == null || sure == null) {
+            return;
+        }
         msg.setText(R.string.sure_clear);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,8 +198,9 @@ public class CodeStepFragment2 extends Fragment implements DataUpdateInterface {
         mStepAdapter.notifyDataSetChanged();
         measuredItems.clear();
         for (StepBean2 _bean : mStepBean2s) {
-            if (_bean.getMeasureItems() != null)
+            if (_bean.getMeasureItems() != null) {
                 measuredItems.addAll(_bean.getMeasureItems());
+            }
         }
         // 所有参数被测量完毕;
         if (measuredItems.size() == mParameterBean2s.size()) {
@@ -258,7 +264,9 @@ public class CodeStepFragment2 extends Fragment implements DataUpdateInterface {
                     final AlertDialog builder = new AlertDialog.Builder(getContext())
                             .create();
                     builder.show();
-                    if (builder.getWindow() == null) return false;
+                    if (builder.getWindow() == null) {
+                        return false;
+                    }
                     builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
                     TextView msg = builder.findViewById(R.id.tv_msg);
                     Button cancel = builder.findViewById(R.id.btn_cancle);

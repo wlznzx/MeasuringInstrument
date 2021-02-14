@@ -86,7 +86,9 @@ public class AuthorityGroupEditDialog extends Dialog implements CalculateDialog.
                 break;
             case R.id.yes:
                 if (doAdd()) {
-                    if (dataUpdateInterface != null) dataUpdateInterface.dataUpdate();
+                    if (dataUpdateInterface != null) {
+                        dataUpdateInterface.dataUpdate();
+                    }
                     dismiss();
                 }
                 break;
@@ -146,7 +148,9 @@ public class AuthorityGroupEditDialog extends Dialog implements CalculateDialog.
             authorityNameTipsTV.setVisibility(View.VISIBLE);
             return false;
         }
-        if (mAuthorityGroupBean == null) mAuthorityGroupBean = new AuthorityGroupBean();
+        if (mAuthorityGroupBean == null) {
+            mAuthorityGroupBean = new AuthorityGroupBean();
+        }
         try {
             mAuthorityGroupBean.setDescribe(describeEDT.getText().toString().trim());
             mAuthorityGroupBean.setName(authorityGroupEDT.getText().toString().trim());

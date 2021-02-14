@@ -1,10 +1,11 @@
 package alauncher.cn.measuringinstrument.widget;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.HorizontalScrollView;
+
+import androidx.annotation.Nullable;
 
 /**
  * 解决横竖滑动冲突

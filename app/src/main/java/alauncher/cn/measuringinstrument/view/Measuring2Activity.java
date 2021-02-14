@@ -222,7 +222,6 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         measureRV.setAdapter(mMeasuringAdapter);
         mMeasuringAdapter.notifyDataSetChanged();
 
-
         if (mMeasureConfigurationBean.getMeasureMode() == HORIZONTAL_MODE_ONE) {
             modeTitle.setVisibility(View.VISIBLE);
             mode2Title.setVisibility(View.GONE);
@@ -235,7 +234,9 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         } else {
             chart.setVisibility(View.GONE);
         }
-        if (mMeasureConfigurationBean.getIsShowChart()) new SPCTask().execute();
+        if (mMeasureConfigurationBean.getIsShowChart()) {
+            new SPCTask().execute();
+        }
     }
 
     @OnClick({R.id.value_btn, R.id.additional_btn, R.id.measure_save_btn})
@@ -263,14 +264,18 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
 
     private void startValue() {
         // start 取值;
-        if (inValue) return;
+        if (inValue) {
+            return;
+        }
         inValue = true;
         mMeasuringPresenter.startMeasuring();
     }
 
     private void stopValue() {
         // stop 取值;
-        if (!inValue) return;
+        if (!inValue) {
+            return;
+        }
         inValue = false;
         mMeasuringPresenter.stopMeasuring();
     }
@@ -299,16 +304,14 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             showForceDialog();
             return false;
         }
-         */
+        */
 
         String _result = mMeasuringPresenter.saveResult(curMValues, mAddInfoBean, isManual);
         if (_result.equals("NoSave")) {
             // Toast.makeText(this, "测试结果不在自动保存区间内.", Toast.LENGTH_SHORT).show();
             //getResources().getString(R.string.step_tips)  取当前步骤
-
             return false;
         } else if (_result.equals("OK")) {
-
             Toastxiaoxi("测试结果保存成功");
             /*Toast.makeText(this, "测试结果保存成功." , Toast.LENGTH_SHORT).show();*/
             if (App.getSetupBean().getIsAutoPopUp()) {
@@ -330,14 +333,20 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             builder = new AlertDialog.Builder(this)
                     .create();
         }
-        if (builder.isShowing()) return;
+        if (builder.isShowing()) {
+            return;
+        }
         builder.show();
-        if (builder.getWindow() == null) return;
+        if (builder.getWindow() == null) {
+            return;
+        }
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
         TextView msg = builder.findViewById(R.id.tv_msg);
         Button cancel = builder.findViewById(R.id.btn_cancle);
         Button sure = builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancel == null || sure == null) return;
+        if (msg == null || cancel == null || sure == null) {
+            return;
+        }
         msg.setText("请校验后继续测量.");
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -382,16 +391,23 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
     }
 
     public void updateMValues(double[] values) {
-        if (values == null) return;
+        if (values == null) {
+            return;
+        }
         // 显示测量结果;
         mGroupMs[0].setText("结果: " + mMeasuringPresenter.getMResults(values));
         // 显示测量分组情况;
         String[] group = mMeasuringPresenter.getMGroupValues(values);
-        if (group == null) return;
+        if (group == null) {
+            return;
+        }
         mGroupMs[1].setText("M" + (mDates.get(0).getSequenceNumber() + 1) + "分组: " + group[0]);
         // 刷新柱状图;
         String[] results = mMeasuringPresenter.getResults(values);
         for (int i = 0; i < values.length; i++) {
+            if (!mMeasuringPresenter.isInMeasuring(String.valueOf(i))) {
+                continue;
+            }
             // if (mMeasuringPresenter.getGeted()[i]) continue;
             if (mMeasureConfigurationBean.getMeasureMode() == HORIZONTAL_MODE_ONE) {
                 if (mMValueViewLandscapes[i] != null) {
@@ -403,7 +419,8 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
                 }
                 if (mValueGroupTV[i] != null) {
                     mValueGroupTV[i].setText(results[i]);
-                    mValueGroupTV[i].setBackgroundResource(results[i].equals("OK") ? R.drawable.measure_item_ok : R.drawable.measure_item_ng);
+                    mValueGroupTV[i].setBackgroundResource(mMValueViewLandscapes[i].getColorByValue(values[i]));
+//                    mValueGroupTV[i].setBackgroundResource(results[i].equals("OK") ? R.drawable.measure_item_ok : R.drawable.measure_item_ng);
                 }
             }
         }
@@ -469,6 +486,9 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
                     actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
                 }
                 updateSaveBtnMsg();
+                if (App.getSetupBean().getIsAutoPopUp()) {
+                    showAddDialog();
+                }
                 dialog.dismiss();
                 mMeasuringPresenter.setPause(false);
             }
@@ -481,10 +501,12 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
      * @return
      */
     private List<Map<String, Object>> getData() {
+        // 获取所有的程序.
+        List<CodeBean> beans = App.getDaoSession().getCodeBeanDao().loadAll();
         List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < province.length; i++) {
+        for (int i = 0; i < beans.size(); i++) {
             Map<String, Object> item = new HashMap<String, Object>();
-            item.put("itemName", province[i]);
+            item.put("itemName", beans.get(i).getName());
             items.add(item);
         }
         return items;
@@ -541,7 +563,6 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         // 4. 如果当前是单步，那么就是单步；
         if (mMeasuringPresenter.isCurStepHaveProcess()) {
 
-
             if (mMeasuringPresenter.getMeasureState() == MeasuringPresenter.IN_PROCESS_VALUE_BEEN_TAKEN_MODE) {
                 // android.util.Log.d("wlDebug", "do 1.");
                 doSave(true);
@@ -568,7 +589,9 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
 
     @Override
     public void updateSaveBtnMsg() {
-        if (mMeasuringPresenter == null) return;
+        if (mMeasuringPresenter == null) {
+            return;
+        }
         // 1. 首先判断是否分步？
         if (mMeasuringPresenter.isSingleStep()) {
             if (mMeasuringPresenter.isCurStepHaveProcess()) {
@@ -640,12 +663,13 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             holder.setText(R.id.show_item_tv, "M" + (_bean.getSequenceNumber() + 1));
             holder.setText(R.id.describe_tv, _bean.getDescribe());
             /* title.setText("M" + (_bean.getSequenceNumber() + 1)+"趋势图");*/
+            if (mMValueViewLandscapes[position] == null) {
+                mMValueViewLandscapes[position] = holder.getView(R.id.m_value_view);
+                mMValueViewLandscapes[position].init(_bean.getNominalValue(), _bean.getUpperToleranceValue()
+                        , _bean.getLowerToleranceValue(), _bean.getResolution());
+            }
             if (mMeasureConfigurationBean.getMeasureMode() == HORIZONTAL_MODE_ONE) {
-                if (mMValueViewLandscapes[position] == null) {
-                    mMValueViewLandscapes[position] = holder.getView(R.id.m_value_view);
-                    mMValueViewLandscapes[position].init(_bean.getNominalValue(), _bean.getUpperToleranceValue()
-                            , _bean.getLowerToleranceValue(), _bean.getResolution());
-                }
+
             } else if (mMeasureConfigurationBean.getMeasureMode() == HORIZONTAL_MODE_TWO) {
                 if (mValueTV[position] == null) {
                     mValueTV[position] = holder.getView(R.id.value_tv);
@@ -658,9 +682,13 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             holder.setOnClickListener(R.id.measure_item, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (tasking) return;
+                    if (tasking) {
+                        return;
+                    }
                     chartIndex = position;
-                    if (mMeasureConfigurationBean.getIsShowChart()) new SPCTask().execute();
+                    if (mMeasureConfigurationBean.getIsShowChart()) {
+                        new SPCTask().execute();
+                    }
                     // android.util.Log.d("wlDebug", "chartIndex = " + chartIndex);
                 }
             });
@@ -702,7 +730,9 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             }
             List<ResultBean2> _datas = getResultBean2s();
             /*  title.setText(ParameterBean2Dao.Properties.SequenceNumber+"");*/
-            if (_datas == null) return null;
+            if (_datas == null) {
+                return null;
+            }
             return ybyxtDatas(_datas);
         }
 
@@ -742,10 +772,15 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
                 yAxis.addLimitLine(getLimitLine(_bean.lcl, "下公差线"));
                 XAxis xAxis = chart.getXAxis();
                 xAxis.setAxisMinimum(0);
-                if (_bean.mValues.size() < 10) xAxis.setAxisMaximum(10);
-                if (10 <= _bean.mValues.size() && _bean.mValues.size() < 20)
+                if (_bean.mValues.size() < 10) {
+                    xAxis.setAxisMaximum(10);
+                }
+                if (10 <= _bean.mValues.size() && _bean.mValues.size() < 20) {
                     xAxis.setAxisMaximum(30);
-                if (_bean.mValues.size() > 20) xAxis.setAxisMaximum(30);
+                }
+                if (_bean.mValues.size() > 20) {
+                    xAxis.setAxisMaximum(30);
+                }
                 if (_bean.mValues.size() > 0) {
                     updateChartDatas(_bean.mValues);
                 } else {
@@ -774,8 +809,12 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         double _max = -10000, _min = 10000;
         for (int i = 0; i < _datas.size(); i++) {
             _values[i] = getValuesFromResultBean2(_datas.get(i), chartIndex);
-            if (_values[i] > _max) _max = _values[i];
-            if (_values[i] < _min) _min = _values[i];
+            if (_values[i] > _max) {
+                _max = _values[i];
+            }
+            if (_values[i] < _min) {
+                _min = _values[i];
+            }
             values.add(new Entry(i + 1, (float) _values[i], getResources().getDrawable(R.drawable.star)));
         }
         _bean.mValues = values;

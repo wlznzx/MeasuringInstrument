@@ -214,34 +214,43 @@ public class UserEditDialog extends Dialog {
             }
         }
 
-        User _user = new User();
-        _user.setAccout(accoutStr);
-        _user.setName(fullName);
-        _user.setPassword(passwordStr);
-        _user.setStatus((int) statusSP.getSelectedItemId());
-        _user.setEmail(emailEdt.getText().toString().trim());
-        _user.setId(workpieceEdt.getText().toString().trim());
+        if (mUser == null) {
+            mUser = new User();
+        }
+        mUser.setAccout(accoutStr);
+        mUser.setName(fullName);
+        mUser.setPassword(passwordStr);
+        mUser.setStatus((int) statusSP.getSelectedItemId());
+        mUser.setEmail(emailEdt.getText().toString().trim());
+//        _user.setId(workpieceEdt.getText().toString().trim());
         int _id = (int) authorityGroupSP.getSelectedItemId();
-        if (_id == 0) {
-            _user.setUseAuthorityGroupID(4);
-        } else {
-            _user.setUseAuthorityGroupID(mAuthorityGroupBeans.get((_id - 1)).getId());
+        android.util.Log.d("wlDebug", "_id = " + _id);
+        if (authorityLayout.isShown()) {
+            if (_id == 0) {
+                mUser.setUseAuthorityGroupID(4);
+            } else {
+                mUser.setUseAuthorityGroupID(mAuthorityGroupBeans.get((_id - 1)).getId());
+            }
         }
-        _user.setLimit(Integer.parseInt(limitSP.getSelectedItem().toString()));
-        android.util.Log.d("wlDebug", _user.toString());
+        mUser.setLimit(Integer.parseInt(limitSP.getSelectedItem().toString()));
+        android.util.Log.d("wlDebug", mUser.toString());
         dismiss();
-        if (mUser != null) {
-            mUserDao.update(_user);
-        } else {
-            mUserDao.insert(_user);
+//        if (mUser != null) {
+//            mUserDao.update(_user);
+//        } else {
+//            mUserDao.insert(_user);
+//        }
+        mUserDao.insertOrReplace(mUser);
+        if (mUIInterface != null) {
+            mUIInterface.upDateUserUI();
         }
-        if (mUIInterface != null) mUIInterface.upDateUserUI();
     }
 
     public interface UIInterface {
         void upDateUserUI();
     }
 
+    @Override
     public void dismiss() {
         //避免闪屏 提高用户体验
         new Handler().postDelayed(new Runnable() {

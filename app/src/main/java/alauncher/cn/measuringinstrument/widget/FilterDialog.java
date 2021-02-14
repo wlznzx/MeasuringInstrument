@@ -170,6 +170,7 @@ public class FilterDialog extends Dialog {
         return bean;
     }
 
+    @Override
     public void dismiss() {
         //避免闪屏 提高用户体验
         new Handler().postDelayed(new Runnable() {

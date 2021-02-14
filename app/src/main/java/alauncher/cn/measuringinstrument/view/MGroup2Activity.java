@@ -71,7 +71,6 @@ public class MGroup2Activity extends BaseOActivity implements DataUpdateInterfac
     }*/
 
 
-
     @OnClick(R.id.add_group_btn)
     public void addGroup(View v) {
         // Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
@@ -121,7 +120,9 @@ public class MGroup2Activity extends BaseOActivity implements DataUpdateInterfac
                     final AlertDialog builder = new AlertDialog.Builder(MGroup2Activity.this)
                             .create();
                     builder.show();
-                    if (builder.getWindow() == null) return false;
+                    if (builder.getWindow() == null) {
+                        return false;
+                    }
                     builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
                     TextView msg = builder.findViewById(R.id.tv_msg);
                     Button cancel = builder.findViewById(R.id.btn_cancle);

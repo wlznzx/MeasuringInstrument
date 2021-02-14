@@ -11,6 +11,7 @@ public class Dif extends PostfixMathCommand {
         this.numberOfParameters = -1;
     }
 
+    @Override
     public void run(Stack var1) throws ParseException {
         this.checkStack(var1);
         double in[] = new double[var1.size()];

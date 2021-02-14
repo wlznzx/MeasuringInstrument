@@ -19,6 +19,9 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.thl.filechooser.FileChooser;
+import com.thl.filechooser.FileInfo;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -152,7 +155,9 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
      * 全选和反选
      */
     private void selectAllMain() {
-        if (mData2Adapter == null) return;
+        if (mData2Adapter == null) {
+            return;
+        }
         if (!isSelectAll) {
             for (int i = 0, j = mData2Adapter.getMyLiveList().size(); i < j; i++) {
                 mData2Adapter.getMyLiveList().get(i).setIsSelect(true);
@@ -186,12 +191,16 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         final AlertDialog builder = new AlertDialog.Builder(this)
                 .create();
         builder.show();
-        if (builder.getWindow() == null) return;
+        if (builder.getWindow() == null) {
+            return;
+        }
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
         TextView msg = builder.findViewById(R.id.tv_msg);
         Button cancel = builder.findViewById(R.id.btn_cancle);
         Button sure = builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancel == null || sure == null) return;
+        if (msg == null || cancel == null || sure == null) {
+            return;
+        }
 
         if (index == 1) {
             msg.setText("删除后不可恢复，是否删除该条目？");
@@ -224,12 +233,16 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         final AlertDialog builder = new AlertDialog.Builder(this)
                 .create();
         builder.show();
-        if (builder.getWindow() == null) return;
+        if (builder.getWindow() == null) {
+            return;
+        }
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
         TextView msg = builder.findViewById(R.id.tv_msg);
         Button cancel = builder.findViewById(R.id.btn_cancle);
         Button sure = builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancel == null || sure == null) return;
+        if (msg == null || cancel == null || sure == null) {
+            return;
+        }
 
         if (index == 1) {
             msg.setText("是否导出这个条目");
@@ -245,7 +258,21 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new ExcelTask().execute();
+
+                FileChooser fileChooser = new FileChooser(Data2Activity.this, new FileChooser.FileChoosenListener() {
+                    @Override
+                    public void onFileChoosen(String filePath) {
+                        // dataBackup(filePath);
+                        new ExcelTask(filePath).execute();
+                    }
+                });
+                fileChooser.setBackIconRes(R.drawable.arrow_back_24px);
+                fileChooser.setTitle(getResources().getString(R.string.select_output_path));
+                fileChooser.setDoneText(getResources().getString(R.string.ok));
+                fileChooser.setThemeColor(R.color.colorPrimary);
+                fileChooser.setChooseType(FileInfo.FILE_TYPE_FOLDER);
+                fileChooser.showFile(true);  //是否显示文件
+                fileChooser.open();
                 builder.dismiss();
             }
         });
@@ -302,7 +329,9 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
     @Override
     public void onItemClickListener(int pos, List<ResultBean2> myLiveList) {
-        if (pos == -1) return;
+        if (pos == -1) {
+            return;
+        }
         if (editorStatus) {
             ResultBean2 _bean = myLiveList.get(pos);
             boolean isSelect = _bean.getIsSelect();
@@ -430,6 +459,10 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
 
         private ProgressDialog dialog;
         private String path = Environment.getExternalStorageDirectory() + "/NTGage/";
+
+        public ExcelTask(String path) {
+            this.path = path + "/";
+        }
 
         //执行的第一个方法用于在执行后台任务前做一些UI操作
         @Override

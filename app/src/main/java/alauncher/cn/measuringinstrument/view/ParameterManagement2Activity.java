@@ -144,7 +144,9 @@ public class ParameterManagement2Activity extends BaseOActivity implements DataU
                     final AlertDialog builder = new AlertDialog.Builder(ParameterManagement2Activity.this)
                             .create();
                     builder.show();
-                    if (builder.getWindow() == null) return false;
+                    if (builder.getWindow() == null) {
+                        return false;
+                    }
                     builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
                     TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
                     Button cancel = (Button) builder.findViewById(R.id.btn_cancle);

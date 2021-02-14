@@ -180,11 +180,11 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             k[2] = bean.getCh3KValue();
             k[3] = bean.getCh4KValue();
 
-            NumberFormat nf = NumberFormat.getInstance();
-            kValueEdt[0].setText(String.valueOf(bean.getCh1KValue() * 1000));
-            kValueEdt[1].setText(String.valueOf(bean.getCh2KValue() * 1000));
-            kValueEdt[2].setText(String.valueOf(bean.getCh3KValue() * 1000));
-            kValueEdt[3].setText(String.valueOf(bean.getCh4KValue() * 1000));
+//            NumberFormat nf = NumberFormat.getInstance();
+            kValueEdt[0].setText(String.valueOf(bean.getCh1KValue()));
+            kValueEdt[1].setText(String.valueOf(bean.getCh2KValue()));
+            kValueEdt[2].setText(String.valueOf(bean.getCh3KValue()));
+            kValueEdt[3].setText(String.valueOf(bean.getCh4KValue()));
             // 补偿值;
             compensationValueEdt[0].setText(String.valueOf(bean.getCh1CompensationValue()));
             compensationValueEdt[1].setText(String.valueOf(bean.getCh2CompensationValue()));
@@ -208,7 +208,7 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
 
         switch (view.getId()) {
             case R.id.samll_part_btn:
-                for (int i = 0; i < smallPartADEdt.length; i++)
+                for (int i = 0; i < smallPartADEdt.length; i++) {
                     try {
                         int x = Integer.parseInt(measureADEdt[i].getText().toString().trim(), 10);
                         smallPartADEdt[i].setText("" + x);
@@ -218,8 +218,8 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
                     } catch (NumberFormatException e) {
 
                     }
+                }
                 break;
-
             case R.id.big_part_btn:
                 for (int i = 0; i < smallPartADEdt.length; i++) {
                     try {
@@ -235,7 +235,9 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             case R.id.calibration_save_btn:
                 doCalc();
                 CalibrationBean _bean = view2Bean();
-                if (_bean == null) return;
+                if (_bean == null) {
+                    return;
+                }
                 android.util.Log.d("wlDebug", _bean.toString());
                 // 判断倍率;
                 /*
@@ -368,14 +370,18 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             _bean.setCh3LowerLimitRate(Double.valueOf(lowerLimitEdt[2].getText().toString().trim()));
             _bean.setCh4LowerLimitRate(Double.valueOf(lowerLimitEdt[3].getText().toString().trim()));
             // 倍率;
-            if (chRbs[0].isChecked())
+            if (chRbs[0].isChecked()) {
                 _bean.setCh1KValue(Double.valueOf(kValueEdt[0].getText().toString().trim()) / 1000);
-            if (chRbs[1].isChecked())
+            }
+            if (chRbs[1].isChecked()) {
                 _bean.setCh2KValue(Double.valueOf(kValueEdt[1].getText().toString().trim()) / 1000);
-            if (chRbs[2].isChecked())
+            }
+            if (chRbs[2].isChecked()) {
                 _bean.setCh3KValue(Double.valueOf(kValueEdt[2].getText().toString().trim()) / 1000);
-            if (chRbs[3].isChecked())
+            }
+            if (chRbs[3].isChecked()) {
                 _bean.setCh4KValue(Double.valueOf(kValueEdt[3].getText().toString().trim()) / 1000);
+            }
             // 偏差;
 
             _bean.setCh1CompensationValue(Double.valueOf(compensationValueEdt[0].getText().toString().trim()));

@@ -1,1 +1,1 @@
-include ':serialport',':app', ':basemvplib'
+include ':filechooser',':serialport',':app', ':basemvplib'

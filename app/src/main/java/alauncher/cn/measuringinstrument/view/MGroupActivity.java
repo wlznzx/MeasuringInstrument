@@ -120,12 +120,16 @@ public class MGroupActivity extends BaseOActivity {
         final AlertDialog builder = new AlertDialog.Builder(MGroupActivity.this)
                 .create();
         builder.show();
-        if (builder.getWindow() == null) return;
+        if (builder.getWindow() == null) {
+            return;
+        }
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
         TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
         Button cancel = (Button) builder.findViewById(R.id.btn_cancle);
         Button sure = (Button) builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancel == null || sure == null) return;
+        if (msg == null || cancel == null || sure == null) {
+            return;
+        }
         msg.setText("确认清空该组数据？");
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +142,9 @@ public class MGroupActivity extends BaseOActivity {
             public void onClick(View v) {
                 builder.dismiss();
                 GroupBean _bean = mDao.queryBuilder().where(GroupBeanDao.Properties.Code_id.eq(App.getSetupBean().getCodeID()), GroupBeanDao.Properties.M_index.eq(mIndex)).unique();
-                if (_bean != null) mDao.delete(_bean);
+                if (_bean != null) {
+                    mDao.delete(_bean);
+                }
                 finish();
             }
         });
@@ -149,23 +155,31 @@ public class MGroupActivity extends BaseOActivity {
         _bean.setCode_id(App.getSetupBean().getCodeID());
         _bean.setM_index(mIndex);
         // 分组的上区间
-        if (!upperLimits[0].getText().toString().equals(""))
+        if (!upperLimits[0].getText().toString().equals("")) {
             _bean.setA_upper_limit(Double.valueOf(upperLimits[0].getText().toString().trim()));
-        if (!upperLimits[1].getText().toString().equals(""))
+        }
+        if (!upperLimits[1].getText().toString().equals("")) {
             _bean.setB_upper_limit(Double.valueOf(upperLimits[1].getText().toString().trim()));
-        if (!upperLimits[2].getText().toString().equals(""))
+        }
+        if (!upperLimits[2].getText().toString().equals("")) {
             _bean.setC_upper_limit(Double.valueOf(upperLimits[2].getText().toString().trim()));
-        if (!upperLimits[3].getText().toString().equals(""))
+        }
+        if (!upperLimits[3].getText().toString().equals("")) {
             _bean.setD_upper_limit(Double.valueOf(upperLimits[3].getText().toString().trim()));
+        }
         // 分组的下区间
-        if (!lowerLimits[0].getText().toString().equals(""))
+        if (!lowerLimits[0].getText().toString().equals("")) {
             _bean.setA_lower_limit(Double.valueOf(lowerLimits[0].getText().toString().trim()));
-        if (!lowerLimits[1].getText().toString().equals(""))
+        }
+        if (!lowerLimits[1].getText().toString().equals("")) {
             _bean.setB_lower_limit(Double.valueOf(lowerLimits[1].getText().toString().trim()));
-        if (!lowerLimits[2].getText().toString().equals(""))
+        }
+        if (!lowerLimits[2].getText().toString().equals("")) {
             _bean.setC_lower_limit(Double.valueOf(lowerLimits[2].getText().toString().trim()));
-        if (!lowerLimits[3].getText().toString().equals(""))
+        }
+        if (!lowerLimits[3].getText().toString().equals("")) {
             _bean.setD_lower_limit(Double.valueOf(lowerLimits[3].getText().toString().trim()));
+        }
         // 分组描述
         _bean.setA_describe(describes[0].getText().toString());
         _bean.setB_describe(describes[1].getText().toString());

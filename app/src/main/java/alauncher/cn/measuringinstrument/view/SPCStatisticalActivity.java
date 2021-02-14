@@ -360,7 +360,9 @@ public class SPCStatisticalActivity extends BaseOActivity {
             //处理耗时操作
             startStatistical();
             List<ResultBean> _datas = dataFilterUpdate();
-            if (_datas == null) return null;
+            if (_datas == null) {
+                return null;
+            }
             if (spc_mode == JZJCT_MODE) {
                 return jzjctDatas(_datas);
             } else if (spc_mode == YBYXT_MODE) {
@@ -456,7 +458,9 @@ public class SPCStatisticalActivity extends BaseOActivity {
         //onCancelled方法用于在取消执行中的任务时更改UI
         @Override
         protected void onCancelled() {
-            if (dialog != null) dialog.dismiss();
+            if (dialog != null) {
+                dialog.dismiss();
+            }
         }
     }
 

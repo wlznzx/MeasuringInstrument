@@ -151,7 +151,9 @@ public class CodeListAdapter extends BaseAdapter {
                 final AlertDialog builder = new AlertDialog.Builder(context)
                         .create();
                 builder.show();
-                if (builder.getWindow() == null) return false;
+                if (builder.getWindow() == null) {
+                    return false;
+                }
                 builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
                 TextView msg = builder.findViewById(R.id.tv_msg);
                 Button cancel = builder.findViewById(R.id.btn_cancle);

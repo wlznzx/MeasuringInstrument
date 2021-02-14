@@ -62,8 +62,9 @@ public class AuthorityDetailActivity extends BaseActivity implements ForceCalibr
                 authorityDetailFragment = (AuthorityDetailFragment) fragment;
             }
         }
-        if (authorityUserFragment == null)
+        if (authorityUserFragment == null) {
             authorityUserFragment = new AuthorityUserFragment();
+        }
         authorityUserFragment.setAuthorityGroupID(authorityGroupID);
         if (authorityDetailFragment == null) {
             authorityDetailFragment = new AuthorityDetailFragment();

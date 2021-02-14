@@ -174,4 +174,5 @@
     <string name="edit_group">编辑分组</string>
     <string name="authorization_failed_title">授权失败</string>
     <string name="authorization_failed_msg">抱歉，您所处的用户组不具备开通此功能的权限。</string>
+    <string name="select_output_path">选择导出路径</string>
 </resources>

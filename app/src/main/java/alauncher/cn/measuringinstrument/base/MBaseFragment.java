@@ -61,10 +61,12 @@ public abstract class MBaseFragment<T extends IPresenter> extends BaseFragment<T
         }
     }
 
+    @Override
     public void toast(String msg) {
         Toast.makeText(this.getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
     public void toast(int id) {
         Toast.makeText(this.getActivity(), getString(id), Toast.LENGTH_SHORT).show();
     }

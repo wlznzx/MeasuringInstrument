@@ -185,7 +185,9 @@ public class Statistical2Activity extends BaseOActivity {
             rBean.setMDescribe(StringConverter.convertToEntityPropertyG(cursor.getString(mDescribeIndex)));
             _datas.add(rBean);
         }
-        if (cursor != null) cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
         return _datas;
     }
 
@@ -526,12 +528,16 @@ public class Statistical2Activity extends BaseOActivity {
         final AlertDialog builder = new AlertDialog.Builder(this)
                 .create();
         builder.show();
-        if (builder.getWindow() == null) return;
+        if (builder.getWindow() == null) {
+            return;
+        }
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
         TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
         Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
         Button sure = (Button) builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancle == null || sure == null) return;
+        if (msg == null || cancle == null || sure == null) {
+            return;
+        }
 
         msg.setText("是否导出统计列表.");
 

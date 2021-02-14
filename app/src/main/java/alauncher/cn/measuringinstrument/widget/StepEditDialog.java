@@ -112,7 +112,9 @@ public class StepEditDialog extends Dialog {
                 break;
             case R.id.yes:
                 if (doConditionAdd()) {
-                    if (dataUpdateInterface != null) dataUpdateInterface.dataUpdate();
+                    if (dataUpdateInterface != null) {
+                        dataUpdateInterface.dataUpdate();
+                    }
                     dismiss();
                 }
                 break;
@@ -150,8 +152,12 @@ public class StepEditDialog extends Dialog {
 
     private void initUnCheck() {
         for (StepBean2 _bean2 : mStepBean2s) {
-            if (!isAdd && _bean2.getId().equals(_bean.getId())) continue;
-            if (_bean2.getMeasureItems() != null) measuredItems.addAll(_bean2.getMeasureItems());
+            if (!isAdd && _bean2.getId().equals(_bean.getId())) {
+                continue;
+            }
+            if (_bean2.getMeasureItems() != null) {
+                measuredItems.addAll(_bean2.getMeasureItems());
+            }
         }
 
         for (int i = 0; i < mParameterBean2s.size(); i++) {
@@ -185,8 +191,9 @@ public class StepEditDialog extends Dialog {
         condications.add(getContext().getResources().getString(R.string.press_save));
         for (int i = 0; i < mTriggerConditionBeans.size(); i++) {
             condications.add(mTriggerConditionBeans.get(i).getConditionName());
-            if (!isAdd && _bean.getConditionID() == mTriggerConditionBeans.get(i).getId())
+            if (!isAdd && _bean.getConditionID() == mTriggerConditionBeans.get(i).getId()) {
                 conditionIndex = i + 1;
+            }
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.step_spinner_item, condications);
         conditionSP.setAdapter(adapter);
@@ -265,6 +272,7 @@ public class StepEditDialog extends Dialog {
         dialogTipsTV.setText(msg);
     }
 
+    @Override
     public void dismiss() {
         //避免闪屏 提高用户体验
         new Handler().postDelayed(new Runnable() {

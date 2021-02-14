@@ -130,8 +130,9 @@ public class CodeStepFragment extends Fragment {
         for (StepBean _bean : list) {
             if (_bean.getStepID() == 1) {
                 for (int i = 0; i < step1CheckBoxs.length; i++) {
-                    if (StepUtils.getChannelByStep(i, _bean.measured))
+                    if (StepUtils.getChannelByStep(i, _bean.measured)) {
                         step1CheckBoxs[i].setChecked(true);
+                    }
                 }
                 for (int j = 0; j < mDatas.size(); j++) {
                     if (mDatas.get(j).getId() == _bean.getConditionID()) {
@@ -142,8 +143,9 @@ public class CodeStepFragment extends Fragment {
             }
             if (_bean.getStepID() == 2) {
                 for (int i = 0; i < step2CheckBoxs.length; i++) {
-                    if (StepUtils.getChannelByStep(i, _bean.measured))
+                    if (StepUtils.getChannelByStep(i, _bean.measured)) {
                         step2CheckBoxs[i].setChecked(true);
+                    }
                 }
                 for (int j = 0; j < mDatas.size(); j++) {
                     if (mDatas.get(j).getId() == _bean.getConditionID()) {
@@ -154,8 +156,9 @@ public class CodeStepFragment extends Fragment {
             }
             if (_bean.getStepID() == 3) {
                 for (int i = 0; i < step3CheckBoxs.length; i++) {
-                    if (StepUtils.getChannelByStep(i, _bean.measured))
+                    if (StepUtils.getChannelByStep(i, _bean.measured)) {
                         step3CheckBoxs[i].setChecked(true);
+                    }
                 }
                 for (int j = 0; j < mDatas.size(); j++) {
                     if (mDatas.get(j).getId() == _bean.getConditionID()) {
@@ -166,8 +169,9 @@ public class CodeStepFragment extends Fragment {
             }
             if (_bean.getStepID() == 4) {
                 for (int i = 0; i < step4CheckBoxs.length; i++) {
-                    if (StepUtils.getChannelByStep(i, _bean.measured))
+                    if (StepUtils.getChannelByStep(i, _bean.measured)) {
                         step4CheckBoxs[i].setChecked(true);
+                    }
                 }
                 for (int j = 0; j < mDatas.size(); j++) {
                     if (mDatas.get(j).getId() == _bean.getConditionID()) {
@@ -231,7 +235,9 @@ public class CodeStepFragment extends Fragment {
                     } else {
                         _bean.setConditionID(-1);
                     }
-                    if (step[i] != 0) dao.insertOrReplace(_bean);
+                    if (step[i] != 0) {
+                        dao.insertOrReplace(_bean);
+                    }
                 }
                 mStoreBean.setStoreMode(isAutoSwitch.isChecked() ? 1 : 0);
                 App.getDaoSession().getStoreBeanDao().insertOrReplace(mStoreBean);
@@ -246,12 +252,16 @@ public class CodeStepFragment extends Fragment {
     private void clearDialog() {
         final AlertDialog builder = new AlertDialog.Builder(getContext()).create();
         builder.show();
-        if (builder.getWindow() == null) return;
+        if (builder.getWindow() == null) {
+            return;
+        }
         builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
         TextView msg = (TextView) builder.findViewById(R.id.tv_msg);
         Button cancle = (Button) builder.findViewById(R.id.btn_cancle);
         Button sure = (Button) builder.findViewById(R.id.btn_sure);
-        if (msg == null || cancle == null || sure == null) return;
+        if (msg == null || cancle == null || sure == null) {
+            return;
+        }
         msg.setText(R.string.sure_clear);
         cancle.setOnClickListener(new View.OnClickListener() {
             @Override

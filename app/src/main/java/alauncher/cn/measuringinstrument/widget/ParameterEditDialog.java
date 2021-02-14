@@ -71,6 +71,9 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
     @BindView(R.id.analysis_pattern_btn)
     public Button analysisPatternBtn;
 
+    @BindView(R.id.analysis_pattern_layout)
+    public View analysisPatternLayout;
+
     ParameterBean2 _bean;
 
     DataUpdateInterface dataUpdateInterface;
@@ -102,7 +105,9 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
                 break;
             case R.id.yes:
                 if (doConditionAdd()) {
-                    if (dataUpdateInterface != null) dataUpdateInterface.dataUpdate();
+                    if (dataUpdateInterface != null) {
+                        dataUpdateInterface.dataUpdate();
+                    }
                     dismiss();
                 }
                 break;
@@ -116,13 +121,17 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parameter_dialog_layout);
         ButterKnife.bind(this);
-        if (!isAdd) parameterDialogTitleTV.setText(R.string.edit_parameter);
+        if (!isAdd) {
+            parameterDialogTitleTV.setText(R.string.edit_parameter);
+        }
         formulaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CalculateDialog mCalculateDialog = new CalculateDialog(getContext());
                 mCalculateDialog.setCodeInterface(ParameterEditDialog.this);
-                if (_bean != null) mCalculateDialog.setCode(_bean.getCode());
+                if (_bean != null) {
+                    mCalculateDialog.setCode(_bean.getCode());
+                }
                 mCalculateDialog.show();
             }
         });
@@ -136,6 +145,9 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
             }
         });
 
+        if (isAdd) {
+            analysisPatternLayout.setVisibility(View.GONE);
+        }
         analysisPatternBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,7 +182,9 @@ public class ParameterEditDialog extends Dialog implements CalculateDialog.CodeI
 
 
     public boolean doConditionAdd() {
-        if (_bean == null) _bean = new ParameterBean2();
+        if (_bean == null) {
+            _bean = new ParameterBean2();
+        }
         try {
             int sequenceNumber = (int) showItemSP.getSelectedItemId();
             _bean.setResolution((int) resolutionSP.getSelectedItemId());

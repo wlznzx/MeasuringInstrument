@@ -39,7 +39,7 @@ public class WorkpieceFragment extends Fragment {
 
 
     @BindView(R.id.workpiece_iv)
-    public ImageView wpIV;
+    public ImageView wIV;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,7 +72,7 @@ public class WorkpieceFragment extends Fragment {
         CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
         if (_bean != null && _bean.getWorkpiecePic() != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(_bean.getWorkpiecePic(), 0, _bean.getWorkpiecePic().length, null);
-            wpIV.setImageBitmap(bitmap);
+            wIV.setImageBitmap(bitmap);
         }
     }
 
@@ -86,10 +86,12 @@ public class WorkpieceFragment extends Fragment {
                 startActivityForResult(intent, 1);
                 break;
             case R.id.clean_btn:
-                wpIV.setImageDrawable(null);
+                wIV.setImageDrawable(null);
                 CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) App.getSetupBean().getCodeID());
                 _bean.setWorkpiecePic(null);
                 App.getDaoSession().getCodeBeanDao().insertOrReplace(_bean);
+                break;
+            default:
                 break;
         }
     }
@@ -104,7 +106,9 @@ public class WorkpieceFragment extends Fragment {
 
 
             File file = new File(_path);
-            if (!file.exists()) return;
+            if (!file.exists()) {
+                return;
+            }
             BitmapFactory.Options opts = new BitmapFactory.Options();
 //设置为true,代表加载器不加载图片,而是把图片的宽高读出来
             opts.inJustDecodeBounds = true;
@@ -126,7 +130,7 @@ public class WorkpieceFragment extends Fragment {
             opts.inJustDecodeBounds = false;
             opts.inSampleSize = scale;
             Bitmap bm = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
-            wpIV.setImageBitmap(bm);
+            wIV.setImageBitmap(bm);
 
             new Thread(new Runnable() {
                 @Override

@@ -102,7 +102,9 @@ public class ParameterManagementActivity extends BaseOActivity implements Calcul
 
     @OnClick(R.id.save_btn)
     public void onSave(View v) {
-        if (!view2Bean()) return;
+        if (!view2Bean()) {
+            return;
+        }
         // ParameterBean oldParameterBean = App.getDaoSession().getParameterBeanDao().load((long) App.getSetupBean().getCodeID());
         android.util.Log.d("wlDebug","old = " + oldParameterBean.toString());
         // app.getDaoSession().getParameterBeanDao().deleteByKey((long) App.getSetupBean().getCodeID());
