@@ -572,6 +572,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
                     // stop 取值;
                     mMeasuringPresenter.stopGetProcessValue();
                 }
+                doSave(true);
             } else if (mMeasuringPresenter.getMeasureState() == MeasuringPresenter.NORMAL_NODE) {
                 // android.util.Log.d("wlDebug", "do 3.");
                 if (!mMeasuringPresenter.getIsStartProcessValue()) {
@@ -619,10 +620,12 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
                         }
                         break;
                     case 2:
-                        saveTv.setText(R.string.stop_get_value);
+//                        saveTv.setText(R.string.stop_get_value);
+                        saveTv.setText(String.format(getResources().getString(R.string.stop_get_process_value), _bean.getSequenceNumber() + 1));
                         break;
                     case 1:
-                        saveTv.setText(R.string.start_get_value);
+//                        saveTv.setText(R.string.start_get_value);
+                        saveTv.setText(String.format(getResources().getString(R.string.start_get_process_value), _bean.getSequenceNumber() + 1));
                         break;
                 }
             } else {

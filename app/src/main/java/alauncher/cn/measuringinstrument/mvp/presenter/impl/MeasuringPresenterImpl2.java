@@ -483,7 +483,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         lastMeetConditionTime = System.currentTimeMillis();
 
         // 测试用;
-//        forValueTest();
+        forValueTest();
     }
 
     // 5301 1086 2031 3036 38C9 4E54
@@ -1282,7 +1282,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
                     Thread.sleep(2000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{30, 30, 30, 30}));
-
+                    /*
                     Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.880121264, 0, 0, 0}));
                     Thread.sleep(1000);
@@ -1309,10 +1309,15 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.603089989, 0, 0, 0}));
                     Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.500988845, 0, 0, 0}));
+                    */
 
+                    for (int i = 0; i < 500; i++) {
+                        Thread.sleep(1000);
+                        double value = Math.random() + 10;
+                        mView.onMeasuringDataUpdate(doCH2PTest(new double[]{value, value, value, value}));
+                    }
 
-                    Thread.sleep(500);
-                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.656299797, 0, 0, 0}));
+                    /*
                     Thread.sleep(500);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.953417387, 0, 0, 0}));
                     Thread.sleep(500);
@@ -1478,11 +1483,10 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                     Thread.sleep(500);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.694444735, 0, 0, 0}));
                     Thread.sleep(500);
-                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.989753622, 0, 0, 0}));
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.989753622, 0.989753622, 0.989753622, 0.989753622}));
                     Thread.sleep(500);
-                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.883354002, 0, 0, 0}));
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.883354002, 0.883354002, 0.883354002, 0.883354002}));
                     Thread.sleep(500);
-                    /*
                      */
                 } catch (Exception e) {
                     e.printStackTrace();
