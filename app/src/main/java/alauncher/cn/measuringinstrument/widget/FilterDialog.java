@@ -22,6 +22,7 @@ import alauncher.cn.measuringinstrument.bean.FilterBean;
 import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.UserDao;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
+import alauncher.cn.measuringinstrument.utils.DialogUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -88,7 +89,7 @@ public class FilterDialog extends Dialog {
                 break;
             case R.id.start_time_btn:
                 Calendar now = Calendar.getInstance();
-                new android.app.DatePickerDialog(
+                new MyDatePickerDialog(
                         mContext,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
@@ -101,6 +102,11 @@ public class FilterDialog extends Dialog {
                                 cal.set(Calendar.SECOND, 0);
                                 cal.set(Calendar.MINUTE, 0);
                                 cal.set(Calendar.MILLISECOND, 0);
+//                                if (stopTimeStamp < startTime) {
+//                                    DialogUtils.showDialog(mContext, mContext.getResources().getString(R.string.time_over_title),
+//                                            mContext.getResources().getString(R.string.time_over_msg));
+//                                    return;
+//                                }
                                 startTime = cal.getTimeInMillis();
                                 startTimeBtn.setText(DateUtils.getDate(cal.getTimeInMillis()));
                             }
@@ -112,7 +118,7 @@ public class FilterDialog extends Dialog {
                 break;
             case R.id.stop_time_btn:
                 Calendar _now = Calendar.getInstance();
-                new android.app.DatePickerDialog(
+                new MyDatePickerDialog(
                         mContext,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
@@ -124,6 +130,12 @@ public class FilterDialog extends Dialog {
                                 cal.set(Calendar.HOUR_OF_DAY, 23);
                                 cal.set(Calendar.SECOND, 59);
                                 cal.set(Calendar.MINUTE, 59);
+                                android.util.Log.d("wlDebug", "cal.getTimeInMillis() = " + cal.getTimeInMillis());
+                                if (cal.getTimeInMillis() < startTime) {
+                                    DialogUtils.showDialog(mContext, mContext.getResources().getString(R.string.time_over_title),
+                                            mContext.getResources().getString(R.string.time_over_msg));
+                                    return;
+                                }
                                 stopTimeStamp = cal.getTimeInMillis();
                                 stopTimeBtn.setText(DateUtils.getDate(stopTimeStamp));
                             }
@@ -168,6 +180,19 @@ public class FilterDialog extends Dialog {
         bean.setStartTime(startTime);
         bean.setEndTime(stopTimeStamp);
         return bean;
+    }
+
+    class MyDatePickerDialog extends DatePickerDialog {
+
+        public MyDatePickerDialog(Context context, OnDateSetListener callBack,
+                                  int year, int monthOfYear, int dayOfMonth) {
+            super(context, callBack, year, monthOfYear, dayOfMonth);
+        }
+
+        @Override
+        protected void onStop() {
+            //super.onStop();
+        }
     }
 
     @Override

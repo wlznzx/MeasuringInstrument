@@ -116,7 +116,7 @@
 
                 <EditText
                     android:id="@+id/describe_edt"
-                    style="@style/EdNumOnlyStyleSPC"
+                    style="@style/EdTextStyle"
                     android:layout_width="@dimen/dialog_width"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"

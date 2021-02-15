@@ -31,6 +31,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
+import com.thl.filechooser.FileChooser;
+import com.thl.filechooser.FileInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -550,7 +552,20 @@ public class Statistical2Activity extends BaseOActivity {
         sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new ExcelTask().execute();
+                FileChooser fileChooser = new FileChooser(Statistical2Activity.this, new FileChooser.FileChoosenListener() {
+                    @Override
+                    public void onFileChoosen(String filePath) {
+                        // dataBackup(filePath);
+                        new ExcelTask(filePath).execute();
+                    }
+                });
+                fileChooser.setBackIconRes(R.drawable.arrow_back_24px);
+                fileChooser.setTitle(getResources().getString(R.string.select_output_path));
+                fileChooser.setDoneText(getResources().getString(R.string.ok));
+                fileChooser.setThemeColor(R.color.colorPrimary);
+                fileChooser.setChooseType(FileInfo.FILE_TYPE_FOLDER);
+                fileChooser.showFile(true);  //是否显示文件
+                fileChooser.open();
                 builder.dismiss();
             }
         });
@@ -564,7 +579,11 @@ public class Statistical2Activity extends BaseOActivity {
     public class ExcelTask extends AsyncTask<String, Integer, String> {
 
         private ProgressDialog dialog;
-        private String path = Environment.getExternalStorageDirectory() + "/NTGage/";
+        private String path = null;
+
+        public ExcelTask(String path) {
+            this.path = path + "/";
+        }
 
         //执行的第一个方法用于在执行后台任务前做一些UI操作
         @Override

@@ -483,7 +483,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         lastMeetConditionTime = System.currentTimeMillis();
 
         // 测试用;
-        forValueTest();
+//        forValueTest();
     }
 
     // 5301 1086 2031 3036 38C9 4E54

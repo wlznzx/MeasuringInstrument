@@ -562,6 +562,13 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
             queryString = "SELECT * FROM " + ResultBean2Dao.TABLENAME + " where " + ResultBean2Dao.Properties.TimeStamp.columnName + " between " + bean.getStartTime() + " and " + bean.getEndTime();
         }
 
+        // 程序
+        if (true) {
+            queryString = queryString + " and "
+                    + ResultBean2Dao.Properties.CodeID.columnName + " =  ?";
+            strParamLt.add(String.valueOf(App.getSetupBean().getCodeID()));
+        }
+
         //用户
         if (!CommonUtil.isNull(bean.getHandler())) {
             queryString = queryString + " and "

@@ -16,7 +16,7 @@ public class UserReg {
         rs = matcher(validateStr, userName);
         if (rs) {
             int strLenth = getStrLength(userName);
-            if (strLenth < 4 || strLenth > 20) {
+            if (strLenth < 2 || strLenth > 20) {
                 rs = false;
             }
         }

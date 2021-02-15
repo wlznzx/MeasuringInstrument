@@ -126,10 +126,13 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
                     _name = user.getName();
                 }
                 if (_bean != null) {
-                    actionTips.setText(_name + " " + _bean.getName());
+                    actionTips.setText(_name);
+                    actionBarCodeTips.setText( _bean.getName());
                 } else {
-                    actionTips.setText(_name + " 程序" + App.getSetupBean().getCodeID());
+                    actionTips.setText(_name);
+                    actionBarCodeTips.setText("程序" + App.getSetupBean().getCodeID());
                 }
+
                 // InputActivity.datas.clear();
                 // InputActivity.updates.clear();
                 DialogUtils.showDialog(this, "设为当前", "设置成功.");
