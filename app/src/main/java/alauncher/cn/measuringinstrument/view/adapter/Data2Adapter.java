@@ -48,6 +48,11 @@ public class Data2Adapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
+    public void setDatas(List<ResultBean2> datas) {
+        this.datas = datas;
+        notifyDataSetChanged();
+    }
+
     public void notifyAdapter(List<ResultBean2> myLiveList, boolean isAdd) {
         if (!isAdd) {
             this.datas = myLiveList;

@@ -53,9 +53,9 @@ public class FilterDialog extends Dialog {
     public UserDao mUserDao;
     private User mUser;
 
-    private long startTime;
+    private long startTime = -1;
 
-    private long stopTimeStamp;
+    private long stopTimeStamp = -1;
 
     private boolean isHandlerSpinnerFirst = true;
 
@@ -102,11 +102,11 @@ public class FilterDialog extends Dialog {
                                 cal.set(Calendar.SECOND, 0);
                                 cal.set(Calendar.MINUTE, 0);
                                 cal.set(Calendar.MILLISECOND, 0);
-//                                if (stopTimeStamp < startTime) {
-//                                    DialogUtils.showDialog(mContext, mContext.getResources().getString(R.string.time_over_title),
-//                                            mContext.getResources().getString(R.string.time_over_msg));
-//                                    return;
-//                                }
+                                if (stopTimeStamp != -1 && stopTimeStamp < cal.getTimeInMillis()) {
+                                    DialogUtils.showDialog(mContext, mContext.getResources().getString(R.string.time_over_title),
+                                            mContext.getResources().getString(R.string.time_over_msg));
+                                    return;
+                                }
                                 startTime = cal.getTimeInMillis();
                                 startTimeBtn.setText(DateUtils.getDate(cal.getTimeInMillis()));
                             }

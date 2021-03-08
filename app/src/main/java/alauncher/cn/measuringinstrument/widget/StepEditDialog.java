@@ -25,6 +25,7 @@ import alauncher.cn.measuringinstrument.bean.TriggerConditionBean;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.StepBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.TriggerConditionBeanDao;
+import alauncher.cn.measuringinstrument.utils.DialogUtils;
 import alauncher.cn.measuringinstrument.view.activity_view.DataUpdateInterface;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -252,8 +253,24 @@ public class StepEditDialog extends Dialog {
                     _bean.setSequenceNumber(sequenceNumber);
                 }
             }
+
+
             int index = conditionSP.getSelectedItemPosition();
+
             if (index > 0) {
+                if ((index - 1) == 0) {
+                    // 判断是否有过程值;
+                    for (int i = 0; i < mParameterBean2s.size(); i++) {
+                        if (_bean.getMeasureItems().contains(String.valueOf(mParameterBean2s.get(i).getSequenceNumber()))) {
+                            if (mParameterBean2s.get(i).getCode().contains("L")) {
+                                DialogUtils.showDialog(getContext(), getContext().getResources().getString(R.string.
+                                        un_support_title), getContext().getResources().getString(R.string.
+                                        un_support_condition_process));
+                                return false;
+                            }
+                        }
+                    }
+                }
                 _bean.setConditionID(mTriggerConditionBeans.get(index - 1).getId());
             } else {
                 _bean.setConditionID(-1);

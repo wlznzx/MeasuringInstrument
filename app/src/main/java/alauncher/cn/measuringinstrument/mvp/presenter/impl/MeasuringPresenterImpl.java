@@ -726,7 +726,7 @@ public class MeasuringPresenterImpl implements MeasuringPresenter {
     }
 
     @Override
-    public boolean isInMeasuring(String item) {
+    public boolean isInMeasuring(int item) {
         return false;
     }
 

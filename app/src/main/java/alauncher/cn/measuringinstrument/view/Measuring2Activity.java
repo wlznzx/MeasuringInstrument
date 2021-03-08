@@ -44,6 +44,7 @@ import org.apache.commons.math3.stat.descriptive.rank.Max;
 import org.apache.commons.math3.stat.descriptive.rank.Min;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +62,7 @@ import alauncher.cn.measuringinstrument.bean.ResultBean2;
 import alauncher.cn.measuringinstrument.bean.SetupBean;
 import alauncher.cn.measuringinstrument.bean.StepBean2;
 import alauncher.cn.measuringinstrument.bean.StoreBean;
+import alauncher.cn.measuringinstrument.bean.User;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ParameterBean2Dao;
 import alauncher.cn.measuringinstrument.database.greenDao.db.ResultBean2Dao;
 import alauncher.cn.measuringinstrument.mvp.presenter.MeasuringPresenter;
@@ -329,6 +331,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
     AlertDialog builder;
 
     public void showForceDialog() {
+        stopValue();
         if (builder == null) {
             builder = new AlertDialog.Builder(this)
                     .create();
@@ -340,7 +343,8 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         if (builder.getWindow() == null) {
             return;
         }
-        builder.getWindow().setContentView(R.layout.pop_user);//设置弹出框加载的布局
+        //设置弹出框加载的布局
+        builder.getWindow().setContentView(R.layout.pop_user);
         TextView msg = builder.findViewById(R.id.tv_msg);
         Button cancel = builder.findViewById(R.id.btn_cancle);
         Button sure = builder.findViewById(R.id.btn_sure);
@@ -351,6 +355,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 builder.dismiss();
             }
         });
@@ -394,6 +399,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         if (values == null) {
             return;
         }
+        android.util.Log.d("wlDebug", "updateMValues = " + Arrays.toString(values));
         // 显示测量结果;
         mGroupMs[0].setText("结果: " + mMeasuringPresenter.getMResults(values));
         // 显示测量分组情况;
@@ -405,7 +411,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         // 刷新柱状图;
         String[] results = mMeasuringPresenter.getResults(values);
         for (int i = 0; i < values.length; i++) {
-            if (!mMeasuringPresenter.isInMeasuring(String.valueOf(i))) {
+            if (!mMeasuringPresenter.isInMeasuring(i)) {
                 continue;
             }
             // if (mMeasuringPresenter.getGeted()[i]) continue;
@@ -444,14 +450,14 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
     public void btnClick(View view) {
         switch (view.getId()) {
             case R.id.swap_btn:
-                for (int i = 0; i < 10; i++) {
-                    CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) (i + 1));
-                    if (_bean != null) {
-                        province[i] = _bean.getName();
-                    } else {
-                        province[i] = "程序 " + (i + 1);
-                    }
-                }
+//                for (int i = 0; i < 10; i++) {
+//                    CodeBean _bean = App.getDaoSession().getCodeBeanDao().load((long) (i + 1));
+//                    if (_bean != null) {
+//                        province[i] = _bean.getName();
+//                    } else {
+//                        province[i] = "程序 " + (i + 1);
+//                    }
+//                }
                 showGridDialog();
                 break;
         }
@@ -466,24 +472,32 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
         dialog.setContentView(view);
         dialog.show();
         GridView gridview = view.findViewById(R.id.gridview);
-        final List<Map<String, Object>> item = getData();
+        final List<CodeBean> beans = App.getDaoSession().getCodeBeanDao().loadAll();
+        final List<Map<String, Object>> item = getData(beans);
         // SimpleAdapter对象，匹配ArrayList中的元素
         SimpleAdapter simpleAdapter = new SimpleAdapter(this, item, R.layout.gridview_item, new String[]{"itemName"}, new int[]{R.id.grid_name});
         gridview.setAdapter(simpleAdapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
                 mMeasuringPresenter.setPause(true);
                 SetupBean _bean = App.getDaoSession().getSetupBeanDao().load(App.SETTING_ID);
-                _bean.setCodeID(arg2 + 1);
+                _bean.setCodeID(Integer.valueOf(beans.get(position).getId().toString()));
                 App.getDaoSession().getSetupBeanDao().update(_bean);
                 ((MeasuringPresenterImpl2) mMeasuringPresenter).initParameter();
                 initParameters();
-                CodeBean _CodeBean = App.getDaoSession().getCodeBeanDao().load((long) (arg2 + 1));
+                CodeBean _CodeBean = App.getDaoSession().getCodeBeanDao().load((long) _bean.getCodeID());
+                String _name = App.handlerAccout;
+                User user = App.getDaoSession().getUserDao().load(App.handlerAccout);
+                if (user != null) {
+                    _name = user.getName();
+                }
                 if (_CodeBean != null) {
-                    actionTips.setText(App.handlerAccout + " " + _CodeBean.getName());
+                    actionTips.setText(_name);
+                    actionBarCodeTips.setText( _CodeBean.getName());
                 } else {
-                    actionTips.setText(App.handlerAccout + " 程序" + App.getSetupBean().getCodeID());
+                    actionTips.setText(_name);
+                    actionBarCodeTips.setText("程序" + App.getSetupBean().getCodeID());
                 }
                 updateSaveBtnMsg();
                 if (App.getSetupBean().getIsAutoPopUp()) {
@@ -500,9 +514,8 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
      *
      * @return
      */
-    private List<Map<String, Object>> getData() {
+    private List<Map<String, Object>> getData(List<CodeBean> beans) {
         // 获取所有的程序.
-        List<CodeBean> beans = App.getDaoSession().getCodeBeanDao().loadAll();
         List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
         for (int i = 0; i < beans.size(); i++) {
             Map<String, Object> item = new HashMap<String, Object>();
@@ -582,7 +595,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             }
         } else {
 
-            Toastxiaoxi(saveTv.getText() + "成功！");
+            // Toastxiaoxi(saveTv.getText() + "成功！");
             /*Toast.makeText(this, ""+saveTv.getText()+"成功！" , Toast.LENGTH_SHORT).show();*/
             doSave(true);
         }
@@ -690,6 +703,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
                     }
                     chartIndex = position;
                     if (mMeasureConfigurationBean.getIsShowChart()) {
+                        title.setText("M" + (_bean.getSequenceNumber() + 1)+"趋势图");
                         new SPCTask().execute();
                     }
                     // android.util.Log.d("wlDebug", "chartIndex = " + chartIndex);
@@ -857,7 +871,7 @@ public class Measuring2Activity extends BaseOActivity implements MeasuringActivi
             result = Double.parseDouble(_bean.getMeasurementValues().get(index));
             //测量界面趋势图标题
             index = index + 1;
-            title.setText("M" + index + "趋势图");
+//            title.setText("M" + index + "趋势图");
         } catch (Exception e) {
 
         }

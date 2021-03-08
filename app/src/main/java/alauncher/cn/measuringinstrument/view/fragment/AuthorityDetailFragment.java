@@ -163,7 +163,8 @@ public class AuthorityDetailFragment extends Fragment {
             tvGroup.setText(group);
             Switch sw = convertView.findViewById(R.id.authority_enable_sw);
             sw.setFocusable(false);
-            AuthorityBean _authorityBean = authorityBeanLists.get(groupPosition);
+            AuthorityBean _authorityBean = authorityBeanLists.get(String.valueOf(groupPosition));
+            android.util.Log.d("wlDebug","_authorityBean = " + _authorityBean.toString());
             if (_authorityBean == null) {
                 sw.setChecked(true);
             } else {
@@ -279,7 +280,7 @@ public class AuthorityDetailFragment extends Fragment {
                     String _secondID = _secondObject.getString("id");
                     String _secondName = _secondObject.getString("name");
                     _list.add(_secondName);
-                    AuthorityBean _bean = App.getDaoSession().getAuthorityBeanDao().queryBuilder().where(AuthorityBeanDao.Properties.GroupID.eq(authorityGroupID)
+                        AuthorityBean _bean = App.getDaoSession().getAuthorityBeanDao().queryBuilder().where(AuthorityBeanDao.Properties.GroupID.eq(authorityGroupID)
                             , AuthorityBeanDao.Properties.Id.eq(_secondID)).unique();
                     if (_bean == null) {
                         _bean = new AuthorityBean();
@@ -302,13 +303,12 @@ public class AuthorityDetailFragment extends Fragment {
                     _bean.setAuthorized(true);
                 }
                 android.util.Log.d("alauncher", "fristID = " + _bean.getId());
+                android.util.Log.d("alauncher", "_bean = " + _bean.toString());
                 authorityBeanLists.put(_bean.getId(), _bean);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private static String getFromAssets(Context context, String fileName) {

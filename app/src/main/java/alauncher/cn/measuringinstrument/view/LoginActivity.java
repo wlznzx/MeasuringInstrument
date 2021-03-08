@@ -213,6 +213,11 @@ public class LoginActivity extends BaseOActivity {
             Toast.makeText(this, R.string.password_error, Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if (_user2.getStatus() == 1) {
+            Toast.makeText(this, R.string.resigned, Toast.LENGTH_SHORT).show();
+            return;
+        }
         App.handlerAccout = accoutStr;
 
         RememberPasswordBean _bean = App.getDaoSession().getRememberPasswordBeanDao().load(App.SETTING_ID);
@@ -222,6 +227,7 @@ public class LoginActivity extends BaseOActivity {
             _bean.setPassowrd(passwordStr);
             App.getDaoSession().getRememberPasswordBeanDao().insertOrReplace(_bean);
         }
+
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }

@@ -8,7 +8,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +21,7 @@ import alauncher.cn.measuringinstrument.database.greenDao.db.AuthorityBeanDao;
 import alauncher.cn.measuringinstrument.mvp.presenter.CalibrationPresenter;
 import alauncher.cn.measuringinstrument.mvp.presenter.impl.CalibrationPresenterImpl;
 import alauncher.cn.measuringinstrument.utils.Arith;
+import alauncher.cn.measuringinstrument.utils.ToastUtil;
 import alauncher.cn.measuringinstrument.view.activity_view.CalibrationActivityView;
 import butterknife.BindViews;
 import butterknife.OnCheckedChanged;
@@ -116,7 +116,7 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             _edt.setEnabled(false);
         }
         for (CheckBox _box : chRbs) {
-            _box.setChecked(true);
+            _box.setChecked(false);
             _box.setEnabled(authorityLists.get(0));
         }
 
@@ -240,46 +240,28 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
                 }
                 android.util.Log.d("wlDebug", _bean.toString());
                 // 判断倍率;
-                /*
-                if (chRbs[0].isChecked() && (_bean.getCh1KValue() < (_bean.getCh1LowerLimitRate() / 1000) || _bean.getCh1KValue() > (_bean.getCh1UpperLimitRate() / 1000))) {
-                    Toast.makeText(this, "Ch1测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (chRbs[1].isChecked() && (_bean.getCh2KValue() < (_bean.getCh2LowerLimitRate() / 1000) || _bean.getCh2KValue() > (_bean.getCh2UpperLimitRate() / 1000))) {
-                    Toast.makeText(this, "Ch2测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (chRbs[2].isChecked() && (_bean.getCh3KValue() < (_bean.getCh3LowerLimitRate() / 1000) || _bean.getCh3KValue() > (_bean.getCh3UpperLimitRate() / 1000))) {
-                    Toast.makeText(this, "Ch3测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (chRbs[3].isChecked() && (_bean.getCh4KValue() < (_bean.getCh4LowerLimitRate() / 1000) || _bean.getCh4KValue() > (_bean.getCh4UpperLimitRate() / 1000))) {
-                    Toast.makeText(this, "Ch4测量倍率超过设定范围，无法保存.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                */
                 if (chRbs[0].isChecked() && (_bean.getCh1KValue() < -0.1 || _bean.getCh1KValue() > 0.1)) {
-                    Toast.makeText(this, "Ch1测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
+                    ToastUtil.newToast(this, "Ch1测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT);
                     return;
                 }
                 if (chRbs[1].isChecked() && (_bean.getCh2KValue() < -0.1 || _bean.getCh2KValue() > 0.1)) {
-                    Toast.makeText(this, "Ch2测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
+                    ToastUtil.newToast(this, "Ch2测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT);
                     return;
                 }
                 if (chRbs[2].isChecked() && (_bean.getCh3KValue() < -0.1 || _bean.getCh3KValue() > 0.1)) {
-                    Toast.makeText(this, "Ch3测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
+                    ToastUtil.newToast(this, "Ch3测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT);
                     return;
                 }
                 if (chRbs[3].isChecked() && (_bean.getCh4KValue() < -0.1 || _bean.getCh4KValue() > 0.1)) {
-                    Toast.makeText(this, "Ch4测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT).show();
+                    ToastUtil.newToast(this, "Ch4测量倍率超过范围，无法保存.", Toast.LENGTH_SHORT);
                     return;
                 }
 
                 if (s == 0) {
-                    Toast.makeText(this, "校验失败.", Toast.LENGTH_SHORT).show();
+                    ToastUtil.newToast(this, "校验失败.", Toast.LENGTH_SHORT);
                     break;
                 } else {
-                    Toast.makeText(this, "校验保存成功.", Toast.LENGTH_SHORT).show();
+                    ToastUtil.newToast(this, "校验保存成功.", Toast.LENGTH_SHORT);
                     mCalibrationPresenter.saveCalibration(_bean);
                     break;
                 }
@@ -371,16 +353,16 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             _bean.setCh4LowerLimitRate(Double.valueOf(lowerLimitEdt[3].getText().toString().trim()));
             // 倍率;
             if (chRbs[0].isChecked()) {
-                _bean.setCh1KValue(Double.valueOf(kValueEdt[0].getText().toString().trim()) / 1000);
+                _bean.setCh1KValue(Double.valueOf(kValueEdt[0].getText().toString().trim()));
             }
             if (chRbs[1].isChecked()) {
-                _bean.setCh2KValue(Double.valueOf(kValueEdt[1].getText().toString().trim()) / 1000);
+                _bean.setCh2KValue(Double.valueOf(kValueEdt[1].getText().toString().trim()));
             }
             if (chRbs[2].isChecked()) {
-                _bean.setCh3KValue(Double.valueOf(kValueEdt[2].getText().toString().trim()) / 1000);
+                _bean.setCh3KValue(Double.valueOf(kValueEdt[2].getText().toString().trim()));
             }
             if (chRbs[3].isChecked()) {
-                _bean.setCh4KValue(Double.valueOf(kValueEdt[3].getText().toString().trim()) / 1000);
+                _bean.setCh4KValue(Double.valueOf(kValueEdt[3].getText().toString().trim()));
             }
             // 偏差;
 
@@ -389,7 +371,7 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
             _bean.setCh3CompensationValue(Double.valueOf(compensationValueEdt[2].getText().toString().trim()));
             _bean.setCh4CompensationValue(Double.valueOf(compensationValueEdt[3].getText().toString().trim()));
         } catch (NumberFormatException e) {
-            Toast.makeText(this, R.string.number_format_tips, Toast.LENGTH_SHORT).show();
+            ToastUtil.newToast(this, getResources().getString(R.string.number_format_tips), Toast.LENGTH_SHORT);
             return null;
         }
         return _bean;
@@ -476,7 +458,7 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
 
                     } catch (NumberFormatException e) {
                         android.util.Log.d("wlDebug", "---------", e);
-                        Toast.makeText(this, "请先取得对应件的AD值", Toast.LENGTH_SHORT).show();
+                        ToastUtil.newToast(this, "请先取得对应件的AD值", Toast.LENGTH_SHORT);
                         s = 0;
                     }
                 }
@@ -508,10 +490,10 @@ public class CalibrationActivity extends BaseOActivity implements CalibrationAct
                         compensationValueEdt[i].setText(String.valueOf(Arith.round(c, 4)));
                         s = 1;
                     } catch (NumberFormatException e) {
-                        Toast.makeText(this, "请先取得对应件的AD值", Toast.LENGTH_SHORT).show();
+                        ToastUtil.newToast(this, "请先取得对应件的AD值", Toast.LENGTH_SHORT);
                         s = 0;
                     } catch (ArithmeticException e) {
-                        Toast.makeText(this, "大小件取值无差异", Toast.LENGTH_SHORT).show();
+                        ToastUtil.newToast(this, "大小件取值无差异", Toast.LENGTH_SHORT);
                         s = 0;
                     }
                 }

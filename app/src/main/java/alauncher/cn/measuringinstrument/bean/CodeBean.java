@@ -91,5 +91,14 @@ public class CodeBean {
         this.workpiecePic = workpiecePic;
     }
 
-
+    @Override
+    public String toString() {
+        return "CodeBean{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", machineTool='" + machineTool + '\'' +
+                ", parts='" + parts + '\'' +
+                ", isEnableStep=" + isEnableStep +
+                '}';
+    }
 }

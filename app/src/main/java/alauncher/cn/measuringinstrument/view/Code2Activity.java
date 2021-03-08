@@ -86,7 +86,8 @@ public class Code2Activity extends BaseOActivity implements DataUpdateInterface 
         super.onResume();
         mDeviceInfoBean = App.getDaoSession().getDeviceInfoBeanDao().load(App.SETTING_ID);
         HashMap<String, Boolean> states = new HashMap<String, Boolean>();
-        allCodeBeans = App.getDaoSession().getCodeBeanDao().queryBuilder().orderAsc(CodeBeanDao.Properties.Name).list();
+//        allCodeBeans = App.getDaoSession().getCodeBeanDao().queryBuilder().orderAsc(CodeBeanDao.Properties.Id).list();
+        allCodeBeans = App.getDaoSession().getCodeBeanDao().loadAll();
 //        for (CodeBean bean : allCodeBeans) {
 //            android.util.Log.d("wlDebug", "bean = " + bean.toString());
 //        }

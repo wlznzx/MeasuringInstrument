@@ -69,6 +69,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
     final String TAG = "MeasuringPresenterImpl2";
 
+    final boolean Debug = true;
+
     private String sPort = "/dev/ttyMT1";
     private int iBaudRate = 115200;
     private SerialHelper serialHelper;
@@ -332,6 +334,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 boolean isFirst = true, temp = true;
                 for (int j = 0; j < _bean.getMeasureItems().size(); j++) {
                     String index = _bean.getMeasureItems().get(j);
+                    android.util.Log.d("wlDebug", "index = " + index);
                     if (isFirst) {
                         isFirst = false;
                         temp = processBeanLists.get(mKeyMap.get(index)).size() > 0;
@@ -415,15 +418,17 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                                 }
                                 if (i == 0) {
                                     if (mView != null) {
-                                        doCH2P(values);
+                                        doCH2P(chValues);
                                     }
                                 }
                                 // android.util.Log.d("wlDebug", "ch1 = " + chValues[0]);
+                                /*
                                 if (tempValues.get(0).size() <= 5000) {
                                     for (int j = 0; j < 4; j++) {
                                         tempValues.get(j).add(chValues[j]);
                                     }
                                 }
+                                 */
                             } catch (Exception e) {
                                 android.util.Log.d("wlDebug", "数字被截断", e);
                                 break;
@@ -467,7 +472,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                                 chValues[3] = Arith.add(Arith.mul(0.01, Integer.parseInt(values[3], 16)), 0.007);
                             }
                             if (mView != null) {
-                                doCH2P(values);
+                                doCH2P(chValues);
                             }
                         }
                     }
@@ -518,13 +523,16 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                 if (processBeanLists.get(i).size() > 0) {
                     try {
                         reMs[i] = handlerProcessValues2(processBeanLists.get(i), i);
+                        android.util.Log.d("wlDebug", "reMs[" + i + "] = " + reMs[i]);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
         }
-        android.util.Log.d("wlDebug", "ms = " + Arrays.toString(reMs));
+
+        // android.util.Log.d("wlDebug", "ms = " + Arrays.toString(reMs));
+
         /*
         for (List<Double> list : tempValues) {
             list.clear();
@@ -849,17 +857,20 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
     }
 
     @Override
-    public boolean isInMeasuring(String item) {
+    public boolean isInMeasuring(int item) {
         try {
             StepBean2 _bean = stepBeans.get(getStep());
-            android.util.Log.d("wlDebug", "_beanItems = " + _bean.getMeasureItems().toString() + " item = " + item);
+//            if (Debug) {
+//                Log.d("wlDebug", "item = " + item);
+//                Log.d("wlDebug", "_beanItems = " + _bean.getMeasureItems().toString() + " mKeyMap.get(item) = " + mParameterBean2Lists.get(item).getSequenceNumber());
+//            }
             if (isSingleStep) {
                 return true;
             } else {
                 if (_bean == null) {
                     return true;
                 }
-                return _bean.getMeasureItems().contains(item);
+                return _bean.getMeasureItems().contains(String.valueOf(mParameterBean2Lists.get(item).getSequenceNumber()));
             }
         } catch (Exception e) {
             return true;
@@ -872,7 +883,7 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
      *
      * */
 
-    private double[] doCH2P(String[] inputValue) {
+    private double[] doCH2P(double[] inputValue) {
         // long startTime = System.currentTimeMillis(); // 获取开始时间
         // 计算测量值，ch1~ch4;
         /*
@@ -889,23 +900,24 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
         }
          */
 
-        /* 不在这取值了;
-        if (haveProcessCalculate && tempValues.get(0).size() <= 5000 && isGetProcessValue) {
+        if (tempValues.get(0).size() <= 5000 && isGetProcessValue) {
             for (int i = 0; i < 4; i++) {
-                tempValues.get(i).add(chValues[i]);
+                tempValues.get(i).add(inputValue[i]);
             }
+            android.util.Log.d("wlDebug", "add tempValues.");
         }
-        */
+
 
         if (mParameterBean2Lists.size() > 0) {
             try {
-                jep.addVariable("ch1", chValues[0]);
-                jep.addVariable("ch2", chValues[1]);
-                jep.addVariable("ch3", chValues[2]);
-                jep.addVariable("ch4", chValues[3]);
+                jep.addVariable("ch1", inputValue[0]);
+                jep.addVariable("ch2", inputValue[1]);
+                jep.addVariable("ch3", inputValue[2]);
+                jep.addVariable("ch4", inputValue[3]);
 
                 for (int i = 0; i < mParameterBean2Lists.size(); i++) {
-                    if (reCodeList.get(i) != null && !reCodeList.get(i).equals("") && !getGeted()[i]) {
+//                    if (reCodeList.get(i) != null && !reCodeList.get(i).equals("") && !getGeted()[i]) {
+                    if (reCodeList.get(i) != null && !reCodeList.get(i).equals("")) {
                         if (processBeanLists.get(i).size() > 0) {
                             String _code = mParameterBean2Lists.get(i).getCode();
                             if (!_code.contains("LDif")) {
@@ -916,6 +928,14 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                             } else {
                                 mValues[i] = 0;
                             }
+                            /*
+                            try {
+                                Node node = jep.parse(reCodesForCaluationList.get(i));
+                                mValues[i] = Arith.round((double) jep.evaluate(node) + mParameterBean2Lists.get(i).getDeviation(), 4);
+                            } catch (Exception e) {
+                                // android.util.Log.d("wlDebug", "reCodesForCaluationList.get(i) = " + reCodesForCaluationList.get(i), e);
+                            }
+                             */
                         } else {
                             if (nodes[i] == null) {
                                 nodes[i] = jep.parse(reCodeList.get(i));
@@ -1057,6 +1077,8 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
 
                 }
             }
+
+//            android.util.Log.d("wlDebug", "ms = " + Arrays.toString(calculationValuesList.toArray()));
             Collections.sort(calculationValuesList);
             jep.addVariable(_process.getReplaceName(), calculationProcess(_process, calculationValuesList));
         }
@@ -1271,18 +1293,19 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(2000);
-                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{-200, -200, 0, 0}));
-
-                    Thread.sleep(2000);
-                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{30, 30, 30, 30}));
-
-                    Thread.sleep(2000);
-                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{-200, -200, 0, 0}));
-
-                    Thread.sleep(2000);
-                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{30, 30, 30, 30}));
                     /*
+                    Thread.sleep(2000);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{-200, -200, 0, 0}));
+
+                    Thread.sleep(2000);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{30, 30, 30, 30}));
+
+                    Thread.sleep(2000);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{-200, -200, 0, 0}));
+
+                    Thread.sleep(2000);
+                    mView.onMeasuringDataUpdate(doCH2PTest(new double[]{30, 30, 30, 30}));
+
                     Thread.sleep(1000);
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.880121264, 0, 0, 0}));
                     Thread.sleep(1000);
@@ -1311,11 +1334,25 @@ public class MeasuringPresenterImpl2 implements MeasuringPresenter {
                     mView.onMeasuringDataUpdate(doCH2PTest(new double[]{0.500988845, 0, 0, 0}));
                     */
 
+                    for (int i = 0; i < 10; i++) {
+                        Thread.sleep(1000);
+                        double value = (Math.random() + 30);
+                        android.util.Log.d("wlDebug", "value = " + value);
+//                        mView.onMeasuringDataUpdate();
+                        doCH2P(new double[]{value, value, value, value});
+                    }
+                    Thread.sleep(1000);
+                    doCH2P(new double[]{25, 25, 25, 25});
+
+                    /*
                     for (int i = 0; i < 500; i++) {
                         Thread.sleep(1000);
-                        double value = Math.random() + 10;
-                        mView.onMeasuringDataUpdate(doCH2PTest(new double[]{value, value, value, value}));
+                        double value = (Math.random() + 10);
+                        android.util.Log.d("wlDebug", "value = " + value);
+//                        mView.onMeasuringDataUpdate();
+                        doCH2P(new double[]{value, value, value, value});
                     }
+                    */
 
                     /*
                     Thread.sleep(500);

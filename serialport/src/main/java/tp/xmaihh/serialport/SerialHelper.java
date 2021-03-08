@@ -110,6 +110,8 @@ public abstract class SerialHelper {
                         SystemClock.sleep(50);
                     }
 
+
+
                 } catch (Throwable e) {
                     Log.e("error", e.getMessage());
                     return;

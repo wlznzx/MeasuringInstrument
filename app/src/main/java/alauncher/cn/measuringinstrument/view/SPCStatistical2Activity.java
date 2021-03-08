@@ -74,6 +74,7 @@ import alauncher.cn.measuringinstrument.utils.Constants;
 import alauncher.cn.measuringinstrument.utils.DateUtils;
 import alauncher.cn.measuringinstrument.utils.Format;
 import alauncher.cn.measuringinstrument.utils.StringConverter;
+import alauncher.cn.measuringinstrument.utils.ToastUtil;
 import alauncher.cn.measuringinstrument.widget.CustomMarkerView;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -551,7 +552,7 @@ public class SPCStatistical2Activity extends BaseOActivity {
                                     .getString(R.string.normal_curve), R.color.colorPrimary, colors.get(1));
                 }
             } else {
-                Toast.makeText(SPCStatistical2Activity.this, "数据源数量不足以分析.", Toast.LENGTH_SHORT).show();
+                ToastUtil.newToast(SPCStatistical2Activity.this, "数据源数量不足以分析.", Toast.LENGTH_SHORT);
             }
         }
 
@@ -629,7 +630,7 @@ public class SPCStatistical2Activity extends BaseOActivity {
 //            android.util.Log.d("wlDebug", _bean.toString());
 //        }
         if (_datas.size() < _limit) {
-            // Toast.makeText(SPCStatisticalActivity.this, "数据源数量不足以分析.", Toast.LENGTH_SHORT).show();
+            // ToastUtil.newToast(SPCStatisticalActivity.this, "数据源数量不足以分析.", Toast.LENGTH_SHORT).show();
             return null;
         }
         return _datas;

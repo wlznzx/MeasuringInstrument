@@ -158,6 +158,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/status_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -182,6 +183,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:visibility="invisible"
             android:orientation="horizontal">
 
             <TextView

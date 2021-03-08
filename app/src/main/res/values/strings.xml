@@ -249,9 +249,9 @@
     <string name="not_supported_same">不支持</string>
     <string name="not_supported_same_msg">不支持过程值与单点值同时测量，请确认。</string>
     <string name="start_get_value">开始取过程值</string>
-    <string name="start_get_process_value">开始取步骤%1$d的过程值</string>
+    <string name="start_get_process_value">开始步骤%1$d取值</string>
     <string name="stop_get_value">结束取过程值</string>
-    <string name="stop_get_process_value">结束步骤%1$d过程值取值</string>
+    <string name="stop_get_process_value">结束步骤%1$d取值</string>
     <string name="not_supported_same_msg_by_step">不支持过程值与单点值同时测量，在分步第%1$d，请确认。</string>
     <string name="is_enable">启\u3000用</string>
     <string name="add_parameter">添加参数</string>
@@ -337,4 +337,7 @@
     <string name="select_output_path">选择导出路径</string>
     <string name="time_over_title">时间</string>
     <string name="time_over_msg">结束时间超过开始时间</string>
+    <string name="resigned">该员工已离职</string>
+    <string name="un_support_title">不支持</string>
+    <string name="un_support_condition_process">过程值不支持非按键触发.</string>
 </resources>

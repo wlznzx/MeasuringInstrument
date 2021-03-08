@@ -177,4 +177,7 @@
     <string name="select_output_path">选择导出路径</string>
     <string name="time_over_title">时间</string>
     <string name="time_over_msg">结束时间超过开始时间</string>
+    <string name="resigned">该员工已离职</string>
+    <string name="un_support_title">不支持</string>
+    <string name="un_support_condition_process">过程值不支持非按键触发.</string>
 </resources>

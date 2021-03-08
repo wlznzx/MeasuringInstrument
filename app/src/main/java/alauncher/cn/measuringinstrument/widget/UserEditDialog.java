@@ -66,6 +66,9 @@ public class UserEditDialog extends Dialog {
     @BindView(R.id.authority_layout)
     public View authorityLayout;
 
+    @BindView(R.id.status_layout)
+    public View statusLayout;
+
 
     AdditionDialogInterface mAdditionDialogInterface;
 
@@ -124,6 +127,7 @@ public class UserEditDialog extends Dialog {
         }
         if (mUser.getAccout().equals(App.handlerAccout)) {
             authorityLayout.setVisibility(View.GONE);
+            statusLayout.setVisibility(View.GONE);
         }
         // limitSP.setSelection(mUser.getLimit() - currentUser.getLimit());
         // limitSP.setSelection(mUser.getLimit());

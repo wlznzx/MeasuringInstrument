@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +31,7 @@ import java.util.List;
 import alauncher.cn.measuringinstrument.App;
 import alauncher.cn.measuringinstrument.R;
 import alauncher.cn.measuringinstrument.base.BaseOActivity;
+import alauncher.cn.measuringinstrument.base.PaginationScrollListener;
 import alauncher.cn.measuringinstrument.bean.AuthorityBean;
 import alauncher.cn.measuringinstrument.bean.FilterBean;
 import alauncher.cn.measuringinstrument.bean.ParameterBean2;
@@ -49,7 +51,8 @@ import butterknife.OnClick;
 import static alauncher.cn.measuringinstrument.view.adapter.DataAdapter.MYLIVE_MODE_CHECK;
 import static alauncher.cn.measuringinstrument.view.adapter.DataAdapter.MYLIVE_MODE_EDIT;
 
-public class Data2Activity extends BaseOActivity implements View.OnClickListener, Data2Adapter.OnItemClickListener, FilterDialog.FilterInterface {
+public class Data2Activity extends BaseOActivity implements View.OnClickListener,
+        Data2Adapter.OnItemClickListener, FilterDialog.FilterInterface {
 
     @BindView(R.id.rv)
     RecyclerView rv;
@@ -116,11 +119,25 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
                 .orderAsc(ParameterBean2Dao.Properties.SequenceNumber).list();
         LayoutInflater inflater = LayoutInflater.from(this);
         mData2Adapter = new Data2Adapter(Data2Activity.this, mResultBean2Dao.queryBuilder()
-                .where(ResultBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBean2Dao.Properties.TimeStamp).list(), mDates);
+                .where(ResultBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBean2Dao.Properties.TimeStamp).limit(300).list(), mDates);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<ResultBean2> _list = mResultBean2Dao.queryBuilder()
+                        .where(ResultBean2Dao.Properties.CodeID.eq(App.getSetupBean().getCodeID())).orderDesc(ResultBean2Dao.Properties.TimeStamp).list();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mData2Adapter.setDatas(_list);
+                    }
+                });
+            }
+        }).start();
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Data2Activity.this);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(mData2Adapter);
-
 
         for (ParameterBean2 _bean2 : mDates) {
             TextView valueView = (TextView) inflater.inflate(R.layout.measure_data_item, dataTitleLayout, false);
@@ -556,7 +573,7 @@ public class Data2Activity extends BaseOActivity implements View.OnClickListener
         ArrayList<String> strParamLt = new ArrayList<String>();
 
         String queryString = "";
-        if (bean.getStartTime() == 0 && bean.getEndTime() == 0) {
+        if (bean.getStartTime() == -1 && bean.getEndTime() == -1) {
             queryString = "SELECT * FROM " + ResultBean2Dao.TABLENAME + " where 1==1 ";
         } else {
             queryString = "SELECT * FROM " + ResultBean2Dao.TABLENAME + " where " + ResultBean2Dao.Properties.TimeStamp.columnName + " between " + bean.getStartTime() + " and " + bean.getEndTime();
